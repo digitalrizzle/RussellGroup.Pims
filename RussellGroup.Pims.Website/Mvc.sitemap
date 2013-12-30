@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+
+  <mvcSiteMapNode title="Home" controller="Home" action="Index">
+    <mvcSiteMapNode title="Jobs" controller="Job" action="Index">
+      <mvcSiteMapNode title="Edit" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Delete" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Products" controller="Product" action="Index"/>
+    <mvcSiteMapNode title="About" controller="Home" action="About"/>
+  </mvcSiteMapNode>
+
+</mvcSiteMap>

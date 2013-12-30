@@ -1,0 +1,121 @@
+﻿body {
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+/*
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+*/
+
+select {
+    height: 28px;
+}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.breadcrumb {
+    margin-top: 35px;
+    background-color: inherit !important;
+    padding-left: 0;
+    border-bottom: 1px solid #e5e5e5;
+    -webkit-border-raduis: 0;
+    border-radius: 0;
+}
+
+.control-label {
+    margin-top: -3px !important;
+}
+
+.col-span-1 {
+  width: 80px;
+}
+
+.col-span-2 {
+  width: 160px;
+}
+
+.col-span-3 {
+  width: 240px;
+}
+
+.col-span-4 {
+  width: 320px;
+}
+
+.col-span-5 {
+  width: 400px;
+}
+
+.col-span-6 {
+  width: 480px;
+}
+
+.col-span-7 {
+  width: 560px;
+}
+
+.col-span-8 {
+  width: 640px;
+}
+
+.col-span-9 {
+  width: 720px;
+}
+
+.col-span-10 {
+  width: 800px;
+}
+
+.col-span-11 {
+  width: 880px;
+}
+
+.col-span-12 {
+  width: 960px;
+}
+
+th {
+    text-align: left;
+}
+
+dt, dd {
+    line-height: 2;
+}
+
+footer {
+    font-size: smaller;
+}
