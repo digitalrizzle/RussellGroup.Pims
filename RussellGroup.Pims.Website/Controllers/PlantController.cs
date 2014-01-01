@@ -11,12 +11,11 @@ using RussellGroup.Pims.DataAccess.Models;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [HandleError]
-    public class JobController : Controller
+    public class PlantController : Controller
     {
         private PimsContext db = new PimsContext();
 
-        // GET: /Job/
+        // GET: /Plant/
         public ActionResult Index()
         {
             return View();
@@ -26,19 +25,17 @@ namespace RussellGroup.Pims.Website.Controllers
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IEnumerable<Job> entries = db.Jobs;
+            IEnumerable<Plant> entries = db.Plants;
             var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
 
             // ordering
-            Func<Job, string> ordering = (c =>
+            Func<Plant, string> ordering = (c =>
                 sortColumnIndex == 1 ? c.Description :
-                    sortColumnIndex == 2 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                        sortColumnIndex == 3 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                            sortColumnIndex == 4 ? (c.ProjectManager != null ? c.ProjectManager.Name : string.Empty) :
-                                sortColumnIndex == 5 ? (c.QuantitySurveyor != null ? c.QuantitySurveyor.Name : string.Empty) : c.Status.ToString());
+                    sortColumnIndex == 2 ? c.Serial :
+                        sortColumnIndex == 3 ? c.FixedAssetCode : c.Category.Name);
 
             // sorting
-            IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
+            IEnumerable<Plant> ordered = Request["sSortDir_0"] == "asc" ?
                 entries.OrderBy(ordering) :
                 entries.OrderByDescending(ordering);
 
@@ -46,14 +43,12 @@ namespace RussellGroup.Pims.Website.Controllers
             var displayData = ordered
                 .Select(c => new string[]
                 {
-                    c.JobId.ToString(),
+                    c.PlantId.ToString(),
                     c.Description,
-                    c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
-                    c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.ProjectManager != null ? c.ProjectManager.Name : string.Empty,
-                    c.QuantitySurveyor != null ? c.QuantitySurveyor.Name : string.Empty,
-                    c.Status.ToString(),
-                    this.CrudLinks(new { id = c.JobId })
+                    c.Serial,
+                    c.FixedAssetCode,
+                    c.Category != null ? c.Category.Name : string.Empty,
+                    this.CrudLinks(new { id = c.PlantId })
                 });
 
             // filter for sSearch
@@ -89,7 +84,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = db.Jobs.Count(),
+                iTotalRecords = db.Plants.Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = filtered
             };
@@ -97,111 +92,101 @@ namespace RussellGroup.Pims.Website.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /Job/Details/5
+        // GET: /Plant/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await db.Jobs.FindAsync(id);
-            if (job == null)
+            Plant plant = await db.Plants.FindAsync(id);
+            if (plant == null)
             {
                 return HttpNotFound();
             }
-            return View(job);
+            return View(plant);
         }
 
-        // GET: /Job/Create
-        [PimsAuthorize(Roles = RoleType.Administrator)]
+        // GET: /Plant/Create
         public ActionResult Create()
         {
-            ViewBag.ProjectManagerContactId = new SelectList(db.Contacts, "ContactId", "Name");
-            ViewBag.QuantitySurveyorContactId = new SelectList(db.Contacts, "ContactId", "Name");
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View();
         }
 
-        // POST: /Job/Create
+        // POST: /Plant/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = RoleType.Administrator)]
-        public async Task<ActionResult> Create([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManagerContactId,QuantitySurveyorContactId,Comment")] Job job)
+        public async Task<ActionResult> Create([Bind(Include="PlantId,CategoryId,XPlantId,XPlantNewId,Description,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool")] Plant plant)
         {
             if (ModelState.IsValid)
             {
-                db.Jobs.Add(job);
+                db.Plants.Add(plant);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProjectManagerContactId = new SelectList(db.Contacts, "ContactId", "Name", job.ProjectManagerContactId);
-            ViewBag.QuantitySurveyorContactId = new SelectList(db.Contacts, "ContactId", "Name", job.QuantitySurveyorContactId);
-            return View(job);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", plant.CategoryId);
+            return View(plant);
         }
 
-        // GET: /Job/Edit/5
-        [PimsAuthorize(Roles = RoleType.Administrator)]
+        // GET: /Plant/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await db.Jobs.FindAsync(id);
-            if (job == null)
+            Plant plant = await db.Plants.FindAsync(id);
+            if (plant == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ProjectManagerContactId = new SelectList(db.Contacts, "ContactId", "Name", job.ProjectManagerContactId);
-            ViewBag.QuantitySurveyorContactId = new SelectList(db.Contacts, "ContactId", "Name", job.QuantitySurveyorContactId);
-            return View(job);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", plant.CategoryId);
+            return View(plant);
         }
 
-        // POST: /Job/Edit/5
+        // POST: /Plant/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = RoleType.Administrator)]
-        public async Task<ActionResult> Edit([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManagerContactId,QuantitySurveyorContactId,Comment")] Job job)
+        public async Task<ActionResult> Edit([Bind(Include="PlantId,CategoryId,XPlantId,XPlantNewId,Description,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool")] Plant plant)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(job).State = EntityState.Modified;
+                db.Entry(plant).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProjectManagerContactId = new SelectList(db.Contacts, "ContactId", "Name", job.ProjectManagerContactId);
-            ViewBag.QuantitySurveyorContactId = new SelectList(db.Contacts, "ContactId", "Name", job.QuantitySurveyorContactId);
-            return View(job);
+            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", plant.CategoryId);
+            return View(plant);
         }
 
-        // GET: /Job/Delete/5
-        [PimsAuthorize(Roles = RoleType.Administrator)]
+        // GET: /Plant/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await db.Jobs.FindAsync(id);
-            if (job == null)
+            Plant plant = await db.Plants.FindAsync(id);
+            if (plant == null)
             {
                 return HttpNotFound();
             }
-            return View(job);
+            return View(plant);
         }
 
-        // POST: /Job/Delete/5
+        // POST: /Plant/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = RoleType.Administrator)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Job job = await db.Jobs.FindAsync(id);
-            db.Jobs.Remove(job);
+            Plant plant = await db.Plants.FindAsync(id);
+            db.Plants.Remove(plant);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -214,23 +199,20 @@ namespace RussellGroup.Pims.Website.Controllers
             }
             base.Dispose(disposing);
         }
-        
+
         private new ActionResult View()
         {
             return View(null);
         }
 
-        private ActionResult View(Job job)
+        private ActionResult View(Plant plant)
         {
-            var contacts = db.Contacts.OrderBy(f => f.Name);
-            var projectManager = job != null ? job.ProjectManagerContactId : null;
-            var quantitySurveyor = job != null ? job.QuantitySurveyorContactId : null;
+            var categories = db.Contacts.OrderBy(f => f.Name);
+            var category = plant != null ? plant.CategoryId : 0;
 
-            ViewBag.ProjectManagers = new SelectList(contacts, "ContactId", "Name", projectManager);
-            ViewBag.QuantitySurveyors = new SelectList(contacts, "ContactId", "Name", quantitySurveyor);
+            ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);
 
-            return base.View(job);
+            return base.View(plant);
         }
-
     }
 }

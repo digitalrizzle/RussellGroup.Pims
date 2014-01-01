@@ -1,10 +1,10 @@
-﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Job>
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Inventory>
 
 @{
-    ViewBag.Title = "Jobs";
+    ViewBag.Title = "Index";
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>Index</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -17,19 +17,16 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WhenStarted)
+                @Html.DisplayNameFor(model => model.WhenPurchased)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WhenEnded)
+                @Html.DisplayNameFor(model => model.WhenDisused)
+            </th>
+            <th class="right">
+                @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProjectManager)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuantitySurveyor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.Category)
             </th>
             <th></th>
         </tr>
@@ -42,22 +39,21 @@
             $('.table').dataTable({
                 "bProcessing": true,
                 "bServerSide": true,
-                "bStateSave": true,
-                "sAjaxSource": '@Url.Content("~/Job/GetDataTableResult")',
+                "bStateSave": false,
+                "sAjaxSource": '@Url.Content("~/Inventory/GetDataTableResult")',
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
                     { "sWidth": "0%" },
                     { "sWidth": "35%" },
                     { "sWidth": "10%" },
                     { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
+                    { "sWidth": "10%", "sClass": "right" },
+                    { "sWidth": "20%" },
                     { "sWidth": "15%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [7] }
+                    { "bSortable": false, "aTargets": [6] }
                 ],
             });
         });

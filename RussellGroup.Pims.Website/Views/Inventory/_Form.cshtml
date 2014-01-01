@@ -1,0 +1,98 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Inventory
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @if (ViewBag.Title == "Edit") { <text>@Html.HiddenFor(model => model.InventoryId)</text> }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.XInventoryId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.XInventoryId)
+                @Html.ValidationMessageFor(model => model.XInventoryId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description)
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WhenPurchased, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.WhenPurchased, "{0:d/MM/yyyy}", new { @class = "col-span-1" })
+                    <span id="WhenPurchased-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+                </div>
+                @Html.ValidationMessageFor(model => model.WhenPurchased)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WhenDisused, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.WhenDisused, "{0:d/MM/yyyy}", new { @class = "col-span-1" })
+                    <span id="WhenDisused-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+                </div>
+                @Html.ValidationMessageFor(model => model.WhenDisused)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Rate, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Rate)
+                @Html.ValidationMessageFor(model => model.Rate)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cost, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Cost)
+                @Html.ValidationMessageFor(model => model.Cost)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantity)
+                @Html.ValidationMessageFor(model => model.Quantity)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Category, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CategoryId")
+                @Html.ValidationMessageFor(model => model.CategoryId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @if (ViewBag.Title == "Edit")
+                {
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                }
+                else
+                {
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                }
+                &nbsp;
+                @Html.ActionLink("Cancel", "Index", new { @class = "btn-cancel" })
+            </div>
+        </div>
+    </div>
+}

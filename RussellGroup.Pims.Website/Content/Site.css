@@ -60,8 +60,22 @@ input[type="checkbox"].input-validation-error {
     margin-top: -3px !important;
 }
 
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+.input-group-addon {
+    width: inherit;
+    padding: 4px 12px 5px 12px;
+    top: 0px;
+}
+
 .col-span-1 {
-  width: 80px;
+  width: 85px;
 }
 
 .col-span-2 {

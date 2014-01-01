@@ -18,12 +18,12 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "description")]
         public string Description { get; set; }
 
-        [Display(Name = "started")]
+        [Display(Name = "when started")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? WhenStarted { get; set; }
 
-        [Display(Name = "ended")]
+        [Display(Name = "when ended")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? WhenEnded { get; set; }

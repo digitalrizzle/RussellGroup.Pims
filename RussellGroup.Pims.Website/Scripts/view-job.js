@@ -9,3 +9,11 @@ var whenEnded = $("#WhenEnded").datepicker({
 }).on("changeDate", function (e) {
     whenEnded.hide();
 }).data("datepicker");
+
+$("#WhenStarted-icon").click(function () {
+    whenStarted.show();
+});
+
+$("#WhenEnded-icon").click(function () {
+    whenEnded.show();
+});
