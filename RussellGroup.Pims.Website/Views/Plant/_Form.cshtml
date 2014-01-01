@@ -1,0 +1,109 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Plant
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @if (ViewBag.Title == "Edit")
+        { <text>@Html.HiddenFor(model => model.PlantId)</text> }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.XPlantId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.XPlantId)
+                @Html.ValidationMessageFor(model => model.XPlantId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.XPlantNewId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.XPlantNewId)
+                @Html.ValidationMessageFor(model => model.XPlantNewId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Description, new { @class = "col-span-10" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Rate, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Rate, new { @class = "col-span-1" })
+                @Html.ValidationMessageFor(model => model.Rate)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cost, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Cost, new { @class = "col-span-1" })
+                @Html.ValidationMessageFor(model => model.Cost)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Serial, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Serial)
+                @Html.ValidationMessageFor(model => model.Serial)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FixedAssetCode, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FixedAssetCode)
+                @Html.ValidationMessageFor(model => model.FixedAssetCode)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsElectrical, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsElectrical)
+                @Html.ValidationMessageFor(model => model.IsElectrical)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IsTool, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IsTool)
+                @Html.ValidationMessageFor(model => model.IsTool)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Category, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CategoryId")
+                @Html.ValidationMessageFor(model => model.CategoryId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @if (ViewBag.Title == "Edit")
+                {
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                }
+                else
+                {
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                }
+                &nbsp;
+                @Html.ActionLink("Cancel", "Index", new { @class = "btn-cancel" })
+            </div>
+        </div>
+    </div>
+}

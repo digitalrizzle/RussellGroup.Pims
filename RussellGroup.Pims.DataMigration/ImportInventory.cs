@@ -20,7 +20,8 @@ namespace RussellGroup.Pims.DataMigration
                 CategoryId = TargetContext.Categories.Single(f => f.Name == categoryName).CategoryId,
                 Description = reader.GetValue("Description"),
                 Rate = reader.GetValueOrNull<decimal>("Rate"),
-                Cost = reader.GetValueOrNull<decimal>("Cost")
+                Cost = reader.GetValueOrNull<decimal>("Cost"),
+                Quantity = Convert.ToInt32(reader.GetValue("Qty"))
             };
 
             TargetContext.Inventories.Add(inventory);

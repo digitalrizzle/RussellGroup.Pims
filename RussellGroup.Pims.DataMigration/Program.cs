@@ -32,11 +32,11 @@ namespace RussellGroup.Pims.DataMigration
 
                 contacts.Delete().Import();
                 categories.Delete().Import();
-                //plant.Delete().Import();
+                plant.Delete().Import();
                 inventory.Delete().Import();
                 job.Import();
 
-                //plantHire.Delete().Import(0, IMPORT_CAP);
+                plantHire.Delete().Import(0, IMPORT_CAP);
                 inventoryHire.Delete().Import(0, IMPORT_CAP);
             }
 
