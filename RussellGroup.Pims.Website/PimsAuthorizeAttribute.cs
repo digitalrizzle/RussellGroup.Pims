@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.Website.Helpers;
 
 namespace RussellGroup.Pims.Website
 {
@@ -17,12 +18,28 @@ namespace RussellGroup.Pims.Website
 
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
+#if !LOCAL
             if (httpContext == null)
             {
                 throw new ArgumentNullException("httpContext");
             }
 
-            return httpContext.User.Identity.IsInRole(Roles);
+            // this is not needed as the authorisation checks the user is authenticated
+            //if (!httpContext.Reconciliation.Identity.IsAuthenticated)
+            //{
+            //    return false;
+            //}
+
+            using (var helper = new ActiveDirectoryHelper())
+            {
+                if (!helper.IsAuthorized(Roles))
+                {
+                    return false;
+                }
+            }
+#endif
+
+            return true;
         }
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)

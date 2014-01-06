@@ -52,13 +52,28 @@
             @Html.DisplayFor(model => model.Comment)
         </dd>
 
-
         <dt>
             @Html.DisplayNameFor(model => model.Status)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.Status)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PlantHire)
+        </dt>
+
+        <dd>
+            @Html.ActionLink(Model.PlantHire.Count.ToString(), "Index", "PlantHire", new { id = Model.JobId }, null)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InventoryHire)
+        </dt>
+
+        <dd>
+            @Html.ActionLink(Model.InventoryHire.Count.ToString(), "Index", "InventoryHire", new { id = Model.JobId }, null)
         </dd>
     </dl>
 

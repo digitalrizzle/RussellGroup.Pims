@@ -35,6 +35,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public int? QuantitySurveyorContactId { get; set; }
 
         [Display(Name = "comments")]
+        [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
         [Display(Name = "project manager")]
@@ -51,5 +52,11 @@ namespace RussellGroup.Pims.DataAccess.Models
                 return WhenEnded.HasValue ? Status.Complete : Models.Status.Incomplete;
             }
         }
+
+        [Display(Name = "inventory hire")]
+        public virtual ICollection<InventoryHire> InventoryHire { get; set; }
+
+        [Display(Name = "plant hire")]
+        public virtual ICollection<PlantHire> PlantHire { get; set; }
     }
 }

@@ -116,8 +116,6 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Roles = RoleType.Administrator)]
         public ActionResult Create()
         {
-            ViewBag.ProjectManagerContactId = new SelectList(db.Contacts, "ContactId", "Name");
-            ViewBag.QuantitySurveyorContactId = new SelectList(db.Contacts, "ContactId", "Name");
             return View();
         }
 
@@ -136,8 +134,6 @@ namespace RussellGroup.Pims.Website.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProjectManagerContactId = new SelectList(db.Contacts, "ContactId", "Name", job.ProjectManagerContactId);
-            ViewBag.QuantitySurveyorContactId = new SelectList(db.Contacts, "ContactId", "Name", job.QuantitySurveyorContactId);
             return View(job);
         }
 
@@ -154,8 +150,6 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.ProjectManagerContactId = new SelectList(db.Contacts, "ContactId", "Name", job.ProjectManagerContactId);
-            ViewBag.QuantitySurveyorContactId = new SelectList(db.Contacts, "ContactId", "Name", job.QuantitySurveyorContactId);
             return View(job);
         }
 
@@ -173,8 +167,6 @@ namespace RussellGroup.Pims.Website.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.ProjectManagerContactId = new SelectList(db.Contacts, "ContactId", "Name", job.ProjectManagerContactId);
-            ViewBag.QuantitySurveyorContactId = new SelectList(db.Contacts, "ContactId", "Name", job.QuantitySurveyorContactId);
             return View(job);
         }
 
@@ -231,6 +223,5 @@ namespace RussellGroup.Pims.Website.Controllers
 
             return base.View(job);
         }
-
     }
 }

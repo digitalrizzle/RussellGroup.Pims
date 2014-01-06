@@ -9,6 +9,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class PimsContext : DbContext
     {
+        public DbSet<Audit> Audits { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
@@ -17,6 +18,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public DbSet<Plant> Plants { get; set; }
         public DbSet<PlantHire> PlantHires { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Setting> Settings { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

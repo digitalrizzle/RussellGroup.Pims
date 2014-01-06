@@ -39,7 +39,7 @@
             $('.table').dataTable({
                 "bProcessing": true,
                 "bServerSide": true,
-                "bStateSave": false,
+                "bStateSave": true,
                 "sAjaxSource": '@Url.Content("~/Inventory/GetDataTableResult")',
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
