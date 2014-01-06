@@ -110,7 +110,6 @@ namespace RussellGroup.Pims.Website.Controllers
         // GET: /Plant/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
             return View();
         }
 
@@ -128,7 +127,6 @@ namespace RussellGroup.Pims.Website.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", plant.CategoryId);
             return View(plant);
         }
 
@@ -144,7 +142,6 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", plant.CategoryId);
             return View(plant);
         }
 
@@ -161,7 +158,6 @@ namespace RussellGroup.Pims.Website.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", plant.CategoryId);
             return View(plant);
         }
 

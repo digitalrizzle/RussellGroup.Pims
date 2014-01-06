@@ -57,7 +57,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Comment, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Comment, new { @class = "col-span-10" })
+                @Html.TextAreaFor(model => model.Comment, new { @class = "col-span-10" })
                 @Html.ValidationMessageFor(model => model.Comment)
             </div>
         </div>

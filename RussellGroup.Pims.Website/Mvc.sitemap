@@ -9,15 +9,19 @@
       <mvcSiteMapNode title="Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
       <mvcSiteMapNode title="Delete" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
     </mvcSiteMapNode>
+    <mvcSiteMapNode title="Plant" controller="Plant" action="Index">
+      <mvcSiteMapNode title="Edit" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Delete" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+    </mvcSiteMapNode>
     <mvcSiteMapNode title="Inventory" controller="Inventory" action="Index">
       <mvcSiteMapNode title="Edit" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
       <mvcSiteMapNode title="Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
       <mvcSiteMapNode title="Delete" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
     </mvcSiteMapNode>
-    <mvcSiteMapNode title="Plant" controller="Plant" action="Index">
-      <mvcSiteMapNode title="Edit" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Delete" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+    <mvcSiteMapNode title="Hire" controller="Hire" action="Index">
+      <mvcSiteMapNode title="Plant" action="Plant" />
+      <mvcSiteMapNode title="Inventory" action="Inventory" />
     </mvcSiteMapNode>
   </mvcSiteMapNode>
 

@@ -21,9 +21,6 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "docket")]
         public string Docket { get; set; }
 
-        [Display(Name = "return docket")]
-        public string ReturnDocket { get; set; }
-
         [Display(Name = "started")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
@@ -38,6 +35,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public decimal? Rate { get; set; }
 
         [Display(Name = "comments")]
+        [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
         [Display(Name = "plant")]

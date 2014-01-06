@@ -16,6 +16,14 @@ namespace RussellGroup.Pims.DataMigration
             var sourcePlant = reader.GetValue("Plant no");
             var sourceJob = reader.GetValue("Job ID");
 
+            var docket = reader.GetValue("Doc no");
+            var returnDocket = reader.GetValue("Return doc no");
+            if (!string.IsNullOrEmpty(returnDocket) && returnDocket.Length >= 5)
+            {
+                docket = returnDocket;
+                Console.WriteLine("Docket no. overwritten: \"{0}\"", key);
+            }
+
             var plant = TargetContext.Plants.SingleOrDefault(f => f.XPlantId == sourcePlant);
 
             DateTime? whenStarted = null;
@@ -29,8 +37,7 @@ namespace RussellGroup.Pims.DataMigration
                 {
                     PlantId = plant.PlantId,
                     JobId = TargetContext.Jobs.Single(f => f.XJobId == sourceJob).JobId,
-                    Docket = reader.GetValue("Doc no"),
-                    ReturnDocket = reader.GetValue("Return doc no"),
+                    Docket = docket,
                     WhenStarted = whenStarted,
                     WhenEnded = whenEnded,
                     Rate = reader.GetValueOrNull<decimal>("Rate"),
