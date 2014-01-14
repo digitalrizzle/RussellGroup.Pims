@@ -26,9 +26,6 @@
                 @Html.DisplayNameFor(model => model.ProjectManager)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.QuantitySurveyor)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
             <th></th>
@@ -47,17 +44,16 @@
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
                     { "sWidth": "0%" },
-                    { "sWidth": "35%" },
+                    { "sWidth": "30%" },
                     { "sWidth": "10%" },
                     { "sWidth": "10%" },
+                    { "sWidth": "15%" },
                     { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "15%", "sClass": "right" }
+                    { "sWidth": "25%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [7] }
+                    { "bSortable": false, "aTargets": [6] }
                 ],
             });
         });

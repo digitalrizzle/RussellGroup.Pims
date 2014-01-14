@@ -21,6 +21,8 @@ namespace RussellGroup.Pims.DataMigration
                 XPlantNewId = reader.GetValue("PlantNew no"),
                 CategoryId = TargetContext.Categories.Single(f => f.Name == categoryName).CategoryId,
                 Description = reader.GetValue("Description"),
+                WhenPurchased = reader.GetDateTime("Start date"),
+                WhenDisused = reader.GetDateTime("End date"),
                 Rate = reader.GetValueOrNull<decimal>("Rate").Value,
                 Cost = reader.GetValueOrNull<decimal>("Cost") ?? 0,
                 Serial = reader.GetValue("Serial number"),

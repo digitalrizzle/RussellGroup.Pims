@@ -20,12 +20,14 @@ namespace RussellGroup.Pims.Website
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/DataTables-1.9.4/media/js/jquery.dataTables.js",
                       "~/Scripts/bootstrap-datepicker.js",
+                      "~/Scripts/typeahead.js",
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/DataTables-1.9.4/media/css/jquery.dataTables.css",
                       "~/Content/bootstrap-datepicker.css",
+                      "~/Content/typeahead.js-bootstrap.css",
                       "~/Content/site.css"));
         }
     }

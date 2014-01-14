@@ -10,7 +10,7 @@ namespace RussellGroup.Pims.DataAccess.Models
     public class Setting
     {
         [Key]
-        [Required]
+        [Required(AllowEmptyStrings=false)]
         public string Key { get; set; }
 
         public string Value { get; set; }

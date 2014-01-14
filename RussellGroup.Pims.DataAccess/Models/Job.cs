@@ -13,6 +13,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public int JobId { get; set; }
 
         [Obsolete]
+        [Display(Name = "id")]
         public string XJobId { get; set; }
 
         [Display(Name = "description")]
@@ -54,9 +55,9 @@ namespace RussellGroup.Pims.DataAccess.Models
         }
 
         [Display(Name = "inventory hire")]
-        public virtual ICollection<InventoryHire> InventoryHire { get; set; }
+        public virtual ICollection<InventoryHire> InventoryHires { get; set; }
 
         [Display(Name = "plant hire")]
-        public virtual ICollection<PlantHire> PlantHire { get; set; }
+        public virtual ICollection<PlantHire> PlantHires { get; set; }
     }
 }

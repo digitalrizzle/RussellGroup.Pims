@@ -14,16 +14,22 @@
         <tr>
             <th></th>
             <th>
+                @Html.DisplayNameFor(model => model.XPlantId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.XPlantNewId)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Serial)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FixedAssetCode)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDisused)
+            </th>
+            <th class="center">
+                @Html.DisplayNameFor(model => model.IsHired)
             </th>
             <th></th>
         </tr>
@@ -41,15 +47,17 @@
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
                     { "sWidth": "0%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
                     { "sWidth": "35%" },
-                    { "sWidth": "15%" },
-                    { "sWidth": "15%" },
                     { "sWidth": "20%" },
+                    { "sWidth": "5%", "sClass": "center" },
+                    { "sWidth": "5%", "sClass": "center" },
                     { "sWidth": "15%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [5] }
+                    { "bSortable": false, "aTargets": [6, 7] }
                 ],
             });
         });

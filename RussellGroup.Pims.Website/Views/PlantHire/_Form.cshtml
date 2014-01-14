@@ -1,0 +1,84 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.PlantHire
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.JobId)
+        @if (ViewBag.Title == "Edit")
+        { <text>@Html.HiddenFor(model => model.PlantHireId)</text> }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PlantId, "PlantId", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.PlantId, ViewBag.Plants as SelectList)
+                @Html.ValidationMessageFor(model => model.PlantId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Docket, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Docket)
+                @Html.ValidationMessageFor(model => model.Docket)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WhenStarted, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.WhenStarted, "{0:d/MM/yyyy}", new { @class = "col-span-1" })
+                    <span id="WhenStarted-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+                </div>
+                @Html.ValidationMessageFor(model => model.WhenStarted)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WhenEnded, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.WhenEnded, "{0:d/MM/yyyy}", new { @class = "col-span-1" })
+                    <span id="WhenEnded-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+                </div>
+                @Html.ValidationMessageFor(model => model.WhenEnded)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Rate, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Rate)
+                @Html.ValidationMessageFor(model => model.Rate)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Comment, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Comment, new { @class = "col-span-10" })
+                @Html.ValidationMessageFor(model => model.Comment)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @if (ViewBag.Title == "Edit")
+                {
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                }
+                else
+                {
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                }
+                &nbsp;
+                @Html.ActionLink("Cancel", "Index", new { id = Model.JobId }, new { @class = "btn-cancel" })
+            </div>
+        </div>
+    </div>
+}

@@ -61,19 +61,19 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.PlantHire)
+            @Html.DisplayNameFor(model => model.PlantHires)
         </dt>
 
         <dd>
-            @Html.ActionLink(Model.PlantHire.Count.ToString(), "Index", "PlantHire", new { id = Model.JobId }, null)
+            @Html.ActionLink(Model.PlantHires.Count.ToString(), "Index", "PlantHire", new { id = Model.JobId }, null)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.InventoryHire)
+            @Html.DisplayNameFor(model => model.InventoryHires)
         </dt>
 
         <dd>
-            @Html.ActionLink(Model.InventoryHire.Count.ToString(), "Index", "InventoryHire", new { id = Model.JobId }, null)
+            @Html.ActionLink(Model.InventoryHires.Count.ToString(), "Index", "InventoryHire", new { id = Model.JobId }, null)
         </dd>
     </dl>
 
@@ -93,7 +93,7 @@
                     <input type="submit" value="Delete" class="btn btn-danger" />
                     <text>&nbsp;</text>
                 }
-                @Html.ActionLink("Index", "Index")
+                @Html.ActionLink("Cancel", "Index")
             }
         </dd>
     </dl>
