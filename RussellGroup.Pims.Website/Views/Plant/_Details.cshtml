@@ -29,6 +29,22 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.WhenPurchased)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WhenPurchased)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WhenDisused)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WhenDisused)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Rate)
         </dt>
 
@@ -104,7 +120,7 @@
                     <input type="submit" value="Delete" class="btn btn-danger" />
                     <text>&nbsp;</text>
                 }
-                @Html.ActionLink("Index", "Index")
+                @Html.ActionLink("Cancel", "Index")
             }
         </dd>
     </dl>

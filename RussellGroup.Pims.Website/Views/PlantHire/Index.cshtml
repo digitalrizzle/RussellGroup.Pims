@@ -1,0 +1,100 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Job
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Plant Hire</h2>
+<h3>@Model.Description</h3>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { id = Model.JobId })
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().PlantHireId)
+            </th>
+            <th>
+                @Html.Encode("plant id")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Docket)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().WhenStarted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().WhenEnded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Rate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Comment)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model.PlantHires)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PlantHireId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Plant.XPlantId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Docket)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WhenStarted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WhenEnded)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comment)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.PlantHireId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.PlantHireId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.PlantHireId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.table').dataTable({
+                "bProcessing": true,
+                "bStateSave": true,
+                "sPaginationType": 'full_numbers',
+                "aoColumns": [
+                    { "sWidth": "0%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "35%" },
+                    { "sWidth": "15%", "sClass": "right" }
+                ],
+                "aoColumnDefs": [
+                    { "bVisible": false, "aTargets": [0] },
+                    { "bSortable": false, "aTargets": [7] }
+                ],
+            });
+        });
+    </script>
+}

@@ -36,6 +36,28 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.WhenPurchased, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.WhenPurchased, "{0:d/MM/yyyy}", new { @class = "col-span-1" })
+                    <span id="WhenPurchased-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+                </div>
+                @Html.ValidationMessageFor(model => model.WhenPurchased)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WhenDisused, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.WhenDisused, "{0:d/MM/yyyy}", new { @class = "col-span-1" })
+                    <span id="WhenDisused-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+                </div>
+                @Html.ValidationMessageFor(model => model.WhenDisused)
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.Rate, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.TextBoxFor(model => model.Rate, new { @class = "col-span-1" })
@@ -86,7 +108,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Category, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("CategoryId")
+                @Html.DropDownListFor(model => model.CategoryId, ViewBag.Categories as SelectList)
                 @Html.ValidationMessageFor(model => model.CategoryId)
             </div>
         </div>

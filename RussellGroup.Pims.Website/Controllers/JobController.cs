@@ -34,8 +34,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 sortColumnIndex == 1 ? c.Description :
                     sortColumnIndex == 2 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
                         sortColumnIndex == 3 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                            sortColumnIndex == 4 ? (c.ProjectManager != null ? c.ProjectManager.Name : string.Empty) :
-                                sortColumnIndex == 5 ? (c.QuantitySurveyor != null ? c.QuantitySurveyor.Name : string.Empty) : c.Status.ToString());
+                            sortColumnIndex == 4 ? (c.ProjectManager != null ? c.ProjectManager.Name : string.Empty) : c.Status.ToString());
 
             // sorting
             IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
@@ -51,16 +50,15 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.ProjectManager != null ? c.ProjectManager.Name : string.Empty,
-                    c.QuantitySurveyor != null ? c.QuantitySurveyor.Name : string.Empty,
                     c.Status.ToString(),
-                    this.CrudLinks(new { id = c.JobId })
+                    this.CrudAndCheckLinks(new { id = c.JobId })
                 });
 
             // filter for sSearch
-            string search = Request["sSearch"];
+            string hint = Request["sSearch"];
             List<string[]> searched = new List<string[]>();
 
-            if (string.IsNullOrEmpty(search))
+            if (string.IsNullOrEmpty(hint))
             {
                 searched.AddRange(displayData);
             }
@@ -72,7 +70,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     // don't include in the search the CRUD links either
                     for (int index = 0; index < row.Length - 1; index++)
                     {
-                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(hint, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             searched.Add(row);
                             break;
@@ -206,7 +204,19 @@ namespace RussellGroup.Pims.Website.Controllers
             }
             base.Dispose(disposing);
         }
-        
+
+        private string CrudAndCheckLinks(object routeValues)
+        {
+            var links = this.CrudLinks(routeValues);
+
+            var checkin = string.Format("<a href=\"{0}\">{1}</a>", Url.Action("Checkin", "Hire", routeValues), "Checkin");
+            var checkout = string.Format("<a href=\"{0}\">{1}</a>", Url.Action("Checkout", "Hire", routeValues), "Checkout");
+
+            links += string.Format(" | {0} | {1}", checkin, checkout);
+
+            return links;
+        }
+
         private new ActionResult View()
         {
             return View(null);

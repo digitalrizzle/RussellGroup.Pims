@@ -9,14 +9,9 @@
     padding-right: 15px;
 }
 
-/* Set width on the form input elements since they're 100% wide by default */
-/*
-input,
-select,
-textarea {
-    max-width: 280px;
+input {
+    padding-left: 4px;
 }
-*/
 
 select {
     height: 28px;
@@ -132,4 +127,31 @@ dt, dd {
 
 footer {
     font-size: smaller;
+}
+
+/* typeahead */
+
+.twitter-typeahead input[disabled] {
+    border: 1px solid #abadb3;
+    height: 26px;
+}
+
+.twitter-typeahead .tt-query {
+    background-color: white !important;
+    border-radius: inherit !important;
+    width: 560px;
+    height: inherit;
+}
+
+.tt-input-group {
+    padding-bottom: 10px;
+}
+
+.typeahead-description {
+    font-weight: bold;
+}
+
+.typeahead-id {
+    display: inline;
+    font-family: 'Courier New', Courier, monospace;
 }

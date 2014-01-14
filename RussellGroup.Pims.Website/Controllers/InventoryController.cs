@@ -54,10 +54,10 @@ namespace RussellGroup.Pims.Website.Controllers
                 });
 
             // filter for sSearch
-            string search = Request["sSearch"];
+            string hint = Request["sSearch"];
             List<string[]> searched = new List<string[]>();
 
-            if (string.IsNullOrEmpty(search))
+            if (string.IsNullOrEmpty(hint))
             {
                 searched.AddRange(displayData);
             }
@@ -69,7 +69,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     // don't include in the search the CRUD links either
                     for (int index = 0; index < row.Length - 1; index++)
                     {
-                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0)
+                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(hint, StringComparison.OrdinalIgnoreCase) >= 0)
                         {
                             searched.Add(row);
                             break;
@@ -205,7 +205,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(Inventory inventory)
         {
-            var categories = db.Contacts.OrderBy(f => f.Name);
+            var categories = db.Categories.OrderBy(f => f.Name);
             var category = inventory != null ? inventory.CategoryId : 0;
 
             ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);

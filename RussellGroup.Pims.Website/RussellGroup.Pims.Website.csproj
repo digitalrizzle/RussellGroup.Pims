@@ -29,6 +29,8 @@
     <DefineConstants>TRACE;DEBUG;LOCAL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabases>false</PublishDatabases>
+    <IncludeIisSettings>false</IncludeIisSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -134,6 +136,7 @@
     <Compile Include="Controllers\InventoryController.cs" />
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Controllers\PlantController.cs" />
+    <Compile Include="Controllers\PlantHireController.cs" />
     <Compile Include="Helpers\ActiveDirectoryHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\VersionHelper.cs" />
@@ -232,6 +235,7 @@
     <Content Include="Content\DataTables-1.9.4\media\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables-1.9.4\media\images\tick-gray.png" />
     <Content Include="Content\DataTables-1.9.4\media\images\tick-green.png" />
+    <Content Include="Content\typeahead.js-bootstrap.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -287,15 +291,18 @@
     <Content Include="Content\DataTables-1.9.4\extras\TableTools\media\images\psd\file_types.psd" />
     <Content Include="Content\DataTables-1.9.4\extras\TableTools\media\images\psd\copy document.psd" />
     <Content Include="Content\DataTables-1.9.4\extras\TableTools\media\images\psd\collection.psd" />
-    <Content Include="Mvc.sitemap" />
+    <Content Include="Mvc.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="MvcSiteMapSchema.xsd" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\DataTables-1.9.4\extras\TableTools\media\js\ZeroClipboard.js" />
     <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.dataTables.js" />
     <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.dataTables.min.js" />
     <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.js" />
-    <Content Include="Scripts\view-inventory.js" />
-    <Content Include="Scripts\view-job.js" />
+    <Content Include="Scripts\typeahead.js" />
+    <Content Include="Scripts\typeahead.min.js" />
+    <Content Include="Scripts\view-datepickers.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ar.js" />
@@ -392,7 +399,14 @@
     <Content Include="Views\Inventory\Delete.cshtml" />
     <Content Include="Views\Inventory\Details.cshtml" />
     <Content Include="Views\Inventory\Edit.cshtml" />
-    <Content Include="Views\Hire\Plant.cshtml" />
+    <Content Include="Views\Hire\Checkout.cshtml" />
+    <Content Include="Views\PlantHire\Create.cshtml" />
+    <Content Include="Views\PlantHire\Delete.cshtml" />
+    <Content Include="Views\PlantHire\Details.cshtml" />
+    <Content Include="Views\PlantHire\Edit.cshtml" />
+    <Content Include="Views\PlantHire\Index.cshtml" />
+    <Content Include="Views\PlantHire\_Details.cshtml" />
+    <Content Include="Views\PlantHire\_Form.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RussellGroup.Pims.DataAccess\RussellGroup.Pims.DataAccess.csproj">

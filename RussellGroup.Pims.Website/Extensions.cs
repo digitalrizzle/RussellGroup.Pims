@@ -8,6 +8,11 @@ namespace RussellGroup.Pims.Website
 {
     public static class Extensions
     {
+        public static string ToYesNo(this bool value)
+        {
+            return value ? "Yes" : "No";
+        }
+
         public static string ActionLink(this Controller controller, string linkText, string actionName, object routeValues)
         {
             return string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action(actionName, routeValues), linkText);
@@ -19,9 +24,9 @@ namespace RussellGroup.Pims.Website
             var details = string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action("Details", routeValues), "Details");
             var delete = string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action("Delete", routeValues), "Delete");
 
-            var link = string.Format("{0} | {1} | {2}", edit, details, delete);
+            var links = string.Format("{0} | {1} | {2}", edit, details, delete);
 
-            return link;
+            return links;
         }
     }
 }

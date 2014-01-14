@@ -30,63 +30,60 @@ namespace RussellGroup.Pims.Website.Controllers
 
             // ordering
             Func<Plant, string> ordering = (c =>
-                sortColumnIndex == 1 ? c.Description :
-                    sortColumnIndex == 2 ? c.Serial :
-                        sortColumnIndex == 3 ? c.FixedAssetCode : c.Category.Name);
+                sortColumnIndex == 1 ? c.XPlantId :
+                    sortColumnIndex == 2 ? c.XPlantNewId :
+                        sortColumnIndex == 3 ? c.Description :
+                            sortColumnIndex == 4 ? c.Category.Name : c.IsDisused.ToString());
 
             // sorting
             IEnumerable<Plant> ordered = Request["sSortDir_0"] == "asc" ?
                 entries.OrderBy(ordering) :
                 entries.OrderByDescending(ordering);
 
-            // get the display values
-            var displayData = ordered
-                .Select(c => new string[]
-                {
-                    c.PlantId.ToString(),
-                    c.Description,
-                    c.Serial,
-                    c.FixedAssetCode,
-                    c.Category != null ? c.Category.Name : string.Empty,
-                    this.CrudLinks(new { id = c.PlantId })
-                });
-
             // filter for sSearch
-            string search = Request["sSearch"];
-            List<string[]> searched = new List<string[]>();
+            string hint = Request["sSearch"].ToUpperInvariant();
+            IEnumerable<Plant> searched;
 
-            if (string.IsNullOrEmpty(search))
+            if (string.IsNullOrEmpty(hint))
             {
-                searched.AddRange(displayData);
+                searched = ordered;
             }
             else
             {
-                foreach (string[] row in displayData)
-                {
-                    // don't include in the search the id as it is hidden from the display
-                    // don't include in the search the CRUD links either
-                    for (int index = 0; index < row.Length - 1; index++)
-                    {
-                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(search, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            searched.Add(row);
-                            break;
-                        }
-                    }
-                }
+                // don't include in the search the id as it is hidden from the display
+                searched = ordered.Where(f =>
+                    (f.XPlantId != null && f.XPlantId.ToUpperInvariant().Contains(hint)) ||
+                    (f.XPlantNewId != null && f.XPlantNewId.ToUpperInvariant().Contains(hint)) ||
+                    (f.Description != null && f.Description.ToUpperInvariant().Contains(hint)) ||
+                    (f.Category != null && f.Category.Name.ToUpperInvariant().Contains(hint))
+                );
             }
 
             // filter for the display
             var filtered = searched
-                .Skip(searched.Count > model.iDisplayLength ? model.iDisplayStart : 0)
-                .Take(searched.Count > model.iDisplayLength ? model.iDisplayLength : searched.Count);
+                .Skip(searched.Count() > model.iDisplayLength ? model.iDisplayStart : 0)
+                .Take(searched.Count() > model.iDisplayLength ? model.iDisplayLength : searched.Count());
+
+            // get the display values
+            var displayData = filtered
+                .Select(c => new string[]
+                {
+                    c.PlantId.ToString(),
+                    c.XPlantId,
+                    c.XPlantNewId,
+                    c.Description,
+                    c.Category != null ? c.Category.Name : string.Empty,
+                    c.IsDisused.ToYesNo(),
+                    c.IsHired.ToYesNo(),
+                    this.CrudLinks(new { id = c.PlantId })
+                });
 
             var result = new
             {
                 sEcho = model.sEcho,
                 iTotalRecords = db.Plants.Count(),
                 iTotalDisplayRecords = searched.Count(),
-                aaData = filtered
+                aaData = displayData
             };
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -118,7 +115,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="PlantId,CategoryId,XPlantId,XPlantNewId,Description,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool")] Plant plant)
+        public async Task<ActionResult> Create([Bind(Include = "PlantId,CategoryId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool")] Plant plant)
         {
             if (ModelState.IsValid)
             {
@@ -150,7 +147,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="PlantId,CategoryId,XPlantId,XPlantNewId,Description,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool")] Plant plant)
+        public async Task<ActionResult> Edit([Bind(Include = "PlantId,CategoryId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool")] Plant plant)
         {
             if (ModelState.IsValid)
             {
@@ -203,7 +200,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(Plant plant)
         {
-            var categories = db.Contacts.OrderBy(f => f.Name);
+            var categories = db.Categories.OrderBy(f => f.Name);
             var category = plant != null ? plant.CategoryId : 0;
 
             ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);

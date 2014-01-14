@@ -28,7 +28,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             factory.GenerateAuditTrigger("Plants", "PlantId");
             factory.GenerateAuditTrigger("PlantHires", "PlantHireId");
             factory.GenerateAuditTrigger("Roles", "RoleId");
-            factory.GenerateAuditTrigger("Settings", "Key");
+            //factory.GenerateAuditTrigger("Settings", "Key");
             factory.GenerateAuditTrigger("Users", "UserId");
 
             factory.GenerateAuditTrigger("UserRoles", "User_UserId", "Role_RoleId");
@@ -36,7 +36,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             // seed
             var settings = new List<Setting>
             {
-                new Setting { Key = "IsAuditingEnabled", Value = "1" }
+                new Setting { Key = "IsAuditingEnabled", Value = "TRUE" }
             };
 
             settings.ForEach(setting => context.Settings.AddOrUpdate(setting));

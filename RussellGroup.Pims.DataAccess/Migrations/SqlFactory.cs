@@ -42,7 +42,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             builder.AppendLine();
             builder.AppendLine("    SET NOCOUNT ON;");
             builder.AppendLine();
-            builder.AppendLine("    IF NOT (SELECT([value]) FROM [dbo].[Settings] WHERE [key] = 'IsAuditingEnabled') IN ('TRUE', '1')");
+            builder.AppendLine("    IF NOT (SELECT([value]) FROM [dbo].[Settings] WHERE [Key] = 'IsAuditingEnabled') IN ('TRUE', '1')");
             builder.AppendLine("        RETURN");
             builder.AppendLine();
             builder.AppendLine("    DECLARE");

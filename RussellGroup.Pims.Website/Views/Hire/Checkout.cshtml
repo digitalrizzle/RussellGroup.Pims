@@ -1,0 +1,120 @@
+﻿@model RussellGroup.Pims.DataAccess.ViewModels.HireTransaction
+
+@{
+    ViewBag.Title = "Hire";
+}
+
+<h2>Checkout</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Docket, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Docket)
+                @Html.ValidationMessageFor(model => model.Docket)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Job, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.JobId, ViewBag.Jobs as SelectList)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PlantHires, new { @class = "control-label col-md-2" })
+            <div id="plant" class="col-md-10"></div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InventoryHires, new { @class = "control-label col-md-2" })
+            <div id="inventory" class="col-md-10"></div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Checkout" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+        var nextPlant = 0, nextInventory = 0;
+
+        $(document).ready(function () {
+            @foreach (var plant in Model.Plants) { <text>addFormField("plant", "@plant.Description", "@plant.PlantId");</text> }
+            @foreach (var inventory in Model.Inventories) { <text>addFormField("inventory", "@inventory.Description", "@inventory.InventoryId");</text> }
+
+            addFormField("plant", "", "");
+            addFormField("inventory", "", "");
+        });
+
+        var SimpleEngine = {
+            compile: function (template) {
+                return {
+                    render: function (context) {
+                        return template.replace(/\{\{(\w+)\}\}/g,
+                            function(match, p1) {
+                                return $('<div/>').text(context[p1] || '').html();
+                            });
+                    }
+                };
+            }
+        };
+
+        function addFormField(prefix, description, id) {
+            var next = prefix == "plant" ? nextPlant : nextInventory;
+
+            var span = '<span id="' + prefix + '-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign"></span>';
+            var div = '<div class="input-group tt-input-group"><input id="' + prefix + '-field' + ++next + '" name="' + prefix + '-field' + next + '" autocomplete="off" placeholder="begin typing a ' + prefix + ' item..." value="' + description + '" /><input id="' + prefix + '-id-field' + next + '" name="' + prefix + '-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
+
+            $("#" + prefix).append($(div));
+            $("#" + prefix + "-field" + (next - 1)).parent().after($(span));
+            wire(prefix, "#" + prefix + "-field" + next, "#" + prefix + "-field" + (next - 1) + "-icon");
+
+            if (prefix == "plant")
+                nextPlant = next;
+            else
+                nextInventory = next;
+        }
+
+        function wire(prefix, input, button) {
+            var url = prefix == "plant" ? "@Url.Content("~/Hire/GetPlantSuggestions?q=%QUERY")" : "@Url.Content("~/Hire/GetInventorySuggestions?q=%QUERY")";
+
+            $(input).typeahead({
+                name: prefix + "-hire",
+                remote: url,
+                valueKey: "description",
+                template: [
+                    '<p class="typeahead-description">{{description}}</p>',
+                    '<p class="typeahead-id">{{xid}}</p>',
+                ].join(""),
+                engine: SimpleEngine
+            });
+
+            $(input).on("typeahead:selected", function (object, datum) {
+                $(this).attr("disabled", "disabled");
+                $(this).parent().parent().children("[id^=" + prefix + "-id-field]").val(datum.id);
+                addFormField(prefix, "", "");
+            });
+
+            if (button) {
+                $(button).on("click", function () {
+                    $(this).prev().children(".hire-typeahead").typeahead("destroy");
+                    $(this).parent().remove();
+                });
+            }
+        }
+</script>
+}
