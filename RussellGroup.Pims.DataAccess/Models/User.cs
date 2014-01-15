@@ -26,5 +26,14 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [Display(Name = "roles")]
         public virtual ICollection<Role> Roles { get; set; }
+
+        [Display(Name="role")]
+        public Role HighestRole
+        {
+            get
+            {
+                return Roles != null ? Roles.SingleOrDefault(r => r.RoleId == Roles.Max(f => f.RoleId)) : null;
+            }
+        }
     }
 }

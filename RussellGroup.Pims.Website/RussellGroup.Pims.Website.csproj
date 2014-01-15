@@ -137,6 +137,7 @@
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Controllers\PlantController.cs" />
     <Compile Include="Controllers\PlantHireController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Helpers\ActiveDirectoryHelper.cs" />
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\VersionHelper.cs" />
@@ -407,6 +408,14 @@
     <Content Include="Views\PlantHire\Index.cshtml" />
     <Content Include="Views\PlantHire\_Details.cshtml" />
     <Content Include="Views\PlantHire\_Form.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Home\Unauthorized.cshtml" />
+    <Content Include="Views\User\_Details.cshtml" />
+    <Content Include="Views\User\_Form.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RussellGroup.Pims.DataAccess\RussellGroup.Pims.DataAccess.csproj">
