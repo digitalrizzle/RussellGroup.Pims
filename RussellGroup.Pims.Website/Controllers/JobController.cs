@@ -52,7 +52,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.ProjectManager != null ? c.ProjectManager.Name : string.Empty,
                     c.Status.ToString(),
-                    this.CrudAndCheckLinks(new { id = c.JobId })
+                    this.CrudAndCheckLinks(c.Status, new { id = c.JobId })
                 });
 
             // filter for sSearch
@@ -206,14 +206,17 @@ namespace RussellGroup.Pims.Website.Controllers
             base.Dispose(disposing);
         }
 
-        private string CrudAndCheckLinks(object routeValues)
+        private string CrudAndCheckLinks(Status status, object routeValues)
         {
             var links = this.CrudLinks(routeValues);
 
-            var checkin = string.Format("<a href=\"{0}\">{1}</a>", Url.Action("Checkin", "Hire", routeValues), "Checkin");
-            var checkout = string.Format("<a href=\"{0}\">{1}</a>", Url.Action("Checkout", "Hire", routeValues), "Checkout");
+            if (status == Status.Incomplete)
+            {
+                var checkin = string.Format("<a href=\"{0}\">{1}</a>", Url.Action("Checkin", "Hire", routeValues), "Checkin");
+                var checkout = string.Format("<a href=\"{0}\">{1}</a>", Url.Action("Checkout", "Hire", routeValues), "Checkout");
 
-            links += string.Format(" | {0} | {1}", checkin, checkout);
+                links = string.Format("{0} | {1} | {2}", checkout, checkin, links);
+            }
 
             return links;
         }
