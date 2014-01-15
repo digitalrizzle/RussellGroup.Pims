@@ -44,7 +44,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 
             var users = new List<User>
             {
-                new User { UserId = 1, Name = "Brett", IsGroup = false, IsEnabled = true }
+                new User { UserId = 1, Name = @"BRETT-PC\Brett", IsGroup = false, IsEnabled = true }
             };
 
             users.ForEach(user => context.Users.AddOrUpdate(user));

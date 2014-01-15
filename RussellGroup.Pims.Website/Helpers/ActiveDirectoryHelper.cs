@@ -20,6 +20,7 @@ namespace RussellGroup.Pims.Website.Helpers
 
         public ActiveDirectoryHelper()
         {
+#if !LOCAL
             var domain = ConfigurationManager.AppSettings["Domain"];
             var container = ConfigurationManager.AppSettings["Container"];
             //var storeUserName = ConfigurationManager.AppSettings["StoreUserName"];
@@ -33,12 +34,15 @@ namespace RussellGroup.Pims.Website.Helpers
             //{
             Context = new PrincipalContext(ContextType.Domain, domain, container);
             //}
+#endif
         }
 
         void IDisposable.Dispose()
         {
             db.Dispose();
+#if !LOCAL
             Context.Dispose();
+#endif
         }
 
         private IEnumerable<Principal> Search(Principal principal)

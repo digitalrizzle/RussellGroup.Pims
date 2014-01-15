@@ -18,7 +18,6 @@ namespace RussellGroup.Pims.Website
 
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
-#if !LOCAL
             if (httpContext == null)
             {
                 throw new ArgumentNullException("httpContext");
@@ -37,7 +36,6 @@ namespace RussellGroup.Pims.Website
                     return false;
                 }
             }
-#endif
 
             return true;
         }

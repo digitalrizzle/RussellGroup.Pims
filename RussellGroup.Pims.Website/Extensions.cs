@@ -20,9 +20,9 @@ namespace RussellGroup.Pims.Website
 
         public static string CrudLinks(this Controller controller, object routeValues)
         {
-            var edit = string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action("Edit", routeValues), "Edit");
-            var details = string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action("Details", routeValues), "Details");
-            var delete = string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action("Delete", routeValues), "Delete");
+            var edit = ActionLink(controller, "Edit", "Edit", routeValues);
+            var details = ActionLink(controller, "Details", "Details", routeValues);
+            var delete = ActionLink(controller, "Delete", "Delete", routeValues);
 
             var links = string.Format("{0} | {1} | {2}", edit, details, delete);
 

@@ -11,6 +11,8 @@ using RussellGroup.Pims.DataAccess.Models;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
+    [HandleError]
+    [PimsAuthorize(Roles = RoleType.All)]
     public class PlantController : Controller
     {
         private PimsContext db = new PimsContext();

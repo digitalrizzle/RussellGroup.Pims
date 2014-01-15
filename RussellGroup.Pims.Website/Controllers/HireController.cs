@@ -10,6 +10,8 @@ using System.Web.Mvc;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
+    [HandleError]
+    [PimsAuthorize(Roles = RoleType.All)]
     public class HireController : Controller
     {
         private PimsContext db = new PimsContext();
@@ -33,7 +35,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var result = db
                 .Plants
-                .Where(f => !f.WhenDisused.HasValue && (f.XPlantId.Contains(hint) || f.Description.Contains(hint)))
+                .Where(f => !f.WhenDisused.HasValue && (f.XPlantId.StartsWith(hint) || f.Description.Contains(hint)))
                 .Take(5)
                 .OrderBy(f => f.Description)
                 .Select(f => new { id = f.PlantId, description = f.Description, xid = f.XPlantId })
@@ -50,7 +52,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var result = db
                 .Inventories
-                .Where(f => !f.WhenDisused.HasValue && (f.XInventoryId.Contains(hint) || f.Description.Contains(hint)))
+                .Where(f => !f.WhenDisused.HasValue && (f.XInventoryId.StartsWith(hint) || f.Description.Contains(hint)))
                 .Take(5)
                 .OrderBy(f => f.Description)
                 .Select(f => new { id = f.InventoryId, description = f.Description, xid = f.XInventoryId })
@@ -89,7 +91,7 @@ namespace RussellGroup.Pims.Website.Controllers
             if (ModelState.IsValid)
             {
                 await Save(transaction);
-                return RedirectToAction("Index", "PlantHire", new { id = jobId });
+                return RedirectToAction("Details", "Job", new { id = jobId });
             }
 
             return View(transaction);

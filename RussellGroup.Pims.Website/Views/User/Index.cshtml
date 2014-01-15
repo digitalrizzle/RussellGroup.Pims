@@ -1,0 +1,85 @@
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.User>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HighestRole)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsGroup)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsEnabled)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if (item.HighestRole != null)
+                    { <text>@Html.Encode(item.HighestRole.Name)</text> }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsGroup)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsEnabled)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.UserId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.UserId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.table').dataTable({
+                "bProcessing": true,
+                "bStateSave": true,
+                "sPaginationType": 'full_numbers',
+                "aoColumns": [
+                    { "sWidth": "0%" },
+                    { "sWidth": "35%" },
+                    { "sWidth": "20%" },
+                    { "sWidth": "15%", "sClass": "center" },
+                    { "sWidth": "15%", "sClass": "center" },
+                    { "sWidth": "15%", "sClass": "right" }
+                ],
+                "aoColumnDefs": [
+                    { "bVisible": false, "aTargets": [0] },
+                    { "bSortable": false, "aTargets": [5] }
+                ],
+            });
+        });
+    </script>
+}

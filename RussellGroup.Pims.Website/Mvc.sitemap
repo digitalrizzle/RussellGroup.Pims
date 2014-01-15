@@ -30,6 +30,7 @@
       <mvcSiteMapNode title="Delete" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Checkout" controller="Hire" action="Checkout" />
+    <mvcSiteMapNode title="Users" controller="User" action="Index" />
   </mvcSiteMapNode>
 
 </mvcSiteMap>

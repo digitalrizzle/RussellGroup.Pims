@@ -54,6 +54,7 @@
     <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Enumerations.cs" />
     <Compile Include="Models\Inventory.cs" />
+    <Compile Include="Models\ModelExtensions.cs" />
     <Compile Include="Models\PimsContext.cs" />
     <Compile Include="Models\InventoryHire.cs" />
     <Compile Include="Models\Job.cs" />
