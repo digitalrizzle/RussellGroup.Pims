@@ -8,17 +8,14 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
-using MvcSiteMapProvider;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [HandleError]
-    [PimsAuthorize(Roles = RoleType.All)]
-    public class PlantHireController : Controller
+    public class InventoryHireController : Controller
     {
         private PimsContext db = new PimsContext();
 
-        // GET: /PlantHire/5
+        // GET: /InventoryHire/5
         public async Task<ActionResult> Index(int? id)
         {
             if (id == null)
@@ -34,23 +31,22 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(job);
         }
 
-        // GET: /PlantHire/Details/5
+        // GET: /InventoryHire/Details/5
         public async Task<ActionResult> Details(int? id, int? hireId)
         {
             if (hireId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await db.PlantHires.FindAsync(hireId);
+            InventoryHire hire = await db.InventoryHires.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
             }
-
             return View(hire);
         }
 
-        // GET: /PlantHire/Create/5
+        // GET: /InventoryHire/Create/5
         public async Task<ActionResult> Create(int? id)
         {
             if (id == null)
@@ -63,7 +59,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            var hire = new PlantHire() 
+            var hire = new InventoryHire()
             {
                 Job = job,
                 JobId = job.JobId,
@@ -73,30 +69,30 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(hire);
         }
 
-        // POST: /PlantHire/Create
+        // POST: /InventoryHire/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="PlantHireId,PlantId,JobId,Docket,WhenStarted,WhenEnded,Rate,Comment")] PlantHire hire)
+        public async Task<ActionResult> Create([Bind(Include="InventoryHireId,InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
             {
-                db.PlantHires.Add(hire);
+                db.InventoryHires.Add(hire);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index", new { id = hire.JobId });
+                return RedirectToAction("Index");
             }
             return View(hire);
         }
 
-        // GET: /PlantHire/Edit/5
+        // GET: /InventoryHire/Edit/5
         public async Task<ActionResult> Edit(int? id, int? hireId)
         {
             if (hireId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await db.PlantHires.FindAsync(hireId);
+            InventoryHire hire = await db.InventoryHires.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -104,12 +100,12 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(hire);
         }
 
-        // POST: /PlantHire/Edit/5
+        // POST: /InventoryHire/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="PlantHireId,PlantId,JobId,Docket,WhenStarted,WhenEnded,Rate,Comment")] PlantHire hire)
+        public async Task<ActionResult> Edit([Bind(Include="InventoryHireId,InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
             {
@@ -120,14 +116,14 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(hire);
         }
 
-        // GET: /PlantHire/Delete/5
+        // GET: /InventoryHire/Delete/5
         public async Task<ActionResult> Delete(int? id, int? hireId)
         {
             if (hireId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await db.PlantHires.FindAsync(hireId);
+            InventoryHire hire = await db.InventoryHires.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -135,13 +131,13 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(hire);
         }
 
-        // POST: /PlantHire/Delete/5
+        // POST: /InventoryHire/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int hireId)
         {
-            PlantHire hire = await db.PlantHires.FindAsync(hireId);
-            db.PlantHires.Remove(hire);
+            InventoryHire hire = await db.InventoryHires.FindAsync(hireId);
+            db.InventoryHires.Remove(hire);
             await db.SaveChangesAsync();
             return RedirectToAction("Index", new { id = hire.JobId });
         }
@@ -160,11 +156,11 @@ namespace RussellGroup.Pims.Website.Controllers
             throw new NotSupportedException();
         }
 
-        private ActionResult View(PlantHire hire)
+        private ActionResult View(InventoryHire hire)
         {
-            var plants = db.Plants.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XPlantId);
+            var inventories = db.Inventories.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XInventoryId);
 
-            ViewBag.Plants = new SelectList(plants, "PlantId", "XPlantId", hire.PlantId);
+            ViewBag.Inventories = new SelectList(inventories, "InventoryId", "XInventoryId", hire.InventoryId);
 
             return base.View(hire);
         }

@@ -1,4 +1,4 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.PlantHire
+﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHire
 
 <div>
     <h4>@ViewBag.Title</h4>
@@ -13,11 +13,11 @@
         </dd>
 
         <dt>
-            @Html.Encode("plant id")
+            @Html.Encode("inventory id")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Plant.XPlantId)
+            @Html.DisplayFor(model => model.Inventory.XInventoryId)
         </dd>
 
         <dt>
@@ -53,6 +53,14 @@
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Comment)
         </dt>
 
@@ -72,7 +80,7 @@
             {
                 if (ViewBag.Title == "Details")
                 {
-                    <text>@Html.ActionLink("Edit", "Edit", new { id = Model.JobId, hireId = Model.PlantHireId }) | </text>
+                    <text>@Html.ActionLink("Edit", "Edit", new { id = Model.JobId, hireId = Model.InventoryHireId }) | </text>
                 }
                 else
                 {

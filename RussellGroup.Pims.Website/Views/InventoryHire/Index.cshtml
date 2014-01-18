@@ -4,7 +4,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Plant Hire</h2>
+<h2>Inventory Hire</h2>
 <h3>@Model.Description</h3>
 
 <p>
@@ -14,39 +14,42 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().PlantHireId)
+                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().InventoryHireId)
             </th>
             <th>
-                @Html.Encode("plant id")
+                @Html.Encode("inventory id")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Docket)
+                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Docket)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().WhenStarted)
+                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().WhenStarted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().WhenEnded)
+                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().WhenEnded)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Rate)
+                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Rate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Comment)
+                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Comment)
             </th>
             <th></th>
         </tr>
     </thead>
 
     <tbody>
-        @foreach (var item in Model.PlantHires)
+        @foreach (var item in Model.InventoryHires)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PlantHireId)
+                    @Html.DisplayFor(modelItem => item.InventoryHireId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Plant.XPlantId)
+                    @Html.DisplayFor(modelItem => item.Inventory.XInventoryId)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Docket)
@@ -61,12 +64,15 @@
                     @Html.DisplayFor(modelItem => item.Rate)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Comment)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.PlantHireId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.PlantHireId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.PlantHireId })
+                    @Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.InventoryHireId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.InventoryHireId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.InventoryHireId })
                 </td>
             </tr>
         }
@@ -87,12 +93,13 @@
                     { "sWidth": "10%" },
                     { "sWidth": "10%" },
                     { "sWidth": "10%" },
-                    { "sWidth": "35%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "15%" },
                     { "sWidth": "15%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [7] }
+                    { "bSortable": false, "aTargets": [8] }
                 ],
             });
         });

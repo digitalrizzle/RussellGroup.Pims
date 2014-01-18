@@ -9,8 +9,17 @@
     padding-right: 15px;
 }
 
-input {
+input, textarea {
+    border: 1px solid #abadb3;
+}
+
+input[type=text], input[type=number] {
     padding-left: 4px;
+    height: 28px !important;
+}
+
+input[type=checkbox] {
+    height: 24px;
 }
 
 select {
