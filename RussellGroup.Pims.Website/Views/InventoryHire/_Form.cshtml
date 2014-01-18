@@ -1,22 +1,22 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.PlantHire
+﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHire
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
+    
     <div class="form-horizontal">
         <h4>@ViewBag.Title</h4>
         <hr />
         @Html.ValidationSummary(true)
         @Html.HiddenFor(model => model.JobId)
         @if (ViewBag.Title == "Edit")
-        { <text>@Html.HiddenFor(model => model.PlantHireId)</text> }
+        { <text>@Html.HiddenFor(model => model.InventoryHireId)</text> }
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PlantId, "plant id", new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.InventoryId, "inventory id", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.PlantId, ViewBag.Plants as SelectList)
-                @Html.ValidationMessageFor(model => model.PlantId)
+                @Html.DropDownListFor(model => model.InventoryId, ViewBag.Inventories as SelectList)
+                @Html.ValidationMessageFor(model => model.InventoryId)
             </div>
         </div>
 
@@ -55,6 +55,14 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Rate)
                 @Html.ValidationMessageFor(model => model.Rate)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Quantity)
+                @Html.ValidationMessageFor(model => model.Quantity)
             </div>
         </div>
 

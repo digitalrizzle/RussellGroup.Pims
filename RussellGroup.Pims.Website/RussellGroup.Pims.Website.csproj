@@ -41,6 +41,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
@@ -49,8 +53,13 @@
       <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="MvcSiteMapProvider">
-      <HintPath>..\packages\MvcSiteMapProvider.MVC5.Core.4.4.6\lib\net45\MvcSiteMapProvider.dll</HintPath>
+    <Reference Include="MvcSiteMapProvider, Version=4.4.8.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.Core.4.4.8\lib\net45\MvcSiteMapProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -63,6 +72,10 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.2\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -88,9 +101,6 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.0.0\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Optimization">
-      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.1\lib\net40\System.Web.Optimization.dll</HintPath>
-    </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Razor.3.0.0\lib\net45\System.Web.Razor.dll</HintPath>
@@ -107,20 +117,12 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.0.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <Private>True</Private>
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\packages\WebActivatorEx.2.0.4\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
-    </Reference>
-    <Reference Include="Antlr3.Runtime">
-      <Private>True</Private>
-      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -134,6 +136,7 @@
     <Compile Include="AuthorizationExtensions.cs" />
     <Compile Include="Controllers\HireController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\InventoryHireController.cs" />
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Controllers\PlantController.cs" />
     <Compile Include="Controllers\PlantHireController.cs" />
@@ -151,6 +154,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\DataTables-1.9.4\docs\media\css\doc.css" />
@@ -241,7 +246,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="MvcSiteMapProvider_Temp_ReadMe.txt" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -295,17 +299,23 @@
     <Content Include="Mvc.sitemap">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="MvcSiteMapSchema.xsd" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\DataTables-1.9.4\extras\TableTools\media\js\ZeroClipboard.js" />
     <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.dataTables.js" />
     <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.dataTables.min.js" />
     <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.js" />
+    <None Include="MvcSiteMapSchema.xsd" />
+    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.0.3.js" />
+    <Content Include="Scripts\jquery-2.0.3.min.js" />
+    <Content Include="Scripts\modernizr-2.7.1.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\typeahead.js" />
     <Content Include="Scripts\typeahead.min.js" />
     <Content Include="Scripts\view-datepickers.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ar.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.bg.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ca.js" />
@@ -350,9 +360,6 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.uk.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -368,15 +375,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MenuHelperModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Job\_Form.cshtml" />
     <Content Include="Views\Job\_Details.cshtml" />
     <Content Include="Views\Plant\Create.cshtml" />
@@ -416,6 +416,20 @@
     <Content Include="Views\Home\Unauthorized.cshtml" />
     <Content Include="Views\User\_Details.cshtml" />
     <Content Include="Views\User\_Form.cshtml" />
+    <Content Include="Views\InventoryHire\Create.cshtml" />
+    <Content Include="Views\InventoryHire\Delete.cshtml" />
+    <Content Include="Views\InventoryHire\Details.cshtml" />
+    <Content Include="Views\InventoryHire\Edit.cshtml" />
+    <Content Include="Views\InventoryHire\Index.cshtml" />
+    <Content Include="Views\InventoryHire\_Details.cshtml" />
+    <Content Include="Views\InventoryHire\_Form.cshtml" />
+    <Content Include="Scripts\jquery-2.0.3.min.map" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RussellGroup.Pims.DataAccess\RussellGroup.Pims.DataAccess.csproj">
@@ -424,9 +438,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
   </ItemGroup>

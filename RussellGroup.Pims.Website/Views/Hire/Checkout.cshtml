@@ -77,7 +77,7 @@
             var next = prefix == "plant" ? nextPlant : nextInventory;
 
             var span = '<span id="' + prefix + '-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign"></span>';
-            var div = '<div class="input-group tt-input-group"><input id="' + prefix + '-field' + ++next + '" name="' + prefix + '-field' + next + '" autocomplete="off" placeholder="begin typing a ' + prefix + ' item..." value="' + description + '" /><input id="' + prefix + '-id-field' + next + '" name="' + prefix + '-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
+            var div = '<div class="input-group tt-input-group"><input type="text" id="' + prefix + '-field' + ++next + '" name="' + prefix + '-field' + next + '" autocomplete="off" placeholder="begin typing a ' + prefix + ' item..." value="' + description + '" /><input id="' + prefix + '-id-field' + next + '" name="' + prefix + '-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
 
             $("#" + prefix).append($(div));
             $("#" + prefix + "-field" + (next - 1)).parent().after($(span));
