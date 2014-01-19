@@ -76,7 +76,6 @@ input[type="checkbox"].input-validation-error {
     width: inherit;
     padding: 4px 12px 5px 12px;
     top: 0px;
-    left: -1px;
 }
 
 .col-span-1 {

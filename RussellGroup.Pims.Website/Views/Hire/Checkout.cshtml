@@ -1,17 +1,17 @@
 ﻿@model RussellGroup.Pims.DataAccess.ViewModels.HireTransaction
 
 @{
-    ViewBag.Title = "Hire";
+    ViewBag.Title = "Checkout";
 }
 
-<h2>Checkout</h2>
+<h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>@ViewBag.Title</h4>
+        <h4>Hire</h4>
         <hr />
         @Html.ValidationSummary(true)
 
@@ -76,7 +76,7 @@
         function addFormField(prefix, description, id) {
             var next = prefix == "plant" ? nextPlant : nextInventory;
 
-            var span = '<span id="' + prefix + '-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign"></span>';
+            var span = '<span id="' + prefix + '-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
             var div = '<div class="input-group tt-input-group"><input type="text" id="' + prefix + '-field' + ++next + '" name="' + prefix + '-field' + next + '" autocomplete="off" placeholder="begin typing a ' + prefix + ' item..." value="' + description + '" /><input id="' + prefix + '-id-field' + next + '" name="' + prefix + '-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
 
             $("#" + prefix).append($(div));
