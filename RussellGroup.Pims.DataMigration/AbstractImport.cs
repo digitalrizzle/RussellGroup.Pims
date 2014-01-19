@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace RussellGroup.Pims.DataMigration
 
         public void Import(int skip, int take)
         {
-            Console.WriteLine("[{0}] => [{1}]", SourceTableName, TargetTableName);
+            Trace.WriteLine(string.Format("[{0}] => [{1}]", SourceTableName, TargetTableName));
 
             int row = 0;
             var sql = string.Format("SELECT * FROM [{0}]{1}", SourceTableName, string.IsNullOrEmpty(SourcePrimaryKeyColumnName) ? string.Empty : string.Format(" ORDER BY [{0}]", SourcePrimaryKeyColumnName));
@@ -74,7 +75,7 @@ namespace RussellGroup.Pims.DataMigration
         public AbstractImport Delete()
         {
             var message = string.Format("Deleting from [{0}]...\r", TargetTableName);
-            Console.Write(message);
+            Trace.Write(message);
 
             using (var context = new PimsContext())
             {
@@ -82,7 +83,22 @@ namespace RussellGroup.Pims.DataMigration
                 context.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT('{0}', RESEED, 0)", TargetTableName));
             }
 
-            Console.Write("{0}\r", string.Empty.PadRight(message.Length));
+            Console.Write(string.Format("{0}\r", string.Empty.PadRight(message.Length)));
+
+            return this;
+        }
+
+        public AbstractImport SetAuditing(bool enable)
+        {
+            var message = string.Format("{0} auditing...\r", enable ? "Enabling" : "Disabling");
+            Trace.Write(message);
+
+            using (var context = new PimsContext())
+            {
+                context.Database.ExecuteSqlCommand(string.Format("UPDATE [Settings] SET [Value] = '{0}' WHERE [Key] = 'IsAuditingEnabled'", enable.ToString()));
+            }
+
+            Console.Write(string.Format("{0}\r", string.Empty.PadRight(message.Length)));
 
             return this;
         }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,8 +21,8 @@ namespace RussellGroup.Pims.DataMigration
 
             DateTime? whenStarted = null;
             DateTime? whenEnded = null;
-            try { whenStarted = reader.GetDateTime("Start date"); } catch { Console.WriteLine("Bad date: \"{0}\"", key); }
-            try { whenEnded = reader.GetDateTime("End date"); } catch { Console.WriteLine("Bad date: \"{0}\"", key); }                
+            try { whenStarted = reader.GetDateTime("Start date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
+            try { whenEnded = reader.GetDateTime("End date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }                
 
             decimal? rate = reader.GetValueOrNull<decimal>("Rate");
             if (rate.HasValue && rate == 0) rate = null;
@@ -44,7 +45,7 @@ namespace RussellGroup.Pims.DataMigration
             }
             else
             {
-                Console.WriteLine("Orphaned: \"{0}\"", key);
+                Trace.WriteLine(string.Format("Orphaned: \"{0}\"", key));
             }
         }
     }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,15 +22,15 @@ namespace RussellGroup.Pims.DataMigration
             if (!string.IsNullOrEmpty(returnDocket) && returnDocket.Length >= 5)
             {
                 docket = returnDocket;
-                Console.WriteLine("Docket no. overwritten: \"{0}\"", key);
+                Trace.Write(string.Format("Docket overwritten: \"{0}\"\r", key));
             }
 
             var plant = TargetContext.Plants.SingleOrDefault(f => f.XPlantId == sourcePlant);
 
             DateTime? whenStarted = null;
             DateTime? whenEnded = null;
-            try { whenStarted = reader.GetDateTime("Start date"); } catch { Console.WriteLine("Bad date: \"{0}\"", key); }
-            try { whenEnded = reader.GetDateTime("End date"); } catch { Console.WriteLine("Bad date: \"{0}\"", key); }                
+            try { whenStarted = reader.GetDateTime("Start date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
+            try { whenEnded = reader.GetDateTime("End date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }                
 
             if (plant != null)
             {
@@ -48,7 +49,7 @@ namespace RussellGroup.Pims.DataMigration
             }
             else
             {
-                Console.WriteLine("Orphaned: \"{0}\"", key);
+                Trace.WriteLine(string.Format("Orphaned: \"{0}\"", key));
             }
         }
     }
