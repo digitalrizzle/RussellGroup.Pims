@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Inventory>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Inventory";
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -13,6 +13,9 @@
     <thead>
         <tr>
             <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.XInventoryId)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
@@ -44,7 +47,8 @@
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
                     { "sWidth": "0%" },
-                    { "sWidth": "35%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "25%" },
                     { "sWidth": "10%" },
                     { "sWidth": "10%" },
                     { "sWidth": "10%", "sClass": "right" },
@@ -53,7 +57,7 @@
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [6] }
+                    { "bSortable": false, "aTargets": [7] }
                 ],
             });
         });

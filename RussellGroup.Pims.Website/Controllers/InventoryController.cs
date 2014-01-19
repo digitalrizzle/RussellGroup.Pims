@@ -32,10 +32,11 @@ namespace RussellGroup.Pims.Website.Controllers
 
             // ordering
             Func<Inventory, string> ordering = (c =>
-                sortColumnIndex == 1 ? c.Description :
-                    sortColumnIndex == 2 ? (c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                        sortColumnIndex == 3 ? (c.WhenDisused.HasValue ? c.WhenDisused.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                            sortColumnIndex == 4 ? c.Quantity.ToString() : c.Category.Name);
+                sortColumnIndex == 1 ? c.XInventoryId :
+                    sortColumnIndex == 2 ? c.Description :
+                        sortColumnIndex == 3 ? (c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
+                            sortColumnIndex == 4 ? (c.WhenDisused.HasValue ? c.WhenDisused.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
+                                sortColumnIndex == 5 ? c.Quantity.ToString() : c.Category.Name);
 
             // sorting
             IEnumerable<Inventory> ordered = Request["sSortDir_0"] == "asc" ?
@@ -47,6 +48,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 .Select(c => new string[]
                 {
                     c.InventoryId.ToString(),
+                    c.XInventoryId,
                     c.Description,
                     c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToShortDateString() : string.Empty,
                     c.WhenDisused.HasValue ? c.WhenDisused.Value.ToShortDateString() : string.Empty,
