@@ -65,7 +65,8 @@
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\HireTransaction.cs" />
+    <Compile Include="ViewModels\CheckinTransaction.cs" />
+    <Compile Include="ViewModels\CheckoutTransaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

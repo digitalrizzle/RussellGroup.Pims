@@ -22,6 +22,10 @@ input[type=text], input[type=number] {
     height: 24px;
 }
 
+table input[type=checkbox] {
+    height: inherit !important;
+}
+
 select {
     height: 28px;
 }

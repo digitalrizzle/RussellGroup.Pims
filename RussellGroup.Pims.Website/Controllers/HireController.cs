@@ -2,6 +2,7 @@
 using RussellGroup.Pims.DataAccess.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -16,9 +17,11 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private PimsContext db = new PimsContext();
 
+        #region Checkout
+
         public async Task<ActionResult> Checkout(int? id)
         {
-            var transaction = new HireTransaction()
+            var transaction = new CheckoutTransaction()
             {
                 Docket = string.Empty,
                 Job = await db.Jobs.FindAsync(id),
@@ -80,7 +83,7 @@ namespace RussellGroup.Pims.Website.Controllers
             foreach (var id in plantIds) plants.Add(db.Plants.Single(f => f.PlantId == id));
             foreach (var id in inventoryIds) inventories.Add(db.Inventories.Single(f => f.InventoryId == id));
 
-            var transaction = new HireTransaction()
+            var transaction = new CheckoutTransaction()
             {
                 Docket = docket,
                 Job = await db.Jobs.FindAsync(jobId),
@@ -90,12 +93,144 @@ namespace RussellGroup.Pims.Website.Controllers
 
             if (ModelState.IsValid)
             {
-                await Save(transaction);
+                await Checkout(transaction);
                 return RedirectToAction("Details", "Job", new { id = jobId });
             }
 
             return View(transaction);
         }
+
+        private async Task Checkout(CheckoutTransaction transaction)
+        {
+            // save plant
+            foreach (var plant in transaction.Plants)
+            {
+                var hire = new PlantHire
+                {
+                    Plant = plant,
+                    Job = transaction.Job,
+                    Docket = transaction.Docket,
+                    WhenStarted = DateTime.Now,
+                    WhenEnded = null,
+                    Rate = plant.Rate
+                };
+
+                db.PlantHires.Add(hire);
+            }
+
+            // save inventory
+            foreach (var inventory in transaction.Inventories)
+            {
+                var hire = new InventoryHire
+                {
+                    Inventory = inventory,
+                    Job = transaction.Job,
+                    Docket = transaction.Docket,
+                    WhenStarted = DateTime.Now,
+                    WhenEnded = null,
+                    Rate = inventory.Rate,
+                    Quantity = inventory.Quantity
+                };
+
+                db.InventoryHires.Add(hire);
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        #endregion
+
+        #region Checkin
+
+        public async Task<ActionResult> Checkin(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Job job = await db.Jobs.FindAsync(id);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
+
+            var transaction = new CheckinTransaction
+            {
+                Job = job,
+                Docket = string.Empty,
+                PlantHires = job.PlantHires.Where(f => !f.WhenEnded.HasValue).ToArray(),
+                InventoryHires = job.InventoryHires.Where(f => !f.WhenEnded.HasValue).ToArray()
+            };
+
+            return View(transaction);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Checkin(FormCollection collection)
+        {
+            var docket = collection["Docket"];
+            var jobId = Convert.ToInt32(collection["JobId"]);
+            var plantHireIds = GetIds("plant-hire-id-field", collection);
+            var inventoryHireIds = GetIds("inventory-hire-id-field", collection);
+
+            if (string.IsNullOrWhiteSpace(docket)) ModelState.AddModelError("Docket", "A docket number is required.");
+            if (plantHireIds.Count == 0 && inventoryHireIds.Count == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
+
+            if (ModelState.IsValid)
+            {
+                await Checkin(plantHireIds, inventoryHireIds);
+                return RedirectToAction("Details", "Job", new { id = jobId });
+            }
+
+            var job = db.Jobs.Single(f => f.JobId == jobId);
+            var plantHires = job.PlantHires.Where(f => !f.WhenEnded.HasValue).ToList();
+            var inventoryHires = job.InventoryHires.Where(f => !f.WhenEnded.HasValue).ToList();
+
+            foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.PlantHireId)) hire.IsChecked = true;
+            foreach (var hire in inventoryHires) if (inventoryHireIds.Any(f => f == hire.InventoryHireId)) hire.IsChecked = true;
+
+            var transaction = new CheckinTransaction
+            {
+                Job = job,
+                Docket = docket,
+                PlantHires = plantHires,
+                InventoryHires = inventoryHires
+            };
+
+            return View(transaction);
+        }
+
+        private async Task Checkin(IEnumerable<int> plantHireIds, IEnumerable<int> inventoryHireIds)
+        {
+            // save plant
+            foreach (var id in plantHireIds)
+            {
+                var hire = db.PlantHires.SingleOrDefault(f => f.PlantHireId == id && !f.WhenEnded.HasValue);
+
+                if (hire != null)
+                {
+                    hire.WhenEnded = DateTime.Now;
+                    db.Entry(hire).State = EntityState.Modified;
+                }
+            }
+
+            // save inventory
+            foreach (var id in inventoryHireIds)
+            {
+                var hire = db.InventoryHires.SingleOrDefault(f => f.InventoryHireId == id && !f.WhenEnded.HasValue);
+
+                if (hire != null)
+                {
+                    hire.WhenEnded = DateTime.Now;
+                    db.Entry(hire).State = EntityState.Modified;
+                }
+            }
+
+            await db.SaveChangesAsync();
+        }
+
+        #endregion
 
         protected override void Dispose(bool disposing)
         {
@@ -114,45 +249,30 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 if (key.StartsWith(prefix) && !string.IsNullOrWhiteSpace(collection[key]))
                 {
-                    ids.Add(Convert.ToInt32(collection[key]));
+                    var value = collection[key].Split(',')[0];
+                    ids.Add(Convert.ToInt32(value));
                 }
             }
 
             return ids;
         }
 
-        private async Task Save(HireTransaction transaction)
-        {
-            // save plant
-            foreach (var plant in transaction.Plants)
-            {
-                var hire = new PlantHire
-                {
-                    Plant = plant,
-                    Job = transaction.Job,
-                    Docket = transaction.Docket,
-                    WhenStarted = DateTime.Now,
-                    WhenEnded = null,
-                    Rate = plant.Rate
-                };
-
-                db.PlantHires.Add(hire);
-            }
-
-            await db.SaveChangesAsync();
-        }
-
         private new ActionResult View()
         {
-            return View(null);
+            return View((CheckoutTransaction)null);
         }
 
-        private ActionResult View(HireTransaction transaction)
+        private ActionResult View(CheckoutTransaction transaction)
         {
             var jobs = db.Jobs.OrderByDescending(f => f.WhenStarted);
 
             ViewBag.Jobs = new SelectList(jobs, "JobId", "Description", transaction.JobId);
 
+            return base.View(transaction);
+        }
+
+        private ActionResult View(CheckinTransaction transaction)
+        {
             return base.View(transaction);
         }
     }

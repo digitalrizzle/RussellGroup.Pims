@@ -7,7 +7,7 @@ using System.Web;
 
 namespace RussellGroup.Pims.DataAccess.ViewModels
 {
-    public class HireTransaction
+    public class CheckoutTransaction
     {
         [Display(Name = "job")]
         public Job Job { get; set; }
@@ -20,12 +20,6 @@ namespace RussellGroup.Pims.DataAccess.ViewModels
 
         [Display(Name = "inventory")]
         public virtual ICollection<Inventory> Inventories { get; set; }
-
-        [Display(Name = "plant hire")]
-        public virtual ICollection<PlantHire> PlantHires { get; set; }
-
-        [Display(Name = "inventory hire")]
-        public virtual ICollection<InventoryHire> InventoryHires { get; set; }
 
         public int? JobId
         {
