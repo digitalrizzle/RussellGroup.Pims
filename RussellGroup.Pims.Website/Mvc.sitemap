@@ -22,6 +22,8 @@
         </mvcSiteMapNode>
       </mvcSiteMapNode>
       <mvcSiteMapNode title="Delete" action="Delete" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
+      <mvcSiteMapNode title="Checkout" controller="Hire" action="Checkout" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
+      <mvcSiteMapNode title="Checkin" controller="Hire" action="Checkin" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Plant" controller="Plant" action="Index">
       <mvcSiteMapNode title="Create" action="Create" visibility="SiteMapPathHelper,!*" />
@@ -35,7 +37,6 @@
       <mvcSiteMapNode title="Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
       <mvcSiteMapNode title="Delete" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
     </mvcSiteMapNode>
-    <mvcSiteMapNode title="Checkout" controller="Hire" action="Checkout" />
     <mvcSiteMapNode title="Users" controller="User" action="Index">
       <mvcSiteMapNode title="Create" action="Create" visibility="SiteMapPathHelper,!*" />
       <mvcSiteMapNode title="Edit" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />

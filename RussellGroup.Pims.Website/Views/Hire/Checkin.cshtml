@@ -1,0 +1,153 @@
+﻿@model RussellGroup.Pims.DataAccess.ViewModels.CheckinTransaction
+
+@{
+    ViewBag.Title = "Checkin";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@Model.Job.Description</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.JobId)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Docket, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Docket)
+                @Html.ValidationMessageFor(model => model.Docket)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PlantHires, new { @class = "control-label col-md-2" })
+            <div class="col-md-10" style="margin-top:-3px">
+                <table id="plant-hire-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th><input type="checkbox" class="check-all" /></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PlantHires.Single().Plant.XPlantId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PlantHires.Single().Plant.XPlantNewId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.PlantHires.Single().Plant.Description)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.PlantHires)
+                        {
+                            <tr>
+                                <td>@Html.Encode(item.PlantId)</td>
+                                <td><input name="@("plant-hire-id-field" + item.PlantHireId)" value="@item.PlantHireId" type="checkbox" /></td>
+                                <td>@Html.DisplayFor(modelItem => item.Plant.XPlantId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Plant.XPlantNewId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Plant.Description)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.InventoryHires, new { @class = "control-label col-md-2" })
+            <div class="col-md-10" style="margin-top:-3px">
+                <table id="inventory-hire-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th><input type="checkbox" class="check-all" /></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.InventoryHires.Single().Inventory.XInventoryId)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.InventoryHires.Single().Inventory.Quantity)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.InventoryHires.Single().Inventory.Description)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.InventoryHires)
+                        {
+                            <tr>
+                                <td>@Html.Encode(item.InventoryId)</td>
+                                <td><input name="@("inventory-hire-id-field" + item.InventoryHireId)" value="@item.InventoryHireId" type="checkbox" /></td>
+                                <td>@Html.DisplayFor(modelItem => item.Inventory.XInventoryId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Inventory.Description)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Checkin" class="btn btn-primary" />
+                &nbsp;
+                @Html.ActionLink("Cancel", "Index", "Job", null, new { @class = "btn-cancel" })
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+<script>
+    $(document).ready(function () {
+        // set checkboxes if there is a postback
+        @foreach (var hire in Model.PlantHires.Where(f => f.IsChecked)) { <text>$('input[name="plant-hire-id-field@(hire.PlantHireId)"]').prop('checked', true);</text> }
+        @foreach (var hire in Model.InventoryHires.Where(f => f.IsChecked)) { <text>$('input[name="inventory-hire-id-field@(hire.InventoryHireId)"]').prop('checked', true);</text> }
+
+        $('#plant-hire-table').dataTable({
+            "bProcessing": true,
+            "bStateSave": false,
+            "sPaginationType": 'full_numbers',
+            "aoColumns": [
+                { "sWidth": "0%" },
+                { "sWidth": "5%" },
+                { "sWidth": "15%" },
+                { "sWidth": "15%" },
+                { "sWidth": "65%" },
+            ],
+            "aoColumnDefs": [
+                { "bVisible": false, "aTargets": [0] },
+                { "bSortable": false, "aTargets": [1] }
+            ],
+        });
+
+        $('#inventory-hire-table').dataTable({
+            "bProcessing": true,
+            "bStateSave": false,
+            "sPaginationType": 'full_numbers',
+            "aoColumns": [
+                { "sWidth": "0%" },
+                { "sWidth": "5%" },
+                { "sWidth": "15%" },
+                { "sWidth": "15%" },
+                { "sWidth": "65%" },
+            ],
+            "aoColumnDefs": [
+                { "bVisible": false, "aTargets": [0] },
+                { "bSortable": false, "aTargets": [1] }
+            ],
+        });
+    });
+
+    $('.check-all').on('click', function () {
+        $(this).closest('table').find(':checkbox').prop('checked', this.checked);
+    });
+</script>
+}

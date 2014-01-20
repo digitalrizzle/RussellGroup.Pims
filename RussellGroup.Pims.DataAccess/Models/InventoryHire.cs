@@ -46,5 +46,8 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [Display(Name = "job")]
         public virtual Job Job { get; set; }
+
+        [NotMapped]
+        public bool IsChecked { get; set; }
     }
 }

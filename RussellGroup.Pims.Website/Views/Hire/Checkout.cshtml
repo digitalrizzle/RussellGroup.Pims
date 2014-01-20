@@ -1,4 +1,4 @@
-﻿@model RussellGroup.Pims.DataAccess.ViewModels.HireTransaction
+﻿@model RussellGroup.Pims.DataAccess.ViewModels.CheckoutTransaction
 
 @{
     ViewBag.Title = "Checkout";
@@ -11,7 +11,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Hire</h4>
+        @if (@Model.Job != null) { <h4>@Model.Job.Description</h4> }
         <hr />
         @Html.ValidationSummary(true)
 
@@ -31,18 +31,20 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PlantHires, new { @class = "control-label col-md-2" })
+            @Html.Label("plant hire", new { @class = "control-label col-md-2" })
             <div id="plant" class="col-md-10"></div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.InventoryHires, new { @class = "control-label col-md-2" })
+            @Html.Label("inventory hire", new { @class = "control-label col-md-2" })
             <div id="inventory" class="col-md-10"></div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Checkout" class="btn btn-primary" />
+                &nbsp;
+                @Html.ActionLink("Cancel", "Index", "Job", null, new { @class = "btn-cancel" })
             </div>
         </div>
     </div>
