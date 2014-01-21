@@ -34,8 +34,8 @@ namespace RussellGroup.Pims.Website.Controllers
             Func<Inventory, string> ordering = (c =>
                 sortColumnIndex == 1 ? c.XInventoryId :
                     sortColumnIndex == 2 ? c.Description :
-                        sortColumnIndex == 3 ? (c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                            sortColumnIndex == 4 ? (c.WhenDisused.HasValue ? c.WhenDisused.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
+                        sortColumnIndex == 3 ? (c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
+                            sortColumnIndex == 4 ? (c.WhenDisused.HasValue ? c.WhenDisused.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
                                 sortColumnIndex == 5 ? c.Quantity.ToString() : c.Category.Name);
 
             // sorting

@@ -18,6 +18,11 @@ namespace RussellGroup.Pims.Website
             return string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action(actionName, routeValues), linkText);
         }
 
+        public static string ActionLink(this Controller controller, string linkText, string actionName, string controllerName, object routeValues)
+        {
+            return string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action(actionName, controllerName, routeValues), linkText);
+        }
+
         public static string CrudLinks(this Controller controller, object routeValues)
         {
             var edit = ActionLink(controller, "Edit", "Edit", routeValues);
