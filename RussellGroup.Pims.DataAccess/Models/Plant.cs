@@ -65,7 +65,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         {
             get
             {
-                return PlantHires.Any(f => !f.WhenEnded.HasValue);
+                return PlantHires.Any(f => f.Job != null);
             }
         }
 

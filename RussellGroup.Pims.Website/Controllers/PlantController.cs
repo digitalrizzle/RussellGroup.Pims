@@ -76,7 +76,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Description,
                     c.Category != null ? c.Category.Name : string.Empty,
                     c.IsDisused.ToYesNo(),
-                    c.IsHired.ToYesNo(),
+                    c.IsHired ? this.ActionLink(c.PlantHires.OrderByDescending(f => f.WhenStarted).FirstOrDefault().Job.XJobId, "Details", "Job", new { id = c.PlantHires.OrderByDescending(f => f.WhenStarted).FirstOrDefault().JobId }) : string.Empty,
                     this.CrudLinks(new { id = c.PlantId })
                 });
 
@@ -104,6 +104,102 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
             return View(plant);
+        }
+
+        // GET: /Plant/Jobs/5
+        public async Task<ActionResult> Jobs(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Plant plant = await db.Plants.FindAsync(id);
+            if (plant == null)
+            {
+                return HttpNotFound();
+            }
+            return View(plant);
+        }
+
+        // this method has been adapted from the code described here:
+        // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
+        public JsonResult GetJobsDataTableResult(JqueryDataTableParameterModel model)
+        {
+            int id = Convert.ToInt32(Request["id"]);
+
+            var entries = from j in db.Jobs
+                          join p in db.PlantHires on j.JobId equals p.JobId
+                          where !j.WhenEnded.HasValue && p.PlantId == id
+                          select j;
+
+            var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
+
+            // ordering
+            Func<Job, string> ordering = (c =>
+                sortColumnIndex == 1 ? c.XJobId :
+                    sortColumnIndex == 2 ? c.Description :
+                        sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
+                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
+                                sortColumnIndex == 5 ? c.ProjectManager : c.Status.ToString());
+
+            // sorting
+            IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
+                entries.OrderBy(ordering) :
+                entries.OrderByDescending(ordering);
+
+            // get the display values
+            var displayData = ordered
+                .Select(c => new string[]
+                {
+                    c.JobId.ToString(),
+                    c.XJobId,
+                    c.Description,
+                    c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
+                    c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
+                    c.ProjectManager,
+                    c.Status.ToString(),
+                    this.ActionLink("Details", "Details", "Job", new { id = c.JobId })
+                });
+
+            // filter for sSearch
+            string hint = Request["sSearch"];
+            List<string[]> searched = new List<string[]>();
+
+            if (string.IsNullOrEmpty(hint))
+            {
+                searched.AddRange(displayData);
+            }
+            else
+            {
+                foreach (string[] row in displayData)
+                {
+                    // don't include in the search the id as it is hidden from the display
+                    // don't include in the search the CRUD links either
+                    for (int index = 0; index < row.Length - 1; index++)
+                    {
+                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(hint, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            searched.Add(row);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // filter for the display
+            var filtered = searched
+                .Skip(searched.Count > model.iDisplayLength ? model.iDisplayStart : 0)
+                .Take(searched.Count > model.iDisplayLength ? model.iDisplayLength : searched.Count);
+
+            var result = new
+            {
+                sEcho = model.sEcho,
+                iTotalRecords = db.Jobs.Count(),
+                iTotalDisplayRecords = searched.Count(),
+                aaData = filtered
+            };
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         // GET: /Plant/Create

@@ -32,10 +32,11 @@ namespace RussellGroup.Pims.Website.Controllers
 
             // ordering
             Func<Job, string> ordering = (c =>
-                sortColumnIndex == 1 ? c.Description :
-                    sortColumnIndex == 2 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                        sortColumnIndex == 3 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                            sortColumnIndex == 4 ? c.ProjectManager : c.Status.ToString());
+                sortColumnIndex == 1 ? c.XJobId :
+                    sortColumnIndex == 2 ? c.Description :
+                        sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
+                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
+                                sortColumnIndex == 5 ? c.ProjectManager : c.Status.ToString());
 
             // sorting
             IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
@@ -47,6 +48,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 .Select(c => new string[]
                 {
                     c.JobId.ToString(),
+                    c.XJobId,
                     c.Description,
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,

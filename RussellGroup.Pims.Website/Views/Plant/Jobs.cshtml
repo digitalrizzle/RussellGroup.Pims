@@ -1,35 +1,33 @@
-﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Job>
+﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
 @{
-    ViewBag.Title = "Jobs";
+    ViewBag.Title = Model.Description;
 }
 
 <h2>@ViewBag.Title</h2>
+<h4>Jobs</h4>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
 <table class="table">
     <thead>
         <tr>
             <th></th>
             <th>
-                @Html.DisplayNameFor(model => model.XJobId)
+                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.XJobId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WhenStarted)
+                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.WhenStarted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WhenEnded)
+                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.WhenEnded)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProjectManager)
+                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.ProjectManager)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.Status)
             </th>
             <th></th>
         </tr>
@@ -43,17 +41,17 @@
                 "bProcessing": true,
                 "bServerSide": true,
                 "bStateSave": true,
-                "sAjaxSource": '@Url.Content("~/Job/GetDataTableResult")',
+                "sAjaxSource": '@Url.Content("~/Plant/GetJobsDataTableResult?id=" + Model.PlantId)',
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
                     { "sWidth": "0%" },
                     { "sWidth": "10%" },
+                    { "sWidth": "35%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
                     { "sWidth": "20%" },
                     { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "15%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "25%", "sClass": "right" }
+                    { "sWidth": "5%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },

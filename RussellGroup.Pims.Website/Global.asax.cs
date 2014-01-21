@@ -10,6 +10,8 @@ namespace RussellGroup.Pims.Website
 {
     public class MvcApplication : System.Web.HttpApplication
     {
+        public const string DATE_TIME_FORMAT = "yyyyMMddhhmmss";
+
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
