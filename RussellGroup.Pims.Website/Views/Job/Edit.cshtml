@@ -10,4 +10,9 @@
 
 @section scripts {
     @Scripts.Render("~/Scripts/view-datepickers.js")
+    @Scripts.Render("~/Scripts/view-job.js")
+    <script>
+        wire('ProjectManager', '@Url.Content("~/Job/GetProjectManagerSuggestions?q=%QUERY")');
+        wire('QuantitySurveyor', '@Url.Content("~/Job/GetQuantitySurveyorSuggestions?q=%QUERY")');
+    </script>
 }

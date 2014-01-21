@@ -21,7 +21,6 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             var factory = new SqlFactory(context);
 
             factory.GenerateAuditTrigger("Categories", "CategoryId");
-            factory.GenerateAuditTrigger("Contacts", "ContactId");
             factory.GenerateAuditTrigger("Inventories", "InventoryId");
             factory.GenerateAuditTrigger("InventoryHires", "InventoryHireId");
             factory.GenerateAuditTrigger("Jobs", "JobId");

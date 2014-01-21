@@ -51,7 +51,6 @@
     <Compile Include="Migrations\SqlFactory.cs" />
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\Contact.cs" />
     <Compile Include="Models\Enumerations.cs" />
     <Compile Include="Models\Inventory.cs" />
     <Compile Include="Models\ModelExtensions.cs" />

@@ -27,8 +27,6 @@ namespace RussellGroup.Pims.DataMigration
                     using (var connection = new OleDbConnection(OLEDB_CONNECTION_STRING))
                     {
                         connection.Open();
-
-                        var contacts = new ImportContact() { SourceConnection = connection, SourceTableName = "Jobs", TargetTableName = "Contacts" };
                         var categories = new ImportCategory() { SourceConnection = connection, SourceTableName = "Plant categories", TargetTableName = "Categories" };
                         var plant = new ImportPlant() { SourceConnection = connection, SourceTableName = "Plant", TargetTableName = "Plants" };
                         var inventory = new ImportInventory() { SourceConnection = connection, SourceTableName = "inventory", TargetTableName = "Inventories" };
@@ -43,7 +41,6 @@ namespace RussellGroup.Pims.DataMigration
                         inventoryHire.Delete();
                         job.Delete();
 
-                        contacts.Delete().Import();
                         categories.Delete().Import();
                         plant.Delete().Import();
                         inventory.Delete().Import();

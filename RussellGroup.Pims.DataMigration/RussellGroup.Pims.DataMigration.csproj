@@ -55,7 +55,6 @@
     <Compile Include="ImportCategory.cs" />
     <Compile Include="ImportInventory.cs" />
     <Compile Include="ImportInventoryHire.cs" />
-    <Compile Include="ImportContact.cs" />
     <Compile Include="ImportJob.cs" />
     <Compile Include="ImportPlant.cs" />
     <Compile Include="ImportPlantHire.cs" />

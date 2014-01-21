@@ -10,7 +10,6 @@ namespace RussellGroup.Pims.DataAccess.Models
     public class PimsContext : DbContext
     {
         public DbSet<Audit> Audits { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<InventoryHire> InventoryHires { get; set; }
