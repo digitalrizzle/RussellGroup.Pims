@@ -43,14 +43,16 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ProjectManager, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ProjectManagerContactId, ViewBag.ProjectManagers as SelectList)
+                @Html.TextBoxFor(model => model.ProjectManager, new { @class = "col-span-7", placeholder = "begin typing a name..." })
+                @Html.ValidationMessageFor(model => model.ProjectManager)
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.QuantitySurveyor, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.QuantitySurveyorContactId, ViewBag.QuantitySurveyors as SelectList)
+                @Html.TextBoxFor(model => model.QuantitySurveyor, new { @class = "col-span-7", placeholder = "begin typing a name..." })
+                @Html.ValidationMessageFor(model => model.QuantitySurveyor)
             </div>
         </div>
 

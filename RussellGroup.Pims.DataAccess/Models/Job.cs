@@ -29,21 +29,15 @@ namespace RussellGroup.Pims.DataAccess.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? WhenEnded { get; set; }
 
-        [ForeignKey("ProjectManager")]
-        public int? ProjectManagerContactId { get; set; }
+        [Display(Name = "project manager")]
+        public string ProjectManager { get; set; }
 
-        [ForeignKey("QuantitySurveyor")]
-        public int? QuantitySurveyorContactId { get; set; }
+        [Display(Name = "quantity surveyor")]
+        public string QuantitySurveyor { get; set; }
 
         [Display(Name = "comments")]
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
-
-        [Display(Name = "project manager")]
-        public virtual Contact ProjectManager { get; set; }
-
-        [Display(Name = "quantity surveyor")]
-        public virtual Contact QuantitySurveyor { get; set; }
 
         [Display(Name = "status")]
         public Status Status

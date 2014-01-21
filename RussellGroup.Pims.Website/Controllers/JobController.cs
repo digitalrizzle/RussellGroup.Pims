@@ -35,7 +35,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 sortColumnIndex == 1 ? c.Description :
                     sortColumnIndex == 2 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
                         sortColumnIndex == 3 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString("yyyyMMddhhmmss") : string.Empty) :
-                            sortColumnIndex == 4 ? (c.ProjectManager != null ? c.ProjectManager.Name : string.Empty) : c.Status.ToString());
+                            sortColumnIndex == 4 ? c.ProjectManager : c.Status.ToString());
 
             // sorting
             IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
@@ -50,7 +50,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Description,
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.ProjectManager != null ? c.ProjectManager.Name : string.Empty,
+                    c.ProjectManager,
                     c.Status.ToString(),
                     this.CrudAndCheckLinks(c.Status, new { id = c.JobId })
                 });
@@ -124,7 +124,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Roles = RoleType.Administrator)]
-        public async Task<ActionResult> Create([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManagerContactId,QuantitySurveyorContactId,Comment")] Job job)
+        public async Task<ActionResult> Create([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
         {
             if (ModelState.IsValid)
             {
@@ -158,7 +158,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Roles = RoleType.Administrator)]
-        public async Task<ActionResult> Edit([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManagerContactId,QuantitySurveyorContactId,Comment")] Job job)
+        public async Task<ActionResult> Edit([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
         {
             if (ModelState.IsValid)
             {
@@ -167,6 +167,42 @@ namespace RussellGroup.Pims.Website.Controllers
                 return RedirectToAction("Index");
             }
             return View(job);
+        }
+
+        public JsonResult GetProjectManagerSuggestions()
+        {
+            string hint = Request["q"];
+
+            var result = db
+                .Jobs
+                .Where(f => f.ProjectManager.Contains(hint))
+                .OrderBy(f => f.ProjectManager)
+                .Select(f => new { value = f.ProjectManager })
+                .Distinct()
+                .Take(5)
+                .ToArray();
+
+            var json = Json(result, JsonRequestBehavior.AllowGet);
+
+            return json;
+        }
+
+        public JsonResult GetQuantitySurveyorSuggestions()
+        {
+            string hint = Request["q"];
+
+            var result = db
+                .Jobs
+                .Where(f => f.QuantitySurveyor.Contains(hint))
+                .OrderBy(f => f.QuantitySurveyor)
+                .Select(f => new { value = f.QuantitySurveyor })
+                .Distinct()
+                .Take(5)
+                .ToArray();
+
+            var json = Json(result, JsonRequestBehavior.AllowGet);
+
+            return json;
         }
 
         // GET: /Job/Delete/5
@@ -219,23 +255,6 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             return links;
-        }
-
-        private new ActionResult View()
-        {
-            return View(null);
-        }
-
-        private ActionResult View(Job job)
-        {
-            var contacts = db.Contacts.OrderBy(f => f.Name);
-            var projectManager = job != null ? job.ProjectManagerContactId : null;
-            var quantitySurveyor = job != null ? job.QuantitySurveyorContactId : null;
-
-            ViewBag.ProjectManagers = new SelectList(contacts, "ContactId", "Name", projectManager);
-            ViewBag.QuantitySurveyors = new SelectList(contacts, "ContactId", "Name", quantitySurveyor);
-
-            return base.View(job);
         }
     }
 }
