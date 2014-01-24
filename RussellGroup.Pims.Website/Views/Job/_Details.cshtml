@@ -79,7 +79,11 @@
             {
                 if (ViewBag.Title == "Details")
                 {
-                <text>@Html.ActionLink("Edit", "Edit", new { id = Model.JobId }) | </text>
+                    <text>
+                        @Html.ActionLink("Checkout", "Checkout", "Hire", new { id = Model.JobId }, null) |
+                        @Html.ActionLink("Checkin", "Checkin", "Hire", new { id = Model.JobId }, null) |
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.JobId }) |
+                    </text>
                 } else {
                     @Html.AntiForgeryToken()
                     <input type="submit" value="Delete" class="btn btn-danger" />
