@@ -26,9 +26,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.PlantHires.Single().Job.ProjectManager)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.Status)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -49,13 +46,12 @@
                     { "sWidth": "35%" },
                     { "sWidth": "10%" },
                     { "sWidth": "10%" },
-                    { "sWidth": "20%" },
-                    { "sWidth": "10%" },
+                    { "sWidth": "30%" },
                     { "sWidth": "5%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [7] }
+                    { "bSortable": false, "aTargets": [6] }
                 ],
             });
         });

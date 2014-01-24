@@ -35,8 +35,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 sortColumnIndex == 1 ? c.XJobId :
                     sortColumnIndex == 2 ? c.Description :
                         sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                                sortColumnIndex == 5 ? c.ProjectManager : c.Status.ToString());
+                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.ProjectManager);
 
             // sorting
             IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
@@ -53,8 +52,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.ProjectManager,
-                    c.Status.ToString(),
-                    this.CrudAndCheckLinks(c.Status, new { id = c.JobId })
+                    this.CrudAndCheckLinks(c.WhenEnded.HasValue, new { id = c.JobId })
                 });
 
             // filter for sSearch
@@ -244,11 +242,11 @@ namespace RussellGroup.Pims.Website.Controllers
             base.Dispose(disposing);
         }
 
-        private string CrudAndCheckLinks(Status status, object routeValues)
+        private string CrudAndCheckLinks(bool isComplete, object routeValues)
         {
             var links = this.CrudLinks(routeValues);
 
-            if (status == Status.Incomplete)
+            if (!isComplete)
             {
                 var checkin = string.Format("<a href=\"{0}\">{1}</a>", Url.Action("Checkin", "Hire", routeValues), "Checkin");
                 var checkout = string.Format("<a href=\"{0}\">{1}</a>", Url.Action("Checkout", "Hire", routeValues), "Checkout");
