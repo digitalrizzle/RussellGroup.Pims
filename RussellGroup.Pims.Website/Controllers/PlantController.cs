@@ -76,7 +76,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.XPlantNewId,
                     c.Description,
                     c.Category != null ? c.Category.Name : string.Empty,
-                    c.PlantHires.Where(f => !f.Job.WhenEnded.HasValue).Distinct().Count() == 0 ? string.Empty : this.ActionLink(c.PlantHires.Where(f => !f.Job.WhenEnded.HasValue).Distinct().Count().ToString(), "Jobs", new { id = c.PlantId }),
+                    GetJobs(c.PlantId).Count() == 0 ? string.Empty : this.ActionLink(GetJobs(c.PlantId).Count().ToString(), "Jobs", new { id = c.PlantId }),
                     c.Status.Name,
                     this.CrudLinks(new { id = c.PlantId })
                 });
@@ -128,10 +128,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             int id = Convert.ToInt32(Request["id"]);
 
-            var entries = from j in db.Jobs
-                          join p in db.PlantHires on j.JobId equals p.JobId
-                          where !j.WhenEnded.HasValue && p.PlantId == id
-                          select j;
+            var entries = GetJobs(id);
 
             var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
 
@@ -307,6 +304,16 @@ namespace RussellGroup.Pims.Website.Controllers
             ViewBag.Statuses = new SelectList(statuses, "StatusId", "Name", status);
 
             return base.View(plant);
+        }
+
+        private IQueryable<Job> GetJobs(int plantId)
+        {
+            var jobs = (from j in db.Jobs
+                           join p in db.PlantHires on j.JobId equals p.JobId
+                           where !j.WhenEnded.HasValue && p.PlantId == plantId
+                           select j).Distinct();
+
+            return jobs;
         }
     }
 }

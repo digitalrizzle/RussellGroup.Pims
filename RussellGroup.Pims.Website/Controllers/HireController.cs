@@ -38,7 +38,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var result = db
                 .Plants
-                .Where(f => !f.WhenDisused.HasValue && (f.XPlantId.StartsWith(hint) || f.Description.Contains(hint)))
+                .Where(f => f.StatusId == 2 && (f.XPlantId.StartsWith(hint) || f.Description.Contains(hint)))
                 .Take(5)
                 .OrderBy(f => f.Description)
                 .Select(f => new { id = f.PlantId, description = f.Description, xid = f.XPlantId })
@@ -116,6 +116,9 @@ namespace RussellGroup.Pims.Website.Controllers
                 };
 
                 db.PlantHires.Add(hire);
+
+                plant.StatusId = 3; // unavailable
+                db.Entry(plant).State = EntityState.Modified;
             }
 
             // save inventory
@@ -214,6 +217,9 @@ namespace RussellGroup.Pims.Website.Controllers
                     hire.WhenEnded = DateTime.Now;
                     db.Entry(hire).State = EntityState.Modified;
                 }
+
+                hire.Plant.StatusId = 2; // available
+                db.Entry(hire.Plant).State = EntityState.Modified;
             }
 
             // save inventory
