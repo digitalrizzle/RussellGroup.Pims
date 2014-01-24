@@ -15,7 +15,7 @@ namespace RussellGroup.Pims.DataMigration
 
             if (!reader.IsDBNull(ordinal))
             {
-                return reader.GetValue(ordinal).ToString();
+                return reader.GetValue(ordinal).ToString().Trim();
             }
 
             return null;

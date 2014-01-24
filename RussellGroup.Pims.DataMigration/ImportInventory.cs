@@ -21,7 +21,8 @@ namespace RussellGroup.Pims.DataMigration
                 Description = reader.GetValue("Description"),
                 Rate = reader.GetValueOrNull<decimal>("Rate"),
                 Cost = reader.GetValueOrNull<decimal>("Cost"),
-                Quantity = Convert.ToInt32(reader.GetValue("Qty"))
+                Quantity = Convert.ToInt32(reader.GetValue("Qty")),
+                IsImported = true
             };
 
             TargetContext.Inventories.Add(inventory);
