@@ -34,11 +34,13 @@ namespace RussellGroup.Pims.DataMigration
                     InventoryId = inventory.InventoryId,
                     JobId = TargetContext.Jobs.Single(f => f.XJobId == sourceJob).JobId,
                     Docket = reader.GetValue("Doc no"),
+                    ReturnDocket = reader.GetValue("Return doc no"),
                     WhenStarted = whenStarted,
                     WhenEnded = whenEnded,
                     Rate = rate,
                     Quantity = reader.GetValueOrNull<int>("Qty"),
                     Comment = reader.GetValue("Comments"),
+                    IsImported = true
                 };
 
                 TargetContext.InventoryHires.Add(hire);

@@ -12,8 +12,6 @@ namespace RussellGroup.Pims.DataMigration
 {
     abstract class AbstractImport
     {
-        const int SAVE_CHANGES_OBJECT_LIMIT = 250;
-
         public PimsContext TargetContext { get; protected set; }
         public OleDbConnection SourceConnection { get; set; }
         public string SourceTableName { get; set; }
@@ -31,51 +29,40 @@ namespace RussellGroup.Pims.DataMigration
 
         public void Import(int skip, int take)
         {
-            Trace.WriteLine(string.Format("[{0}] => [{1}]", SourceTableName, TargetTableName));
+            Trace.WriteLine(string.Format("Importing [{0}] => [{1}]...", SourceTableName, TargetTableName));
 
             int row = 0;
             var sql = string.Format("SELECT * FROM [{0}]{1}", SourceTableName, string.IsNullOrEmpty(SourcePrimaryKeyColumnName) ? string.Empty : string.Format(" ORDER BY [{0}]", SourcePrimaryKeyColumnName));
             var command = new OleDbCommand(sql, SourceConnection);
             var reader = command.ExecuteReader();
 
+            Console.Write("{0}\r", string.Empty.PadLeft(10));
+
             while (reader.Read())
             {
-                if (row % SAVE_CHANGES_OBJECT_LIMIT == 0)
-                {
-                    if (TargetContext != null) TargetContext.Dispose();
-                    TargetContext = new PimsContext();
-                }
+                if (TargetContext != null) TargetContext.Dispose();
+                TargetContext = new PimsContext();
 
                 Console.Write("{0}\r", ++row);
 
                 if (row - 1 < skip) continue;
 
                 Map(reader);
+                TargetContext.SaveChanges();
 
-                if (row % SAVE_CHANGES_OBJECT_LIMIT == 0) SaveChanges();
                 if (take > 0 && row >= skip + take) break;
             }
 
-            SaveChanges();
-            TargetContext.Dispose();
-        }
-
-        private void SaveChanges()
-        {
-            var message = "Saving...\r";
-            Console.Write(message);
-
             TargetContext.SaveChanges();
-
-            Console.Write("{0}\r", string.Empty.PadRight(message.Length));
+            TargetContext.Dispose();
         }
 
         protected abstract void Map(OleDbDataReader reader);
 
         public AbstractImport Delete()
         {
-            var message = string.Format("Deleting from [{0}]...\r", TargetTableName);
-            Trace.Write(message);
+            var message = string.Format("Deleting from [{0}]...", TargetTableName);
+            Trace.WriteLine(message);
 
             using (var context = new PimsContext())
             {
@@ -83,22 +70,18 @@ namespace RussellGroup.Pims.DataMigration
                 context.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT('{0}', RESEED, 0)", TargetTableName));
             }
 
-            Console.Write(string.Format("{0}\r", string.Empty.PadRight(message.Length)));
-
             return this;
         }
 
         public AbstractImport SetAuditing(bool enable)
         {
-            var message = string.Format("{0} auditing...\r", enable ? "Enabling" : "Disabling");
-            Trace.Write(message);
+            var message = string.Format("{0} auditing...", enable ? "Enabling" : "Disabling");
+            Trace.WriteLine(message);
 
             using (var context = new PimsContext())
             {
                 context.Database.ExecuteSqlCommand(string.Format("UPDATE [Settings] SET [Value] = '{0}' WHERE [Key] = 'IsAuditingEnabled'", enable.ToString()));
             }
-
-            Console.Write(string.Format("{0}\r", string.Empty.PadRight(message.Length)));
 
             return this;
         }

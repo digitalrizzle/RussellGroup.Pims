@@ -15,7 +15,8 @@ namespace RussellGroup.Pims.DataMigration
             var category = new Category
             {
                 Name = reader.GetValue("Category"),
-                Type = reader.GetValue("Plant Type")
+                Type = reader.GetValue("Plant Type"),
+                IsImported = true
             };
 
             TargetContext.Categories.Add(category);
