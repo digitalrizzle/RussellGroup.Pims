@@ -28,6 +28,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             factory.GenerateAuditTrigger("PlantHires", "PlantHireId");
             factory.GenerateAuditTrigger("Roles", "RoleId");
             //factory.GenerateAuditTrigger("Settings", "Key");
+            factory.GenerateAuditTrigger("Status", "StatusId");
             factory.GenerateAuditTrigger("Users", "UserId");
 
             factory.GenerateAuditTrigger("UserRoles", "User_UserId", "Role_RoleId");
@@ -39,6 +40,20 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             };
 
             settings.ForEach(setting => context.Settings.AddOrUpdate(setting));
+            context.SaveChanges();
+
+            var statuses = new List<Status>
+            {
+                new Status { StatusId = 1, Name = "Unknown" },
+                new Status { StatusId = 2, Name = "Available" },
+                new Status { StatusId = 3, Name = "Unavailable" },
+                new Status { StatusId = 4, Name = "Missing" },
+                new Status { StatusId = 5, Name = "Stolen" },
+                new Status { StatusId = 6, Name = "Under repair" },
+                new Status { StatusId = 7, Name = "Written off" }
+            };
+
+            statuses.ForEach(status => context.Statuses.AddOrUpdate(status));
             context.SaveChanges();
 
             var users = new List<User>

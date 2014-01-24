@@ -6,12 +6,6 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Models
 {
-    public enum Status
-    {
-        Incomplete,
-        Complete
-    }
-
     [Flags]
     [Serializable]
     public enum RoleType

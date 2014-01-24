@@ -15,6 +15,9 @@ namespace RussellGroup.Pims.DataAccess.Models
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
+        [ForeignKey("Status")]
+        public int StatusId { get; set; }
+
         [Obsolete]
         [Display(Name = "id")]
         public string XPlantId { get; set; }
@@ -57,25 +60,17 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "category")]
         public virtual Category Category { get; set; }
 
+        [Display(Name = "status")]
+        public virtual Status Status { get; set; }
+
+        [Display(Name = "comments")]
+        [DataType(DataType.MultilineText)]
+        public string Comment { get; set; }
+
+        [Required]
+        public bool IsImported { get; set; }
+
         [Display(Name = "hire")]
         public virtual ICollection<PlantHire> PlantHires { get; set; }
-
-        [Display(Name = "hired?")]
-        public bool IsHired
-        {
-            get
-            {
-                return PlantHires.Any(f => f.Job != null);
-            }
-        }
-
-        [Display(Name = "disused?")]
-        public bool IsDisused
-        {
-            get
-            {
-                return WhenDisused.HasValue;
-            }
-        }
     }
 }

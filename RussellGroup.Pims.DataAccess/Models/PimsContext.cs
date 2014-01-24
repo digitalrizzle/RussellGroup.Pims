@@ -18,6 +18,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public DbSet<PlantHire> PlantHires { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Setting> Settings { get; set; }
+        public DbSet<Status> Statuses { get; set; }
         public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

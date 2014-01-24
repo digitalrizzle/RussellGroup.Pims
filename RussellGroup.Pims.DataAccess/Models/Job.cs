@@ -39,14 +39,8 @@ namespace RussellGroup.Pims.DataAccess.Models
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
-        [Display(Name = "status")]
-        public Status Status
-        {
-            get
-            {
-                return WhenEnded.HasValue ? Status.Complete : Models.Status.Incomplete;
-            }
-        }
+        [Required]
+        public bool IsImported { get; set; }
 
         [Display(Name = "inventory hire")]
         public virtual ICollection<InventoryHire> InventoryHires { get; set; }
