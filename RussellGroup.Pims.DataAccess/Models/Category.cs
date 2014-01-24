@@ -19,5 +19,8 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [Display(Name = "plant items")]
         public virtual ICollection<Plant> Plants { get; set; }
+
+        [Required]
+        public bool IsImported { get; set; }
     }
 }
