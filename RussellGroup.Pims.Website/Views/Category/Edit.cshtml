@@ -1,0 +1,16 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Category
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Category</h2>
+
+@Html.Partial("_Form")
+
+@section scripts {
+    @Scripts.Render("~/Scripts/view-typeahead.js")
+    <script>
+        wire('Type', '@Url.Content("~/Category/GetTypeSuggestions?q=%QUERY")');
+    </script>
+}
