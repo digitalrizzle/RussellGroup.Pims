@@ -25,11 +25,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDisused)
+            <th class="right">
+                @Html.Encode("jobs")
             </th>
-            <th class="center">
-                @Html.DisplayNameFor(model => model.IsHired)
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th></th>
         </tr>
@@ -49,15 +49,15 @@
                     { "sWidth": "0%" },
                     { "sWidth": "10%" },
                     { "sWidth": "10%" },
-                    { "sWidth": "35%" },
+                    { "sWidth": "30%" },
                     { "sWidth": "20%" },
-                    { "sWidth": "5%", "sClass": "center" },
-                    { "sWidth": "5%", "sClass": "center" },
+                    { "sWidth": "5%", "sClass": "right" },
+                    { "sWidth": "10%" },
                     { "sWidth": "15%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [6, 7] }
+                    { "bSortable": false, "aTargets": [5, 7] }
                 ],
             });
         });

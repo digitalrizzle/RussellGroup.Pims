@@ -17,7 +17,7 @@
         @Html.HiddenFor(model => model.JobId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Docket, new { @class = "control-label col-md-2" })
+            @Html.Label("return docket", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Docket)
                 @Html.ValidationMessageFor(model => model.Docket)
@@ -39,6 +39,9 @@
                                 @Html.DisplayNameFor(model => model.PlantHires.Single().Plant.XPlantNewId)
                             </th>
                             <th>
+                                @Html.DisplayNameFor(model => model.PlantHires.Single().Docket)
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.PlantHires.Single().Plant.Description)
                             </th>
                         </tr>
@@ -51,6 +54,7 @@
                                 <td><input name="@("plant-hire-id-field" + item.PlantHireId)" value="@item.PlantHireId" type="checkbox" /></td>
                                 <td>@Html.DisplayFor(modelItem => item.Plant.XPlantId)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Plant.XPlantNewId)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Docket)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Plant.Description)</td>
                             </tr>
                         }
@@ -74,6 +78,9 @@
                                 @Html.DisplayNameFor(model => model.InventoryHires.Single().Inventory.Quantity)
                             </th>
                             <th>
+                                @Html.DisplayNameFor(model => model.InventoryHires.Single().Docket)
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.InventoryHires.Single().Inventory.Description)
                             </th>
                         </tr>
@@ -86,6 +93,7 @@
                                 <td><input name="@("inventory-hire-id-field" + item.InventoryHireId)" value="@item.InventoryHireId" type="checkbox" /></td>
                                 <td>@Html.DisplayFor(modelItem => item.Inventory.XInventoryId)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Docket)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Inventory.Description)</td>
                             </tr>
                         }
@@ -120,7 +128,8 @@
                 { "sWidth": "5%" },
                 { "sWidth": "15%" },
                 { "sWidth": "15%" },
-                { "sWidth": "65%" },
+                { "sWidth": "15%" },
+                { "sWidth": "50%" },
             ],
             "aoColumnDefs": [
                 { "bVisible": false, "aTargets": [0] },
@@ -137,7 +146,8 @@
                 { "sWidth": "5%" },
                 { "sWidth": "15%" },
                 { "sWidth": "15%" },
-                { "sWidth": "65%" },
+                { "sWidth": "15%" },
+                { "sWidth": "50%" },
             ],
             "aoColumnDefs": [
                 { "bVisible": false, "aTargets": [0] },

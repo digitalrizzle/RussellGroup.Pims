@@ -28,9 +28,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.ProjectManager)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -48,16 +45,15 @@
                 "aoColumns": [
                     { "sWidth": "0%" },
                     { "sWidth": "10%" },
+                    { "sWidth": "25%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
                     { "sWidth": "20%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "15%" },
-                    { "sWidth": "10%" },
                     { "sWidth": "25%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [7] }
+                    { "bSortable": false, "aTargets": [6] }
                 ],
             });
         });

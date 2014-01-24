@@ -35,7 +35,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 sortColumnIndex == 1 ? c.XPlantId :
                     sortColumnIndex == 2 ? c.XPlantNewId :
                         sortColumnIndex == 3 ? c.Description :
-                            sortColumnIndex == 4 ? c.Category.Name : c.IsDisused.ToString());
+                            sortColumnIndex == 4 ? c.Category.Name : c.Status.Name);
 
             // sorting
             IEnumerable<Plant> ordered = Request["sSortDir_0"] == "asc" ?
@@ -57,7 +57,8 @@ namespace RussellGroup.Pims.Website.Controllers
                     (f.XPlantId != null && f.XPlantId.ToUpperInvariant().Contains(hint)) ||
                     (f.XPlantNewId != null && f.XPlantNewId.ToUpperInvariant().Contains(hint)) ||
                     (f.Description != null && f.Description.ToUpperInvariant().Contains(hint)) ||
-                    (f.Category != null && f.Category.Name.ToUpperInvariant().Contains(hint))
+                    (f.Category != null && f.Category.Name.ToUpperInvariant().Contains(hint)) ||
+                    (f.Status != null && f.Status.Name.ToUpperInvariant().Contains(hint))
                 );
             }
 
@@ -75,8 +76,8 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.XPlantNewId,
                     c.Description,
                     c.Category != null ? c.Category.Name : string.Empty,
-                    c.IsDisused.ToYesNo(),
-                    c.IsHired ? this.ActionLink(c.PlantHires.OrderByDescending(f => f.WhenStarted).FirstOrDefault().Job.XJobId, "Details", "Job", new { id = c.PlantHires.OrderByDescending(f => f.WhenStarted).FirstOrDefault().JobId }) : string.Empty,
+                    c.PlantHires.Where(f => !f.Job.WhenEnded.HasValue).Distinct().Count() == 0 ? string.Empty : this.ActionLink(c.PlantHires.Where(f => !f.Job.WhenEnded.HasValue).Distinct().Count().ToString(), "Jobs", new { id = c.PlantId }),
+                    c.Status.Name,
                     this.CrudLinks(new { id = c.PlantId })
                 });
 
@@ -139,8 +140,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 sortColumnIndex == 1 ? c.XJobId :
                     sortColumnIndex == 2 ? c.Description :
                         sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                                sortColumnIndex == 5 ? c.ProjectManager : c.Status.ToString());
+                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.ProjectManager);
 
             // sorting
             IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
@@ -157,7 +157,6 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.ProjectManager,
-                    c.Status.ToString(),
                     this.ActionLink("Details", "Details", "Job", new { id = c.JobId })
                 });
 
@@ -194,7 +193,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = db.Jobs.Count(),
+                iTotalRecords = entries.Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = filtered
             };
@@ -213,7 +212,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "PlantId,CategoryId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool")] Plant plant)
+        public async Task<ActionResult> Create([Bind(Include = "PlantId,CategoryId,StatusId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
         {
             if (ModelState.IsValid)
             {
@@ -245,7 +244,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "PlantId,CategoryId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool")] Plant plant)
+        public async Task<ActionResult> Edit([Bind(Include = "PlantId,CategoryId,StatusId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
         {
             if (ModelState.IsValid)
             {
@@ -301,7 +300,11 @@ namespace RussellGroup.Pims.Website.Controllers
             var categories = db.Categories.OrderBy(f => f.Name);
             var category = plant != null ? plant.CategoryId : 0;
 
+            var statuses = db.Statuses.OrderBy(f => f.StatusId);
+            var status = plant != null ? plant.StatusId : 0;
+
             ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);
+            ViewBag.Statuses = new SelectList(statuses, "StatusId", "Name", status);
 
             return base.View(plant);
         }

@@ -78,7 +78,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var inventories = new List<Inventory>();
 
             if (string.IsNullOrWhiteSpace(docket)) ModelState.AddModelError("Docket", "A docket number is required.");
-            if (plantIds.Count == 0 && inventoryIds.Count == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkout.");
+            if (plantIds.Count() == 0 && inventoryIds.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkout.");
 
             foreach (var id in plantIds) plants.Add(db.Plants.Single(f => f.PlantId == id));
             foreach (var id in inventoryIds) inventories.Add(db.Inventories.Single(f => f.InventoryId == id));
@@ -169,17 +169,17 @@ namespace RussellGroup.Pims.Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Checkin(FormCollection collection)
         {
-            var docket = collection["Docket"];
+            var returnDocket = collection["Docket"];
             var jobId = Convert.ToInt32(collection["JobId"]);
             var plantHireIds = GetIds("plant-hire-id-field", collection);
             var inventoryHireIds = GetIds("inventory-hire-id-field", collection);
 
-            if (string.IsNullOrWhiteSpace(docket)) ModelState.AddModelError("Docket", "A docket number is required.");
-            if (plantHireIds.Count == 0 && inventoryHireIds.Count == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
+            if (string.IsNullOrWhiteSpace(returnDocket)) ModelState.AddModelError("Docket", "A docket number is required.");
+            if (plantHireIds.Count() == 0 && inventoryHireIds.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
 
             if (ModelState.IsValid)
             {
-                await Checkin(plantHireIds, inventoryHireIds);
+                await Checkin(returnDocket, plantHireIds, inventoryHireIds);
                 return RedirectToAction("Details", "Job", new { id = jobId });
             }
 
@@ -193,7 +193,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var transaction = new CheckinTransaction
             {
                 Job = job,
-                Docket = docket,
+                Docket = returnDocket,
                 PlantHires = plantHires,
                 InventoryHires = inventoryHires
             };
@@ -201,7 +201,7 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(transaction);
         }
 
-        private async Task Checkin(IEnumerable<int> plantHireIds, IEnumerable<int> inventoryHireIds)
+        private async Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IEnumerable<int> inventoryHireIds)
         {
             // save plant
             foreach (var id in plantHireIds)
@@ -210,6 +210,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
                 if (hire != null)
                 {
+                    hire.ReturnDocket = returnDocket;
                     hire.WhenEnded = DateTime.Now;
                     db.Entry(hire).State = EntityState.Modified;
                 }
@@ -222,6 +223,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
                 if (hire != null)
                 {
+                    hire.ReturnDocket = returnDocket;
                     hire.WhenEnded = DateTime.Now;
                     db.Entry(hire).State = EntityState.Modified;
                 }
@@ -241,7 +243,7 @@ namespace RussellGroup.Pims.Website.Controllers
             base.Dispose(disposing);
         }
 
-        private List<int> GetIds(string prefix, FormCollection collection)
+        private IEnumerable<int> GetIds(string prefix, FormCollection collection)
         {
             var ids = new List<int>();
 
@@ -254,7 +256,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 }
             }
 
-            return ids;
+            return ids.Distinct();
         }
 
         private new ActionResult View()
