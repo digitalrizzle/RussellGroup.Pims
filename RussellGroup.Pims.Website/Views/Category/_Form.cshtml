@@ -1,0 +1,46 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Category
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@ViewBag.Title</h4>
+        <hr />
+        @Html.ValidationSummary(true)
+        @if (ViewBag.Title == "Edit")
+        { <text>@Html.HiddenFor(model => model.CategoryId)</text> }
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Name, new { @class = "col-span-7" })
+                @Html.ValidationMessageFor(model => model.Name)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Type, new { @class = "col-span-7", placeholder = "begin typing a type..." })
+                @Html.ValidationMessageFor(model => model.Type)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @if (ViewBag.Title == "Edit")
+                {
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                }
+                else
+                {
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                }
+                &nbsp;
+                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn-cancel" })
+            </div>
+        </div>
+    </div>
+}
