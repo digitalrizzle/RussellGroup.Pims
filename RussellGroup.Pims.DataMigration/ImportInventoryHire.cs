@@ -16,6 +16,7 @@ namespace RussellGroup.Pims.DataMigration
             var key = reader.GetValue(SourcePrimaryKeyColumnName);
             var sourceInventory = reader.GetValue("Inv no");
             var sourceJob = reader.GetValue("Job ID");
+            decimal? rate = reader.GetValueOrNull<decimal>("Rate");
 
             var inventory = TargetContext.Inventories.SingleOrDefault(f => f.XInventoryId == sourceInventory);
 
@@ -24,11 +25,10 @@ namespace RussellGroup.Pims.DataMigration
             try { whenStarted = reader.GetDateTime("Start date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
             try { whenEnded = reader.GetDateTime("End date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }                
 
-            decimal? rate = reader.GetValueOrNull<decimal>("Rate");
-            if (rate.HasValue && rate == 0) rate = null;
-
             if (inventory != null)
             {
+                if (rate.HasValue && rate == 0) rate = inventory.Rate;
+
                 var hire = new InventoryHire
                 {
                     InventoryId = inventory.InventoryId,
@@ -39,8 +39,7 @@ namespace RussellGroup.Pims.DataMigration
                     WhenEnded = whenEnded,
                     Rate = rate,
                     Quantity = reader.GetValueOrNull<int>("Qty"),
-                    Comment = reader.GetValue("Comments"),
-                    IsImported = true
+                    Comment = reader.GetValue("Comments")
                 };
 
                 TargetContext.InventoryHires.Add(hire);

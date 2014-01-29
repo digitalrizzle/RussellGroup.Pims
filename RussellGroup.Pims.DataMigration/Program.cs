@@ -46,8 +46,8 @@ namespace RussellGroup.Pims.DataMigration
                     //inventory.Delete().Import();
                     //job.Import();
 
-                    plantHire.Delete().Import(0, IMPORT_CAP);
-                    //inventoryHire.Import(0, IMPORT_CAP);
+                    //plantHire.Delete().Import(0, IMPORT_CAP);
+                    inventoryHire.Delete().Import(0, IMPORT_CAP);
 
                     job.SetAuditing(true);
                 }

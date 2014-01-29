@@ -29,8 +29,7 @@ namespace RussellGroup.Pims.DataMigration
                 Cost = reader.GetValueOrNull<decimal>("Cost") ?? 0,
                 Serial = reader.GetValue("Serial number"),
                 FixedAssetCode = reader.GetValue("Fixed Asset Code"),
-                IsElectrical = reader.IsDBNull(ordinal) ? false : reader[ordinal].ToString().Trim().ToUpper().StartsWith("Y"),
-                IsImported = true
+                IsElectrical = reader.IsDBNull(ordinal) ? false : reader[ordinal].ToString().Trim().ToUpper().StartsWith("Y")
             };
 
             TargetContext.Plants.Add(plant);

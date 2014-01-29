@@ -67,9 +67,6 @@ namespace RussellGroup.Pims.DataAccess.Models
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
-        [Required]
-        public bool IsImported { get; set; }
-
         [Display(Name = "hire")]
         public virtual ICollection<PlantHire> PlantHires { get; set; }
     }

@@ -47,9 +47,6 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "hire")]
         public virtual ICollection<InventoryHire> InventoryHires { get; set; }
 
-        [Required]
-        public bool IsImported { get; set; }
-
         [Display(Name = "disused?")]
         public bool IsDisused
         {

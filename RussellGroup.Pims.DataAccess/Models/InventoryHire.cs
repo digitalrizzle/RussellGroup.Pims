@@ -50,9 +50,6 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "job")]
         public virtual Job Job { get; set; }
 
-        [Required]
-        public bool IsImported { get; set; }
-
         [NotMapped]
         public bool IsChecked { get; set; }
     }
