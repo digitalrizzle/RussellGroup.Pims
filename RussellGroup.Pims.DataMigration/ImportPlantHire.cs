@@ -43,8 +43,7 @@ namespace RussellGroup.Pims.DataMigration
                         WhenStarted = whenStarted,
                         WhenEnded = whenEnded,
                         Rate = reader.GetValueOrNull<decimal>("Rate"),
-                        Comment = reader.GetValue("Comments"),
-                        IsImported = true
+                        Comment = reader.GetValue("Comments")
                     };
 
                 TargetContext.PlantHires.Add(hire);

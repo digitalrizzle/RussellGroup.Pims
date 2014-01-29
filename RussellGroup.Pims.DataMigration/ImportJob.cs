@@ -20,8 +20,7 @@ namespace RussellGroup.Pims.DataMigration
                 WhenEnded = reader.GetDateTime("End date"),
                 ProjectManager = reader.GetValue("Project Manager"),
                 QuantitySurveyor = reader.GetValue("QS"),
-                Comment = reader.GetValue("Comments"),
-                IsImported = true
+                Comment = reader.GetValue("Comments")
             };
 
             TargetContext.Jobs.Add(job);

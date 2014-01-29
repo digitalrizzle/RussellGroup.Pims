@@ -44,6 +44,7 @@
       <mvcSiteMapNode title="Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
       <mvcSiteMapNode title="Delete" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
     </mvcSiteMapNode>
+    <mvcSiteMapNode title="Reports" controller="Report" action="Index" />
     <mvcSiteMapNode title="Users" controller="User" action="Index">
       <mvcSiteMapNode title="Create" action="Create" visibility="SiteMapPathHelper,!*" />
       <mvcSiteMapNode title="Edit" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
