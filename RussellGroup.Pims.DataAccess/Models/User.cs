@@ -10,8 +10,10 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class User
     {
+        [ScaffoldColumn(false)]
         public int UserId { get; set; }
 
+        [ScaffoldColumn(false)]
         [NotMapped]
         public int RoleId { get; set; }
 

@@ -10,6 +10,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class PlantHire
     {
+        [ScaffoldColumn(false)]
         public int PlantHireId { get; set; }
 
         [ForeignKey("Plant")]

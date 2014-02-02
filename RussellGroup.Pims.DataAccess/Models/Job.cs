@@ -10,6 +10,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class Job
     {
+        [ScaffoldColumn(false)]
         public int JobId { get; set; }
 
         [Obsolete]

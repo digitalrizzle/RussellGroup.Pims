@@ -10,6 +10,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class InventoryHire
     {
+        [ScaffoldColumn(false)]
         public int InventoryHireId { get; set; }
 
         [ForeignKey("Inventory")]
