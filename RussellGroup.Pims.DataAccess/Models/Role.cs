@@ -10,6 +10,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class Role
     {
+        [ScaffoldColumn(false)]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         public int RoleId { get; set; }
 

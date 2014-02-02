@@ -9,6 +9,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class Category
     {
+        [ScaffoldColumn(false)]
         public int CategoryId { get; set; }
 
         [Display(Name = "name")]

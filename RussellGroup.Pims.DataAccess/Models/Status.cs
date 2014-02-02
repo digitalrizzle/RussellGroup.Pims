@@ -10,6 +10,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class Status
     {
+        [ScaffoldColumn(false)]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
         public int StatusId { get; set; }
 
