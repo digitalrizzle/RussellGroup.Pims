@@ -55,11 +55,11 @@
         var nextPlant = 0, nextInventory = 0;
 
         $(document).ready(function () {
-            @foreach (var plant in Model.Plants) { <text>addFormField("plant", "@plant.Description", "@plant.PlantId");</text> }
-            @foreach (var inventory in Model.Inventories) { <text>addFormField("inventory", "@inventory.Description", "@inventory.InventoryId");</text> }
+            @foreach (var plant in Model.Plants) { <text>addPlantFormField("@plant.Description", "@plant.PlantId");</text> }
+            @foreach (var inventory in Model.Inventories) { <text>addInventoryFormField("@inventory.Key.Description", "@inventory.Key.InventoryId", "@inventory.Value");</text> }
 
-            addFormField("plant", "", "");
-            addFormField("inventory", "", "");
+            addPlantFormField("", "");
+            addInventoryFormField("", "", "");
         });
 
         var SimpleEngine = {
@@ -75,20 +75,30 @@
             }
         };
 
-        function addFormField(prefix, description, id) {
-            var next = prefix == "plant" ? nextPlant : nextInventory;
+        function addPlantFormField(description, id) {
+            var next = nextPlant;
 
-            var span = '<span id="' + prefix + '-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
-            var div = '<div class="input-group tt-input-group"><input type="text" id="' + prefix + '-field' + ++next + '" name="' + prefix + '-field' + next + '" autocomplete="off" placeholder="begin typing a ' + prefix + ' item..." value="' + description + '" /><input id="' + prefix + '-id-field' + next + '" name="' + prefix + '-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
+            var span = '<span id="plant-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
+            var div = '<div class="input-group tt-input-group"><input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" /><input id="plant-id-field' + next + '" name="plant-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
 
-            $("#" + prefix).append($(div));
-            $("#" + prefix + "-field" + (next - 1)).parent().after($(span));
-            wire(prefix, "#" + prefix + "-field" + next, "#" + prefix + "-field" + (next - 1) + "-icon");
+            $("#plant").append($(div));
+            $("#plant-field" + (next - 1)).parent().after($(span));
+            wire("plant", "#plant-field" + next, "#plant-field" + (next - 1) + "-icon");
 
-            if (prefix == "plant")
-                nextPlant = next;
-            else
-                nextInventory = next;
+            nextPlant = next;
+        }
+
+        function addInventoryFormField(description, id, quantity) {
+            var next = nextInventory;
+
+            var span = '<span id="inventory-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
+            var div = '<div class="input-group tt-input-group"><input type="text" id="inventory-quantity-field' + ++next + '" name="inventory-quantity-field' + next + '" value="' + quantity + '" placeholder="quantity" style="width: 80px; margin-right: 5px" /><input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" /><input id="inventory-id-field' + next + '" name="inventory-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
+
+            $("#inventory").append($(div));
+            $("#inventory-field" + (next - 1)).parent().after($(span));
+            wire("inventory", "#inventory-field" + next, "#inventory-field" + (next - 1) + "-icon");
+
+            nextInventory = next;
         }
 
         function wire(prefix, input, button) {
@@ -108,7 +118,11 @@
             $(input).on("typeahead:selected", function (object, datum) {
                 $(this).attr("disabled", "disabled");
                 $(this).parent().parent().children("[id^=" + prefix + "-id-field]").val(datum.id);
-                addFormField(prefix, "", "");
+
+                if (prefix == "plant")
+                    addPlantFormField("", "");
+                else
+                    addInventoryFormField("", "", "");
             });
 
             if (button) {

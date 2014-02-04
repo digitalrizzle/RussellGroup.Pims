@@ -28,10 +28,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().WhenEnded)
             </th>
-            <th>
+            <th class="right">
                 @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Rate)
             </th>
-            <th>
+            <th class="right">
                 @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Quantity)
             </th>
             <th>
@@ -60,10 +60,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.WhenEnded)
                 </td>
-                <td>
+                <td class="right">
                     @Html.DisplayFor(modelItem => item.Rate)
                 </td>
-                <td>
+                <td class="right">
                     @Html.DisplayFor(modelItem => item.Quantity)
                 </td>
                 <td>
