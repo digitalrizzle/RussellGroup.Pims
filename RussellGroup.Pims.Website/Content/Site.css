@@ -143,6 +143,9 @@ footer {
 }
 
 /* typeahead */
+.twitter-typeahead {
+    display: inline !important;
+}
 
 .twitter-typeahead input[disabled] {
     border: 1px solid #abadb3;

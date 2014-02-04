@@ -19,7 +19,7 @@ namespace RussellGroup.Pims.DataAccess.ViewModels
         public virtual ICollection<Plant> Plants { get; set; }
 
         [Display(Name = "inventory")]
-        public virtual ICollection<Inventory> Inventories { get; set; }
+        public virtual List<KeyValuePair<Inventory, int?>> Inventories { get; set; }
 
         public int? JobId
         {

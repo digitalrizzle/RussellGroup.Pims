@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -26,7 +27,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 Docket = string.Empty,
                 Job = await db.Jobs.FindAsync(id),
                 Plants = new List<Plant>(),
-                Inventories = new List<Inventory>()
+                Inventories = new List<KeyValuePair<Inventory,int?>>()
             };
 
             return View(transaction);
@@ -73,15 +74,15 @@ namespace RussellGroup.Pims.Website.Controllers
             var docket = collection["Docket"];
             var jobId = Convert.ToInt32(collection["JobId"]);
             var plantIds = GetIds("plant-id-field", collection);
-            var inventoryIds = GetIds("inventory-id-field", collection);
+            var inventoryIds = GetIdsAndQuantities("inventory-id-field", "inventory-quantity-field", collection);
             var plants = new List<Plant>();
-            var inventories = new List<Inventory>();
+            var inventories = new List<KeyValuePair<Inventory, int?>>();
 
             if (string.IsNullOrWhiteSpace(docket)) ModelState.AddModelError("Docket", "A docket number is required.");
             if (plantIds.Count() == 0 && inventoryIds.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkout.");
 
             foreach (var id in plantIds) plants.Add(db.Plants.Single(f => f.PlantId == id));
-            foreach (var id in inventoryIds) inventories.Add(db.Inventories.Single(f => f.InventoryId == id));
+            foreach (var pair in inventoryIds) inventories.Add(new KeyValuePair<Inventory, int?>(db.Inventories.Single(f => f.InventoryId == pair.Key), pair.Value));
 
             var transaction = new CheckoutTransaction()
             {
@@ -126,13 +127,13 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 var hire = new InventoryHire
                 {
-                    Inventory = inventory,
+                    Inventory = inventory.Key,
                     Job = transaction.Job,
                     Docket = transaction.Docket,
                     WhenStarted = DateTime.Now,
                     WhenEnded = null,
-                    Rate = inventory.Rate,
-                    Quantity = inventory.Quantity
+                    Rate = inventory.Key.Rate,
+                    Quantity = inventory.Value
                 };
 
                 db.InventoryHires.Add(hire);
@@ -263,6 +264,39 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             return ids.Distinct();
+        }
+
+        private IEnumerable<KeyValuePair<int, int?>> GetIdsAndQuantities(string idPrefix, string quantityPrefix, FormCollection collection)
+        {
+            var pairs = new List<KeyValuePair<int, int?>>();
+
+            foreach (var idKey in collection.AllKeys)
+            {
+                if (idKey.StartsWith(idPrefix) && !string.IsNullOrWhiteSpace(collection[idKey]))
+                {
+                    var idFieldValue = Regex.Replace(idKey, @"[^\d]", "");
+                    var idValue = collection[idKey].Split(',')[0];
+                    var id = Convert.ToInt32(idValue);
+
+                    int? quantity = null;
+                    var quantityKey = collection.AllKeys.SingleOrDefault(f => f == quantityPrefix + idFieldValue);
+
+                    if (quantityKey != null)
+                    {
+                        int result;
+                        var quantityValue = collection[quantityKey].Split(',')[0];
+
+                        if (int.TryParse(quantityValue, out result))
+                        {
+                            quantity = result;
+                        }
+                    }
+
+                    pairs.Add(new KeyValuePair<int,int?>(id, quantity));
+                }
+            }
+
+            return pairs.Distinct();
         }
 
         private new ActionResult View()
