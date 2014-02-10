@@ -1,50 +1,39 @@
-﻿using System;
+﻿using Ninject;
+using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.Website.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using RussellGroup.Pims.DataAccess.Models;
-using RussellGroup.Pims.Website.Helpers;
 
 namespace RussellGroup.Pims.Website
 {
-    // this code has been adapted from:
-    // http://schotime.net/blog/index.php/2009/02/17/custom-authorization-with-aspnet-mvc
-
-    public class PimsAuthorizeAttribute : AuthorizeAttribute
+    public class AuthorizationFilter : IAuthorizationFilter
     {
-        public new RoleType Roles;
+        private readonly IActiveDirectoryHelper helper;
 
-        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        public AuthorizationFilter(IActiveDirectoryHelper helper)
         {
-            if (httpContext == null)
-            {
-                throw new ArgumentNullException("httpContext");
-            }
-
-            // this is not needed as the authorisation checks the user is authenticated
-            //if (!httpContext.Reconciliation.Identity.IsAuthenticated)
-            //{
-            //    return false;
-            //}
-
-            using (var helper = new ActiveDirectoryHelper())
-            {
-                if (!helper.IsAuthorized(Roles))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            this.helper = helper;
         }
 
-        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
-        {
-            base.HandleUnauthorizedRequest(filterContext);
+        [Inject]
+        public RoleType Roles { get; set; }
 
-            filterContext.Result = new RedirectResult("~/Home/Unauthorized");
+        public void OnAuthorization(AuthorizationContext filterContext)
+        {
+            if (!helper.IsAuthorized(Roles))
+            {
+                filterContext.Result = new RedirectResult("~/Home/Unauthorized");
+            }
         }
+    }
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    public class PimsAuthorizeAttribute : Attribute
+    {
+        public RoleType Roles;
     }
 }
