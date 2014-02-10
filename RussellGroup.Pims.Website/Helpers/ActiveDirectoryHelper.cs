@@ -10,7 +10,7 @@ using System.Web;
 
 namespace RussellGroup.Pims.Website.Helpers
 {
-    class ActiveDirectoryHelper : IDisposable
+    public class ActiveDirectoryHelper : IActiveDirectoryHelper
     {
         private const int MAX_PAGE_SIZE = 1000 * 1024 * 1024;
 
