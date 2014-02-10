@@ -11,7 +11,6 @@ using RussellGroup.Pims.DataAccess.Models;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [HandleError]
     [PimsAuthorize(Roles = RoleType.Administrator)]
     public class UserController : Controller
     {

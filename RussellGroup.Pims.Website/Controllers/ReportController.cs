@@ -9,7 +9,6 @@ using System.Web.Mvc;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [HandleError]
     [PimsAuthorize(Roles = RoleType.All)]
     public class ReportController : Controller
     {

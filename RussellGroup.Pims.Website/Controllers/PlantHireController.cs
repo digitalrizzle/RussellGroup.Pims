@@ -12,7 +12,6 @@ using MvcSiteMapProvider;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [HandleError]
     [PimsAuthorize(Roles = RoleType.All)]
     public class PlantHireController : Controller
     {
