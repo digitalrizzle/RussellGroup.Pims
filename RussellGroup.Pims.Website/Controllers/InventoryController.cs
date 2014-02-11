@@ -8,13 +8,19 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
     [PimsAuthorize(Roles = RoleType.All)]
     public class InventoryController : Controller
     {
-        private PimsContext db = new PimsContext();
+        private readonly IInventoryRepository repository;
+
+        public InventoryController(IInventoryRepository repository)
+        {
+            this.repository = repository;
+        }
 
         // GET: /Inventory/
         public ActionResult Index()
@@ -26,8 +32,8 @@ namespace RussellGroup.Pims.Website.Controllers
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IEnumerable<Inventory> entries = db.Inventories;
-            var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
+            IEnumerable<Inventory> entries = repository.GetAll();
+            var sortColumnIndex = model.iSortCol_0;
 
             // ordering
             Func<Inventory, string> ordering = (c =>
@@ -38,7 +44,7 @@ namespace RussellGroup.Pims.Website.Controllers
                                 sortColumnIndex == 5 ? c.Quantity.ToString() : c.Category.Name);
 
             // sorting
-            IEnumerable<Inventory> ordered = Request["sSortDir_0"] == "asc" ?
+            IEnumerable<Inventory> ordered = model.sSortDir_0 == "asc" ?
                 entries.OrderBy(ordering) :
                 entries.OrderByDescending(ordering);
 
@@ -57,7 +63,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 });
 
             // filter for sSearch
-            string hint = Request["sSearch"];
+            string hint = model.sSearch;
             List<string[]> searched = new List<string[]>();
 
             if (string.IsNullOrEmpty(hint))
@@ -89,7 +95,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = db.Inventories.Count(),
+                iTotalRecords = repository.GetAll().Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = filtered
             };
@@ -104,7 +110,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await db.Inventories.FindAsync(id);
+            Inventory inventory = await repository.Find(id);
             if (inventory == null)
             {
                 return HttpNotFound();
@@ -127,8 +133,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Inventories.Add(inventory);
-                await db.SaveChangesAsync();
+                await repository.Add(inventory);
                 return RedirectToAction("Index");
             }
 
@@ -142,7 +147,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await db.Inventories.FindAsync(id);
+            Inventory inventory = await repository.Find(id);
             if (inventory == null)
             {
                 return HttpNotFound();
@@ -159,8 +164,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(inventory).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                await repository.Update(inventory);
                 return RedirectToAction("Index");
             }
             return View(inventory);
@@ -173,7 +177,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await db.Inventories.FindAsync(id);
+            Inventory inventory = await repository.Find(id);
             if (inventory == null)
             {
                 return HttpNotFound();
@@ -186,9 +190,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Inventory inventory = await db.Inventories.FindAsync(id);
-            db.Inventories.Remove(inventory);
-            await db.SaveChangesAsync();
+            await repository.Remove(id);
             return RedirectToAction("Index");
         }
 
@@ -196,7 +198,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -208,7 +210,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(Inventory inventory)
         {
-            var categories = db.Categories.OrderBy(f => f.Name);
+            var categories = repository.Categories.OrderBy(f => f.Name);
             var category = inventory != null ? inventory.CategoryId : 0;
 
             ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);

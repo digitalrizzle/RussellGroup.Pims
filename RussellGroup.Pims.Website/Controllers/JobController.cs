@@ -8,26 +8,32 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
     [PimsAuthorize(Roles = RoleType.All)]
     public class JobController : Controller
     {
-        private PimsContext db = new PimsContext();
+        private readonly IRepository<Job> repository;
+
+        public JobController(IRepository<Job> repository)
+        {
+            this.repository = repository;
+        }
 
         // GET: /Job/
         public ActionResult Index()
         {
-            return View();
+            return View("Index");
         }
 
         // this method has been adapted from the code described here:
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IEnumerable<Job> entries = db.Jobs;
-            var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
+            IQueryable<Job> entries = repository.GetAll();
+            var sortColumnIndex = model.iSortCol_0;
 
             // ordering
             Func<Job, string> ordering = (c =>
@@ -37,7 +43,7 @@ namespace RussellGroup.Pims.Website.Controllers
                             sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.ProjectManager);
 
             // sorting
-            IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
+            IEnumerable<Job> ordered = model.sSortDir_0 == "asc" ?
                 entries.OrderBy(ordering) :
                 entries.OrderByDescending(ordering);
 
@@ -55,7 +61,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 });
 
             // filter for sSearch
-            string hint = Request["sSearch"];
+            string hint = model.sSearch;
             List<string[]> searched = new List<string[]>();
 
             if (string.IsNullOrEmpty(hint))
@@ -87,7 +93,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = db.Jobs.Count(),
+                iTotalRecords = repository.GetAll().Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = filtered
             };
@@ -102,7 +108,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await db.Jobs.FindAsync(id);
+            Job job = await repository.Find(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -127,8 +133,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Jobs.Add(job);
-                await db.SaveChangesAsync();
+                await repository.Add(job);
                 return RedirectToAction("Index");
             }
 
@@ -143,7 +148,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await db.Jobs.FindAsync(id);
+            Job job = await repository.Find(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -161,8 +166,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(job).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                await repository.Update(job);
                 return RedirectToAction("Index");
             }
             return View(job);
@@ -172,8 +176,8 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string hint = Request["q"];
 
-            var result = db
-                .Jobs
+            var result = repository
+                .GetAll()
                 .Where(f => f.ProjectManager.Contains(hint))
                 .OrderBy(f => f.ProjectManager)
                 .Select(f => new { value = f.ProjectManager })
@@ -190,8 +194,8 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string hint = Request["q"];
 
-            var result = db
-                .Jobs
+            var result = repository
+                .GetAll()
                 .Where(f => f.QuantitySurveyor.Contains(hint))
                 .OrderBy(f => f.QuantitySurveyor)
                 .Select(f => new { value = f.QuantitySurveyor })
@@ -212,7 +216,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await db.Jobs.FindAsync(id);
+            Job job = await repository.Find(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -226,9 +230,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Roles = RoleType.Administrator)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Job job = await db.Jobs.FindAsync(id);
-            db.Jobs.Remove(job);
-            await db.SaveChangesAsync();
+            await repository.Remove(id);
             return RedirectToAction("Index");
         }
 
@@ -236,7 +238,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
         }

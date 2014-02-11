@@ -8,13 +8,19 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
     [PimsAuthorize(Roles = RoleType.All)]
     public class PlantController : Controller
     {
-        private PimsContext db = new PimsContext();
+        private readonly IPlantRepository repository;
+
+        public PlantController(IPlantRepository repository)
+        {
+            this.repository = repository;
+        }
 
         // GET: /Plant/
         public ActionResult Index()
@@ -26,8 +32,8 @@ namespace RussellGroup.Pims.Website.Controllers
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IEnumerable<Plant> entries = db.Plants;
-            var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
+            IEnumerable<Plant> entries = repository.GetAll();
+            var sortColumnIndex = model.iSortCol_0;
 
             // ordering
             Func<Plant, string> ordering = (c =>
@@ -37,12 +43,12 @@ namespace RussellGroup.Pims.Website.Controllers
                             sortColumnIndex == 4 ? c.Category.Name : c.Status.Name);
 
             // sorting
-            IEnumerable<Plant> ordered = Request["sSortDir_0"] == "asc" ?
+            IEnumerable<Plant> ordered = model.sSortDir_0 == "asc" ?
                 entries.OrderBy(ordering) :
                 entries.OrderByDescending(ordering);
 
             // filter for sSearch
-            string hint = Request["sSearch"].ToUpperInvariant();
+            string hint = model.sSearch.ToUpperInvariant();
             IEnumerable<Plant> searched;
 
             if (string.IsNullOrEmpty(hint))
@@ -75,7 +81,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.XPlantNewId,
                     c.Description,
                     c.Category != null ? c.Category.Name : string.Empty,
-                    GetJobs(c.PlantId).Count() == 0 ? string.Empty : this.ActionLink(GetJobs(c.PlantId).Count().ToString(), "Jobs", new { id = c.PlantId }),
+                    repository.GetJobs(c.PlantId).Count() == 0 ? string.Empty : this.ActionLink(repository.GetJobs(c.PlantId).Count().ToString(), "Jobs", new { id = c.PlantId }),
                     c.Status.Name,
                     this.CrudLinks(new { id = c.PlantId })
                 });
@@ -83,7 +89,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = db.Plants.Count(),
+                iTotalRecords = repository.GetAll().Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = displayData
             };
@@ -98,7 +104,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await db.Plants.FindAsync(id);
+            Plant plant = await repository.Find(id);
             if (plant == null)
             {
                 return HttpNotFound();
@@ -113,7 +119,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await db.Plants.FindAsync(id);
+            Plant plant = await repository.Find(id);
             if (plant == null)
             {
                 return HttpNotFound();
@@ -127,9 +133,8 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             int id = Convert.ToInt32(Request["id"]);
 
-            var entries = GetJobs(id);
-
-            var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
+            var entries = repository.GetJobs(id);
+            var sortColumnIndex = model.iSortCol_0;
 
             // ordering
             Func<Job, string> ordering = (c =>
@@ -139,7 +144,7 @@ namespace RussellGroup.Pims.Website.Controllers
                             sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.ProjectManager);
 
             // sorting
-            IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
+            IEnumerable<Job> ordered = model.sSortDir_0 == "asc" ?
                 entries.OrderBy(ordering) :
                 entries.OrderByDescending(ordering);
 
@@ -157,7 +162,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 });
 
             // filter for sSearch
-            string hint = Request["sSearch"];
+            string hint = model.sSearch;
             List<string[]> searched = new List<string[]>();
 
             if (string.IsNullOrEmpty(hint))
@@ -212,8 +217,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Plants.Add(plant);
-                await db.SaveChangesAsync();
+                await repository.Add(plant);
                 return RedirectToAction("Index");
             }
 
@@ -227,7 +231,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await db.Plants.FindAsync(id);
+            Plant plant = await repository.Find(id);
             if (plant == null)
             {
                 return HttpNotFound();
@@ -244,8 +248,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(plant).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                await repository.Update(plant);
                 return RedirectToAction("Index");
             }
             return View(plant);
@@ -258,7 +261,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await db.Plants.FindAsync(id);
+            Plant plant = await repository.Find(id);
             if (plant == null)
             {
                 return HttpNotFound();
@@ -271,9 +274,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Plant plant = await db.Plants.FindAsync(id);
-            db.Plants.Remove(plant);
-            await db.SaveChangesAsync();
+            await repository.Remove(id);
             return RedirectToAction("Index");
         }
 
@@ -281,7 +282,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -293,26 +294,16 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(Plant plant)
         {
-            var categories = db.Categories.OrderBy(f => f.Name);
+            var categories = repository.Categories.OrderBy(f => f.Name);
             var category = plant != null ? plant.CategoryId : 0;
 
-            var statuses = db.Statuses.OrderBy(f => f.StatusId);
+            var statuses = repository.Statuses.OrderBy(f => f.StatusId);
             var status = plant != null ? plant.StatusId : 0;
 
             ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);
             ViewBag.Statuses = new SelectList(statuses, "StatusId", "Name", status);
 
             return base.View(plant);
-        }
-
-        private IQueryable<Job> GetJobs(int plantId)
-        {
-            var jobs = (from j in db.Jobs
-                           join p in db.PlantHires on j.JobId equals p.JobId
-                           where !j.WhenEnded.HasValue && p.PlantId == plantId
-                           select j).Distinct();
-
-            return jobs;
         }
     }
 }
