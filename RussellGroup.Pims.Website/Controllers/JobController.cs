@@ -113,7 +113,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
-            return View(job);
+            return View("Details", job);
         }
 
         // GET: /Job/Create
@@ -137,7 +137,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(job);
+            return View("Create", job);
         }
 
         // GET: /Job/Edit/5
@@ -169,7 +169,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 await repository.Update(job);
                 return RedirectToAction("Index");
             }
-            return View(job);
+            return View("Edit", job);
         }
 
         public JsonResult GetProjectManagerSuggestions()
