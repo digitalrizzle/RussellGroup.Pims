@@ -45,5 +45,15 @@ namespace RussellGroup.Pims.DataAccess.Models
         /// Comma separated list of column names
         /// </summary>
         public string sColumns { get; set; }
+
+        /// <summary>
+        /// The first column to sort.
+        /// </summary>
+        public int iSortCol_0 { get; set; }
+
+        /// <summary>
+        /// The sort direction of the first sorting column.
+        /// </summary>
+        public string sSortDir_0 { get; set; }
     }
 }

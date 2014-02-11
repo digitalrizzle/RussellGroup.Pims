@@ -13,6 +13,8 @@ namespace RussellGroup.Pims.Website.App_Start
     using Ninject.Web.Common;
     using Ninject.Web.Mvc.FilterBindingSyntax;
     using RussellGroup.Pims.Website.Helpers;
+    using RussellGroup.Pims.DataAccess.Respositories;
+    using RussellGroup.Pims.DataAccess.Models;
 
     public static class NinjectWebCommon 
     {
@@ -56,6 +58,7 @@ namespace RussellGroup.Pims.Website.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            // for authorisation
             kernel.Bind<IActiveDirectoryHelper>().To<ActiveDirectoryHelper>();
 
             kernel.BindFilter<AuthorizationFilter>(FilterScope.Action, 0)
@@ -65,6 +68,11 @@ namespace RussellGroup.Pims.Website.App_Start
             kernel.BindFilter<AuthorizationFilter>(FilterScope.Controller, 0)
                 .WhenControllerHas<PimsAuthorizeAttribute>()
                 .WithPropertyValueFromControllerAttribute<PimsAuthorizeAttribute>("Roles", f => f.Roles);
+
+            // for repositories
+            kernel.Bind<IRepository<Job>>().To<DbRepository<Job>>();
+            kernel.Bind<IPlantRepository>().To<PlantDbRepository>();
+            kernel.Bind<IRepository<Inventory>>().To<DbRepository<Inventory>>();
         }        
     }
 }
