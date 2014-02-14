@@ -16,20 +16,20 @@ namespace RussellGroup.Pims.Website.App_Start
     using RussellGroup.Pims.DataAccess.Respositories;
     using RussellGroup.Pims.DataAccess.Models;
 
-    public static class NinjectWebCommon 
+    public static class NinjectWebCommon
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             bootstrapper.Initialize(CreateKernel);
         }
-        
+
         /// <summary>
         /// Stops the application.
         /// </summary>
@@ -37,7 +37,7 @@ namespace RussellGroup.Pims.Website.App_Start
         {
             bootstrapper.ShutDown();
         }
-        
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -47,7 +47,7 @@ namespace RussellGroup.Pims.Website.App_Start
             var kernel = new StandardKernel();
             kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
             kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-            
+
             RegisterServices(kernel);
             return kernel;
         }
@@ -70,9 +70,15 @@ namespace RussellGroup.Pims.Website.App_Start
                 .WithPropertyValueFromControllerAttribute<PimsAuthorizeAttribute>("Roles", f => f.Roles);
 
             // for repositories
+            kernel.Bind<IRepository<Category>>().To<DbRepository<Category>>();
             kernel.Bind<IRepository<Job>>().To<DbRepository<Job>>();
+            kernel.Bind<IInventoryRepository>().To<InventoryDbRepository>();
             kernel.Bind<IPlantRepository>().To<PlantDbRepository>();
-            kernel.Bind<IRepository<Inventory>>().To<DbRepository<Inventory>>();
-        }        
+            kernel.Bind<IHireRepository<PlantHire>>().To<HireDbRepository<PlantHire>>();
+            kernel.Bind<IHireRepository<InventoryHire>>().To<HireDbRepository<InventoryHire>>();
+            kernel.Bind<ITransactionRepository>().To<TransactionDbRepository>();
+            kernel.Bind<IReportRepository>().To<ReportDbRepository>();
+            kernel.Bind<IUserRepository>().To<UserDbRepository>();
+        }
     }
 }

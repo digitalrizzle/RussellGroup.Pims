@@ -8,18 +8,24 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
     [PimsAuthorize(Roles = RoleType.Administrator)]
     public class UserController : Controller
     {
-        private PimsContext db = new PimsContext();
+        private readonly IUserRepository repository;
+
+        public UserController(IUserRepository repository)
+        {
+            this.repository = repository;
+        }
 
         // GET: /User/
         public async Task<ActionResult> Index()
         {
-            return View(await db.Users.Include("Roles").ToListAsync());
+            return View(await repository.GetAll().ToListAsync());
         }
 
         // GET: /User/Details/5
@@ -29,7 +35,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = await db.Users.FindAsync(id);
+            User user = await repository.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -42,7 +48,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var user = new User
             {
-                Roles = db.Roles.Where(r => r.RoleId == db.Roles.Max(f => f.RoleId)).ToArray(),
+                Roles = repository.Roles.Where(r => r.RoleId == repository.Roles.Max(f => f.RoleId)).ToArray(),
                 IsEnabled = true
             };
 
@@ -58,12 +64,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                Role role = db.Roles.Single(r => r.RoleId == user.RoleId);
-                user.Roles = new List<Role>();
-                user.Roles.Add(role);
-
-                db.Users.Add(user);
-                await db.SaveChangesAsync();
+                await repository.Add(user);
                 return RedirectToAction("Index");
             }
 
@@ -77,7 +78,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = await db.Users.FindAsync(id);
+            User user = await repository.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -94,15 +95,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(user).State = EntityState.Modified;
-
-                await db.Entry(user).Collection(f => f.Roles).LoadAsync();
-                Role role = db.Roles.Single(r => r.RoleId == user.RoleId);
-                user.Roles.RemoveAll();
-                user.Roles.Add(role);
-
-                await db.SaveChangesAsync();
-
+                await repository.Update(user);
                 return RedirectToAction("Index");
             }
             return View(user);
@@ -115,7 +108,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = await db.Users.FindAsync(id);
+            User user = await repository.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -128,9 +121,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            User user = await db.Users.FindAsync(id);
-            db.Users.Remove(user);
-            await db.SaveChangesAsync();
+            await repository.Remove(id);
             return RedirectToAction("Index");
         }
 
@@ -138,7 +129,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -150,8 +141,8 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(User user)
         {
-            var roles = db.Roles.OrderBy(f => f.Name);
-            var role = user != null && user.Roles != null && user.Roles.Count > 0 ? user.Roles.Min(f => f.RoleId) : db.Roles.Max(f => f.RoleId);
+            var roles = repository.Roles.OrderBy(f => f.Name);
+            var role = user != null && user.Roles != null && user.Roles.Count > 0 ? user.Roles.Min(f => f.RoleId) : repository.Roles.Max(f => f.RoleId);
             user.RoleId = role;
 
             ViewBag.Roles = new SelectList(roles, "RoleId", "Name", role);

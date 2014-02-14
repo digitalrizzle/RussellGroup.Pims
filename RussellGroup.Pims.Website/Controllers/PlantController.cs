@@ -48,7 +48,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 entries.OrderByDescending(ordering);
 
             // filter for sSearch
-            string hint = model.sSearch.ToUpperInvariant();
+            string hint = (model.sSearch ?? string.Empty).ToUpperInvariant();
             IEnumerable<Plant> searched;
 
             if (string.IsNullOrEmpty(hint))

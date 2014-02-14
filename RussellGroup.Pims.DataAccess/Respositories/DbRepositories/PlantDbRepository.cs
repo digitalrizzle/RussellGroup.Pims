@@ -9,7 +9,6 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 {
     public class PlantDbRepository : DbRepository<Plant>, IPlantRepository
     {
-
         public IQueryable<Category> Categories
         {
             get { return db.Categories; }
