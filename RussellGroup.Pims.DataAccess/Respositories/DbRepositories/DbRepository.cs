@@ -36,9 +36,9 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             return item;
         }
 
-        public async Task Remove(int id)
+        public async Task Remove(params object[] keyValues)
         {
-            var item = await Find(id);
+            var item = await Find(keyValues);
             var result = db.Set<T>().Remove(item);
         }
 

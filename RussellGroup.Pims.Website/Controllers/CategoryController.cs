@@ -8,18 +8,24 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
     [PimsAuthorize(Roles = RoleType.Administrator)]
     public class CategoryController : Controller
     {
-        private PimsContext db = new PimsContext();
+        private readonly IRepository<Category> repository;
+
+        public CategoryController(IRepository<Category> repository)
+        {
+            this.repository = repository;
+        }
 
         // GET: /Category/
         public async Task<ActionResult> Index()
         {
-            return View(await db.Categories.ToListAsync());
+            return View(await repository.GetAll().ToListAsync());
         }
 
         // GET: /Category/Details/5
@@ -29,7 +35,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await db.Categories.FindAsync(id);
+            Category category = await repository.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -52,8 +58,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Categories.Add(category);
-                await db.SaveChangesAsync();
+                await repository.Add(category);
                 return RedirectToAction("Index");
             }
 
@@ -67,7 +72,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await db.Categories.FindAsync(id);
+            Category category = await repository.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -84,8 +89,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(category).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                await repository.Update(category);
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -95,8 +99,8 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string hint = Request["q"];
 
-            var result = db
-                .Categories
+            var result = repository
+                .GetAll()
                 .Where(f => f.Type.Contains(hint))
                 .OrderBy(f => f.Type)
                 .Select(f => new { value = f.Type })
@@ -116,7 +120,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await db.Categories.FindAsync(id);
+            Category category = await repository.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -129,9 +133,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Category category = await db.Categories.FindAsync(id);
-            db.Categories.Remove(category);
-            await db.SaveChangesAsync();
+            await repository.Remove(id);
             return RedirectToAction("Index");
         }
 
@@ -139,7 +141,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
         }

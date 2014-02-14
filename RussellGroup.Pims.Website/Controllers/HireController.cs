@@ -1,4 +1,5 @@
 ﻿using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
 using RussellGroup.Pims.DataAccess.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,12 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Roles = RoleType.All)]
     public class HireController : Controller
     {
-        private PimsContext db = new PimsContext();
+        private readonly ITransactionRepository repository;
+
+        public HireController(ITransactionRepository repository)
+        {
+            this.repository = repository;
+        }
 
         #region Checkout
 
@@ -24,7 +30,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var transaction = new CheckoutTransaction()
             {
                 Docket = string.Empty,
-                Job = await db.Jobs.FindAsync(id),
+                Job = await repository.GetJob(id),
                 Plants = new List<Plant>(),
                 Inventories = new List<KeyValuePair<Inventory,int?>>()
             };
@@ -36,7 +42,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string hint = Request["q"];
 
-            var result = db
+            var result = repository
                 .Plants
                 .Where(f => f.StatusId == 2 && (f.XPlantId.StartsWith(hint) || f.Description.Contains(hint)))
                 .Take(5)
@@ -53,7 +59,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string hint = Request["q"];
 
-            var result = db
+            var result = repository
                 .Inventories
                 .Where(f => !f.WhenDisused.HasValue && (f.XInventoryId.StartsWith(hint) || f.Description.Contains(hint)))
                 .Take(5)
@@ -73,72 +79,32 @@ namespace RussellGroup.Pims.Website.Controllers
             var docket = collection["Docket"];
             var jobId = Convert.ToInt32(collection["JobId"]);
             var plantIds = GetIds("plant-id-field", collection);
-            var inventoryIds = GetIdsAndQuantities("inventory-id-field", "inventory-quantity-field", collection);
+            var inventoryIdsAndQuantities = GetIdsAndQuantities("inventory-id-field", "inventory-quantity-field", collection);
+            var job = await repository.GetJob(jobId);
             var plants = new List<Plant>();
-            var inventories = new List<KeyValuePair<Inventory, int?>>();
+            var inventoriesAndQuantities = new List<KeyValuePair<Inventory, int?>>();
 
             if (string.IsNullOrWhiteSpace(docket)) ModelState.AddModelError("Docket", "A docket number is required.");
-            if (plantIds.Count() == 0 && inventoryIds.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkout.");
+            if (plantIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkout.");
 
-            foreach (var id in plantIds) plants.Add(db.Plants.Single(f => f.PlantId == id));
-            foreach (var pair in inventoryIds) inventories.Add(new KeyValuePair<Inventory, int?>(db.Inventories.Single(f => f.InventoryId == pair.Key), pair.Value));
+            foreach (var id in plantIds) plants.Add(repository.Plants.Single(f => f.PlantId == id));
+            foreach (var pair in inventoryIdsAndQuantities) inventoriesAndQuantities.Add(new KeyValuePair<Inventory, int?>(repository.Inventories.Single(f => f.InventoryId == pair.Key), pair.Value));
 
             var transaction = new CheckoutTransaction()
             {
                 Docket = docket,
-                Job = await db.Jobs.FindAsync(jobId),
+                Job = job,
                 Plants = plants,
-                Inventories = inventories
+                Inventories = inventoriesAndQuantities
             };
 
             if (ModelState.IsValid)
             {
-                await Checkout(transaction);
+                await repository.Checkout(job, docket, plantIds, inventoryIdsAndQuantities);
                 return RedirectToAction("Details", "Job", new { id = jobId });
             }
 
             return View(transaction);
-        }
-
-        private async Task Checkout(CheckoutTransaction transaction)
-        {
-            // save plant
-            foreach (var plant in transaction.Plants)
-            {
-                var hire = new PlantHire
-                {
-                    Plant = plant,
-                    Job = transaction.Job,
-                    Docket = transaction.Docket,
-                    WhenStarted = DateTime.Now,
-                    WhenEnded = null,
-                    Rate = plant.Rate
-                };
-
-                db.PlantHires.Add(hire);
-
-                plant.StatusId = 3; // unavailable
-                db.Entry(plant).State = EntityState.Modified;
-            }
-
-            // save inventory
-            foreach (var inventory in transaction.Inventories)
-            {
-                var hire = new InventoryHire
-                {
-                    Inventory = inventory.Key,
-                    Job = transaction.Job,
-                    Docket = transaction.Docket,
-                    WhenStarted = DateTime.Now,
-                    WhenEnded = null,
-                    Rate = inventory.Key.Rate,
-                    Quantity = inventory.Value
-                };
-
-                db.InventoryHires.Add(hire);
-            }
-
-            await db.SaveChangesAsync();
         }
 
         #endregion
@@ -151,7 +117,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await db.Jobs.FindAsync(id);
+            Job job = await repository.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -182,13 +148,13 @@ namespace RussellGroup.Pims.Website.Controllers
 
             if (ModelState.IsValid)
             {
-                await Checkin(returnDocket, plantHireIds, inventoryHireIds);
+                await repository.Checkin(returnDocket, plantHireIds, inventoryHireIds);
                 return RedirectToAction("Details", "Job", new { id = jobId });
             }
 
-            var job = db.Jobs.Single(f => f.JobId == jobId);
-            var plantHires = job.PlantHires.Where(f => !f.WhenEnded.HasValue).ToList();
-            var inventoryHires = job.InventoryHires.Where(f => !f.WhenEnded.HasValue).ToList();
+            var job = await repository.GetJob(jobId);
+            var plantHires = repository.GetActivePlantHiresInJob(jobId).ToList();
+            var inventoryHires = repository.GetActiveInventoryHiresInJob(jobId).ToList();
 
             foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.PlantHireId)) hire.IsChecked = true;
             foreach (var hire in inventoryHires) if (inventoryHireIds.Any(f => f == hire.InventoryHireId)) hire.IsChecked = true;
@@ -204,47 +170,13 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(transaction);
         }
 
-        private async Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IEnumerable<int> inventoryHireIds)
-        {
-            // save plant
-            foreach (var id in plantHireIds)
-            {
-                var hire = db.PlantHires.SingleOrDefault(f => f.PlantHireId == id && !f.WhenEnded.HasValue);
-
-                if (hire != null)
-                {
-                    hire.ReturnDocket = returnDocket;
-                    hire.WhenEnded = DateTime.Now;
-                    db.Entry(hire).State = EntityState.Modified;
-                }
-
-                hire.Plant.StatusId = 2; // available
-                db.Entry(hire.Plant).State = EntityState.Modified;
-            }
-
-            // save inventory
-            foreach (var id in inventoryHireIds)
-            {
-                var hire = db.InventoryHires.SingleOrDefault(f => f.InventoryHireId == id && !f.WhenEnded.HasValue);
-
-                if (hire != null)
-                {
-                    hire.ReturnDocket = returnDocket;
-                    hire.WhenEnded = DateTime.Now;
-                    db.Entry(hire).State = EntityState.Modified;
-                }
-            }
-
-            await db.SaveChangesAsync();
-        }
-
         #endregion
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -305,7 +237,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(CheckoutTransaction transaction)
         {
-            var jobs = db.Jobs.OrderByDescending(f => f.WhenStarted);
+            var jobs = repository.Jobs.OrderByDescending(f => f.WhenStarted);
 
             ViewBag.Jobs = new SelectList(jobs, "JobId", "Description", transaction.JobId);
 

@@ -1,4 +1,5 @@
 ﻿using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,12 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Roles = RoleType.All)]
     public class ReportController : Controller
     {
-        private PimsContext db = new PimsContext();
+        private readonly IReportRepository repository;
+
+        public ReportController(IReportRepository repository)
+        {
+            this.repository = repository;
+        }
 
         // GET: /Report/
         public ActionResult Index()
@@ -24,7 +30,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IEnumerable<Job> entries = db.Jobs;
+            IEnumerable<Job> entries = repository.Jobs;
             var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
 
             // ordering
@@ -88,16 +94,15 @@ namespace RussellGroup.Pims.Website.Controllers
             foreach (string[] row in filtered)
             {
                 int id = Convert.ToInt32(row[0]);
-                var job = db.Jobs.Find(id);
 
-                row[6] = job.PlantHires.Count.ToString();
-                row[7] = job.InventoryHires.Count.ToString();
+                row[6] = repository.GetActivePlantHiresInJob(id).Count().ToString();
+                row[7] = repository.GetActiveInventoryHiresInJob(id).Count().ToString();
             }
 
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = db.Jobs.Count(),
+                iTotalRecords = repository.Jobs.Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = filtered
             };
@@ -111,7 +116,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await db.Jobs.FindAsync(id);
+            Job job = await repository.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -123,7 +128,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -65,13 +65,21 @@
     <Compile Include="Models\Status.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Respositories\DbRepository.cs" />
+    <Compile Include="Respositories\DbRepositories\DbRepository.cs" />
+    <Compile Include="Respositories\DbRepositories\HireDbRepository.cs" />
+    <Compile Include="Respositories\IReportRepository.cs" />
+    <Compile Include="Respositories\DbRepositories\ReportDbRepository.cs" />
+    <Compile Include="Respositories\DbRepositories\TransactionDbRepository.cs" />
     <Compile Include="Respositories\IInventoryRepository.cs" />
+    <Compile Include="Respositories\IHireRepository.cs" />
     <Compile Include="Respositories\IPlantRepository.cs" />
     <Compile Include="Respositories\IRepository.cs" />
-    <Compile Include="Respositories\MemoryRepository.cs" />
-    <Compile Include="Respositories\InventoryDbRepository.cs" />
-    <Compile Include="Respositories\PlantDbRepository.cs" />
+    <Compile Include="Respositories\ITransactionRepository.cs" />
+    <Compile Include="Respositories\IUserRepository.cs" />
+    <Compile Include="Respositories\MemoryRepositories\MemoryRepository.cs" />
+    <Compile Include="Respositories\DbRepositories\InventoryDbRepository.cs" />
+    <Compile Include="Respositories\DbRepositories\PlantDbRepository.cs" />
+    <Compile Include="Respositories\DbRepositories\UserDbRepository.cs" />
     <Compile Include="ViewModels\CheckinTransaction.cs" />
     <Compile Include="ViewModels\CheckoutTransaction.cs" />
   </ItemGroup>

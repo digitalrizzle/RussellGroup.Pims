@@ -15,6 +15,6 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
         Task<T> Add(T item);
         Task<T> Update(T item);
-        Task Remove(int id);
+        Task Remove(params object[] keyValues);
     }
 }

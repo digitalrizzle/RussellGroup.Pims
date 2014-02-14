@@ -8,14 +8,19 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
-using MvcSiteMapProvider;
+using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
     [PimsAuthorize(Roles = RoleType.All)]
     public class PlantHireController : Controller
     {
-        private PimsContext db = new PimsContext();
+        private readonly IHireRepository<PlantHire> repository;
+
+        public PlantHireController(IHireRepository<PlantHire> repository)
+        {
+            this.repository = repository;
+        }
 
         // GET: /PlantHire/5
         public async Task<ActionResult> Index(int? id)
@@ -24,7 +29,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await db.Jobs.FindAsync(id);
+            var job = await repository.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -40,7 +45,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await db.PlantHires.FindAsync(hireId);
+            PlantHire hire = await repository.Find(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -56,7 +61,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await db.Jobs.FindAsync(id);
+            var job = await repository.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -81,8 +86,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.PlantHires.Add(hire);
-                await db.SaveChangesAsync();
+                await repository.Add(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
             return View(hire);
@@ -95,7 +99,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await db.PlantHires.FindAsync(hireId);
+            PlantHire hire = await repository.Find(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -112,8 +116,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(hire).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                await repository.Update(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
             return View(hire);
@@ -126,7 +129,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await db.PlantHires.FindAsync(hireId);
+            PlantHire hire = await repository.Find(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -139,17 +142,16 @@ namespace RussellGroup.Pims.Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int hireId)
         {
-            PlantHire hire = await db.PlantHires.FindAsync(hireId);
-            db.PlantHires.Remove(hire);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index", new { id = hire.JobId });
+            int id = (await repository.Find(hireId)).JobId;
+            await repository.Remove(hireId);
+            return RedirectToAction("Index", new { id = id });
         }
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -161,7 +163,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(PlantHire hire)
         {
-            var plants = db.Plants.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XPlantId);
+            var plants = repository.Plants.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XPlantId);
 
             ViewBag.Plants = new SelectList(plants, "PlantId", "XPlantId", hire.PlantId);
 
