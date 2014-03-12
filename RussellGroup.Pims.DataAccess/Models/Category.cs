@@ -20,5 +20,8 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [Display(Name = "plant items")]
         public virtual ICollection<Plant> Plants { get; set; }
+
+        [Display(Name = "inventory items")]
+        public virtual ICollection<Inventory> Inventories { get; set; }
     }
 }

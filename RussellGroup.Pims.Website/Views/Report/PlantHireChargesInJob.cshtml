@@ -1,0 +1,137 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Job
+
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = "Plant in job - detailed";
+}
+
+<h2>@Model.Description</h2>
+<h3>@ViewBag.Title</h3>
+<h4>Project Manager: @Html.Encode(Model.ProjectManager)</h4>
+<h5>Period: @Html.Encode(ViewBag.WhenStarted.ToShortDateString()) - @Html.Encode(ViewBag.WhenEnded.ToShortDateString())</h5>
+
+@if (Model.PlantHires
+    .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+    .Count(f => !f.WhenEnded.HasValue) == 0)
+{
+    <p>There is no plant hire for this job in the given period.</p>
+}
+else
+{
+    decimal grand = 0;
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    plant id
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.Serial)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Docket)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().ReturnDocket)
+                </th>
+                <th>
+                    start
+                </th>
+                <th>
+                    end
+                </th>
+                <th class="right">
+                    days
+                </th>
+                <th class="right">
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Rate)
+                </th>
+                <th class="right">
+                    cost
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var category in Model.PlantHires
+                .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+                .Select(f => f.Plant.Category)
+                .Distinct()
+                .OrderBy(f => f.Name)
+                .ToList())
+            {
+                decimal total = 0, cost = 0;
+                <tr>
+                    <td colspan="10"><strong>@Html.Encode(category.Name)</strong></td>
+                </tr>
+                foreach (var item in Model.PlantHires
+                    .Where(f => f.Plant.Category == category)
+                    .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+                    .OrderBy(f => f.Plant.XPlantId))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => item.Plant.XPlantId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Plant.Serial)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Plant.Description)
+                            <br />
+                            @Html.DisplayFor(m => item.Comment)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Docket)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.ReturnDocket)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.WhenStarted)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.WhenEnded)
+                        </td>
+                        <td class="right">
+                            @if (item.WhenStarted.HasValue && item.WhenEnded.HasValue)
+                            {
+                                <text>@Html.Encode(item.WhenEnded.Value.Subtract(item.WhenStarted.Value).Days)</text>
+                            }
+                            else if (item.WhenStarted.HasValue)
+                            {
+                                <text>@Html.Encode(DateTime.Now.Subtract(item.WhenStarted.Value).Days)</text>
+                            }
+                        </td>
+                        <td class="right">
+                            @Html.DisplayFor(m => item.Rate)
+                        </td>
+                        <td class="right">
+                            @if (item.WhenStarted.HasValue && item.WhenEnded.HasValue)
+                            {
+                                cost = item.WhenEnded.Value.Subtract(item.WhenStarted.Value).Days * item.Rate.Value;
+                            }
+                            else if (item.WhenStarted.HasValue)
+                            {
+                                cost = DateTime.Now.Subtract(item.WhenStarted.Value).Days * item.Rate.Value;
+                            }
+                            @Html.Encode(cost)
+                            @{total += cost;}
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="10" class="right"><strong>@Html.Encode(string.Format("${0:0.00}", total))</strong></td>
+                    @{grand += total;}
+                </tr>
+            }
+            <tr>
+                <td><strong>TOTAL</strong></td>
+                <td colspan="9" class="right"><strong>@Html.Encode(string.Format("${0:0.00}", grand))</strong></td>
+            </tr>
+        </tbody>
+    </table>
+}

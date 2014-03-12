@@ -1,0 +1,79 @@
+﻿@model RussellGroup.Pims.DataAccess.ReportModels.InventoryLocationsReportModel
+
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = string.Format("Inventory Locations for {0}", Model.Category.Name);
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (Model.InventoryHireInJobs.Count() == 0)
+{
+    <p>There are no jobs for this category.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    job id
+                </th>
+                <th>
+                    job
+                </th>
+                <th>
+                    when hired
+                </th>
+                <th>
+                    inventory id
+                </th>
+                <th>
+                    inventory description
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var job in Model.InventoryHireInJobs)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => job.Job.XJobId)
+                    </td>
+                    <td colspan="4">
+                        @Html.DisplayFor(m => job.Job.Description)
+                    </td>
+                </tr>
+                foreach (var item in job.InventoryHires)
+                {
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.WhenStarted)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Inventory.XInventoryId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Inventory.Description)
+                        </td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td><strong>TOTAL</strong></td>
+                <td>
+                    <strong>@Html.Encode(Model.InventoryHireInJobs.Count()) items</strong>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+}
+

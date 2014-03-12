@@ -456,9 +456,16 @@
     <Content Include="Views\Category\Index.cshtml" />
     <Content Include="Views\Category\_Details.cshtml" />
     <Content Include="Views\Category\_Form.cshtml" />
-    <Content Include="Views\Report\Job.cshtml" />
-    <Content Include="Views\Report\Index.cshtml" />
+    <Content Include="Views\Report\InventoryInJob.cshtml" />
+    <Content Include="Views\Report\JobIndex.cshtml" />
     <Content Include="Views\Shared\_ReportLayout.cshtml" />
+    <Content Include="Views\Report\CategoryIndex.cshtml" />
+    <Content Include="Views\Report\PlantLocations.cshtml" />
+    <Content Include="Views\Report\InventoryLocations.cshtml" />
+    <Content Include="Views\Report\PlantInJob.cshtml" />
+    <Content Include="Views\Report\JobIndexWithDateFilter.cshtml" />
+    <Content Include="Views\Report\PlantHireChargesInJob.cshtml" />
+    <Content Include="Views\Report\InventoryStocktakeInJob.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RussellGroup.Pims.DataAccess\RussellGroup.Pims.DataAccess.csproj">

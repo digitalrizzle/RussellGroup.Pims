@@ -82,6 +82,8 @@
     <Compile Include="Respositories\DbRepositories\UserDbRepository.cs" />
     <Compile Include="ViewModels\CheckinTransaction.cs" />
     <Compile Include="ViewModels\CheckoutTransaction.cs" />
+    <Compile Include="ReportModels\InventoryLocationsReportModel.cs" />
+    <Compile Include="ReportModels\PlantLocationsReportModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

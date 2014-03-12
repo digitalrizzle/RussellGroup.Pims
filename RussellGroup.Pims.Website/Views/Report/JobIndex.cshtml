@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Job>
 
 @{
-    ViewBag.Title = "Reports";
+    ViewBag.Title = "Reports by job";
 }
 
 <h2>@ViewBag.Title</h2>
@@ -25,10 +25,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.ProjectManager)
             </th>
-            <th>
+            <th class="right">
                 Plant
             </th>
-            <th>
+            <th class="right">
                 Inventory
             </th>
             <th></th>
@@ -48,13 +48,13 @@
                 "aoColumns": [
                     { "sWidth": "0%" },
                     { "sWidth": "10%" },
-                    { "sWidth": "25%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
                     { "sWidth": "20%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "15%" },
                     { "sWidth": "5%", "sClass": "right" },
                     { "sWidth": "5%", "sClass": "right" },
-                    { "sWidth": "15%", "sClass": "right" }
+                    { "sWidth": "25%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },

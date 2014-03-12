@@ -1,0 +1,65 @@
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Category>
+
+@{
+    ViewBag.Title = "Reports by category";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CategoryId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @if (item.Plants.Count > 0)
+                    { <text>@Html.Raw(string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantLocations", new { id = item.CategoryId }), "Plant Locations #69"))</text> }
+                    else if (item.Inventories.Count > 0)
+                    { <text>@Html.Raw(string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryLocations", new { id = item.CategoryId }), "Inventory Locations #71"))</text> }
+                    else
+                    { <text><i>No jobs available</i></text> }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('.table').dataTable({
+                "bProcessing": true,
+                "bStateSave": true,
+                "sPaginationType": 'full_numbers',
+                "aoColumnDefs": [
+                    { "bVisible": false, "aTargets": [0] },
+                    { "bSortable": false, "aTargets": [3] }
+                ],
+            });
+        });
+    </script>
+}

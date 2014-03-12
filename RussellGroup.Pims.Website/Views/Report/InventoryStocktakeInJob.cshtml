@@ -1,0 +1,70 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Job
+
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = "Inventory stocktake in job";
+}
+
+<h2>@Model.Description</h2>
+<h3>@ViewBag.Title</h3>
+
+@if (Model.InventoryHires.Count(f => !f.WhenEnded.HasValue) == 0)
+{
+    <p>There is no inventory hire for this job.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    inventory id
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.InventoryHires.First().Inventory.Description)
+                </th>
+                <th class="right">
+                    quantity<br />in system
+                </th>
+                <th class="right col-md-1">
+                    quantity<br />counted
+                </th>
+                <th class="col-md-5">
+                    comments
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var category in Model.InventoryHires
+                .Select(f => f.Inventory.Category)
+                .Distinct()
+                .OrderBy(f => f.Name).ToList())
+            {
+                <tr>
+                    <td colspan="5"><strong>@Html.Encode(category.Name)</strong></td>
+                </tr>
+                foreach (var inventory in Model.InventoryHires
+                    .Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue)
+                    .OrderBy(f => f.Inventory.XInventoryId)
+                    .Select(f => f.Inventory)
+                    .Distinct())
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => inventory.XInventoryId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => inventory.Description)
+                        </td>
+                        <td class="right">
+                            @Html.Encode(Model.InventoryHires.Where(f => f.Inventory == inventory).Sum(f => f.Quantity))
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
