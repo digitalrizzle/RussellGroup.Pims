@@ -1,0 +1,102 @@
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Job>
+
+@{
+    ViewBag.Title = "Reports for jobs by date";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="form-horizontal" style="margin-left: -50px; margin-top: 20px">
+    <div class="form-group">
+        <label class="control-label col-sm-2">Dated from:</label>
+        <div class="input-group">
+            @Html.TextBox("WhenStarted", (ViewBag.WhenStarted as string), "{0:d/MM/yyyy}", new { @class = "col-span-1" })
+            <span id="WhenStarted-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2">to:</label>
+        <div class="input-group">
+            @Html.TextBox("WhenEnded", (ViewBag.WhenEnded as string), "{0:d/MM/yyyy}", new { @class = "col-span-1" })
+            <span id="WhenEnded-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+        </div>
+    </div>
+</div>
+
+<div style="clear: both">
+    <hr />
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.XJobId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WhenStarted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WhenEnded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectManager)
+            </th>
+            <th class="right">
+                Plant
+            </th>
+            <th class="right">
+                Inventory
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts {
+    @Scripts.Render("~/Scripts/view-datepickers.js")
+
+    <script>
+        $(document).ready(function () {
+            $('.table').dataTable({
+                "bProcessing": true,
+                "bServerSide": true,
+                "bStateSave": true,
+                "sAjaxSource": '@Url.Content("~/Report/GetDataTableResult?bDetailed=true")',
+                "sPaginationType": 'full_numbers',
+                "aoColumns": [
+                    { "sWidth": "0%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "20%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "10%" },
+                    { "sWidth": "15%" },
+                    { "sWidth": "5%", "sClass": "right" },
+                    { "sWidth": "5%", "sClass": "right" },
+                    { "sWidth": "25%", "sClass": "right" }
+                ],
+                "aoColumnDefs": [
+                    { "bVisible": false, "aTargets": [0] },
+                    { "bSortable": false, "aTargets": [6, 7, 8] }
+                ],
+                fnDrawCallback: function () {
+                    $("a", "td").on("click", function (e) {
+                        e.preventDefault();
+                        window.open(this.href + getFilterUrlParameters(), '_blank');
+                    });
+                }
+            });
+        });
+
+        function getFilterUrlParameters() {
+            var url = '?WhenStarted=' + encodeURIComponent($('#WhenStarted').val());
+            url = url + '&WhenEnded=' + encodeURIComponent($('#WhenEnded').val());
+
+            return url;
+        }
+    </script>
+}

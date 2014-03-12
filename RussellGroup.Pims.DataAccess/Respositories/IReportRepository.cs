@@ -1,4 +1,5 @@
 ﻿using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.ReportModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +10,10 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 {
     public interface IReportRepository : IDisposable
     {
-        Task<Job> GetJob(int? id);
-
         IQueryable<Job> Jobs { get; }
+        IQueryable<Category> Categories { get; }
 
-        IQueryable<PlantHire> GetActivePlantHiresInJob(int? jobId);
-        IQueryable<InventoryHire> GetActiveInventoryHiresInJob(int? jobId);
+        PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId);
+        InventoryLocationsReportModel GetInventoryLocationsByCategory(int? categoryId);
     }
 }

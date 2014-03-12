@@ -1,0 +1,106 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Job
+
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = "Plant in job";
+}
+
+<h2>@Model.Description</h2>
+<h3>@ViewBag.Title</h3>
+<h4>Project Manager: @Html.Encode(Model.ProjectManager)</h4>
+
+@if (Model.PlantHires.Count(f => !f.WhenEnded.HasValue) == 0)
+{
+    <p>There is no plant hire for this job.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    plant id
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.Serial)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Docket)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().WhenStarted)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Comment)
+                </th>
+                <th>
+                    additional comments
+                </th>
+                <th>
+                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.XPlantNewId)
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var category in Model.PlantHires.Select(f => f.Plant.Category).Distinct().OrderBy(f => f.Name).ToList())
+            {
+                <tr>
+                    <td colspan="9"><strong>@Html.Encode(category.Name)</strong></td>
+                </tr>
+                foreach (var item in Model.PlantHires.Where(f => f.Plant.Category == category && !f.WhenEnded.HasValue).OrderBy(f => f.Plant.XPlantId))
+                {
+                    <tr>
+                        <td>
+                            <span style="border: 1px solid black; padding: 5px 10px">Y</span>
+                            <span style="border: 1px solid black; padding: 5px 10px">N</span>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Plant.XPlantId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Plant.Serial)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Plant.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Docket)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.WhenStarted)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Comment)
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => item.Plant.XPlantNewId)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <p>
+        *** Please ensure each item is marked off (Y/N) and where any details
+        are incorrect, e.g. serial no., plant id, record in the comments column.
+        Should items not be on your job where possible record: plant transfer no.,
+        date transferred and where. Any additional items should also be added to
+        the bottom of this report with all relevant details.
+    </p>
+    <br />
+    <br />
+    <br />
+    <div class="row">
+        <div class="col-md-4">Checked by: ____________________</div>
+        <div class="col-md-4">Signature: ____________________</div>
+        <div class="col-md-4">Date: ____________________</div>
+    </div>
+}

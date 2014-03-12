@@ -1,0 +1,77 @@
+﻿@model RussellGroup.Pims.DataAccess.ReportModels.PlantLocationsReportModel
+
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = string.Format("Plant Locations for {0}", Model.Category.Name);
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (Model.PlantHireInJobs.Count() == 0)
+{
+    <p>There are no jobs for this category.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    job id
+                </th>
+                <th>
+                    job
+                </th>
+                <th>
+                    when hired
+                </th>
+                <th>
+                    new plant id
+                </th>
+                <th>
+                    old plant id
+                </th>
+                <th>
+                    plant description
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model.PlantHireInJobs)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(m => item.Job.XJobId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Job.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.WhenStarted)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Plant.XPlantNewId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Plant.XPlantId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(m => item.Plant.Description)
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td><strong>TOTAL</strong></td>
+                <td>
+                    <strong>@Html.Encode(Model.PlantHireInJobs.Count()) items</strong>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+}
+
