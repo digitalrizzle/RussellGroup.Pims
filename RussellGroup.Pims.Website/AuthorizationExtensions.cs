@@ -14,14 +14,17 @@ namespace RussellGroup.Pims.Website
     {
         public static string GetUserGivenName(this IIdentity identity)
         {
-#if LOCAL
-            return "LOCAL";
-#else
-            using (ActiveDirectoryHelper helper = new ActiveDirectoryHelper())
+            if (!ActiveDirectoryHelper.BYPASS_LDAP)
             {
-                return helper.GetUser(identity.Name).GivenName;
+                return "LOCAL";
             }
-#endif
+            else
+            {
+                using (ActiveDirectoryHelper helper = new ActiveDirectoryHelper())
+                {
+                    return helper.GetUser(identity.Name).GivenName;
+                }
+            }
         }
     }
 }

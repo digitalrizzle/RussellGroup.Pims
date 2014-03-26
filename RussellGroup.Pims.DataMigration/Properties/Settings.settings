@@ -1,0 +1,19 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RussellGroup.Pims.DataMigration.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ImportCap" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="OleDbConnectionString" Type="(Connection string)" Scope="Application">
+      <DesignTimeValue Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;SerializableConnectionString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;ConnectionString&gt;Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=C:\Users\Brett\Documents\Visual Studio 2013\Projects\RussellGroup.Pims\DCL PLANT (2002).mdb&lt;/ConnectionString&gt;
+&lt;/SerializableConnectionString&gt;</DesignTimeValue>
+      <Value Profile="(Default)">Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=C:\Users\Brett\Documents\Visual Studio 2013\Projects\RussellGroup.Pims\DCL PLANT (2002).mdb</Value>
+    </Setting>
+    <Setting Name="TraceLog" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Brett\Documents\Visual Studio 2013\Projects\RussellGroup.Pims\PIMS data migration.log</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

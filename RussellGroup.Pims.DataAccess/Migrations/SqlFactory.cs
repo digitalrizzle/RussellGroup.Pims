@@ -23,10 +23,10 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 
         public void GenerateAuditTrigger(string tableName, string primaryKeyName1, string primaryKeyName2)
         {
-            string table = string.Format("[dbo].[{0}]", tableName);
-            string trigger = string.Format("[dbo].[TR_{0}Audit]", tableName);
+            var table = string.Format("[dbo].[{0}]", tableName);
+            var trigger = string.Format("[dbo].[TR_{0}Audit]", tableName);
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
             builder.AppendFormatLine("IF EXISTS (SELECT * FROM sys.triggers WHERE object_id = OBJECT_ID(N'{0}'))", trigger);
             builder.AppendFormatLine("DROP TRIGGER {0}", trigger);
@@ -54,8 +54,8 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             builder.AppendLine("    SELECT @context = CONTEXT_INFO FROM master.dbo.sysprocesses WHERE spid = @@spid");
             builder.AppendLine("    SET @userName = CAST(@context as NVARCHAR(50))");
             builder.AppendLine();
-            builder.AppendLine("    SELECT @inserted = (SELECT * FROM inserted FOR XML RAW)");
-            builder.AppendLine("    SELECT @deleted = (SELECT * FROM deleted FOR XML RAW)");
+            builder.AppendLine("    SELECT @inserted = (SELECT * FROM inserted FOR XML RAW) COLLATE Latin1_General_CS_AS");
+            builder.AppendLine("    SELECT @deleted = (SELECT * FROM deleted FOR XML RAW) COLLATE Latin1_General_CS_AS");
             builder.AppendLine();
             builder.AppendLine("    IF CAST(@inserted AS NVARCHAR(MAX)) = CAST(@deleted AS NVARCHAR(MAX))");
             builder.AppendLine("        RETURN");
