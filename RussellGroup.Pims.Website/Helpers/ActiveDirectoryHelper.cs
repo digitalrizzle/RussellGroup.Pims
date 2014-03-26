@@ -12,6 +12,8 @@ namespace RussellGroup.Pims.Website.Helpers
 {
     public class ActiveDirectoryHelper : IActiveDirectoryHelper
     {
+        public static readonly bool BYPASS_LDAP = bool.Parse(ConfigurationManager.AppSettings["BypassLdap"] ?? "false");
+
         private const int MAX_PAGE_SIZE = 1000 * 1024 * 1024;
 
         private PimsContext db = new PimsContext();
@@ -20,29 +22,32 @@ namespace RussellGroup.Pims.Website.Helpers
 
         public ActiveDirectoryHelper()
         {
-#if !LOCAL
-            var domain = ConfigurationManager.AppSettings["Domain"];
-            var container = ConfigurationManager.AppSettings["Container"];
-            //var storeUserName = ConfigurationManager.AppSettings["StoreUserName"];
-            //var storePassword = ConfigurationManager.AppSettings["StorePassword"];
+            if (!BYPASS_LDAP)
+            {
+                var domain = ConfigurationManager.AppSettings["Domain"];
+                var container = ConfigurationManager.AppSettings["Container"];
+                //var storeUserName = ConfigurationManager.AppSettings["StoreUserName"];
+                //var storePassword = ConfigurationManager.AppSettings["StorePassword"];
 
-            //if (storeUserName != null && storePassword != null)
-            //{
-            //    Context = new PrincipalContext(ContextType.Domain, domain, container, storeUserName, storePassword);
-            //}
-            //else
-            //{
-            Context = new PrincipalContext(ContextType.Domain, domain, container);
-            //}
-#endif
+                //if (storeUserName != null && storePassword != null)
+                //{
+                //    Context = new PrincipalContext(ContextType.Domain, domain, container, storeUserName, storePassword);
+                //}
+                //else
+                //{
+                Context = new PrincipalContext(ContextType.Domain, domain, container);
+                //}
+            }
         }
 
         void IDisposable.Dispose()
         {
             db.Dispose();
-#if !LOCAL
-            Context.Dispose();
-#endif
+
+            if (Context != null)
+            {
+                Context.Dispose();
+            }
         }
 
         private IEnumerable<Principal> Search(Principal principal)

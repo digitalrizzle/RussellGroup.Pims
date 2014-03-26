@@ -323,6 +323,7 @@
     <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.dataTables.min.js" />
     <Content Include="Scripts\DataTables-1.9.4\media\js\jquery.js" />
     <None Include="MvcSiteMapSchema.xsd" />
+    <None Include="Properties\PublishProfiles\pdbdev.pubxml" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />

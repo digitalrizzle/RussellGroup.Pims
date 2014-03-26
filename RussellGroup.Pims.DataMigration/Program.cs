@@ -12,21 +12,21 @@ namespace RussellGroup.Pims.DataMigration
 {
     class Program
     {
-        const int IMPORT_CAP = 00; // set to 0 to import all rows
-        const string OLEDB_CONNECTION_STRING = @"Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=C:\Users\Brett\Documents\Visual Studio 2013\Projects\RussellGroup.Pims\DCL PLANT (2002).mdb";
-        const string TRACE_LOG_PATH = @"C:\Users\Brett\Documents\Visual Studio 2013\Projects\RussellGroup.Pims\PIMS data migration.log";
-
         static void Main(string[] args)
         {
-            if (File.Exists(TRACE_LOG_PATH)) File.Delete(TRACE_LOG_PATH);
+            var importCap = global::RussellGroup.Pims.DataMigration.Properties.Settings.Default.ImportCap;
+            var traceLogPath = global::RussellGroup.Pims.DataMigration.Properties.Settings.Default.TraceLog;
 
-            using (var file = new TextWriterTraceListener(TRACE_LOG_PATH))
+            if (File.Exists(traceLogPath)) File.Delete(traceLogPath);
+
+            using (var file = new TextWriterTraceListener(traceLogPath))
             {
                 Trace.Listeners.Add(file);
 
-                using (var connection = new OleDbConnection(OLEDB_CONNECTION_STRING))
+                using (var connection = new OleDbConnection(global::RussellGroup.Pims.DataMigration.Properties.Settings.Default.OleDbConnectionString))
                 {
                     connection.Open();
+
                     var categories = new ImportCategory() { SourceConnection = connection, SourceTableName = "Plant categories", TargetTableName = "Categories" };
                     var plant = new ImportPlant() { SourceConnection = connection, SourceTableName = "Plant", TargetTableName = "Plants" };
                     var inventory = new ImportInventory() { SourceConnection = connection, SourceTableName = "inventory", TargetTableName = "Inventories" };
@@ -37,17 +37,17 @@ namespace RussellGroup.Pims.DataMigration
 
                     job.SetAuditing(false);
 
-                    //plantHire.Delete();
-                    //inventoryHire.Delete();
-                    //job.Delete();
+                    plantHire.Delete();
+                    inventoryHire.Delete();
+                    job.Delete();
 
-                    //categories.Delete().Import();
-                    //plant.Delete().Import();
-                    //inventory.Delete().Import();
-                    //job.Import();
+                    categories.Delete().Import();
+                    plant.Delete().Import();
+                    inventory.Delete().Import();
+                    job.Import();
 
-                    //plantHire.Delete().Import(0, IMPORT_CAP);
-                    inventoryHire.Delete().Import(0, IMPORT_CAP);
+                    plantHire.Import(0, importCap);
+                    inventoryHire.Import(0, importCap);
 
                     job.SetAuditing(true);
                 }
@@ -55,9 +55,6 @@ namespace RussellGroup.Pims.DataMigration
                 Trace.Flush();
                 Trace.Listeners.Remove(file);
             }
-
-            //Console.WriteLine("Ready.");
-            //Console.ReadKey();
         }
     }
 }
