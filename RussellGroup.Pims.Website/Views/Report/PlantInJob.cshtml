@@ -56,7 +56,7 @@ else
                 foreach (var item in Model.PlantHires.Where(f => f.Plant.Category == category && !f.WhenEnded.HasValue).OrderBy(f => f.Plant.XPlantId))
                 {
                     <tr>
-                        <td>
+                        <td style="width: 90px">
                             <span style="border: 1px solid black; padding: 5px 10px">Y</span>
                             <span style="border: 1px solid black; padding: 5px 10px">N</span>
                         </td>

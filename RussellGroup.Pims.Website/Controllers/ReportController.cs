@@ -195,7 +195,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var whenStarted = ParseDate(Request["WhenStarted"]);
             var whenEnded = ParseDate(Request["WhenEnded"]);
 
-            return await JobView("DetailedPlantInJob", id, whenStarted, whenEnded);
+            return await JobView("PlantHireChargesInJob", id, whenStarted, whenEnded);
         }
 
         private async Task<ActionResult> JobView(string viewName, int? id, DateTime whenStarted, DateTime whenEnded)
