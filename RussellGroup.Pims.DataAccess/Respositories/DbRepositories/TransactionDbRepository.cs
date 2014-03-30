@@ -94,7 +94,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             await db.SaveChangesAsync();
         }
 
-        public async Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IEnumerable<int> inventoryHireIds)
+        public async Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IDictionary<int, int> inventoryHireIdsAndQuantities)
         {
             // save plant
             foreach (var id in plantHireIds)
@@ -113,14 +113,18 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             }
 
             // save inventory
-            foreach (var id in inventoryHireIds)
+            foreach (var pair in inventoryHireIdsAndQuantities)
             {
+                var id = pair.Key;
+                var quantity = pair.Value;
+
                 var hire = db.InventoryHires.SingleOrDefault(f => f.InventoryHireId == id && !f.WhenEnded.HasValue);
 
                 if (hire != null)
                 {
                     hire.ReturnDocket = returnDocket;
                     hire.WhenEnded = DateTime.Now;
+                    hire.Quantity = quantity;
                     db.Entry(hire).State = EntityState.Modified;
                 }
             }

@@ -91,10 +91,10 @@
                             <tr>
                                 <td>@Html.Encode(item.InventoryId)</td>
                                 <td><input name="@("inventory-hire-id-field" + item.InventoryHireId)" value="@item.InventoryHireId" type="checkbox" /></td>
-                                <td>@Html.DisplayFor(modelItem => item.Inventory.XInventoryId)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Docket)</td>
-                                <td>@Html.DisplayFor(modelItem => item.Inventory.Description)</td>
+                                <td>@Html.DisplayFor(model => item.Inventory.XInventoryId)</td>
+                                <td><input name="@("inventory-hire-quantity-field" + item.InventoryHireId)" value="@item.Quantity" type="number" /></td>
+                                <td>@Html.DisplayFor(model => item.Docket)</td>
+                                <td>@Html.DisplayFor(model => item.Inventory.Description)</td>
                             </tr>
                         }
                     </tbody>
@@ -134,7 +134,7 @@
             "aoColumnDefs": [
                 { "bVisible": false, "aTargets": [0] },
                 { "bSortable": false, "aTargets": [1] }
-            ],
+            ]
         });
 
         $('#inventory-hire-table').dataTable({
@@ -152,7 +152,7 @@
             "aoColumnDefs": [
                 { "bVisible": false, "aTargets": [0] },
                 { "bSortable": false, "aTargets": [1] }
-            ],
+            ]
         });
     });
 

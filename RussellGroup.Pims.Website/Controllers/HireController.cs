@@ -32,7 +32,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 Docket = string.Empty,
                 Job = await repository.GetJob(id),
                 Plants = new List<Plant>(),
-                Inventories = new List<KeyValuePair<Inventory,int?>>()
+                Inventories = new List<KeyValuePair<Inventory, int?>>()
             };
 
             return View(transaction);
@@ -142,22 +142,29 @@ namespace RussellGroup.Pims.Website.Controllers
             var jobId = Convert.ToInt32(collection["JobId"]);
             var plantHireIds = GetIds("plant-hire-id-field", collection);
             var inventoryHireIds = GetIds("inventory-hire-id-field", collection);
+            var inventoryHireIdsAndQuantities = GetQuantities("inventory-hire-quantity-field", collection, inventoryHireIds);
 
             if (string.IsNullOrWhiteSpace(returnDocket)) ModelState.AddModelError("Docket", "A docket number is required.");
             if (plantHireIds.Count() == 0 && inventoryHireIds.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
 
             if (ModelState.IsValid)
             {
-                await repository.Checkin(returnDocket, plantHireIds, inventoryHireIds);
+                await repository.Checkin(returnDocket, plantHireIds, inventoryHireIdsAndQuantities);
                 return RedirectToAction("Details", "Job", new { id = jobId });
             }
 
+            // ModelState is invalid, so repopulate
             var job = await repository.GetJob(jobId);
             var plantHires = repository.GetActivePlantHiresInJob(jobId).ToList();
             var inventoryHires = repository.GetActiveInventoryHiresInJob(jobId).ToList();
 
             foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.PlantHireId)) hire.IsChecked = true;
-            foreach (var hire in inventoryHires) if (inventoryHireIds.Any(f => f == hire.InventoryHireId)) hire.IsChecked = true;
+
+            foreach (var hire in inventoryHires) if (inventoryHireIds.Any(f => f == hire.InventoryHireId))
+            {
+                hire.IsChecked = true;
+                hire.Quantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.InventoryHireId).Value;
+            }
 
             var transaction = new CheckinTransaction
             {
@@ -197,6 +204,25 @@ namespace RussellGroup.Pims.Website.Controllers
             return ids.Distinct();
         }
 
+        private IDictionary<int, int> GetQuantities(string prefix, FormCollection collection, IEnumerable<int> ids)
+        {
+            var quantities = new Dictionary<int, int>();
+
+            foreach (var key in collection.AllKeys)
+            {
+                foreach (var id in ids)
+                {
+                    if (key.Equals(prefix + id.ToString()) && !string.IsNullOrWhiteSpace(collection[key]))
+                    {
+                        var value = collection[key].Split(',')[0];
+                        quantities.Add(id, Convert.ToInt32(value));
+                    }
+                }
+            }
+
+            return quantities;
+        }
+
         private IEnumerable<KeyValuePair<int, int?>> GetIdsAndQuantities(string idPrefix, string quantityPrefix, FormCollection collection)
         {
             var pairs = new List<KeyValuePair<int, int?>>();
@@ -223,7 +249,7 @@ namespace RussellGroup.Pims.Website.Controllers
                         }
                     }
 
-                    pairs.Add(new KeyValuePair<int,int?>(id, quantity));
+                    pairs.Add(new KeyValuePair<int, int?>(id, quantity));
                 }
             }
 

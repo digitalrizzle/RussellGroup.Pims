@@ -18,6 +18,10 @@ input[type=text], input[type=number] {
     height: 28px !important;
 }
 
+input[type=number] {
+    text-align: right;
+}
+
 .form-group input[type=checkbox], dl .check-box {
     height: 24px;
 }
