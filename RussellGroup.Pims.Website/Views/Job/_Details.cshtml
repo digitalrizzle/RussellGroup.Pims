@@ -57,7 +57,7 @@
         </dt>
 
         <dd>
-            @Html.ActionLink(Model.PlantHires.Count.ToString(), "Index", "PlantHire", new { id = Model.JobId }, null)
+            @Html.ActionLink(Model.PlantHires.Where(f => !f.WhenEnded.HasValue).Count().ToString(), "Index", "PlantHire", new { id = Model.JobId }, null)
         </dd>
 
         <dt>
@@ -65,7 +65,7 @@
         </dt>
 
         <dd>
-            @Html.ActionLink(Model.InventoryHires.Count.ToString(), "Index", "InventoryHire", new { id = Model.JobId }, null)
+            @Html.ActionLink(Model.InventoryHires.Where(f => !f.WhenEnded.HasValue).Count().ToString(), "Index", "InventoryHire", new { id = Model.JobId }, null)
         </dd>
     </dl>
 
