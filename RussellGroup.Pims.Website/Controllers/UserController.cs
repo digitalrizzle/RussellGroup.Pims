@@ -9,10 +9,11 @@ using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Respositories;
+using RussellGroup.Pims.DataAccess.ViewModels;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = RoleType.Administrator)]
+    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEditUsers })]
     public class UserController : Controller
     {
         private readonly IUserRepository repository;
@@ -25,17 +26,26 @@ namespace RussellGroup.Pims.Website.Controllers
         // GET: /User/
         public async Task<ActionResult> Index()
         {
-            return View(await repository.GetAll().ToListAsync());
+            var roles = await repository.Roles.ToArrayAsync();
+            var users = await repository.GetAll().ToArrayAsync();
+
+            var model = users.Select(ur => new UserRoles()
+            {
+                User = ur,
+                Roles = roles.Where(r => ur.Roles.Select(u => u.RoleId).Contains(r.Id)).ToArray()
+            });
+
+            return View(model);
         }
 
         // GET: /User/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = await repository.Find(id);
+            ApplicationUser user = await repository.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -46,12 +56,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // GET: /User/Create
         public ActionResult Create()
         {
-            var user = new User
-            {
-                Roles = repository.Roles.Where(r => r.RoleId == repository.Roles.Max(f => f.RoleId)).ToArray(),
-                IsEnabled = true
-            };
-
+            var user = new ApplicationUser();
             return View(user);
         }
 
@@ -60,25 +65,29 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="UserId,Name,RoleId,IsGroup,IsEnabled")] User user)
+        public async Task<ActionResult> Create(FormCollection collection)
         {
+            var roleIds = collection.GetGuids("role-id-field").Select(f => f.ToString());
+            var roles = await repository.Roles.Where(f => roleIds.Contains(f.Id)).Select(f => f.Name).ToArrayAsync();
+
+            var user = new ApplicationUser { UserName = collection["User.UserName"], LockoutEnabled = false };
+
             if (ModelState.IsValid)
             {
-                await repository.Add(user);
+                await repository.Add(user, roles);
                 return RedirectToAction("Index");
             }
-
             return View(user);
         }
 
         // GET: /User/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = await repository.Find(id);
+            ApplicationUser user = await repository.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -91,24 +100,33 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="UserId,Name,RoleId,IsGroup,IsEnabled")] User user)
+        public async Task<ActionResult> Edit(FormCollection collection)
         {
+            var roleIds = collection.GetGuids("role-id-field").Select(f => f.ToString());
+            var roles = await repository.Roles.Where(f => roleIds.Contains(f.Id)).Select(f => f.Name).ToArrayAsync();
+
+            ApplicationUser user = await repository.Find(collection["User.Id"]);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                await repository.Update(user);
+                await repository.Update(user, roles);
                 return RedirectToAction("Index");
             }
             return View(user);
         }
 
         // GET: /User/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(string id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = await repository.Find(id);
+            ApplicationUser user = await repository.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -119,7 +137,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // POST: /User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(string id)
         {
             await repository.Remove(id);
             return RedirectToAction("Index");
@@ -139,15 +157,23 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(null);
         }
 
-        private ActionResult View(User user)
+        private ActionResult View(ApplicationUser user)
         {
-            var roles = repository.Roles.OrderBy(f => f.Name);
-            var role = user != null && user.Roles != null && user.Roles.Count > 0 ? user.Roles.Min(f => f.RoleId) : repository.Roles.Max(f => f.RoleId);
-            user.RoleId = role;
+            var model = new UserRoles()
+            {
+                User = user,
+                Roles = repository.Roles
+                    .ToArray()
+                    .Select(f => new ApplicationRole
+                    {
+                        Id = f.Id,
+                        Name = f.Name,
+                        IsChecked = user.Roles.Select(u => u.RoleId).Contains(f.Id)
+                    })
+                    .ToArray()
+            };
 
-            ViewBag.Roles = new SelectList(roles, "RoleId", "Name", role);
-
-            return base.View(user);
+            return base.View(model);
         }
     }
 }

@@ -30,11 +30,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -49,9 +57,10 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Extensions.cs" />
     <Compile Include="Migrations\SqlFactory.cs" />
+    <Compile Include="Models\ApplicationRole.cs" />
+    <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\Enumerations.cs" />
     <Compile Include="Models\Inventory.cs" />
     <Compile Include="Models\ModelExtensions.cs" />
     <Compile Include="Models\PimsContext.cs" />
@@ -60,10 +69,8 @@
     <Compile Include="Models\JqueryDataTableParameterModel.cs" />
     <Compile Include="Models\Plant.cs" />
     <Compile Include="Models\PlantHire.cs" />
-    <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Setting.cs" />
     <Compile Include="Models\Status.cs" />
-    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Respositories\DbRepositories\DbRepository.cs" />
     <Compile Include="Respositories\DbRepositories\HireDbRepository.cs" />
@@ -84,6 +91,7 @@
     <Compile Include="ViewModels\CheckoutTransaction.cs" />
     <Compile Include="ReportModels\InventoryLocationsReportModel.cs" />
     <Compile Include="ReportModels\PlantLocationsReportModel.cs" />
+    <Compile Include="ViewModels\UserRoles.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

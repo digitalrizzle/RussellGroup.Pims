@@ -18,16 +18,7 @@ namespace RussellGroup.Pims.DataMigration
         public string TargetTableName { get; set; }
         public string SourcePrimaryKeyColumnName { get; set; }
 
-        public void Import()
-        {
-            Import(0, 0);
-        }
-        public void Import(int take)
-        {
-            Import(0, 0);
-        }
-
-        public void Import(int skip, int take)
+        public void Import(int skip = 0, int take = 0)
         {
             Trace.WriteLine(string.Format("Importing [{0}] => [{1}]...", SourceTableName, TargetTableName));
 

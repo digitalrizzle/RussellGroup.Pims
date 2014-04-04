@@ -1,4 +1,5 @@
-﻿using RussellGroup.Pims.DataAccess.Models;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using RussellGroup.Pims.DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,11 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Respositories
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<ApplicationUser>
     {
-        IQueryable<Role> Roles { get; }
+        Task<ApplicationUser> Add(ApplicationUser user, string[] roles);
+        Task Update(ApplicationUser user, string[] roles);
+
+        IQueryable<ApplicationRole> Roles { get; }
     }
 }

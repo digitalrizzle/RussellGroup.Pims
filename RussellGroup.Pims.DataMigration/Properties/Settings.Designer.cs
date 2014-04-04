@@ -35,8 +35,8 @@ namespace RussellGroup.Pims.DataMigration.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=C:\\Users\\Brett\\Documents\\V" +
-            "isual Studio 2013\\Projects\\RussellGroup.Pims\\DCL PLANT (2002).mdb")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=C:\\Users\\Brett\\Downloads\\2" +
+            "0140327_DCL PLANT.mdb")]
         public string OleDbConnectionString {
             get {
                 return ((string)(this["OleDbConnectionString"]));
@@ -45,8 +45,7 @@ namespace RussellGroup.Pims.DataMigration.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Brett\\Documents\\Visual Studio 2013\\Projects\\RussellGroup.Pims\\PIMS data " +
-            "migration.log")]
+        [global::System.Configuration.DefaultSettingValueAttribute("PIMS data migration.log")]
         public string TraceLog {
             get {
                 return ((string)(this["TraceLog"]));

@@ -6,14 +6,13 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = RoleType.All)]
+    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
     public class HireController : Controller
     {
         private readonly ITransactionRepository repository;
@@ -78,8 +77,8 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var docket = collection["Docket"];
             var jobId = Convert.ToInt32(collection["JobId"]);
-            var plantIds = GetIds("plant-id-field", collection);
-            var inventoryIdsAndQuantities = GetIdsAndQuantities("inventory-id-field", "inventory-quantity-field", collection);
+            var plantIds = collection.GetIds("plant-id-field");
+            var inventoryIdsAndQuantities = collection.GetIdsAndQuantities("inventory-id-field", "inventory-quantity-field");
             var job = await repository.GetJob(jobId);
             var plants = new List<Plant>();
             var inventoriesAndQuantities = new List<KeyValuePair<Inventory, int?>>();
@@ -140,9 +139,9 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var returnDocket = collection["Docket"];
             var jobId = Convert.ToInt32(collection["JobId"]);
-            var plantHireIds = GetIds("plant-hire-id-field", collection);
-            var inventoryHireIds = GetIds("inventory-hire-id-field", collection);
-            var inventoryHireIdsAndQuantities = GetQuantities("inventory-hire-quantity-field", collection, inventoryHireIds);
+            var plantHireIds = collection.GetIds("plant-hire-id-field");
+            var inventoryHireIds = collection.GetIds("inventory-hire-id-field");
+            var inventoryHireIdsAndQuantities = collection.GetQuantities("inventory-hire-quantity-field", inventoryHireIds);
 
             if (string.IsNullOrWhiteSpace(returnDocket)) ModelState.AddModelError("Docket", "A docket number is required.");
             if (plantHireIds.Count() == 0 && inventoryHireIds.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
@@ -186,74 +185,6 @@ namespace RussellGroup.Pims.Website.Controllers
                 repository.Dispose();
             }
             base.Dispose(disposing);
-        }
-
-        private IEnumerable<int> GetIds(string prefix, FormCollection collection)
-        {
-            var ids = new List<int>();
-
-            foreach (var key in collection.AllKeys)
-            {
-                if (key.StartsWith(prefix) && !string.IsNullOrWhiteSpace(collection[key]))
-                {
-                    var value = collection[key].Split(',')[0];
-                    ids.Add(Convert.ToInt32(value));
-                }
-            }
-
-            return ids.Distinct();
-        }
-
-        private IDictionary<int, int> GetQuantities(string prefix, FormCollection collection, IEnumerable<int> ids)
-        {
-            var quantities = new Dictionary<int, int>();
-
-            foreach (var key in collection.AllKeys)
-            {
-                foreach (var id in ids)
-                {
-                    if (key.Equals(prefix + id.ToString()) && !string.IsNullOrWhiteSpace(collection[key]))
-                    {
-                        var value = collection[key].Split(',')[0];
-                        quantities.Add(id, Convert.ToInt32(value));
-                    }
-                }
-            }
-
-            return quantities;
-        }
-
-        private IEnumerable<KeyValuePair<int, int?>> GetIdsAndQuantities(string idPrefix, string quantityPrefix, FormCollection collection)
-        {
-            var pairs = new List<KeyValuePair<int, int?>>();
-
-            foreach (var idKey in collection.AllKeys)
-            {
-                if (idKey.StartsWith(idPrefix) && !string.IsNullOrWhiteSpace(collection[idKey]))
-                {
-                    var idFieldValue = Regex.Replace(idKey, @"[^\d]", "");
-                    var idValue = collection[idKey].Split(',')[0];
-                    var id = Convert.ToInt32(idValue);
-
-                    int? quantity = null;
-                    var quantityKey = collection.AllKeys.SingleOrDefault(f => f == quantityPrefix + idFieldValue);
-
-                    if (quantityKey != null)
-                    {
-                        int result;
-                        var quantityValue = collection[quantityKey].Split(',')[0];
-
-                        if (int.TryParse(quantityValue, out result))
-                        {
-                            quantity = result;
-                        }
-                    }
-
-                    pairs.Add(new KeyValuePair<int, int?>(id, quantity));
-                }
-            }
-
-            return pairs.Distinct();
         }
 
         private new ActionResult View()

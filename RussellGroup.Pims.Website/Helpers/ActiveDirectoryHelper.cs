@@ -1,4 +1,6 @@
-﻿using RussellGroup.Pims.DataAccess.Models;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using RussellGroup.Pims.DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -13,6 +15,7 @@ namespace RussellGroup.Pims.Website.Helpers
     public class ActiveDirectoryHelper : IActiveDirectoryHelper
     {
         public static readonly bool BYPASS_LDAP = bool.Parse(ConfigurationManager.AppSettings["BypassLdap"] ?? "false");
+        public static readonly string[] ROLES = new string[] { "canView", "canEdit" };
 
         private const int MAX_PAGE_SIZE = 1000 * 1024 * 1024;
 
@@ -135,35 +138,9 @@ namespace RussellGroup.Pims.Website.Helpers
 
         #endregion
 
-        public IQueryable<User> GetGroups()
+        public ApplicationUser GetCurrentUser()
         {
-            return db.Users.Where(f => f.IsEnabled && f.IsGroup);
-        }
-
-        public User GetCurrentUser()
-        {
-            return db.Users.SingleOrDefault(f => !f.IsGroup && f.Name.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public User GetMostPrivilegedGroup()
-        {
-            User mostPrivilegedGroup = null;
-
-            foreach (var group in GetGroups())
-            {
-                if (HttpContext.Current.User.IsInRole(group.Name))
-                {
-                    // get the highest role privilege that this user has
-                    int roleId = group.Roles.Min(r => r.RoleId);
-
-                    if (mostPrivilegedGroup == null || roleId < mostPrivilegedGroup.RoleId)
-                    {
-                        mostPrivilegedGroup = group;
-                    }
-                }
-            }
-
-            return mostPrivilegedGroup;
+            return db.Users.SingleOrDefault(f => f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         public bool IsAuthenticated()
@@ -173,21 +150,41 @@ namespace RussellGroup.Pims.Website.Helpers
 
         // gets the current user, and if disabled then returns false
         // even if the user belongs to a group that is enabled
-        public bool IsAuthorized(RoleType roleType)
+        public bool IsAuthorized(string[] roles)
         {
-            User user = GetCurrentUser() ?? GetMostPrivilegedGroup();
+            ApplicationUser user = GetCurrentUser();
 
-            return IsAuthorized(user, roleType);
+            return IsAuthorized(user, roles);
         }
 
-        private bool IsAuthorized(User user, RoleType roleType)
+        private bool IsAuthorized(ApplicationUser user, string[] roles)
         {
             if (IsAuthenticated())
             {
-                if (user != null && user.IsEnabled)
+                if (user != null && !user.LockoutEnabled)
                 {
-                    return user.Roles.Any(f => (f.RoleId & (int)roleType) == f.RoleId);
+                    if (IsUserInRole(user, roles))
+                    {
+                        return true;
+                    }
                 }
+            }
+
+            return false;
+        }
+
+        private bool IsUserInRole(ApplicationUser user, string role)
+        {
+            return IsUserInRole(user, new string[] { role });
+        }
+
+        private bool IsUserInRole(ApplicationUser user, string[] roles)
+        {
+            var manager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
+
+            foreach (var role in manager.Roles.ToArray())
+            {
+                return user.Roles.Any(f => f.RoleId == role.Id);
             }
 
             return false;

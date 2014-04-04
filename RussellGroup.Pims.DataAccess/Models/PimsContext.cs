@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Models
 {
-    public class PimsContext : DbContext
+    public class PimsContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -16,10 +18,10 @@ namespace RussellGroup.Pims.DataAccess.Models
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Plant> Plants { get; set; }
         public DbSet<PlantHire> PlantHires { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Status> Statuses { get; set; }
-        public DbSet<User> Users { get; set; }
+
+        public PimsContext() : base("PimsContext") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

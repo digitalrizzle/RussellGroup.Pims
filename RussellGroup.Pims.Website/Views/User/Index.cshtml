@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.User>
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.ViewModels.UserRoles>
 
 @{
     ViewBag.Title = "Users";
@@ -15,16 +15,13 @@
             <th>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HighestRole)
+                @Html.DisplayNameFor(model => model.First().Roles)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsGroup)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsEnabled)
+                locked out?
             </th>
             <th></th>
         </tr>
@@ -35,25 +32,21 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserId)
+                    @Html.DisplayFor(model => item.User.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(model => item.User.UserName)
                 </td>
                 <td>
-                    @if (item.HighestRole != null)
-                    { <text>@Html.Encode(item.HighestRole.Name)</text> }
+                    @Html.Encode(item.GetRoleNames())
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IsGroup)
+                    @Html.DisplayFor(model => item.User.LockoutEnabled)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IsEnabled)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.UserId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.UserId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.UserId })
+                    @Html.ActionLink("Edit", "Edit", new { id = item.User.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.User.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.User.Id })
                 </td>
             </tr>
         }
@@ -69,15 +62,14 @@
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
                     { "sWidth": "0%" },
-                    { "sWidth": "35%" },
-                    { "sWidth": "20%" },
-                    { "sWidth": "15%", "sClass": "center" },
+                    { "sWidth": "40%" },
+                    { "sWidth": "30%" },
                     { "sWidth": "15%", "sClass": "center" },
                     { "sWidth": "15%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [5] }
+                    { "bSortable": false, "aTargets": [4] }
                 ],
             });
         });

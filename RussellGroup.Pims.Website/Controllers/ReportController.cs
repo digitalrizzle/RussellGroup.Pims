@@ -13,7 +13,7 @@ using System.Web.Mvc;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = RoleType.All)]
+    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
     public class ReportController : Controller
     {
         private static readonly CultureInfo culture = CultureInfo.CreateSpecificCulture("en-NZ");
