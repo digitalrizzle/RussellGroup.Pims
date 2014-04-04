@@ -1,4 +1,6 @@
-﻿using RussellGroup.Pims.DataAccess.Models;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using RussellGroup.Pims.DataAccess.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -8,42 +10,115 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Respositories
 {
-    public class UserDbRepository : DbRepository<User>, IUserRepository
+    public class UserDbRepository : DbRepository<ApplicationUser>, IUserRepository
     {
-        public new async Task<User> Add(User user)
-        {
-            Role role = db.Roles.Single(r => r.RoleId == user.RoleId);
-            user.Roles = new List<Role>();
-            user.Roles.Add(role);
+        protected readonly UserManager<ApplicationUser> userManager;
+        protected readonly RoleManager<ApplicationRole> roleManager;
 
-            var result = db.Users.Add(user);
-            await db.SaveChangesAsync();
-            return result;
+        public UserDbRepository()
+        {
+            userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
+            userManager.UserValidator = new UserValidator<ApplicationUser>(userManager) { AllowOnlyAlphanumericUserNames = false };
+
+            roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(db));
         }
 
-        public new async Task<User> Update(User user)
+        public async Task<ApplicationUser> Add(ApplicationUser user)
         {
-            db.Entry(user).State = EntityState.Modified;
+            return await Add(user, null);
+        }
 
-            await db.Entry(user).Collection(f => f.Roles).LoadAsync();
-            Role role = db.Roles.Single(r => r.RoleId == user.RoleId);
-            user.Roles.RemoveAll();
-            user.Roles.Add(role);
+        public async Task<ApplicationUser> Add(ApplicationUser user, string[] roles)
+        {
+            var result = await userManager.CreateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception("Failed to create user.");
+            }
+
+            foreach (var role in roles)
+            {
+                result = await userManager.AddToRoleAsync(user.Id, role);
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Failed to add user to role.");
+                }
+            }
 
             await db.SaveChangesAsync();
+
             return user;
+        }
+
+        public async Task Update(ApplicationUser user)
+        {
+            await Update(user, null);
+        }
+
+        public async Task Update(ApplicationUser user, string[] roles)
+        {
+            var result = await userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception("Failed to update user.");
+            }
+
+            foreach (var role in await this.Roles.Select(f => f.Name).ToArrayAsync())
+            {
+                if (await userManager.IsInRoleAsync(user.Id, role))
+                {
+                    result = await userManager.RemoveFromRoleAsync(user.Id, role);
+
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception("Failed to remove user from role.");
+                    }
+                }
+            }
+
+            foreach (var role in roles)
+            {
+                result = await userManager.AddToRoleAsync(user.Id, role);
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Failed to add user to role.");
+                }
+            }
+
+            await db.SaveChangesAsync();
         }
 
         public async Task Remove(params object[] keyValues)
         {
-            User user = await db.Users.FindAsync(keyValues);
-            db.Users.Remove(user);
+            var user = await userManager.FindByIdAsync(keyValues[0] as string);
+            var result = await userManager.DeleteAsync(user);
+
+            if (!result.Succeeded)
+            {
+                throw new Exception("Failed to remove user.");
+            }
+
             await db.SaveChangesAsync();
         }
 
-        public IQueryable<Role> Roles
+        public IQueryable<ApplicationRole> Roles
         {
-            get { return db.Roles; }
+            get
+            {
+                return roleManager.Roles;
+            }
+        }
+
+        public void Dispose()
+        {
+            userManager.Dispose();
+            roleManager.Dispose();
+
+            base.Dispose();
         }
     }
 }

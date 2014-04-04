@@ -12,7 +12,7 @@ using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = RoleType.Administrator)]
+    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
     public class CategoryController : Controller
     {
         private readonly IRepository<Category> repository;

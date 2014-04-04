@@ -29,11 +29,10 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             return result;
         }
 
-        public async Task<T> Update(T item)
+        public async Task Update(T item)
         {
             db.Entry(item).State = EntityState.Modified;
             await db.SaveChangesAsync();
-            return item;
         }
 
         public async Task Remove(params object[] keyValues)

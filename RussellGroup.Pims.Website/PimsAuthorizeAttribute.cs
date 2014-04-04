@@ -20,7 +20,7 @@ namespace RussellGroup.Pims.Website
         }
 
         [Inject]
-        public RoleType Roles { get; set; }
+        public string[] Roles { get; set; }
 
         public void OnAuthorization(AuthorizationContext filterContext)
         {
@@ -34,6 +34,6 @@ namespace RussellGroup.Pims.Website
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class PimsAuthorizeAttribute : Attribute
     {
-        public RoleType Roles;
+        public string[] Roles;
     }
 }

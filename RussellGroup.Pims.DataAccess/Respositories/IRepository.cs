@@ -14,7 +14,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
         IQueryable<T> GetAll();
 
         Task<T> Add(T item);
-        Task<T> Update(T item);
+        Task Update(T item);
         Task Remove(params object[] keyValues);
     }
 }

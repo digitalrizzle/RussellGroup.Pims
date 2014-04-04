@@ -1,39 +1,39 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.User
+﻿@model RussellGroup.Pims.DataAccess.ViewModels.UserRoles
 
 <div>
     <h4>@ViewBag.Title</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            name
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.User.UserName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.HighestRole)
+            @Html.DisplayNameFor(model => model.Roles)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.HighestRole.Name)
+            @Html.Encode(Model.GetRoleNames())
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.IsGroup)
+            locked out?
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.IsGroup)
+            @Html.DisplayFor(model => model.User.LockoutEnabled)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.IsEnabled)
+            when locked out?
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.IsEnabled)
+            @Html.DisplayFor(model => model.User.LockoutEndDateUtc)
         </dd>
 
     </dl>
@@ -48,7 +48,7 @@
             {
                 if (ViewBag.Title == "Details")
                 {
-                    <text>@Html.ActionLink("Edit", "Edit", new { id = Model.UserId }) | </text>
+                    <text>@Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }) | </text>
                 }
                 else
                 {
@@ -56,7 +56,7 @@
                     <input type="submit" value="Delete" class="btn btn-danger" />
                     <text>&nbsp;</text>
                 }
-                @Html.ActionLink("Cancel", "Index", new { id = Model.UserId })
+                @Html.ActionLink("Cancel", "Index", new { id = Model.User.Id })
             }
         </dd>
     </dl>

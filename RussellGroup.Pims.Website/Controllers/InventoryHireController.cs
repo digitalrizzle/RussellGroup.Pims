@@ -12,7 +12,7 @@ using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = RoleType.All)]
+    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
     public class InventoryHireController : Controller
     {
         private readonly IHireRepository<InventoryHire> repository;

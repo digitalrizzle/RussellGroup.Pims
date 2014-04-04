@@ -52,11 +52,11 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             });
         }
 
-        public async Task<T> Update(T item)
+        public async Task Update(T item)
         {
-            return await Task.Run<T>(() =>
+            await Task.Run(() =>
             {
-                return item;
+                // do nothing
             });
         }
 

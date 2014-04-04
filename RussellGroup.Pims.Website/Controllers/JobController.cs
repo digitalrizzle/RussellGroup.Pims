@@ -12,7 +12,7 @@ using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = RoleType.All)]
+    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
     public class JobController : Controller
     {
         private readonly IRepository<Job> repository;
@@ -117,7 +117,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Job/Create
-        [PimsAuthorize(Roles = RoleType.Administrator)]
+        [PimsAuthorize(Roles = new string[] { "canEdit" })]
         public ActionResult Create()
         {
             return View();
@@ -128,7 +128,6 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = RoleType.Administrator)]
         public async Task<ActionResult> Create([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
         {
             if (ModelState.IsValid)
@@ -141,7 +140,6 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Job/Edit/5
-        [PimsAuthorize(Roles = RoleType.Administrator)]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -161,7 +159,6 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = RoleType.Administrator)]
         public async Task<ActionResult> Edit([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
         {
             if (ModelState.IsValid)
@@ -209,7 +206,6 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Job/Delete/5
-        [PimsAuthorize(Roles = RoleType.Administrator)]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -227,7 +223,6 @@ namespace RussellGroup.Pims.Website.Controllers
         // POST: /Job/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = RoleType.Administrator)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             await repository.Remove(id);

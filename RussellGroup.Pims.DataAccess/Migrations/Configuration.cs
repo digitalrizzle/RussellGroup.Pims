@@ -1,14 +1,18 @@
 namespace RussellGroup.Pims.DataAccess.Migrations
 {
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using RussellGroup.Pims.DataAccess.Models;
+    using RussellGroup.Pims.DataAccess.Respositories;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Validation;
     using System.Linq;
+    using System.Threading.Tasks;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<RussellGroup.Pims.DataAccess.Models.PimsContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<PimsContext>
     {
         public Configuration()
         {
@@ -26,12 +30,8 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             factory.GenerateAuditTrigger("Jobs", "JobId");
             factory.GenerateAuditTrigger("Plants", "PlantId");
             factory.GenerateAuditTrigger("PlantHires", "PlantHireId");
-            factory.GenerateAuditTrigger("Roles", "RoleId");
             //factory.GenerateAuditTrigger("Settings", "Key");
             factory.GenerateAuditTrigger("Status", "StatusId");
-            factory.GenerateAuditTrigger("Users", "UserId");
-
-            factory.GenerateAuditTrigger("UserRoles", "User_UserId", "Role_RoleId");
 
             // seed
             var settings = new List<Setting>
@@ -56,27 +56,59 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             statuses.ForEach(status => context.Statuses.AddOrUpdate(status));
             context.SaveChanges();
 
-            var users = new List<User>
-            {
-                new User { UserId = 1, Name = @"BRETT-PC\Brett", IsGroup = false, IsEnabled = true },
-                new User { UserId = 2, Name = @"RUSPDB\PDBDev", IsGroup = false, IsEnabled = true },
-                new User { UserId = 3, Name = @"constructors\jassen", IsGroup = false, IsEnabled = true },
-                new User { UserId = 4, Name = @"constructors\allan.payne", IsGroup = false, IsEnabled = true },
-            };
+            // add users and roles
+            CreateRole(context, new string[] { ApplicationRole.CanEdit, ApplicationRole.CanEditUsers });
 
-            users.ForEach(user => context.Users.AddOrUpdate(user));
-            context.SaveChanges();
-
-            var roles = new List<Role>
-            {
-                new Role { RoleId = 1, Name = "Administrator", Users = users },
-                new Role { RoleId = 32768, Name = "Temp" }
-            };
-
-            roles.ForEach(role => context.Roles.AddOrUpdate(role));
-            context.SaveChanges();
+            CreateUser(context, new ApplicationUser { UserName = @"BRETT-PC\Brett" }, new string[] { ApplicationRole.CanEdit, ApplicationRole.CanEditUsers });
+            CreateUser(context, new ApplicationUser { UserName = @"RUSPDB\PDBDev" }, new string[] { ApplicationRole.CanEdit });
+            CreateUser(context, new ApplicationUser { UserName = @"constructors\jassen" }, new string[] { ApplicationRole.CanEdit });
+            CreateUser(context, new ApplicationUser { UserName = @"constructors\allan.payne" }, new string[] { ApplicationRole.CanEdit });
 
             base.Seed(context);
+        }
+
+        private void CreateRole(PimsContext context, string[] roles)
+        {
+            var manager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(context));
+
+            foreach (var role in roles)
+            {
+                if (!manager.RoleExists(role))
+                {
+                    var ir = manager.Create(new ApplicationRole() { Name = role });
+
+                    if (!ir.Succeeded)
+                    {
+                        throw new Exception("Failed to create a role.");
+                    }
+                }
+            }
+        }
+
+        public void CreateUser(PimsContext context, ApplicationUser user, string[] roles)
+        {
+            var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
+            manager.UserValidator = new UserValidator<ApplicationUser>(manager) { AllowOnlyAlphanumericUserNames = false };
+
+            if (manager.FindByName(user.UserName) == null)
+            {
+                var result = manager.Create(user);
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Failed to create user. " + result.Errors.First());
+                }
+
+                foreach (var role in roles)
+                {
+                    result = manager.AddToRole(user.Id, role);
+
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception("Failed to add user to role." + result.Errors.First());
+                    }
+                }
+            }
         }
     }
 }
