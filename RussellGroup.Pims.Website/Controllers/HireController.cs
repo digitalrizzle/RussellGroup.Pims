@@ -140,11 +140,10 @@ namespace RussellGroup.Pims.Website.Controllers
             var returnDocket = collection["Docket"];
             var jobId = Convert.ToInt32(collection["JobId"]);
             var plantHireIds = collection.GetIds("plant-hire-id-field");
-            var inventoryHireIds = collection.GetIds("inventory-hire-id-field");
-            var inventoryHireIdsAndQuantities = collection.GetQuantities("inventory-hire-quantity-field", inventoryHireIds);
+            var inventoryHireIdsAndQuantities = collection.GetIdsAndQuantities("inventory-hire-id-field", "inventory-hire-quantity-field");
 
             if (string.IsNullOrWhiteSpace(returnDocket)) ModelState.AddModelError("Docket", "A docket number is required.");
-            if (plantHireIds.Count() == 0 && inventoryHireIds.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
+            if (plantHireIds.Count() == 0 && inventoryHireIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
 
             if (ModelState.IsValid)
             {
@@ -159,7 +158,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.PlantHireId)) hire.IsChecked = true;
 
-            foreach (var hire in inventoryHires) if (inventoryHireIds.Any(f => f == hire.InventoryHireId))
+            foreach (var hire in inventoryHires) if (inventoryHireIdsAndQuantities.Any(f => f.Key == hire.InventoryHireId))
             {
                 hire.IsChecked = true;
                 hire.Quantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.InventoryHireId).Value;

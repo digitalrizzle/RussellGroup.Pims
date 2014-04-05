@@ -67,25 +67,6 @@ namespace RussellGroup.Pims.Website
             return ids.Distinct();
         }
 
-        public static IDictionary<int, int> GetQuantities(this FormCollection collection, string prefix, IEnumerable<int> ids)
-        {
-            var quantities = new Dictionary<int, int>();
-
-            foreach (var key in collection.AllKeys)
-            {
-                foreach (var id in ids)
-                {
-                    if (key.Equals(prefix + id.ToString()) && !string.IsNullOrWhiteSpace(collection[key]))
-                    {
-                        var value = collection[key].Split(',')[0];
-                        quantities.Add(id, Convert.ToInt32(value));
-                    }
-                }
-            }
-
-            return quantities;
-        }
-
         public static IEnumerable<KeyValuePair<int, int?>> GetIdsAndQuantities(this FormCollection collection, string idPrefix, string quantityPrefix)
         {
             var pairs = new List<KeyValuePair<int, int?>>();

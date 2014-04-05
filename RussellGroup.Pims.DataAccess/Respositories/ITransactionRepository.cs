@@ -19,6 +19,6 @@ namespace RussellGroup.Pims.DataAccess.Respositories
         IQueryable<InventoryHire> GetActiveInventoryHiresInJob(int? jobId);
 
         Task Checkout(Job job, string docket, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities);
-        Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IDictionary<int, int> inventoryHireIdsAndQuantities);
+        Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryHireIdsAndQuantities);
     }
 }

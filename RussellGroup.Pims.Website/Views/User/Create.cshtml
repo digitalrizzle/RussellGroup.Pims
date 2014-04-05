@@ -20,7 +20,7 @@
         <div class="form-group">
             @Html.Label("name", new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.User.UserName)
+                @Html.TextBoxFor(model => model.User.UserName, new { @class = "col-span-5" })
                 @Html.ValidationMessageFor(model => model.User.UserName)
             </div>
         </div>

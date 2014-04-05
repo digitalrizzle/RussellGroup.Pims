@@ -266,6 +266,7 @@
     <Content Include="Content\DataTables-1.9.4\media\images\sort_desc_disabled.png" />
     <Content Include="Content\DataTables-1.9.4\media\images\tick-gray.png" />
     <Content Include="Content\DataTables-1.9.4\media\images\tick-green.png" />
+    <Content Include="Content\dominion_constructors.png" />
     <Content Include="Content\typeahead.js-bootstrap.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

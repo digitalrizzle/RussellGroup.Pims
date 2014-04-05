@@ -9,6 +9,11 @@
     padding-right: 15px;
 }
 
+#logo {
+    padding-top: 6px;
+    padding-right: 30px;
+}
+
 input, textarea {
     border: 1px solid #abadb3;
 }

@@ -94,7 +94,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             await db.SaveChangesAsync();
         }
 
-        public async Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IDictionary<int, int> inventoryHireIdsAndQuantities)
+        public async Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryHireIdsAndQuantities)
         {
             // save plant
             foreach (var id in plantHireIds)
