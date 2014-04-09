@@ -12,7 +12,6 @@ namespace RussellGroup.Pims.DataAccess.Respositories
     {
         Task<ApplicationUser> Add(ApplicationUser user, string[] roles);
         Task Update(ApplicationUser user, string[] roles);
-
-        IQueryable<ApplicationRole> Roles { get; }
+        IQueryable<ApplicationRole> GetAllRoles();
     }
 }

@@ -39,6 +39,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
         {
             var item = await Find(keyValues);
             var result = db.Set<T>().Remove(item);
+            await db.SaveChangesAsync();
         }
 
         public void Dispose()

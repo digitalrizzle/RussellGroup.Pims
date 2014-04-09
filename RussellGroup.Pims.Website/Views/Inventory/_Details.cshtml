@@ -1,7 +1,7 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Inventory
 
 <div>
-    <h4>@ViewBag.Title</h4>
+    @if (ViewBag.Title == "Details") { <h4>@ViewBag.Title</h4> }
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -78,15 +78,18 @@
         <dd>
             @using (Html.BeginForm())
             {
-                if (ViewBag.Title == "Details")
+                if (User.IsAuthorized(ApplicationRole.CanEdit))
                 {
-                    <text>@Html.ActionLink("Edit", "Edit", new { id = Model.InventoryId }) | </text>
-                }
-                else
-                {
-                    @Html.AntiForgeryToken()
-                    <input type="submit" value="Delete" class="btn btn-danger" />
-                    <text>&nbsp;</text>
+                    if (ViewBag.Title == "Details")
+                    {
+                        <text>@Html.ActionLink("Edit", "Edit", new { id = Model.InventoryId }) | </text>
+                    }
+                    else
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                        <text>&nbsp;</text>
+                    }
                 }
                 @Html.ActionLink("Cancel", "Index")
             }

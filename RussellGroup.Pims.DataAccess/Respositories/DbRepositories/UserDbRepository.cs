@@ -52,40 +52,41 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             return user;
         }
 
-        public async Task Update(ApplicationUser user)
+        public Task Update(ApplicationUser user)
         {
-            await Update(user, null);
+            throw new NotImplementedException();
         }
 
         public async Task Update(ApplicationUser user, string[] roles)
         {
-            var result = await userManager.UpdateAsync(user);
+            var result = userManager.Update(user);
 
             if (!result.Succeeded)
             {
                 throw new Exception("Failed to update user.");
             }
 
-            foreach (var role in await this.Roles.Select(f => f.Name).ToArrayAsync())
+            foreach (var userRole in user.Roles.ToArray())
             {
-                if (await userManager.IsInRoleAsync(user.Id, role))
-                {
-                    result = await userManager.RemoveFromRoleAsync(user.Id, role);
+                var role = GetAllRoles().Single(f => f.Id == userRole.RoleId);
+                result = userManager.RemoveFromRole(user.Id, role.Name);
 
-                    if (!result.Succeeded)
-                    {
-                        throw new Exception("Failed to remove user from role.");
-                    }
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Failed to remove user from role.");
                 }
             }
 
             foreach (var role in roles)
             {
-                result = await userManager.AddToRoleAsync(user.Id, role);
-
-                if (!result.Succeeded)
+                if (!userManager.IsInRole(user.Id, role))
                 {
-                    throw new Exception("Failed to add user to role.");
+                    result = userManager.AddToRole(user.Id, role);
+
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception("Failed to add user to role.");
+                    }
                 }
             }
 
@@ -105,15 +106,22 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             await db.SaveChangesAsync();
         }
 
-        public IQueryable<ApplicationRole> Roles
+        public IQueryable<ApplicationRole> GetAllRoles()
         {
-            get
-            {
-                return roleManager.Roles;
-            }
+            return roleManager.Roles;
         }
 
-        public void Dispose()
+        public IQueryable<ApplicationRole> GetRoles(ApplicationUser user)
+        {
+            return GetAllRoles().Where(f => ((ApplicationRole)user.Roles).Id == f.Id);
+        }
+
+        public IQueryable<ApplicationRole> GetRoles(IEnumerable<string> roleIds)
+        {
+            return GetAllRoles().Where(r => roleIds.Contains(r.Id));
+        }
+
+        public new void Dispose()
         {
             userManager.Dispose();
             roleManager.Dispose();

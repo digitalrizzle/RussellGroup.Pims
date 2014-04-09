@@ -6,9 +6,10 @@
 
 <h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (User.IsAuthorized(ApplicationRole.CanEditCategories))
+{
+    <p>@Html.ActionLink("Create New", "Create")</p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -39,9 +40,9 @@
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.CategoryId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.CategoryId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.CategoryId })
+                    @if (User.IsAuthorized(ApplicationRole.CanEditCategories)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.CategoryId }) |</text> }
+                    @Html.ActionLink("Details", "Details", new { id = item.CategoryId })
+                    @if (User.IsAuthorized(ApplicationRole.CanEditCategories)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.CategoryId })</text> }
                 </td>
             </tr>
         }

@@ -1,6 +1,10 @@
-﻿using System;
+﻿using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
+using RussellGroup.Pims.Website.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +13,22 @@ namespace RussellGroup.Pims.Website
 {
     public static class Extensions
     {
+        public static bool IsAuthorized(this IPrincipal user, string role)
+        {
+            return IsAuthorized(user, new string[] { role });
+        }
+
+        public static bool IsAuthorized(this IPrincipal user, string[] roles)
+        {
+            using (var repository = new UserDbRepository())
+            {
+                using (var helper = new ActiveDirectoryHelper(repository))
+                {
+                    return helper.IsAuthorized(roles);
+                }
+            }
+        }
+
         public static string ToYesNo(this bool value)
         {
             return value ? "Yes" : "No";
@@ -24,15 +44,20 @@ namespace RussellGroup.Pims.Website
             return string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action(actionName, controllerName, routeValues), linkText);
         }
 
-        public static string CrudLinks(this Controller controller, object routeValues)
+        public static string CrudLinks(this Controller controller, object routeValues, bool canEdit)
         {
             var edit = ActionLink(controller, "Edit", "Edit", routeValues);
             var details = ActionLink(controller, "Details", "Details", routeValues);
             var delete = ActionLink(controller, "Delete", "Delete", routeValues);
 
-            var links = string.Format("{0} | {1} | {2}", edit, details, delete);
-
-            return links;
+            if (canEdit)
+            {
+                return string.Format("{0} | {1} | {2}", edit, details, delete);
+            }
+            else
+            {
+                return details;
+            }
         }
 
         public static IEnumerable<Guid> GetGuids(this FormCollection collection, string prefix)

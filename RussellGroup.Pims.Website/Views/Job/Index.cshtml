@@ -6,9 +6,10 @@
 
 <h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+@if (User.IsAuthorized(ApplicationRole.CanEdit))
+{
+    <p>@Html.ActionLink("Create New", "Create")</p>
+}
 <table class="table">
     <thead>
         <tr>

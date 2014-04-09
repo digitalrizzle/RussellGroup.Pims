@@ -1,7 +1,7 @@
 ﻿@model RussellGroup.Pims.DataAccess.ViewModels.UserRoles
 
 <div>
-    <h4>@ViewBag.Title</h4>
+    @if (ViewBag.Title == "Details") { <h4>@ViewBag.Title</h4> }
     <hr />
     <dl class="dl-horizontal">
         <dt>

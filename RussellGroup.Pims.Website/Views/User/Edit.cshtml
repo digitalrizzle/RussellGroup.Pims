@@ -41,6 +41,7 @@
                             <th></th>
                             <th><input type="checkbox" class="check-all" /></th>
                             <th>role</th>
+                            <th>description</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,6 +51,7 @@
                                 <td>@Html.Encode(item.Id)</td>
                                 <td><input name="@("role-id-field" + item.Id)" value="@item.Id" type="checkbox" /></td>
                                 <td>@Html.Encode(item.Name)</td>
+                                <td>@Html.Encode(item.Description)</td>
                             </tr>
                         }
                     </tbody>
@@ -88,7 +90,8 @@
             "aoColumns": [
                 { "sWidth": "0%" },
                 { "sWidth": "5%" },
-                { "sWidth": "95%" }
+                { "sWidth": "20%" },
+                { "sWidth": "75%" }
             ],
             "aoColumnDefs": [
                 { "bVisible": false, "aTargets": [0] },

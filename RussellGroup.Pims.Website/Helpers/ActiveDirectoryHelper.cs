@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using RussellGroup.Pims.DataAccess.Models;
+﻿using RussellGroup.Pims.DataAccess.Models;
+using RussellGroup.Pims.DataAccess.Respositories;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -15,16 +14,17 @@ namespace RussellGroup.Pims.Website.Helpers
     public class ActiveDirectoryHelper : IActiveDirectoryHelper
     {
         public static readonly bool BYPASS_LDAP = bool.Parse(ConfigurationManager.AppSettings["BypassLdap"] ?? "false");
-        public static readonly string[] ROLES = new string[] { "canView", "canEdit" };
 
         private const int MAX_PAGE_SIZE = 1000 * 1024 * 1024;
 
-        private PimsContext db = new PimsContext();
+        private readonly IUserRepository repository;
 
         public PrincipalContext Context { get; private set; }
 
-        public ActiveDirectoryHelper()
+        public ActiveDirectoryHelper(IUserRepository repository)
         {
+            this.repository = repository;
+
             if (!BYPASS_LDAP)
             {
                 var domain = ConfigurationManager.AppSettings["Domain"];
@@ -45,7 +45,7 @@ namespace RussellGroup.Pims.Website.Helpers
 
         void IDisposable.Dispose()
         {
-            db.Dispose();
+            repository.Dispose();
 
             if (Context != null)
             {
@@ -140,7 +140,8 @@ namespace RussellGroup.Pims.Website.Helpers
 
         public ApplicationUser GetCurrentUser()
         {
-            return db.Users.SingleOrDefault(f => f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+            return repository.GetAll().SingleOrDefault(f => f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+            //return repository.GetAll().Single(f => f.UserName == @"RUSPDB\PDBDev");
         }
 
         public bool IsAuthenticated()
@@ -180,11 +181,12 @@ namespace RussellGroup.Pims.Website.Helpers
 
         private bool IsUserInRole(ApplicationUser user, string[] roles)
         {
-            var manager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(db));
-
-            foreach (var role in manager.Roles.ToArray())
+            foreach (var role in roles)
             {
-                return user.Roles.Any(f => f.RoleId == role.Id);
+                if (user.Roles.Any(f => f.RoleId == repository.GetAllRoles().Single(r => r.Name == role).Id))
+                {
+                    return true;
+                }
             }
 
             return false;

@@ -155,7 +155,6 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="AuthorizationExtensions.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HireController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />

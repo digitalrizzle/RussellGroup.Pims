@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace RussellGroup.Pims.Website
 {
-    public class AuthorizationFilter : IAuthorizationFilter
+    public class AuthorizationFilter : AuthorizeAttribute
     {
         private readonly IActiveDirectoryHelper helper;
 
@@ -20,14 +20,16 @@ namespace RussellGroup.Pims.Website
         }
 
         [Inject]
-        public string[] Roles { get; set; }
+        public new string[] Roles { get; set; }
 
-        public void OnAuthorization(AuthorizationContext filterContext)
+        public override void OnAuthorization(AuthorizationContext filterContext)
         {
             if (!helper.IsAuthorized(Roles))
             {
                 filterContext.Result = new RedirectResult("~/Home/Unauthorized");
             }
+
+            base.OnAuthorization(filterContext);
         }
     }
 

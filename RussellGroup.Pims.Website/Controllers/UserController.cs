@@ -26,7 +26,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // GET: /User/
         public async Task<ActionResult> Index()
         {
-            var roles = await repository.Roles.ToArrayAsync();
+            var roles = await repository.GetAllRoles().ToArrayAsync();
             var users = await repository.GetAll().ToArrayAsync();
 
             var model = users.Select(ur => new UserRoles()
@@ -68,7 +68,7 @@ namespace RussellGroup.Pims.Website.Controllers
         public async Task<ActionResult> Create(FormCollection collection)
         {
             var roleIds = collection.GetGuids("role-id-field").Select(f => f.ToString());
-            var roles = await repository.Roles.Where(f => roleIds.Contains(f.Id)).Select(f => f.Name).ToArrayAsync();
+            var roles = await repository.GetAllRoles().Where(f => roleIds.Contains(f.Id)).Select(f => f.Name).ToArrayAsync();
 
             var user = new ApplicationUser { UserName = collection["User.UserName"], LockoutEnabled = false };
 
@@ -103,7 +103,7 @@ namespace RussellGroup.Pims.Website.Controllers
         public async Task<ActionResult> Edit(FormCollection collection)
         {
             var roleIds = collection.GetGuids("role-id-field").Select(f => f.ToString());
-            var roles = await repository.Roles.Where(f => roleIds.Contains(f.Id)).Select(f => f.Name).ToArrayAsync();
+            var roles = await repository.GetAllRoles().Where(f => roleIds.Contains(f.Id)).Select(f => f.Name).ToArrayAsync();
 
             ApplicationUser user = await repository.Find(collection["User.Id"]);
             if (user == null)
@@ -162,13 +162,14 @@ namespace RussellGroup.Pims.Website.Controllers
             var model = new UserRoles()
             {
                 User = user,
-                Roles = repository.Roles
+                Roles = repository.GetAllRoles()
                     .ToArray()
                     .Select(f => new ApplicationRole
                     {
                         Id = f.Id,
                         Name = f.Name,
-                        IsChecked = user.Roles.Select(u => u.RoleId).Contains(f.Id)
+                        IsChecked = user.Roles.Select(u => u.RoleId).Contains(f.Id),
+                        Description = f.Description
                     })
                     .ToArray()
             };

@@ -12,7 +12,7 @@ using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanView })]
     public class CategoryController : Controller
     {
         private readonly IRepository<Category> repository;
@@ -44,6 +44,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Category/Create
+        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEditCategories })]
         public ActionResult Create()
         {
             return View();
@@ -54,7 +55,8 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include="CategoryId,Name,Type")] Category category)
+        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEditCategories })]
+        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Name,Type")] Category category)
         {
             if (ModelState.IsValid)
             {
@@ -66,6 +68,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Category/Edit/5
+        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEditCategories })]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -85,7 +88,8 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include="CategoryId,Name,Type")] Category category)
+        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEditCategories })]
+        public async Task<ActionResult> Edit([Bind(Include = "CategoryId,Name,Type")] Category category)
         {
             if (ModelState.IsValid)
             {
@@ -114,6 +118,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Category/Delete/5
+        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEditCategories })]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -131,6 +136,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // POST: /Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEditCategories })]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             await repository.Remove(id);
