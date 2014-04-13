@@ -141,7 +141,6 @@ namespace RussellGroup.Pims.Website.Helpers
         public ApplicationUser GetCurrentUser()
         {
             return repository.GetAll().SingleOrDefault(f => f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase));
-            //return repository.GetAll().Single(f => f.UserName == @"RUSPDB\PDBDev");
         }
 
         public bool IsAuthenticated()

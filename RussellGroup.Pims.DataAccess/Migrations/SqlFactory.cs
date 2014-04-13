@@ -99,5 +99,29 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 
             Context.Database.ExecuteSqlCommand(builder.ToString());
         }
+
+        public void GenerateSetUserNameContextStoredProcedure()
+        {
+            var builder = new StringBuilder();
+
+            builder.AppendLine("IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetContextUserName]') AND type in (N'P', N'PC'))");
+            builder.AppendLine("DROP PROCEDURE [dbo].[SetContextUserName]");
+
+            Context.Database.ExecuteSqlCommand(builder.ToString());
+            builder.Clear();
+
+            builder.AppendLine("IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SetContextUserName]') AND type in (N'P', N'PC'))");
+            builder.AppendLine("BEGIN");
+            builder.AppendLine("EXEC dbo.sp_executesql @statement = N'");
+            builder.AppendLine("CREATE PROCEDURE [dbo].[SetContextUserName](@userName NVARCHAR(50)) AS");
+            builder.AppendLine("BEGIN");
+            builder.AppendLine("	DECLARE @m BINARY(128)");
+            builder.AppendLine("	SET @m = CAST(@userName AS BINARY(128))");
+            builder.AppendLine("	SET CONTEXT_INFO @m");
+            builder.AppendLine("END'");
+            builder.AppendLine("END");
+
+            Context.Database.ExecuteSqlCommand(builder.ToString());
+        }
     }
 }

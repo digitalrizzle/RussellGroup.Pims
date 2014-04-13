@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data;
+using System.Data.Common;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
+using System.Data.SqlClient;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RussellGroup.Pims.DataAccess.Models
 {
@@ -26,6 +26,40 @@ namespace RussellGroup.Pims.DataAccess.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override int SaveChanges()
+        {
+            var task = this.SaveChangesAsync();
+            task.Wait();
+
+            return task.Result;
+        }
+
+        public override async Task<int> SaveChangesAsync()
+        {
+            return await this.SaveChangesAsync(CancellationToken.None);
+        }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            DbConnection connection = base.Database.Connection;
+            if (connection.State == ConnectionState.Closed) connection.Open();
+
+            if (HttpContext.Current != null)
+            {
+                DbCommand command = connection.CreateCommand();
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "SetContextUserName";
+                command.Parameters.Add(new SqlParameter("userName", HttpContext.Current.User.Identity.Name));
+                command.ExecuteNonQuery();
+            }
+
+            var result = await base.SaveChangesAsync(cancellationToken);
+
+            connection.Close();
+
+            return result;
         }
     }
 }

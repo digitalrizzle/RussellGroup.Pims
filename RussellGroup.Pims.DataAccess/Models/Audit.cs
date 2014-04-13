@@ -21,11 +21,13 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "table")]
         public string Table { get; set; }
 
+        [StringLength(128)]
         [Display(Name = "first primary key")]
-        public int? PrimaryKeyId1 { get; set; }
+        public string PrimaryKeyId1 { get; set; }
 
         [Display(Name = "second primary key")]
-        public int? PrimaryKeyId2 { get; set; }
+        [StringLength(128)]
+        public string PrimaryKeyId2 { get; set; }
 
         [StringLength(1)]
         public string Action { get; set; }
