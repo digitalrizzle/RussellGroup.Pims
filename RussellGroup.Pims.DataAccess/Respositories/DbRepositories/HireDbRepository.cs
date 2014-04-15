@@ -42,6 +42,5 @@ namespace RussellGroup.Pims.DataAccess.Respositories
         {
             get { return db.Inventories; }
         }
-
     }
 }

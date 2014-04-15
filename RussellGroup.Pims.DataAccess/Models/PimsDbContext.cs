@@ -9,7 +9,7 @@ using System.Web;
 
 namespace RussellGroup.Pims.DataAccess.Models
 {
-    public class PimsContext : IdentityDbContext<ApplicationUser>
+    public class PimsDbContext : IdentityDbContext<ApplicationUser>
     {
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -21,7 +21,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Status> Statuses { get; set; }
 
-        public PimsContext() : base("PimsContext") { }
+        public PimsDbContext() : base("PimsContext") { }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

@@ -9,7 +9,6 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 {
     public class InventoryDbRepository : DbRepository<Inventory>, IInventoryRepository
     {
-
         public IQueryable<Category> Categories
         {
             get { return db.Categories; }

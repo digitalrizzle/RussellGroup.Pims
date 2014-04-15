@@ -64,8 +64,7 @@
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Inventory.cs" />
-    <Compile Include="Models\ModelExtensions.cs" />
-    <Compile Include="Models\PimsContext.cs" />
+    <Compile Include="Models\PimsDbContext.cs" />
     <Compile Include="Models\InventoryHire.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\JqueryDataTableParameterModel.cs" />

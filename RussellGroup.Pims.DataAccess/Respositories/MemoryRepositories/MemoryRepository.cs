@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Respositories
 {
+    // http://www.codeproject.com/Articles/228865/Csharp-IDisposable-pattern-on-sub-classes
     public class MemoryRepository<T> : IRepository<T> where T : class
     {
+        private bool _disposed;
+
         protected List<T> db = new List<T>();
 
         public virtual async Task<T> Find(params object[] keyValues)
@@ -69,6 +72,25 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             });
         }
 
-        public void Dispose() { }
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize((object)this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                db = null;
+            }
+
+            _disposed = true;
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using RussellGroup.Pims.DataAccess.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,11 +11,26 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 {
     public class SqlFactory
     {
-        public PimsContext Context { get; private set; }
+        public PimsDbContext Context { get; private set; }
+        public string AuditTableName { get; private set; }
+        public string SettingsTableName { get; private set; }
 
-        public SqlFactory(PimsContext context)
+        public SqlFactory(PimsDbContext context, string auditTableName, string settingsTableName)
         {
             Context = context;
+            AuditTableName = auditTableName;
+            SettingsTableName = settingsTableName;
+        }
+
+        public void GenerateAuditTrigger<T>() where T : class
+        {
+            var keyNames = GetKeyNames<T>();
+
+            var tableName = typeof(T).Name;
+            var primaryKeyName1 = keyNames[0];
+            var primaryKeyName2 = keyNames.Length > 1 ? keyNames[1] : null;
+
+            GenerateAuditTrigger(tableName, primaryKeyName1, primaryKeyName2);
         }
 
         public void GenerateAuditTrigger(string tableName, string primaryKeyName1)
@@ -21,10 +38,10 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             GenerateAuditTrigger(tableName, primaryKeyName1, null);
         }
 
-        public void GenerateAuditTrigger(string tableName, string primaryKeyName1, string primaryKeyName2)
+        public void GenerateAuditTrigger(string tableName, string primaryKeyName1, string primaryKeyName2 = null)
         {
             var table = string.Format("[dbo].[{0}]", tableName);
-            var trigger = string.Format("[dbo].[TR_{0}Audit]", tableName);
+            var trigger = string.Format("[dbo].[TR_{0}{1}]", tableName, AuditTableName);
 
             var builder = new StringBuilder();
 
@@ -54,8 +71,8 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             builder.AppendLine("    SELECT @context = CONTEXT_INFO FROM master.dbo.sysprocesses WHERE spid = @@spid");
             builder.AppendLine("    SET @userName = CAST(@context as NVARCHAR(50))");
             builder.AppendLine();
-            builder.AppendLine("    SELECT @inserted = (SELECT * FROM inserted FOR XML RAW) COLLATE Latin1_General_CS_AS");
-            builder.AppendLine("    SELECT @deleted = (SELECT * FROM deleted FOR XML RAW) COLLATE Latin1_General_CS_AS");
+            builder.AppendLine("    SELECT @inserted = (SELECT * FROM inserted FOR XML RAW, BINARY BASE64) COLLATE Latin1_General_CS_AS");
+            builder.AppendLine("    SELECT @deleted = (SELECT * FROM deleted FOR XML RAW, BINARY BASE64) COLLATE Latin1_General_CS_AS");
             builder.AppendLine();
             builder.AppendLine("    IF CAST(@inserted AS NVARCHAR(MAX)) = CAST(@deleted AS NVARCHAR(MAX))");
             builder.AppendLine("        RETURN");
@@ -122,6 +139,23 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             builder.AppendLine("END");
 
             Context.Database.ExecuteSqlCommand(builder.ToString());
+        }
+
+        private string[] GetKeyNames<T>() where T : class
+        {
+            Type t = typeof(T);
+
+            var objectContext = ((IObjectContextAdapter)Context).ObjectContext;
+
+            // create method CreateObjectSet with the generic parameter of the base-type
+            var method = typeof(ObjectContext).GetMethod("CreateObjectSet", Type.EmptyTypes).MakeGenericMethod(t);
+            dynamic objectSet = method.Invoke(objectContext, null);
+
+            IEnumerable<dynamic> keyMembers = objectSet.EntitySet.ElementType.KeyMembers;
+
+            string[] keyNames = keyMembers.Select(k => (string)k.Name).ToArray();
+
+            return keyNames;
         }
     }
 }

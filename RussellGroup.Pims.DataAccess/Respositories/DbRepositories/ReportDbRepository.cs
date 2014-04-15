@@ -11,7 +11,9 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 {
     public class ReportDbRepository : IReportRepository
     {
-        protected PimsContext db = new PimsContext();
+        private bool _disposed;
+
+        protected PimsDbContext db = new PimsDbContext();
 
         public IQueryable<Job> Jobs
         {
@@ -82,7 +84,23 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
         public void Dispose()
         {
-            db.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize((object)this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                db.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }

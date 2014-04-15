@@ -12,7 +12,7 @@ namespace RussellGroup.Pims.DataMigration
 {
     abstract class AbstractImport
     {
-        public PimsContext TargetContext { get; protected set; }
+        public PimsDbContext TargetContext { get; protected set; }
         public OleDbConnection SourceConnection { get; set; }
         public string SourceTableName { get; set; }
         public string TargetTableName { get; set; }
@@ -32,7 +32,7 @@ namespace RussellGroup.Pims.DataMigration
             while (reader.Read())
             {
                 if (TargetContext != null) TargetContext.Dispose();
-                TargetContext = new PimsContext();
+                TargetContext = new PimsDbContext();
 
                 Console.Write("{0}\r", ++row);
 
@@ -55,7 +55,7 @@ namespace RussellGroup.Pims.DataMigration
             var message = string.Format("Deleting from [{0}]...", TargetTableName);
             Trace.WriteLine(message);
 
-            using (var context = new PimsContext())
+            using (var context = new PimsDbContext())
             {
                 context.Database.ExecuteSqlCommand(string.Format("DELETE FROM [{0}]", TargetTableName));
                 context.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT('{0}', RESEED, 0)", TargetTableName));
@@ -69,7 +69,7 @@ namespace RussellGroup.Pims.DataMigration
             var message = string.Format("{0} auditing...", enable ? "Enabling" : "Disabling");
             Trace.WriteLine(message);
 
-            using (var context = new PimsContext())
+            using (var context = new PimsDbContext())
             {
                 context.Database.ExecuteSqlCommand(string.Format("UPDATE [Settings] SET [Value] = '{0}' WHERE [Key] = 'IsAuditingEnabled'", enable.ToString()));
             }

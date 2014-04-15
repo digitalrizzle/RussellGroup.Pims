@@ -12,6 +12,8 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 {
     public class UserDbRepository : DbRepository<ApplicationUser>, IUserRepository
     {
+        private bool _disposed;
+
         protected readonly UserManager<ApplicationUser> userManager;
         protected readonly RoleManager<ApplicationRole> roleManager;
 
@@ -23,7 +25,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(db));
         }
 
-        public async Task<ApplicationUser> Add(ApplicationUser user)
+        public new async Task<ApplicationUser> Add(ApplicationUser user)
         {
             return await Add(user, null);
         }
@@ -52,7 +54,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             return user;
         }
 
-        public Task Update(ApplicationUser user)
+        public new Task Update(ApplicationUser user)
         {
             throw new NotImplementedException();
         }
@@ -93,7 +95,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             await db.SaveChangesAsync();
         }
 
-        public async Task Remove(params object[] keyValues)
+        public new async Task Remove(params object[] keyValues)
         {
             var user = await userManager.FindByIdAsync(keyValues[0] as string);
             var result = await userManager.DeleteAsync(user);
@@ -121,12 +123,22 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             return GetAllRoles().Where(r => roleIds.Contains(r.Id));
         }
 
-        public new void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            userManager.Dispose();
-            roleManager.Dispose();
+            if (_disposed)
+            {
+                return;
+            }
 
-            base.Dispose();
+            if (disposing)
+            {
+                userManager.Dispose();
+                roleManager.Dispose();
+            }
+
+            _disposed = true;
+
+            base.Dispose(disposing);
         }
     }
 }

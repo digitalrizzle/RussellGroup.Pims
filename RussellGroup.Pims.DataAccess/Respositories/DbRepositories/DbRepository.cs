@@ -8,9 +8,12 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Respositories
 {
+    // http://www.codeproject.com/Articles/228865/Csharp-IDisposable-pattern-on-sub-classes
     public class DbRepository<T> : IRepository<T> where T : class
     {
-        protected PimsContext db = new PimsContext();
+        private bool _disposed;
+
+        protected PimsDbContext db = new PimsDbContext();
 
         public async Task<T> Find(params object[] keyValues)
         {
@@ -44,7 +47,23 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
         public void Dispose()
         {
-            db.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize((object)this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                db.Dispose();
+            }
+
+            _disposed = true;
         }
     }
 }
