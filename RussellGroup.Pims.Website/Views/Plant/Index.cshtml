@@ -6,7 +6,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-@if (User.IsAuthorized(ApplicationRole.CanEdit))
+@if (User.IsAuthorized(Role.CanEdit))
 {
     <p>@Html.ActionLink("Create New", "Create")</p>
 }

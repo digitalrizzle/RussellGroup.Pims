@@ -7,7 +7,7 @@
 <h2>@ViewBag.Title</h2>
 <h3>@Model.Description</h3>
 
-@if (User.IsAuthorized(ApplicationRole.CanEdit))
+@if (User.IsAuthorized(Role.CanEdit))
 {
     <p>@Html.ActionLink("Create New", "Create", new { id = Model.JobId })</p>
 }
@@ -65,9 +65,9 @@
                     @Html.DisplayFor(modelItem => item.Comment)
                 </td>
                 <td>
-                    @if (User.IsAuthorized(ApplicationRole.CanEdit)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.PlantHireId }) |</text> }
+                    @if (User.IsAuthorized(Role.CanEdit)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.PlantHireId }) |</text> }
                     @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.PlantHireId })
-                    @if (User.IsAuthorized(ApplicationRole.CanEdit)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.PlantHireId })</text> }
+                    @if (User.IsAuthorized(Role.CanEdit)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.PlantHireId })</text> }
                 </td>
             </tr>
         }

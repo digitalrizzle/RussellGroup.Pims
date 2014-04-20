@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+    [PimsAuthorize(Role.CanEdit)]
     public class HireController : Controller
     {
         private readonly ITransactionRepository repository;

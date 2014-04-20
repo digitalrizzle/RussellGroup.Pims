@@ -30,7 +30,7 @@
         <dd>
             @using (Html.BeginForm())
             {
-                if (User.IsAuthorized(ApplicationRole.CanEditCategories))
+                if (User.IsAuthorized(Role.CanEditCategories))
                 {
                     if (ViewBag.Title == "Details")
                     {

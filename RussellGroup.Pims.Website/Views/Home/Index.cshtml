@@ -44,16 +44,17 @@
                 async: false
             }).responseText;
 
-            jsonData = eval('(' + jsonText + ')');
+            jsonData = $.parseJSON(jsonText);
 
             // Create the data table
             var data = new google.visualization.DataTable();
             data.addColumn('string', 'Status');
             data.addColumn('number', 'Value');
 
-            for (item in jsonData) {
-                data.addRows([[jsonData[item].key, jsonData[item].value]]);
-            }
+            //for (item in jsonData) {
+            jsonData.map(function (item) {
+                data.addRows([[item.key, item.value]]);
+            });
 
             // Set chart options
             var options = {

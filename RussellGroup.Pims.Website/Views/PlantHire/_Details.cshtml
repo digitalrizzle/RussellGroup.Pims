@@ -70,7 +70,7 @@
         <dd>
             @using (Html.BeginForm())
             {
-                if (User.IsAuthorized(ApplicationRole.CanEdit))
+                if (User.IsAuthorized(Role.CanEdit))
                 {
                     if (ViewBag.Title == "Details")
                     {

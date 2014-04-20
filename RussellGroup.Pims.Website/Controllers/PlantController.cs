@@ -12,7 +12,7 @@ using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanView, ApplicationRole.CanEdit })]
+    [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class PlantController : Controller
     {
         private readonly IPlantRepository repository;
@@ -34,7 +34,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             IEnumerable<Plant> entries = repository.GetAll();
             var sortColumnIndex = model.iSortCol_0;
-            var canEdit = User.IsAuthorized(ApplicationRole.CanEdit);
+            var canEdit = User.IsAuthorized(Role.CanEdit);
 
             // ordering
             Func<Plant, string> ordering = (c =>
@@ -204,7 +204,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Plant/Create
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public ActionResult Create()
         {
             return View();
@@ -215,7 +215,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Create([Bind(Include = "PlantId,CategoryId,StatusId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
         {
             if (ModelState.IsValid)
@@ -228,7 +228,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Plant/Edit/5
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -248,7 +248,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Edit([Bind(Include = "PlantId,CategoryId,StatusId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
         {
             if (ModelState.IsValid)
@@ -260,7 +260,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Plant/Delete/5
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -278,7 +278,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // POST: /Plant/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             await repository.Remove(id);

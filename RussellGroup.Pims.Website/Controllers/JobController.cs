@@ -12,7 +12,7 @@ using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanView, ApplicationRole.CanEdit })]
+    [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class JobController : Controller
     {
         private readonly IRepository<Job> repository;
@@ -34,7 +34,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             IQueryable<Job> entries = repository.GetAll();
             var sortColumnIndex = model.iSortCol_0;
-            var canEdit = User.IsAuthorized(ApplicationRole.CanEdit);
+            var canEdit = User.IsAuthorized(Role.CanEdit);
 
             // ordering
             Func<Job, string> ordering = (c =>
@@ -118,7 +118,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Job/Create
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public ActionResult Create()
         {
             return View();
@@ -129,7 +129,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Create([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
         {
             if (ModelState.IsValid)
@@ -142,7 +142,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Job/Edit/5
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -162,7 +162,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Edit([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
         {
             if (ModelState.IsValid)
@@ -210,7 +210,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Job/Delete/5
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -228,7 +228,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // POST: /Job/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             await repository.Remove(id);

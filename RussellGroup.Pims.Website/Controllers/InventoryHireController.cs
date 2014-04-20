@@ -12,7 +12,7 @@ using RussellGroup.Pims.DataAccess.Respositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanView, ApplicationRole.CanEdit })]
+    [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class InventoryHireController : Controller
     {
         private readonly IHireRepository<InventoryHire> repository;
@@ -54,7 +54,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /InventoryHire/Create/5
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Create(int? id)
         {
             if (id == null)
@@ -82,7 +82,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Create([Bind(Include = "InventoryHireId,InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
@@ -94,7 +94,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /InventoryHire/Edit/5
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Edit(int? id, int? hireId)
         {
             if (hireId == null)
@@ -114,7 +114,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Edit([Bind(Include = "InventoryHireId,InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
@@ -126,7 +126,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /InventoryHire/Delete/5
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Delete(int? id, int? hireId)
         {
             if (hireId == null)
@@ -144,7 +144,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // POST: /InventoryHire/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEdit })]
+        [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> DeleteConfirmed(int hireId)
         {
             int id = (await repository.Find(hireId)).JobId;

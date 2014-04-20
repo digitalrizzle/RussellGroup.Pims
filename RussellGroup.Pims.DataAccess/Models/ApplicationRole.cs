@@ -9,13 +9,16 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Models
 {
-    public class ApplicationRole : IdentityRole
+    public class Role
     {
         public const string CanView = "CanView";
         public const string CanEdit = "CanEdit";
         public const string CanEditCategories = "CanEditCategories";
         public const string CanEditUsers = "CanEditUsers";
+    }
 
+    public class ApplicationRole : IdentityRole
+    {
         [NotMapped]
         public bool IsChecked { get; set; }
 

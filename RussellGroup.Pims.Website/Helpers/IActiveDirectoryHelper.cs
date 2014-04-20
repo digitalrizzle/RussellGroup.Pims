@@ -8,6 +8,6 @@ namespace RussellGroup.Pims.Website.Helpers
 {
     public interface IActiveDirectoryHelper : IDisposable
     {
-        bool IsAuthorized(string[] roles);
+        bool IsAuthorized(string roles);
     }
 }

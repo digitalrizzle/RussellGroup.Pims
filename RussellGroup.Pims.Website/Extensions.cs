@@ -13,18 +13,13 @@ namespace RussellGroup.Pims.Website
 {
     public static class Extensions
     {
-        public static bool IsAuthorized(this IPrincipal user, string role)
-        {
-            return IsAuthorized(user, new string[] { role });
-        }
-
-        public static bool IsAuthorized(this IPrincipal user, string[] roles)
+        public static bool IsAuthorized(this IPrincipal user, params string[] roles)
         {
             using (var repository = new UserDbRepository())
             {
                 using (var helper = new ActiveDirectoryHelper(repository))
                 {
-                    return helper.IsAuthorized(roles);
+                    return helper.IsAuthorized(string.Join(",", roles));
                 }
             }
         }

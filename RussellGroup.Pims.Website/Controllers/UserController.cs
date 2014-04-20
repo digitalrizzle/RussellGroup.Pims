@@ -13,7 +13,7 @@ using RussellGroup.Pims.DataAccess.ViewModels;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Roles = new string[] { ApplicationRole.CanEditUsers })]
+    [PimsAuthorize(Role.CanEditUsers)]
     public class UserController : Controller
     {
         private readonly IUserRepository repository;
