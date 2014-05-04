@@ -23,43 +23,64 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         public PimsDbContext() : base("PimsContext") { }
 
+        public string UserName { get; private set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
         }
 
-        public override int SaveChanges()
+        public void SetContextUserName(string userName)
         {
-            var task = this.SaveChangesAsync();
-            task.Wait();
-
-            return task.Result;
+            UserName = userName;
         }
 
-        public override async Task<int> SaveChangesAsync()
+        public override int SaveChanges()
         {
-            return await this.SaveChangesAsync(CancellationToken.None);
+            DbConnection connection = base.Database.Connection;
+            ExecuteSetContextUserNameCommand(connection);
+
+            var result = base.SaveChanges();
+
+            connection.Close();
+
+            return result;
+        }
+
+        public override Task<int> SaveChangesAsync()
+        {
+            return SaveChangesAsync(CancellationToken.None);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            DbConnection connection = base.Database.Connection;
-            if (connection.State == ConnectionState.Closed) connection.Open();
-
             if (HttpContext.Current != null)
             {
-                DbCommand command = connection.CreateCommand();
-                command.CommandType = CommandType.StoredProcedure;
-                command.CommandText = "SetContextUserName";
-                command.Parameters.Add(new SqlParameter("userName", HttpContext.Current.User.Identity.Name));
-                command.ExecuteNonQuery();
+                UserName = HttpContext.Current.User.Identity.Name;
             }
+
+            DbConnection connection = base.Database.Connection;
+            ExecuteSetContextUserNameCommand(connection);
 
             var result = await base.SaveChangesAsync(cancellationToken);
 
             connection.Close();
 
             return result;
+        }
+
+        private void ExecuteSetContextUserNameCommand(DbConnection connection)
+        {
+            if (connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+
+            DbCommand command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "SetContextUserName";
+            command.Parameters.Add(new SqlParameter("userName", UserName));
+            command.ExecuteNonQuery();
         }
     }
 }

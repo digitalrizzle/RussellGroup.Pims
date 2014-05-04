@@ -11,18 +11,18 @@ namespace RussellGroup.Pims.DataAccess.Respositories
     {
         public IQueryable<Category> Categories
         {
-            get { return db.Categories; }
+            get { return Db.Categories; }
         }
 
         public IQueryable<Status> Statuses
         {
-            get { return db.Statuses; }
+            get { return Db.Statuses; }
         }
 
         public IQueryable<Job> GetJobs(int plantId)
         {
-            var jobs = (from j in db.Jobs
-                        join p in db.PlantHires on j.JobId equals p.JobId
+            var jobs = (from j in Db.Jobs
+                        join p in Db.PlantHires on j.JobId equals p.JobId
                         where !j.WhenEnded.HasValue && p.PlantId == plantId
                         select j).Distinct();
 

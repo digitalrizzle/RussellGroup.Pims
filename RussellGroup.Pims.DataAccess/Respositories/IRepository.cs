@@ -10,12 +10,10 @@ namespace RussellGroup.Pims.DataAccess.Respositories
     // http://www.codeproject.com/Articles/228865/Csharp-IDisposable-pattern-on-sub-classes
     public interface IRepository<T> : IDisposable
     {
-        Task<T> Find(params object[] keyValues);
-
+        Task<T> FindAsync(params object[] keyValues);
         IQueryable<T> GetAll();
-
-        Task<T> Add(T item);
-        Task Update(T item);
-        Task Remove(params object[] keyValues);
+        Task<T> AddAsync(T item);
+        Task UpdateAsync(T item);
+        Task RemoveAsync(params object[] keyValues);
     }
 }

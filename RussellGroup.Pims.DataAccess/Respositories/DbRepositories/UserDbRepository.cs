@@ -7,32 +7,34 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RussellGroup.Pims.DataAccess.Respositories
 {
     public class UserDbRepository : DbRepository<ApplicationUser>, IUserRepository
     {
         private bool _disposed;
-
-        protected readonly UserManager<ApplicationUser> userManager;
-        protected readonly RoleManager<ApplicationRole> roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
 
         public UserDbRepository()
         {
-            userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(db));
-            userManager.UserValidator = new UserValidator<ApplicationUser>(userManager) { AllowOnlyAlphanumericUserNames = false };
+            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Db));
+            _userManager.UserValidator = new UserValidator<ApplicationUser>(_userManager) { AllowOnlyAlphanumericUserNames = false };
 
-            roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(db));
+            _roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(Db));
         }
 
-        public new async Task<ApplicationUser> Add(ApplicationUser user)
+        public new Task<ApplicationUser> AddAsync(ApplicationUser user)
         {
-            return await Add(user, null);
+            throw new NotImplementedException();
         }
 
-        public async Task<ApplicationUser> Add(ApplicationUser user, string[] roles)
+        public async Task<ApplicationUser> AddAsync(ApplicationUser user, IEnumerable<string> roles)
         {
-            var result = await userManager.CreateAsync(user);
+            Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
+
+            var result = await _userManager.CreateAsync(user);
 
             if (!result.Succeeded)
             {
@@ -41,7 +43,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
             foreach (var role in roles)
             {
-                result = await userManager.AddToRoleAsync(user.Id, role);
+                result = await _userManager.AddToRoleAsync(user.Id, role);
 
                 if (!result.Succeeded)
                 {
@@ -49,29 +51,53 @@ namespace RussellGroup.Pims.DataAccess.Respositories
                 }
             }
 
-            await db.SaveChangesAsync();
-
             return user;
         }
 
-        public new Task Update(ApplicationUser user)
+        public new Task UpdateAsync(ApplicationUser user)
         {
             throw new NotImplementedException();
         }
 
-        public async Task Update(ApplicationUser user, string[] roles)
+        public async Task UpdateAsync(ApplicationUser user, IEnumerable<string> roles, bool lockOut)
         {
-            var result = userManager.Update(user);
+            Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
+
+            var storedUser = await _userManager.FindByIdAsync(user.Id);
+
+            var result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
             {
                 throw new Exception("Failed to update user.");
             }
 
-            foreach (var userRole in user.Roles.ToArray())
+            result = await _userManager.SetLockoutEnabledAsync(user.Id, lockOut);
+
+            if (!result.Succeeded)
             {
-                var role = GetAllRoles().Single(f => f.Id == userRole.RoleId);
-                result = userManager.RemoveFromRole(user.Id, role.Name);
+                throw new Exception("Failed to unlock or lockout user.");
+            }
+
+            if (lockOut)
+            {
+                result = await _userManager.SetLockoutEndDateAsync(user.Id, DateTime.Now);
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Failed to set lockout date for user.");
+                }
+            }
+
+            var storedRoleIds = storedUser.Roles.Select(f => f.RoleId);
+            var storedRoles = GetAllRoles().Where(f => storedRoleIds.Contains(f.Id)).Select(f => f.Name);
+
+            // remove roles
+            var rolesToRemove = storedRoles.Except(roles).ToArray();
+
+            foreach (var role in rolesToRemove)
+            {
+                result = await _userManager.RemoveFromRoleAsync(user.Id, role);
 
                 if (!result.Succeeded)
                 {
@@ -79,48 +105,36 @@ namespace RussellGroup.Pims.DataAccess.Respositories
                 }
             }
 
-            foreach (var role in roles)
-            {
-                if (!userManager.IsInRole(user.Id, role))
-                {
-                    result = userManager.AddToRole(user.Id, role);
+            // add roles
+            var rolesToAdd = roles.Except(storedRoles).ToArray();
 
-                    if (!result.Succeeded)
-                    {
-                        throw new Exception("Failed to add user to role.");
-                    }
+            foreach (var role in rolesToAdd)
+            {
+                result = await _userManager.AddToRoleAsync(user.Id, role);
+
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Failed to add user to role.");
                 }
             }
-
-            await db.SaveChangesAsync();
         }
 
-        public new async Task Remove(params object[] keyValues)
+        public new async Task RemoveAsync(params object[] keyValues)
         {
-            var user = await userManager.FindByIdAsync(keyValues[0] as string);
-            var result = await userManager.DeleteAsync(user);
+            Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
+
+            var user = await _userManager.FindByIdAsync(keyValues[0] as string);
+            var result = await _userManager.DeleteAsync(user);
 
             if (!result.Succeeded)
             {
                 throw new Exception("Failed to remove user.");
             }
-
-            await db.SaveChangesAsync();
         }
 
         public IQueryable<ApplicationRole> GetAllRoles()
         {
-            return roleManager.Roles;
-        }
-
-        public IQueryable<ApplicationRole> GetRoles(ApplicationUser user)
-        {
-            return GetAllRoles().Where(f => ((ApplicationRole)user.Roles).Id == f.Id);
-        }
-
-        public IQueryable<ApplicationRole> GetRoles(IEnumerable<string> roleIds)
-        {
-            return GetAllRoles().Where(r => roleIds.Contains(r.Id));
+            return _roleManager.Roles;
         }
 
         protected override void Dispose(bool disposing)
@@ -132,12 +146,11 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
             if (disposing)
             {
-                userManager.Dispose();
-                roleManager.Dispose();
+                _userManager.Dispose();
+                _roleManager.Dispose();
             }
 
             _disposed = true;
-
             base.Dispose(disposing);
         }
     }

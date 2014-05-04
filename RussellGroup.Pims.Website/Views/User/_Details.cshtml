@@ -21,20 +21,22 @@
         </dd>
 
         <dt>
-            locked out?
+            @Html.DisplayNameFor(model => model.User.LockoutEnabled)
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.User.LockoutEnabled)
         </dd>
 
-        <dt>
-            when locked out?
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.User.LockoutEndDateUtc)
-        </dd>
+        @if (Model.User.LockoutEndDateUtc.HasValue)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.User.LockoutEndDateUtc)
+            </dt>
+            <dd>
+                @Html.Encode(Model.User.LockoutEndDateUtc.Value.ToLocalTime().ToString())
+            </dd>
+        }
 
     </dl>
 

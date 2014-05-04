@@ -10,11 +10,11 @@ namespace RussellGroup.Pims.Website.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IPlantRepository repository;
+        private readonly IPlantRepository _repository;
 
-        public HomeController(IPlantRepository repository)
+        public HomeController(IPlantRepository _repository)
         {
-            this.repository = repository;
+            this._repository = _repository;
         }
 
         public ActionResult Index()
@@ -29,7 +29,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         public JsonResult GetPlantData()
         {
-            var plants = repository.GetAll();
+            var plants = _repository.GetAll();
 
             var unknown = plants.Count(f => f.Status.StatusId == Status.Unknown);
             var available = plants.Count(f => f.Status.StatusId == Status.Available);
@@ -57,7 +57,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }

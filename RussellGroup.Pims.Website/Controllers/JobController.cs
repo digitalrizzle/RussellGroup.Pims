@@ -15,11 +15,11 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class JobController : Controller
     {
-        private readonly IRepository<Job> repository;
+        private readonly IRepository<Job> _repository;
 
-        public JobController(IRepository<Job> repository)
+        public JobController(IRepository<Job> _repository)
         {
-            this.repository = repository;
+            this._repository = _repository;
         }
 
         // GET: /Job/
@@ -32,7 +32,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IQueryable<Job> entries = repository.GetAll();
+            IQueryable<Job> entries = _repository.GetAll();
             var sortColumnIndex = model.iSortCol_0;
             var canEdit = User.IsAuthorized(Role.CanEdit);
 
@@ -94,7 +94,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = repository.GetAll().Count(),
+                iTotalRecords = _repository.GetAll().Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = filtered
             };
@@ -109,7 +109,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await repository.Find(id);
+            Job job = await _repository.FindAsync(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -134,7 +134,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Add(job);
+                await _repository.AddAsync(job);
                 return RedirectToAction("Index");
             }
 
@@ -149,7 +149,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await repository.Find(id);
+            Job job = await _repository.FindAsync(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -167,7 +167,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Update(job);
+                await _repository.UpdateAsync(job);
                 return RedirectToAction("Index");
             }
             return View("Edit", job);
@@ -177,7 +177,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string hint = Request["q"];
 
-            var result = repository
+            var result = _repository
                 .GetAll()
                 .Where(f => f.ProjectManager.Contains(hint))
                 .OrderBy(f => f.ProjectManager)
@@ -195,7 +195,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string hint = Request["q"];
 
-            var result = repository
+            var result = _repository
                 .GetAll()
                 .Where(f => f.QuantitySurveyor.Contains(hint))
                 .OrderBy(f => f.QuantitySurveyor)
@@ -217,7 +217,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await repository.Find(id);
+            Job job = await _repository.FindAsync(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -231,7 +231,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            await repository.Remove(id);
+            await _repository.RemoveAsync(id);
             return RedirectToAction("Index");
         }
 
@@ -239,7 +239,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }

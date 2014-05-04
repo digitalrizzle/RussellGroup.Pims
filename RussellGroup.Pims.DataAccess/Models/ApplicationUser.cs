@@ -2,11 +2,33 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Models
 {
-    public class ApplicationUser : IdentityUser { }
+    [MetadataType(typeof(ApplicationUserMetadata))]
+    public class ApplicationUser : IdentityUser
+    {
+        internal sealed class ApplicationUserMetadata
+        {
+            // metadata classes are not meant to be instantiated
+            private ApplicationUserMetadata() { }
+
+            [DisplayName("user name")]
+            public string UserName { get; set; }
+
+            [DisplayName("email")]
+            public string Email { get; set; }
+
+            [DisplayName("locked out?")]
+            public string LockoutEnabled { get; set; }
+
+            [DisplayName("when locked out")]
+            public DateTime LockoutEndDateUtc { get; set; }
+        }
+    }
 }

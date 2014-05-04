@@ -15,9 +15,9 @@ namespace RussellGroup.Pims.Website
     {
         public static bool IsAuthorized(this IPrincipal user, params string[] roles)
         {
-            using (var repository = new UserDbRepository())
+            using (var _repository = new UserDbRepository())
             {
-                using (var helper = new ActiveDirectoryHelper(repository))
+                using (var helper = new ActiveDirectoryHelper(_repository))
                 {
                     return helper.IsAuthorized(string.Join(",", roles));
                 }

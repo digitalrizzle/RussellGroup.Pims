@@ -99,6 +99,8 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             builder.AppendLine("            inserted");
             builder.AppendLine("    END");
             builder.AppendLine("    ELSE");
+            builder.AppendLine("        SET @action = 'D'");
+            builder.AppendLine();
             builder.AppendLine("        INSERT INTO");
             builder.AppendLine("            [dbo].[Audits]");
             builder.AppendLine("        SELECT");

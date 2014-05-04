@@ -25,22 +25,22 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
         public Task<Job> GetJob(int? id)
         {
-            return db.Jobs.SingleOrDefaultAsync(f => f.JobId == id);
+            return Db.Jobs.SingleOrDefaultAsync(f => f.JobId == id);
         }
 
         public IQueryable<Job> Jobs
         {
-            get { return db.Jobs; }
+            get { return Db.Jobs; }
         }
 
         public IQueryable<Plant> Plants
         {
-            get { return db.Plants; }
+            get { return Db.Plants; }
         }
 
         public IQueryable<Inventory> Inventories
         {
-            get { return db.Inventories; }
+            get { return Db.Inventories; }
         }
     }
 }

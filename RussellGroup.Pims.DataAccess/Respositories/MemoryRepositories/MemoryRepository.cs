@@ -16,7 +16,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
         protected List<T> db = new List<T>();
 
-        public virtual async Task<T> Find(params object[] keyValues)
+        public virtual async Task<T> FindAsync(params object[] keyValues)
         {
             return await Task.Run<T>(() =>
             {
@@ -46,7 +46,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             return db.AsQueryable();
         }
 
-        public async Task<T> Add(T item)
+        public async Task<T> AddAsync(T item)
         {
             return await Task.Run<T>(() =>
             {
@@ -55,7 +55,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             });
         }
 
-        public async Task Update(T item)
+        public async Task UpdateAsync(T item)
         {
             await Task.Run(() =>
             {
@@ -63,11 +63,11 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             });
         }
 
-        public async Task Remove(params object[] keyValues)
+        public async Task RemoveAsync(params object[] keyValues)
         {
             await Task.Run(async () =>
             {
-                var item = await Find(keyValues);
+                var item = await FindAsync(keyValues);
                 db.Remove(item);
             });
         }

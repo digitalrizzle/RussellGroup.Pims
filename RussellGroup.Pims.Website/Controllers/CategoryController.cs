@@ -15,17 +15,17 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Role.CanView, Role.CanEdit, Role.CanEditCategories)]
     public class CategoryController : Controller
     {
-        private readonly IRepository<Category> repository;
+        private readonly IRepository<Category> _repository;
 
-        public CategoryController(IRepository<Category> repository)
+        public CategoryController(IRepository<Category> _repository)
         {
-            this.repository = repository;
+            this._repository = _repository;
         }
 
         // GET: /Category/
         public async Task<ActionResult> Index()
         {
-            return View(await repository.GetAll().ToListAsync());
+            return View(await _repository.GetAll().ToListAsync());
         }
 
         // GET: /Category/Details/5
@@ -35,7 +35,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await repository.Find(id);
+            Category category = await _repository.FindAsync(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -60,7 +60,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Add(category);
+                await _repository.AddAsync(category);
                 return RedirectToAction("Index");
             }
 
@@ -75,7 +75,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await repository.Find(id);
+            Category category = await _repository.FindAsync(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -93,7 +93,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Update(category);
+                await _repository.UpdateAsync(category);
                 return RedirectToAction("Index");
             }
             return View(category);
@@ -103,7 +103,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string hint = Request["q"];
 
-            var result = repository
+            var result = _repository
                 .GetAll()
                 .Where(f => f.Type.Contains(hint))
                 .OrderBy(f => f.Type)
@@ -125,7 +125,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await repository.Find(id);
+            Category category = await _repository.FindAsync(id);
             if (category == null)
             {
                 return HttpNotFound();
@@ -139,7 +139,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEditCategories)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            await repository.Remove(id);
+            await _repository.RemoveAsync(id);
             return RedirectToAction("Index");
         }
 
@@ -147,7 +147,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }

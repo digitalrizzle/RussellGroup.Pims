@@ -19,11 +19,11 @@ namespace RussellGroup.Pims.Website.Controllers
         private static readonly CultureInfo culture = CultureInfo.CreateSpecificCulture("en-NZ");
         private static readonly DateTimeStyles styles = DateTimeStyles.None;
 
-        private readonly IReportRepository repository;
+        private readonly IReportRepository _repository;
 
-        public ReportController(IReportRepository repository)
+        public ReportController(IReportRepository _repository)
         {
-            this.repository = repository;
+            this._repository = _repository;
         }
 
         // GET: /Report/Jobs
@@ -45,14 +45,14 @@ namespace RussellGroup.Pims.Website.Controllers
         // GET: /Report/Categories
         public async Task<ActionResult> Categories()
         {
-            return View("CategoryIndex", await repository.Categories.ToListAsync());
+            return View("CategoryIndex", await _repository.Categories.ToListAsync());
         }
 
         // this method has been adapted from the code described here:
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IEnumerable<Job> entries = repository.Jobs;
+            IEnumerable<Job> entries = _repository.Jobs;
             bool isDetailed = bool.Parse(Request["bDetailed"] ?? false.ToString());
             var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
 
@@ -125,7 +125,7 @@ namespace RussellGroup.Pims.Website.Controllers
             foreach (string[] row in filtered)
             {
                 int id = Convert.ToInt32(row[0]);
-                var job = repository.Jobs.Single(f => f.JobId == id);
+                var job = _repository.Jobs.Single(f => f.JobId == id);
 
                 row[6] = job.PlantHires.Count(f => !f.WhenEnded.HasValue).ToString();
                 row[7] = job.InventoryHires.Count(f => !f.WhenEnded.HasValue).ToString();
@@ -134,7 +134,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = repository.Jobs.Count(),
+                iTotalRecords = _repository.Jobs.Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = filtered
             };
@@ -148,12 +148,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await repository.Categories.SingleOrDefaultAsync(f => f.CategoryId == id);
+            Category category = await _repository.Categories.SingleOrDefaultAsync(f => f.CategoryId == id);
             if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(repository.GetPlantLocationsByCategory(category.CategoryId));
+            return View(_repository.GetPlantLocationsByCategory(category.CategoryId));
         }
 
         public async Task<ActionResult> InventoryLocations(int? id)
@@ -162,12 +162,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await repository.Categories.SingleOrDefaultAsync(f => f.CategoryId == id);
+            Category category = await _repository.Categories.SingleOrDefaultAsync(f => f.CategoryId == id);
             if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(repository.GetInventoryLocationsByCategory(category.CategoryId));
+            return View(_repository.GetInventoryLocationsByCategory(category.CategoryId));
         }
 
         public async Task<ActionResult> PlantInJob(int? id)
@@ -212,7 +212,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await repository.Jobs.SingleOrDefaultAsync(f => f.JobId == id);
+            var job = await _repository.Jobs.SingleOrDefaultAsync(f => f.JobId == id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -236,7 +236,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }

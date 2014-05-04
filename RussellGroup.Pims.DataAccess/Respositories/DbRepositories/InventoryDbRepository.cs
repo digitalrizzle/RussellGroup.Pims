@@ -11,7 +11,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
     {
         public IQueryable<Category> Categories
         {
-            get { return db.Categories; }
+            get { return Db.Categories; }
         }
     }
 }

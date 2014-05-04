@@ -15,11 +15,11 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class PlantController : Controller
     {
-        private readonly IPlantRepository repository;
+        private readonly IPlantRepository _repository;
 
-        public PlantController(IPlantRepository repository)
+        public PlantController(IPlantRepository _repository)
         {
-            this.repository = repository;
+            this._repository = _repository;
         }
 
         // GET: /Plant/
@@ -32,7 +32,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IEnumerable<Plant> entries = repository.GetAll();
+            IEnumerable<Plant> entries = _repository.GetAll();
             var sortColumnIndex = model.iSortCol_0;
             var canEdit = User.IsAuthorized(Role.CanEdit);
 
@@ -82,7 +82,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.XPlantNewId,
                     c.Description,
                     c.Category != null ? c.Category.Name : string.Empty,
-                    repository.GetJobs(c.PlantId).Count() == 0 ? string.Empty : this.ActionLink(repository.GetJobs(c.PlantId).Count().ToString(), "Jobs", new { id = c.PlantId }),
+                    _repository.GetJobs(c.PlantId).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetJobs(c.PlantId).Count().ToString(), "Jobs", new { id = c.PlantId }),
                     c.Status.Name,
                     this.CrudLinks(new { id = c.PlantId }, canEdit)
                 });
@@ -90,7 +90,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = repository.GetAll().Count(),
+                iTotalRecords = _repository.GetAll().Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = displayData
             };
@@ -105,7 +105,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await repository.Find(id);
+            Plant plant = await _repository.FindAsync(id);
             if (plant == null)
             {
                 return HttpNotFound();
@@ -120,7 +120,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await repository.Find(id);
+            Plant plant = await _repository.FindAsync(id);
             if (plant == null)
             {
                 return HttpNotFound();
@@ -134,7 +134,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             int id = Convert.ToInt32(Request["id"]);
 
-            var entries = repository.GetJobs(id);
+            var entries = _repository.GetJobs(id);
             var sortColumnIndex = model.iSortCol_0;
 
             // ordering
@@ -220,7 +220,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Add(plant);
+                await _repository.AddAsync(plant);
                 return RedirectToAction("Index");
             }
 
@@ -235,7 +235,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await repository.Find(id);
+            Plant plant = await _repository.FindAsync(id);
             if (plant == null)
             {
                 return HttpNotFound();
@@ -253,7 +253,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Update(plant);
+                await _repository.UpdateAsync(plant);
                 return RedirectToAction("Index");
             }
             return View(plant);
@@ -267,7 +267,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await repository.Find(id);
+            Plant plant = await _repository.FindAsync(id);
             if (plant == null)
             {
                 return HttpNotFound();
@@ -281,7 +281,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            await repository.Remove(id);
+            await _repository.RemoveAsync(id);
             return RedirectToAction("Index");
         }
 
@@ -289,7 +289,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -301,10 +301,10 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(Plant plant)
         {
-            var categories = repository.Categories.OrderBy(f => f.Name);
+            var categories = _repository.Categories.OrderBy(f => f.Name);
             var category = plant != null ? plant.CategoryId : 0;
 
-            var statuses = repository.Statuses.OrderBy(f => f.StatusId);
+            var statuses = _repository.Statuses.OrderBy(f => f.StatusId);
             var status = plant != null ? plant.StatusId : 0;
 
             ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);

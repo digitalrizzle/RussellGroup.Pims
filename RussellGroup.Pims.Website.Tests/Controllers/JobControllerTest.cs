@@ -70,8 +70,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Job job2 = GetJob(2, "Keith Harris", "Dean Seabolt");
 
             var jobs = new MemoryRepository<Job>();
-            jobs.Add(job1).Wait();
-            jobs.Add(job2).Wait();
+            jobs.AddAsync(job1).Wait();
+            jobs.AddAsync(job2).Wait();
 
             repository.Setup(f => f.GetAll()).Returns(jobs.GetAll());
 
@@ -113,9 +113,9 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Job job = GetJob();
 
             var jobs = new MemoryRepository<Job>();
-            jobs.Add(job).Wait();
+            jobs.AddAsync(job).Wait();
 
-            repository.Setup(f => f.Find(1)).Returns(jobs.Find(job.JobId));
+            repository.Setup(f => f.FindAsync(1)).Returns(jobs.FindAsync(job.JobId));
 
             // Act
             var result = controller.Details(1).Result as ViewResult;
@@ -137,7 +137,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var result = controller.Create(job).Result as RedirectToRouteResult;
 
             // Assert
-            repository.Verify(f => f.Add(job), Times.Once);
+            repository.Verify(f => f.AddAsync(job), Times.Once);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
 
@@ -152,7 +152,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var result = controller.Create(job).Result as ViewResult;
 
             // Assert
-            repository.Verify(f => f.Add(job), Times.Never);
+            repository.Verify(f => f.AddAsync(job), Times.Never);
 
             var model = result.ViewData.Model as Job;
 
@@ -170,7 +170,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var result = controller.Edit(job).Result as RedirectToRouteResult;
 
             // Assert
-            repository.Verify(f => f.Update(job), Times.Once);
+            repository.Verify(f => f.UpdateAsync(job), Times.Once);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
 
@@ -185,7 +185,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var result = controller.Edit(job).Result as ViewResult;
 
             // Assert
-            repository.Verify(f => f.Update(job), Times.Never);
+            repository.Verify(f => f.UpdateAsync(job), Times.Never);
 
             var model = result.ViewData.Model as Job;
 
@@ -200,15 +200,15 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Job job = GetJob();
 
             var jobs = new MemoryRepository<Job>();
-            jobs.Add(job).Wait();
+            jobs.AddAsync(job).Wait();
 
-            repository.Setup(f => f.Remove(1)).Returns(jobs.Remove(job.JobId));
+            repository.Setup(f => f.RemoveAsync(1)).Returns(jobs.RemoveAsync(job.JobId));
 
             // Act
             var result = controller.DeleteConfirmed(job.JobId).Result as RedirectToRouteResult;
 
             // Assert
-            repository.Verify(f => f.Remove(job.JobId), Times.Once);
+            repository.Verify(f => f.RemoveAsync(job.JobId), Times.Once);
             Assert.AreEqual("Index", result.RouteValues["action"]);
         }
     }

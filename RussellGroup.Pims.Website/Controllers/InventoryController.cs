@@ -15,11 +15,11 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class InventoryController : Controller
     {
-        private readonly IInventoryRepository repository;
+        private readonly IInventoryRepository _repository;
 
-        public InventoryController(IInventoryRepository repository)
+        public InventoryController(IInventoryRepository _repository)
         {
-            this.repository = repository;
+            this._repository = _repository;
         }
 
         // GET: /Inventory/
@@ -32,7 +32,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
         public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
         {
-            IEnumerable<Inventory> entries = repository.GetAll();
+            IEnumerable<Inventory> entries = _repository.GetAll();
             var sortColumnIndex = model.iSortCol_0;
             var canEdit = User.IsAuthorized(Role.CanEdit);
 
@@ -96,7 +96,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = new
             {
                 sEcho = model.sEcho,
-                iTotalRecords = repository.GetAll().Count(),
+                iTotalRecords = _repository.GetAll().Count(),
                 iTotalDisplayRecords = searched.Count(),
                 aaData = filtered
             };
@@ -111,7 +111,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await repository.Find(id);
+            Inventory inventory = await _repository.FindAsync(id);
             if (inventory == null)
             {
                 return HttpNotFound();
@@ -136,7 +136,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Add(inventory);
+                await _repository.AddAsync(inventory);
                 return RedirectToAction("Index");
             }
 
@@ -151,7 +151,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await repository.Find(id);
+            Inventory inventory = await _repository.FindAsync(id);
             if (inventory == null)
             {
                 return HttpNotFound();
@@ -169,7 +169,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Update(inventory);
+                await _repository.UpdateAsync(inventory);
                 return RedirectToAction("Index");
             }
             return View(inventory);
@@ -183,7 +183,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await repository.Find(id);
+            Inventory inventory = await _repository.FindAsync(id);
             if (inventory == null)
             {
                 return HttpNotFound();
@@ -197,7 +197,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            await repository.Remove(id);
+            await _repository.RemoveAsync(id);
             return RedirectToAction("Index");
         }
 
@@ -205,7 +205,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -217,7 +217,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(Inventory inventory)
         {
-            var categories = repository.Categories.OrderBy(f => f.Name);
+            var categories = _repository.Categories.OrderBy(f => f.Name);
             var category = inventory != null ? inventory.CategoryId : 0;
 
             ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);

@@ -15,11 +15,11 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class InventoryHireController : Controller
     {
-        private readonly IHireRepository<InventoryHire> repository;
+        private readonly IHireRepository<InventoryHire> _repository;
 
-        public InventoryHireController(IHireRepository<InventoryHire> repository)
+        public InventoryHireController(IHireRepository<InventoryHire> _repository)
         {
-            this.repository = repository;
+            this._repository = _repository;
         }
 
         // GET: /InventoryHire/5
@@ -29,7 +29,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await repository.GetJob(id);
+            var job = await _repository.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -45,7 +45,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            InventoryHire hire = await repository.Find(hireId);
+            InventoryHire hire = await _repository.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -61,7 +61,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await repository.GetJob(id);
+            var job = await _repository.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -87,7 +87,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Add(hire);
+                await _repository.AddAsync(hire);
                 return RedirectToAction("Index");
             }
             return View(hire);
@@ -101,7 +101,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            InventoryHire hire = await repository.Find(hireId);
+            InventoryHire hire = await _repository.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -119,7 +119,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Update(hire);
+                await _repository.UpdateAsync(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
             return View(hire);
@@ -133,7 +133,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            InventoryHire hire = await repository.Find(hireId);
+            InventoryHire hire = await _repository.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -147,8 +147,8 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> DeleteConfirmed(int hireId)
         {
-            int id = (await repository.Find(hireId)).JobId;
-            await repository.Remove(hireId);
+            int id = (await _repository.FindAsync(hireId)).JobId;
+            await _repository.RemoveAsync(hireId);
             return RedirectToAction("Index", new { id = id });
         }
 
@@ -156,7 +156,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -168,7 +168,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(InventoryHire hire)
         {
-            var inventories = repository.Inventories.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XInventoryId);
+            var inventories = _repository.Inventories.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XInventoryId);
 
             ViewBag.Inventories = new SelectList(inventories, "InventoryId", "XInventoryId", hire.InventoryId);
 

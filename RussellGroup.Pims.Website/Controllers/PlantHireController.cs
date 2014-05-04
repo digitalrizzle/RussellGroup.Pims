@@ -15,11 +15,11 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class PlantHireController : Controller
     {
-        private readonly IHireRepository<PlantHire> repository;
+        private readonly IHireRepository<PlantHire> _repository;
 
-        public PlantHireController(IHireRepository<PlantHire> repository)
+        public PlantHireController(IHireRepository<PlantHire> _repository)
         {
-            this.repository = repository;
+            this._repository = _repository;
         }
 
         // GET: /PlantHire/5
@@ -29,7 +29,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await repository.GetJob(id);
+            var job = await _repository.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -45,7 +45,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await repository.Find(hireId);
+            PlantHire hire = await _repository.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -62,7 +62,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await repository.GetJob(id);
+            var job = await _repository.GetJob(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -88,7 +88,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Add(hire);
+                await _repository.AddAsync(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
             return View(hire);
@@ -102,7 +102,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await repository.Find(hireId);
+            PlantHire hire = await _repository.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -120,7 +120,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (ModelState.IsValid)
             {
-                await repository.Update(hire);
+                await _repository.UpdateAsync(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
             return View(hire);
@@ -134,7 +134,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            PlantHire hire = await repository.Find(hireId);
+            PlantHire hire = await _repository.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
@@ -148,8 +148,8 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> DeleteConfirmed(int hireId)
         {
-            int id = (await repository.Find(hireId)).JobId;
-            await repository.Remove(hireId);
+            int id = (await _repository.FindAsync(hireId)).JobId;
+            await _repository.RemoveAsync(hireId);
             return RedirectToAction("Index", new { id = id });
         }
 
@@ -157,7 +157,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             if (disposing)
             {
-                repository.Dispose();
+                _repository.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -169,7 +169,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(PlantHire hire)
         {
-            var plants = repository.Plants.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XPlantId);
+            var plants = _repository.Plants.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XPlantId);
 
             ViewBag.Plants = new SelectList(plants, "PlantId", "XPlantId", hire.PlantId);
 

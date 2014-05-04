@@ -38,7 +38,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
                 }
 
                 throw new DbEntityValidationException(
-                    "Entity Validation Failed - errors follow:\n" +
+                    "Entity validation failed - errors follow:\n" +
                     builder.ToString(), ex
                 ); // add the original exception as the innerException
             }

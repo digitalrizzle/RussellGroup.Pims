@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RussellGroup.Pims.DataAccess.Respositories
 {
@@ -13,42 +14,41 @@ namespace RussellGroup.Pims.DataAccess.Respositories
     {
         private bool _disposed;
 
-        protected PimsDbContext db = new PimsDbContext();
+        protected readonly PimsDbContext Db = new PimsDbContext();
 
-        public async Task<T> Find(params object[] keyValues)
+        protected string UserName
         {
-            return await db.Set<T>().FindAsync(keyValues);
+            get { return HttpContext.Current.User.Identity.Name; }
+        }
+
+        public async Task<T> FindAsync(params object[] keyValues)
+        {
+            return await Db.Set<T>().FindAsync(keyValues);
         }
 
         public IQueryable<T> GetAll()
         {
-            return db.Set<T>();
+            return Db.Set<T>();
         }
 
-        public async Task<T> Add(T item)
+        public async Task<T> AddAsync(T item)
         {
-            var result = db.Set<T>().Add(item);
-            await db.SaveChangesAsync();
+            var result = Db.Set<T>().Add(item);
+            await Db.SaveChangesAsync();
             return result;
         }
 
-        public async Task Update(T item)
+        public async Task UpdateAsync(T item)
         {
-            db.Entry(item).State = EntityState.Modified;
-            await db.SaveChangesAsync();
+            Db.Entry(item).State = EntityState.Modified;
+            await Db.SaveChangesAsync();
         }
 
-        public async Task Remove(params object[] keyValues)
+        public async Task RemoveAsync(params object[] keyValues)
         {
-            var item = await Find(keyValues);
-            var result = db.Set<T>().Remove(item);
-            await db.SaveChangesAsync();
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize((object)this);
+            var item = await FindAsync(keyValues);
+            Db.Set<T>().Remove(item);
+            await Db.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)
@@ -60,10 +60,16 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
             if (disposing)
             {
-                db.Dispose();
+                Db.Dispose();
             }
 
             _disposed = true;
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize((object)this);
         }
     }
 }

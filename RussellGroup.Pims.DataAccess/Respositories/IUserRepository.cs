@@ -10,8 +10,8 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 {
     public interface IUserRepository : IRepository<ApplicationUser>
     {
-        Task<ApplicationUser> Add(ApplicationUser user, string[] roles);
-        Task Update(ApplicationUser user, string[] roles);
+        Task<ApplicationUser> AddAsync(ApplicationUser user, IEnumerable<string> roles);
+        Task UpdateAsync(ApplicationUser user, IEnumerable<string> roles, bool lockOut);
         IQueryable<ApplicationRole> GetAllRoles();
     }
 }
