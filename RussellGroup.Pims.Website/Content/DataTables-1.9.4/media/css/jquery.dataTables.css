@@ -33,9 +33,11 @@ table.dataTable td.dataTables_empty {
 
 table.dataTable tr.odd { background-color: #f0f0f0; }
 table.dataTable tr.even { background-color: #f7f7f7; }
+table.dataTable tr:hover { background-color: #ccc; }
 
 table.dataTable tr.odd td.sorting_1 { background-color: #ddd; }
 table.dataTable tr.even td.sorting_1 { background-color: #eee; }
+table.dataTable tr:hover td.sorting_1 { background-color: #ccc; }
 
 /*
 table.dataTable tr.odd td.sorting_1 { background-color: #D3D6FF; }

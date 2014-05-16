@@ -1,62 +1,61 @@
-﻿@model RussellGroup.Pims.DataAccess.ViewModels.UserRoles
+﻿@model RussellGroup.Pims.Website.Models.UserRolesViewModel
 
 <div>
-    @if (ViewBag.Title == "Details") { <h4>@ViewBag.Title</h4> }
+    @if (ViewBag.Title == "Details")
+    { <h4>@ViewBag.Title</h4> }
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            name
+            @Html.DisplayNameFor(model => model.User.UserName)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.User.UserName)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.Roles)
         </dt>
-
         <dd>
-            @Html.Encode(Model.GetRoleNames())
+            @if (string.IsNullOrWhiteSpace(Model.RoleNames))
+            {
+                <text>&nbsp;</text>
+            }
+            else
+            {
+                @Html.Encode(Model.RoleNames)
+            }
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.User.LockoutEnabled)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.User.LockoutEnabled)
         </dd>
-
         @if (Model.User.LockoutEndDateUtc.HasValue)
         {
             <dt>
                 @Html.DisplayNameFor(model => model.User.LockoutEndDateUtc)
             </dt>
             <dd>
-                @Html.Encode(Model.User.LockoutEndDateUtc.Value.ToLocalTime().ToString())
+                @Html.Encode(Model.User.LockoutEndDateUtc.Value.ToLocalTime())
             </dd>
         }
-
     </dl>
-
     <hr />
-
     <dl class="dl-horizontal">
         <dt>
         </dt>
         <dd>
             @using (Html.BeginForm())
             {
-                if (ViewBag.Title == "Details")
-                {
-                    <text>@Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }) | </text>
-                }
-                else
+                if (ViewBag.Title == "Delete")
                 {
                     @Html.AntiForgeryToken()
                     <input type="submit" value="Delete" class="btn btn-danger" />
                     <text>&nbsp;</text>
+                }
+                else
+                {
+                    <text>@Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }) | </text>
                 }
                 @Html.ActionLink("Cancel", "Index", new { id = Model.User.Id })
             }

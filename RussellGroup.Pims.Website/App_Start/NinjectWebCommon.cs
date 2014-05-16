@@ -1,5 +1,5 @@
-[assembly: WebActivator.PreApplicationStartMethod(typeof(RussellGroup.Pims.Website.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(RussellGroup.Pims.Website.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(RussellGroup.Pims.Website.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(RussellGroup.Pims.Website.App_Start.NinjectWebCommon), "Stop")]
 
 namespace RussellGroup.Pims.Website.App_Start
 {

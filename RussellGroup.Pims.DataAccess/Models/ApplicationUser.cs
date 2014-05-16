@@ -19,9 +19,11 @@ namespace RussellGroup.Pims.DataAccess.Models
             private ApplicationUserMetadata() { }
 
             [DisplayName("user name")]
+            [Required(AllowEmptyStrings = false, ErrorMessage = "A user name is required.")]
             public string UserName { get; set; }
 
             [DisplayName("email")]
+            [EmailAddress(ErrorMessage = "The email address is not valid.")]
             public string Email { get; set; }
 
             [DisplayName("locked out?")]

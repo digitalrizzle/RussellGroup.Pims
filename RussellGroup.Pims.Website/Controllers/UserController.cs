@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Respositories;
 using RussellGroup.Pims.DataAccess.ViewModels;
+using RussellGroup.Pims.Website.Models;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -18,26 +19,87 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly IUserRepository _repository;
 
-        public UserController(IUserRepository _repository)
+        public UserController(IUserRepository repository)
         {
-            this._repository = _repository;
+            _repository = repository;
         }
-
+        //
         // GET: /User/
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            var roles = await _repository.GetAllRoles().ToArrayAsync();
-            var users = await _repository.GetAll().ToArrayAsync();
-
-            var model = users.Select(ur => new UserRoles()
-            {
-                User = ur,
-                Roles = roles.Where(r => ur.Roles.Select(u => u.RoleId).Contains(r.Id)).ToArray()
-            });
-
-            return View(model);
+            return base.View("Index");
         }
 
+        // this method has been adapted from the code described here:
+        // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
+        public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
+        {
+            var entries = _repository.GetAll();
+            var sortColumnIndex = model.iSortCol_0;
+
+            // ordering
+            Func<ApplicationUser, string> ordering = (c =>
+                    sortColumnIndex == 1 ? c.UserName :
+                        sortColumnIndex == 2 ? string.Empty : c.LockoutEnabled.ToString());
+
+            // sorting
+            IEnumerable<ApplicationUser> ordered = model.sSortDir_0 == "asc" ?
+                entries.OrderBy(ordering) :
+                entries.OrderByDescending(ordering);
+
+            // get the display values
+            var displayData = ordered
+                .Select(c => new[]
+                {
+                    c.Id,
+                    c.UserName,
+                    GetUserRolesViewModel(c).RoleNames,
+                    c.LockoutEnabled.ToYesNo(),
+                    this.CrudLinks(new { id = c.Id }, true)
+                });
+
+            // filter for sSearch
+            var hint = model.sSearch;
+            var searched = new List<string[]>();
+
+            if (string.IsNullOrEmpty(hint))
+            {
+                searched.AddRange(displayData);
+            }
+            else
+            {
+                foreach (var row in displayData)
+                {
+                    // don't include in the search the id as it is hidden from the display
+                    // don't include in the search the CRUD links either
+                    for (int index = 1; index < row.Length - 1; index++)
+                    {
+                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(hint, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            searched.Add(row);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // filter for the display
+            var filtered = searched
+                .Skip(searched.Count > model.iDisplayLength ? model.iDisplayStart : 0)
+                .Take(searched.Count > model.iDisplayLength ? model.iDisplayLength : searched.Count);
+
+            var result = new
+            {
+                model.sEcho,
+                iTotalRecords = _repository.GetAll().Count(),
+                iTotalDisplayRecords = searched.Count(),
+                aaData = filtered
+            };
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        //
         // GET: /User/Details/5
         public async Task<ActionResult> Details(string id)
         {
@@ -45,41 +107,56 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUser user = await _repository.FindAsync(id);
+            var user = await _repository.FindAsync(id);
             if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            var model = GetUserRolesViewModel(user);
+            return View("Details", model);
         }
 
+        //
         // GET: /User/Create
         public ActionResult Create()
         {
-            var user = new ApplicationUser();
-            return View(user);
+            return View("Create");
         }
 
+        //
         // POST: /User/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(FormCollection collection)
+        public async Task<ActionResult> Create(UserRolesViewModel model)
         {
-            var roleIds = collection.GetGuids("role-id-field").Select(f => f.ToString());
-            var roles = await _repository.GetAllRoles().Where(f => roleIds.Contains(f.Id)).Select(f => f.Name).ToArrayAsync();
+            var user = model.User;
+            var roleNames = model.Roles.Where(f => f.IsChecked).Select(f => f.Name).ToArray();
 
-            var user = new ApplicationUser { UserName = collection["User.UserName"], LockoutEnabled = false };
+            if (!roleNames.Any())
+            {
+                ModelState.AddModelError(string.Empty, "At least one role must be selected.");
+            }
 
             if (ModelState.IsValid)
             {
-                await _repository.AddAsync(user, roles);
-                return RedirectToAction("Index");
+                var result = await _repository.AddAsync(user, roleNames);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                }
             }
-            return View(user);
+            return View("Create", model);
         }
 
+        //
         // GET: /User/Edit/5
         public async Task<ActionResult> Edit(string id)
         {
@@ -87,40 +164,48 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUser user = await _repository.FindAsync(id);
+            var user = await _repository.FindAsync(id);
             if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View("Edit", GetUserRolesViewModel(user));
         }
 
+        //
         // POST: /User/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(FormCollection collection)
+        public async Task<ActionResult> Edit(UserRolesViewModel model)
         {
-            var roleIds = collection.GetGuids("role-id-field").Select(f => f.ToString());
-            var roles = await _repository.GetAllRoles().Where(f => roleIds.Contains(f.Id)).Select(f => f.Name).ToArrayAsync();
-            var isLockoutEnabled = bool.Parse(collection["User.LockoutEnabled"].Split(',')[0]);
+            var user = model.User;
+            var roleNames = model.Roles.Where(f => f.IsChecked).Select(f => f.Name).ToArray();
 
-            ApplicationUser user = await _repository.FindAsync(collection["User.Id"]);
-            if (user == null)
+            if (!roleNames.Any())
             {
-                return HttpNotFound();
+                ModelState.AddModelError(string.Empty, "At least one role must be selected.");
             }
 
             if (ModelState.IsValid)
             {
-                await _repository.UpdateAsync(user, roles, isLockoutEnabled);
-                return RedirectToAction("Index");
-            }
+                var result = await _repository.UpdateAsync(user, roleNames);
 
-            return View(user);
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error);
+                    }
+                }
+            }
+            return View("Edit", model);
         }
 
+        //
         // GET: /User/Delete/5
         public async Task<ActionResult> Delete(string id)
         {
@@ -128,55 +213,66 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUser user = await _repository.FindAsync(id);
+            var user = await _repository.FindAsync(id);
             if (user == null)
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View("Delete", GetUserRolesViewModel(user));
         }
 
+        //
         // POST: /User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(string id)
         {
-            await _repository.RemoveAsync(id);
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            var user = await _repository.FindAsync(id);
+            if (user == null)
             {
-                _repository.Dispose();
+                return HttpNotFound();
             }
-            base.Dispose(disposing);
+
+            if (ModelState.IsValid)
+            {
+                await _repository.RemoveAsync(id);
+                return RedirectToAction("Index");
+            }
+
+            return View("Delete", GetUserRolesViewModel(user));
         }
 
-        private new ActionResult View()
+        private ActionResult View(string viewName, UserRolesViewModel model = null)
         {
-            return View(null);
+            if (model == null)
+            {
+                model = GetUserRolesViewModel(new ApplicationUser());
+            }
+
+            return base.View(viewName, model);
         }
 
-        private ActionResult View(ApplicationUser user)
+        private UserRolesViewModel GetUserRolesViewModel(ApplicationUser user)
         {
-            var model = new UserRoles()
+            var roles = _repository
+                .GetAllRoles()
+                .ToArray()
+                .Select(r => new ApplicationRole
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    IsChecked = user != null ? user.Roles.Select(u => u.RoleId).Contains(r.Id) : false,
+                    Description = r.Description
+                })
+                .ToList();
+
+            var model = new UserRolesViewModel
             {
                 User = user,
-                Roles = _repository.GetAllRoles()
-                    .ToArray()
-                    .Select(f => new ApplicationRole
-                    {
-                        Id = f.Id,
-                        Name = f.Name,
-                        IsChecked = user.Roles.Select(u => u.RoleId).Contains(f.Id),
-                        Description = f.Description
-                    })
-                    .ToArray()
+                Roles = roles
             };
 
-            return base.View(model);
+            return model;
         }
     }
 }
