@@ -1,11 +1,10 @@
-﻿@model RussellGroup.Pims.DataAccess.ViewModels.UserRoles
+﻿@model RussellGroup.Pims.Website.Models.UserRolesViewModel
 
 @{
     ViewBag.Title = "Edit";
 }
 
 <h2>User</h2>
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -13,14 +12,22 @@
     <div class="form-horizontal">
         <h4>@ViewBag.Title</h4>
         <hr />
-        @Html.ValidationSummary(true)
-        @if (ViewBag.Title == "Edit")
-        { <text>@Html.HiddenFor(model => model.User.Id)</text> }
 
+        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+        {
+            <div class="form-group">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+                </div>
+            </div>
+        }
+
+        @Html.HiddenFor(model => model.User.Id)
         <div class="form-group">
             @Html.LabelFor(model => model.User.UserName, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.User.UserName, new { @class = "col-span-5" })
+                @Html.TextBoxFor(model => model.User.UserName, new { @class = "col-span-6" })
                 @Html.ValidationMessageFor(model => model.User.UserName)
             </div>
         </div>
@@ -45,13 +52,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.Roles)
+                        @for (int index = 0; index < Model.Roles.Count; index++)
                         {
                             <tr>
-                                <td>@Html.Encode(item.Id)</td>
-                                <td><input name="@("role-id-field" + item.Id)" value="@item.Id" type="checkbox" /></td>
-                                <td>@Html.Encode(item.Name)</td>
-                                <td>@Html.Encode(item.Description)</td>
+                                <td>@Html.HiddenFor(model => model.Roles[index].Id)</td>
+                                <td>@Html.EditorFor(model => model.Roles[index].IsChecked)</td>
+                                <td>@Html.HiddenFor(model => model.Roles[index].Name)@Html.DisplayFor(model => model.Roles[index].Name)</td>
+                                <td>@Html.HiddenFor(model => model.Roles[index].Description)@Html.DisplayFor(model => model.Roles[index].Description)</td>
                             </tr>
                         }
                     </tbody>
@@ -61,47 +68,41 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                @if (ViewBag.Title == "Edit")
-                {
-                    <input type="submit" value="Save" class="btn btn-primary" />
-                }
-                else
-                {
-                    <input type="submit" value="Create" class="btn btn-primary" />
-                }
+                <input type="submit" value="Save" class="btn btn-primary" />
                 &nbsp;
                 @Html.ActionLink("Cancel", "Index", null, new { @class = "btn-cancel" })
             </div>
         </div>
     </div>
 }
-
 @section scripts {
-<script>
-    $(document).ready(function () {
-        // set checkboxes if there is a postback
-        @foreach (var role in Model.Roles.Where(f => f.IsChecked))
-        { <text>$('input[name="role-id-field@(role.Id)"]').prop('checked', true);</text> }
-
-        $('#roles-table').dataTable({
-            "bProcessing": true,
-            "bStateSave": false,
-            "sPaginationType": 'full_numbers',
-            "aoColumns": [
-                { "sWidth": "0%" },
-                { "sWidth": "5%" },
-                { "sWidth": "20%" },
-                { "sWidth": "75%" }
-            ],
-            "aoColumnDefs": [
-                { "bVisible": false, "aTargets": [0] },
-                { "bSortable": false, "aTargets": [1] }
-            ]
+    <script>
+        $(document).ready(function () {
+            $('#roles-table').dataTable({
+                "bStateSave": false,
+                "bFilter": false,
+                "bInfo": false,
+                "bPaginate": false,
+                "aoColumns": [
+                    { "sWidth": "0%" },
+                    { "sWidth": "5%" },
+                    { "sWidth": "20%" },
+                    { "sWidth": "75%" }
+                ],
+                "aoColumnDefs": [
+                    { "bVisible": false, "aTargets": [0] },
+                    { "bSortable": false, "aTargets": [1] }
+                ]
+            });
         });
-    });
 
-    $('.check-all').on('click', function () {
-        $(this).closest('table').find(':checkbox').prop('checked', this.checked);
-    });
-</script>
+        // adjusts the datatable container because pagination is hidden
+        $('[id$="-table"]').on('draw.dt', function () {
+            $('[id$="-table_wrapper"]').css('padding-bottom', 0);
+        });
+
+        $('.check-all').on('click', function () {
+            $(this).closest('table').find(':checkbox').prop('checked', this.checked);
+        });
+    </script>
 }

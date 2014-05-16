@@ -19,18 +19,18 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
         public UserDbRepository()
         {
-            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Db));
+            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Db) { AutoSaveChanges = false });
             _userManager.UserValidator = new UserValidator<ApplicationUser>(_userManager) { AllowOnlyAlphanumericUserNames = false };
 
             _roleManager = new RoleManager<ApplicationRole>(new RoleStore<ApplicationRole>(Db));
         }
 
-        public new Task<ApplicationUser> AddAsync(ApplicationUser user)
+        public new Task<int> AddAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public async Task<ApplicationUser> AddAsync(ApplicationUser user, IEnumerable<string> roles)
+        public async Task<IdentityResult> AddAsync(ApplicationUser user, IEnumerable<string> roles)
         {
             Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
 
@@ -38,98 +38,114 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
             if (!result.Succeeded)
             {
-                throw new Exception("Failed to create user.");
+                return result;
             }
 
-            foreach (var role in roles)
+            if (await Db.SaveChangesAsync() == 0)
             {
-                result = await _userManager.AddToRoleAsync(user.Id, role);
+                return IdentityResult.Failed("An unknown error occurred while saving the user.");
+            }
 
-                if (!result.Succeeded)
+            if (roles != null)
+            {
+                foreach (var role in roles)
                 {
-                    throw new Exception("Failed to add user to role.");
+                    result = await _userManager.AddToRoleAsync(user.Id, role);
                 }
             }
 
-            return user;
+            if (await Db.SaveChangesAsync() == 0)
+            {
+                result = IdentityResult.Failed("An unknown error occurred while saving the user.");
+            }
+
+            return result;
         }
 
-        public new Task UpdateAsync(ApplicationUser user)
+        public new Task<int> UpdateAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
-        public async Task UpdateAsync(ApplicationUser user, IEnumerable<string> roles, bool lockOut)
+        public async Task<IdentityResult> UpdateAsync(ApplicationUser user, IEnumerable<string> roles)
         {
             Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
+            Db.Users.Attach(user);
 
-            var storedUser = await _userManager.FindByIdAsync(user.Id);
+            var storedUser = Db.Entry(user).GetDatabaseValues();
+            var wasLockoutEnabled = (bool)storedUser["LockoutEnabled"];
 
             var result = await _userManager.UpdateAsync(user);
 
             if (!result.Succeeded)
             {
-                throw new Exception("Failed to update user.");
+                return result;
             }
 
-            result = await _userManager.SetLockoutEnabledAsync(user.Id, lockOut);
-
-            if (!result.Succeeded)
-            {
-                throw new Exception("Failed to unlock or lockout user.");
-            }
-
-            if (lockOut)
+            if (!wasLockoutEnabled && user.LockoutEnabled)
             {
                 result = await _userManager.SetLockoutEndDateAsync(user.Id, DateTime.Now);
 
                 if (!result.Succeeded)
                 {
-                    throw new Exception("Failed to set lockout date for user.");
+                    return result;
                 }
             }
 
-            var storedRoleIds = storedUser.Roles.Select(f => f.RoleId);
-            var storedRoles = GetAllRoles().Where(f => storedRoleIds.Contains(f.Id)).Select(f => f.Name);
-
-            // remove roles
-            var rolesToRemove = storedRoles.Except(roles).ToArray();
-
-            foreach (var role in rolesToRemove)
+            if (roles != null)
             {
-                result = await _userManager.RemoveFromRoleAsync(user.Id, role);
+                var storedRoleIds = user.Roles.Select(f => f.RoleId);
+                var storedRoles = GetAllRoles().Where(f => storedRoleIds.Contains(f.Id)).Select(f => f.Name);
 
-                if (!result.Succeeded)
+                // remove roles
+                var rolesToRemove = storedRoles.Except(roles).ToArray();
+
+                foreach (var role in rolesToRemove)
                 {
-                    throw new Exception("Failed to remove user from role.");
+                    result = await _userManager.RemoveFromRoleAsync(user.Id, role);
+
+                    if (!result.Succeeded)
+                    {
+                        return result;
+                    }
+                }
+
+                // add roles
+                var rolesToAdd = roles.Except(storedRoles).ToArray();
+
+                foreach (var role in rolesToAdd)
+                {
+                    result = await _userManager.AddToRoleAsync(user.Id, role);
+
+                    if (!result.Succeeded)
+                    {
+                        return result;
+                    }
                 }
             }
 
-            // add roles
-            var rolesToAdd = roles.Except(storedRoles).ToArray();
-
-            foreach (var role in rolesToAdd)
+            if (await Db.SaveChangesAsync() == 0)
             {
-                result = await _userManager.AddToRoleAsync(user.Id, role);
-
-                if (!result.Succeeded)
-                {
-                    throw new Exception("Failed to add user to role.");
-                }
+                result = IdentityResult.Failed("An unknown error occurred while saving the user.");
             }
+
+            return result;
         }
 
-        public new async Task RemoveAsync(params object[] keyValues)
+        public new async Task<IdentityResult> RemoveAsync(params object[] keyValues)
         {
             Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
 
             var user = await _userManager.FindByIdAsync(keyValues[0] as string);
+
             var result = await _userManager.DeleteAsync(user);
 
-            if (!result.Succeeded)
+            if (await Db.SaveChangesAsync() == 0)
             {
-                throw new Exception("Failed to remove user.");
+                result = IdentityResult.Failed("An unknown error occurred while saving the user.");
             }
+
+            return result;
         }
 
         public IQueryable<ApplicationRole> GetAllRoles()

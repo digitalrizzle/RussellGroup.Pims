@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RussellGroup.Pims.DataAccess.ViewModels.UserRoles>
+﻿@model RussellGroup.Pims.Website.Models.UserRolesViewModel
 
 @{
     ViewBag.Title = "Users";
@@ -15,42 +15,17 @@
             <th>
             </th>
             <th>
-                name
+                @Html.DisplayNameFor(model => model.User.UserName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Roles)
+                @Html.DisplayNameFor(model => model.Roles)
             </th>
             <th>
-                locked out?
+                @Html.DisplayNameFor(model => model.User.LockoutEnabled)
             </th>
             <th></th>
         </tr>
     </thead>
-
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => item.User.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.User.UserName)
-                </td>
-                <td>
-                    @Html.Encode(item.GetRoleNames())
-                </td>
-                <td>
-                    @Html.DisplayFor(model => item.User.LockoutEnabled)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.User.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.User.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.User.Id })
-                </td>
-            </tr>
-        }
-    </tbody>
 </table>
 
 @section scripts {
@@ -58,18 +33,20 @@
         $(document).ready(function () {
             $('.table').dataTable({
                 "bProcessing": true,
+                "bServerSide": true,
                 "bStateSave": true,
+                "sAjaxSource": '@Url.Content("~/User/GetDataTableResult")',
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
                     { "sWidth": "0%" },
-                    { "sWidth": "25%" },
-                    { "sWidth": "45%" },
+                    { "sWidth": "30%" },
+                    { "sWidth": "35%" },
                     { "sWidth": "15%", "sClass": "center" },
-                    { "sWidth": "15%", "sClass": "right" }
+                    { "sWidth": "20%", "sClass": "right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [4] }
+                    { "bSortable": false, "aTargets": [2, 4] }
                 ],
             });
         });

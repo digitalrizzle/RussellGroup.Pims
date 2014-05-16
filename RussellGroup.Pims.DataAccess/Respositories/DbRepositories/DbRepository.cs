@@ -31,24 +31,23 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             return Db.Set<T>();
         }
 
-        public async Task<T> AddAsync(T item)
+        public async Task<int> AddAsync(T item)
         {
-            var result = Db.Set<T>().Add(item);
-            await Db.SaveChangesAsync();
-            return result;
+            Db.Set<T>().Add(item);
+            return await Db.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(T item)
+        public async Task<int> UpdateAsync(T item)
         {
             Db.Entry(item).State = EntityState.Modified;
-            await Db.SaveChangesAsync();
+            return await Db.SaveChangesAsync();
         }
 
-        public async Task RemoveAsync(params object[] keyValues)
+        public async Task<int> RemoveAsync(params object[] keyValues)
         {
             var item = await FindAsync(keyValues);
             Db.Set<T>().Remove(item);
-            await Db.SaveChangesAsync();
+            return await Db.SaveChangesAsync();
         }
 
         protected virtual void Dispose(bool disposing)

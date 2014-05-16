@@ -180,3 +180,7 @@ footer {
     display: inline;
     font-family: 'Courier New', Courier, monospace;
 }
+
+.dataTables_filter input {
+    font-weight: normal;
+}
