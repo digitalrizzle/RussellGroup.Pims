@@ -23,7 +23,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Type, new { @class = "col-span-7", placeholder = "begin typing a type..." })
+                @Html.TextBoxFor(model => model.Type, new { @class = "col-span-7 typeahead", placeholder = "begin typing a type..." })
                 @Html.ValidationMessageFor(model => model.Type)
             </div>
         </div>

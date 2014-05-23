@@ -154,6 +154,7 @@ footer {
 /* typeahead */
 .twitter-typeahead {
     display: inline !important;
+    float: none;
 }
 
 .twitter-typeahead input[disabled] {
@@ -161,11 +162,12 @@ footer {
     height: 26px;
 }
 
-.twitter-typeahead .tt-query {
-    background-color: white !important;
+.input-group .twitter-typeahead {
+    display: inline !important;
+}
+
+.input-group .twitter-typeahead:first-child .tt-input {
     border-radius: inherit !important;
-    width: 560px;
-    height: inherit;
 }
 
 .tt-input-group {
