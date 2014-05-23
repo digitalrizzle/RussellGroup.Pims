@@ -62,28 +62,23 @@
             addInventoryFormField("", "", "");
         });
 
-        var SimpleEngine = {
-            compile: function (template) {
-                return {
-                    render: function (context) {
-                        return template.replace(/\{\{(\w+)\}\}/g,
-                            function(match, p1) {
-                                return $('<div/>').text(context[p1] || '').html();
-                            });
-                    }
-                };
-            }
-        };
-
         function addPlantFormField(description, id) {
             var next = nextPlant;
 
             var span = '<span id="plant-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
-            var div = '<div class="input-group tt-input-group"><input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" /><input id="plant-id-field' + next + '" name="plant-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
+            var div = [
+                '<div class="input-group tt-input-group">',
+                    '<input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" class="col-span-6 typeahead" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" />',
+                    '<input id="plant-id-field' + next + '" name="plant-id-field' + next + '" type="hidden" value="' + id + '" />',
+                '</div>'].join("");
 
             $("#plant").append($(div));
             $("#plant-field" + (next - 1)).parent().after($(span));
             wire("plant", "#plant-field" + next, "#plant-field" + (next - 1) + "-icon");
+
+            if (id != "") {
+                $("#plant-field" + next).attr("disabled", "disabled");
+            }
 
             nextPlant = next;
         }
@@ -92,11 +87,20 @@
             var next = nextInventory;
 
             var span = '<span id="inventory-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
-            var div = '<div class="input-group tt-input-group"><input type="text" id="inventory-quantity-field' + ++next + '" name="inventory-quantity-field' + next + '" value="' + quantity + '" placeholder="quantity" style="width: 80px; margin-right: 5px" /><input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" /><input id="inventory-id-field' + next + '" name="inventory-id-field' + next + '" type="hidden" value="' + id + '" /></div>';
+            var div = [
+                '<div class="input-group tt-input-group">',
+                    '<input type="text" id="inventory-quantity-field' + ++next + '" name="inventory-quantity-field' + next + '" value="' + quantity + '" placeholder="quantity" style="width: 80px; margin-right: 5px" />',
+                    '<input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" class="col-span-6 typeahead" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" />',
+                    '<input id="inventory-id-field' + next + '" name="inventory-id-field' + next + '" type="hidden" value="' + id + '" />',
+                '</div>'].join("");
 
             $("#inventory").append($(div));
             $("#inventory-field" + (next - 1)).parent().after($(span));
             wire("inventory", "#inventory-field" + next, "#inventory-field" + (next - 1) + "-icon");
+
+            if (id != "") {
+                $("#inventory-field" + next).attr("disabled", "disabled");
+            }
 
             nextInventory = next;
         }
@@ -104,15 +108,24 @@
         function wire(prefix, input, button) {
             var url = prefix == "plant" ? "@Url.Content("~/Hire/GetPlantSuggestions?q=%QUERY")" : "@Url.Content("~/Hire/GetInventorySuggestions?q=%QUERY")";
 
-            $(input).typeahead({
+            var bloodhound = new Bloodhound({
+                datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: url
+            });
+
+            bloodhound.initialize();
+
+            $(input).typeahead(null, {
                 name: prefix + "-hire",
-                remote: url,
-                valueKey: "description",
-                template: [
-                    '<p class="typeahead-description">{{description}}</p>',
-                    '<p class="typeahead-id">{{xid}}</p>',
-                ].join(""),
-                engine: SimpleEngine
+                source: bloodhound.ttAdapter(),
+                displayKey: "description",
+                templates: {
+                    suggestion: Handlebars.compile([
+                            '<p class="typeahead-description">{{description}}</p>',
+                            '<p class="typeahead-id">{{xid}}</p>'
+                        ].join(""))
+                }
             });
 
             $(input).on("typeahead:selected", function (object, datum) {
