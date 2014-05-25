@@ -4,7 +4,6 @@ using RussellGroup.Pims.DataAccess.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -16,9 +15,6 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class ReportController : Controller
     {
-        private static readonly CultureInfo culture = CultureInfo.CreateSpecificCulture("en-NZ");
-        private static readonly DateTimeStyles styles = DateTimeStyles.None;
-
         private readonly IReportRepository _repository;
 
         public ReportController(IReportRepository _repository)
@@ -72,7 +68,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var displayData = ordered
                 .Select(c => new string[]
                 {
-                    c.JobId.ToString(),
+                    c.Id.ToString(),
                     c.XJobId,
                     c.Description,
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
@@ -82,12 +78,12 @@ namespace RussellGroup.Pims.Website.Controllers
                     null,
                     isDetailed ?
                         string.Format("{0}",
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.JobId }), "Plant Charges #50")
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant Charges #50")
                         ) :
                         string.Format("{0} | {1} | {2}",
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.JobId }), "Plant #51"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.JobId }), "Inventory #56"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.JobId }), "Stocktake #70")
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant #51"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory #56"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake #70")
                         )
                 });
 
@@ -125,7 +121,7 @@ namespace RussellGroup.Pims.Website.Controllers
             foreach (string[] row in filtered)
             {
                 int id = Convert.ToInt32(row[0]);
-                var job = _repository.Jobs.Single(f => f.JobId == id);
+                var job = _repository.Jobs.Single(f => f.Id == id);
 
                 row[6] = job.PlantHires.Count(f => !f.WhenEnded.HasValue).ToString();
                 row[7] = job.InventoryHires.Count(f => !f.WhenEnded.HasValue).ToString();
@@ -148,12 +144,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await _repository.Categories.SingleOrDefaultAsync(f => f.CategoryId == id);
+            Category category = await _repository.Categories.SingleOrDefaultAsync(f => f.Id == id);
             if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(_repository.GetPlantLocationsByCategory(category.CategoryId));
+            return View(_repository.GetPlantLocationsByCategory(category.Id));
         }
 
         public async Task<ActionResult> InventoryLocations(int? id)
@@ -162,12 +158,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await _repository.Categories.SingleOrDefaultAsync(f => f.CategoryId == id);
+            Category category = await _repository.Categories.SingleOrDefaultAsync(f => f.Id == id);
             if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(_repository.GetInventoryLocationsByCategory(category.CategoryId));
+            return View(_repository.GetInventoryLocationsByCategory(category.Id));
         }
 
         public async Task<ActionResult> PlantInJob(int? id)
@@ -212,7 +208,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await _repository.Jobs.SingleOrDefaultAsync(f => f.JobId == id);
+            var job = await _repository.Jobs.SingleOrDefaultAsync(f => f.Id == id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -224,7 +220,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             DateTime date;
 
-            if (!DateTime.TryParse(value, culture, styles, out date))
+            if (!DateTime.TryParse(value, MvcApplication.CULTURE_EN_NZ, MvcApplication.DATE_TIME_STYLES_NONE, out date))
             {
                 date = DateTime.MinValue;
             }

@@ -20,8 +20,9 @@ namespace RussellGroup.Pims.DataMigration
             {
                 XPlantId = reader.GetValue("Plant no"),
                 XPlantNewId = reader.GetValue("PlantNew no"),
-                CategoryId = TargetContext.Categories.Single(f => f.Name == categoryName).CategoryId,
-                StatusId = whenDisused.HasValue ? 3 : 1,    // 3 => Unavailable, 1 => Unknown
+                CategoryId = TargetContext.Categories.Single(f => f.Name == categoryName).Id,
+                StatusId = whenDisused.HasValue ? Status.Unavailable : Status.Unknown,
+                ConditionId = Condition.Unknown,
                 Description = reader.GetValue("Description"),
                 WhenPurchased = reader.GetDateTime("Start date"),
                 WhenDisused = whenDisused, 

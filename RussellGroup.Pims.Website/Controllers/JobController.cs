@@ -15,9 +15,9 @@ namespace RussellGroup.Pims.Website.Controllers
     [PimsAuthorize(Role.CanView, Role.CanEdit)]
     public class JobController : Controller
     {
-        private readonly IRepository<Job> _repository;
+        private readonly IJobRepository _repository;
 
-        public JobController(IRepository<Job> _repository)
+        public JobController(IJobRepository _repository)
         {
             this._repository = _repository;
         }
@@ -52,13 +52,13 @@ namespace RussellGroup.Pims.Website.Controllers
             var displayData = ordered
                 .Select(c => new string[]
                 {
-                    c.JobId.ToString(),
+                    c.Id.ToString(),
                     c.XJobId,
                     c.Description,
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.ProjectManager,
-                    this.CrudAndHireLinks(c.WhenEnded.HasValue, new { id = c.JobId }, canEdit)
+                    this.CrudAndHireLinks(c.WhenEnded.HasValue, new { id = c.Id }, canEdit)
                 });
 
             // filter for sSearch
@@ -130,7 +130,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
+        public async Task<ActionResult> Create([Bind(Include = "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
         {
             if (ModelState.IsValid)
             {
@@ -163,7 +163,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "JobId,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
         {
             if (ModelState.IsValid)
             {

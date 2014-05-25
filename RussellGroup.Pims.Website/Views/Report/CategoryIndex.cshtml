@@ -10,7 +10,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryId)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -27,7 +27,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CategoryId)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -37,9 +37,9 @@
                 </td>
                 <td>
                     @if (item.Plants.Count > 0)
-                    { <text>@Html.Raw(string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantLocations", new { id = item.CategoryId }), "Plant Locations #69"))</text> }
+                    { <text>@Html.Raw(string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantLocations", new { id = item.Id }), "Plant Locations #69"))</text> }
                     else if (item.Inventories.Count > 0)
-                    { <text>@Html.Raw(string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryLocations", new { id = item.CategoryId }), "Inventory Locations #71"))</text> }
+                    { <text>@Html.Raw(string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryLocations", new { id = item.Id }), "Inventory Locations #71"))</text> }
                     else
                     { <text><i>No jobs available</i></text> }
                 </td>

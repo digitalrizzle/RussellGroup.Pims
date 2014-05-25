@@ -56,7 +56,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEditCategories)]
-        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Name,Type")] Category category)
+        public async Task<ActionResult> Create([Bind(Include = "Name,Type")] Category category)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +89,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEditCategories)]
-        public async Task<ActionResult> Edit([Bind(Include = "CategoryId,Name,Type")] Category category)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Type")] Category category)
         {
             if (ModelState.IsValid)
             {

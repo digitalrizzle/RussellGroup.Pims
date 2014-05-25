@@ -53,14 +53,14 @@ namespace RussellGroup.Pims.Website.Controllers
             var displayData = ordered
                 .Select(c => new string[]
                 {
-                    c.InventoryId.ToString(),
+                    c.Id.ToString(),
                     c.XInventoryId,
                     c.Description,
                     c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToShortDateString() : string.Empty,
                     c.WhenDisused.HasValue ? c.WhenDisused.Value.ToShortDateString() : string.Empty,
                     c.Quantity.ToString(),
                     c.Category != null ? c.Category.Name : string.Empty,
-                    this.CrudLinks(new { id = c.InventoryId }, canEdit)
+                    this.CrudLinks(new { id = c.Id }, canEdit)
                 });
 
             // filter for sSearch
@@ -132,7 +132,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "InventoryId,CategoryId,XInventoryId,Description,WhenPurchased,WhenDisused,Rate,Cost,Quantity")] Inventory inventory)
+        public async Task<ActionResult> Create([Bind(Include = "CategoryId,XInventoryId,Description,WhenPurchased,WhenDisused,Rate,Cost,Quantity")] Inventory inventory)
         {
             if (ModelState.IsValid)
             {
@@ -165,7 +165,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "InventoryId,CategoryId,XInventoryId,Description,WhenPurchased,WhenDisused,Rate,Cost,Quantity")] Inventory inventory)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,CategoryId,XInventoryId,Description,WhenPurchased,WhenDisused,Rate,Cost,Quantity")] Inventory inventory)
         {
             if (ModelState.IsValid)
             {
@@ -219,8 +219,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var categories = _repository.Categories.OrderBy(f => f.Name);
             var category = inventory != null ? inventory.CategoryId : 0;
-
-            ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", category);
 
             return base.View(inventory);
         }

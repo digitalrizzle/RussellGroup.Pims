@@ -11,7 +11,7 @@ namespace RussellGroup.Pims.DataAccess.Models
     public class Job
     {
         [ScaffoldColumn(false)]
-        public int JobId { get; set; }
+        public int Id { get; set; }
 
         [Obsolete]
         [Display(Name = "id")]
@@ -40,10 +40,10 @@ namespace RussellGroup.Pims.DataAccess.Models
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
-        [Display(Name = "inventory hire")]
-        public virtual ICollection<InventoryHire> InventoryHires { get; set; }
-
         [Display(Name = "plant hire")]
         public virtual ICollection<PlantHire> PlantHires { get; set; }
+
+        [Display(Name = "inventory hire")]
+        public virtual ICollection<InventoryHire> InventoryHires { get; set; }
     }
 }

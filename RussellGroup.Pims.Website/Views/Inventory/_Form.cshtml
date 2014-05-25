@@ -1,14 +1,24 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Inventory
 
+<h2>Inventory</h2>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h4>@ViewBag.Title</h4>
+        <h4>@Html.GetAction()</h4>
         <hr />
-        @Html.ValidationSummary(true)
-        @if (ViewBag.Title == "Edit") { <text>@Html.HiddenFor(model => model.InventoryId)</text> }
+
+        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+        {
+            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+        }
+
+        @if (Html.IsAction("Edit"))
+        {
+            <text>@Html.HiddenFor(model => model.Id)</text>
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.XInventoryId, new { @class = "control-label col-md-2" })
@@ -82,7 +92,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                @if (ViewBag.Title == "Edit")
+                @if (Html.IsAction("Edit"))
                 {
                     <input type="submit" value="Save" class="btn btn-primary" />
                 }

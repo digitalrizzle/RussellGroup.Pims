@@ -70,7 +70,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var hire = new InventoryHire()
             {
                 Job = job,
-                JobId = job.JobId,
+                JobId = job.Id,
                 WhenStarted = DateTime.Now
             };
 
@@ -83,7 +83,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "InventoryHireId,InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
+        public async Task<ActionResult> Create([Bind(Include = "InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
             {
@@ -115,7 +115,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "InventoryHireId,InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
             {
@@ -170,7 +170,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var inventories = _repository.Inventories.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XInventoryId);
 
-            ViewBag.Inventories = new SelectList(inventories, "InventoryId", "XInventoryId", hire.InventoryId);
+            ViewBag.Inventories = new SelectList(inventories, "Id", "XInventoryId", hire.InventoryId);
 
             return base.View(hire);
         }

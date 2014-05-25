@@ -20,7 +20,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [ScaffoldColumn(false)]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
-        public int StatusId { get; set; }
+        public int Id { get; set; }
 
         [Display(Name = "name")]
         public string Name { get; set; }

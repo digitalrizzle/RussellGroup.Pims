@@ -19,10 +19,15 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             get { return Db.Statuses; }
         }
 
+        public IQueryable<Condition> Conditions
+        {
+            get { return Db.Conditions; }
+        }
+
         public IQueryable<Job> GetJobs(int plantId)
         {
             var jobs = (from j in Db.Jobs
-                        join p in Db.PlantHires on j.JobId equals p.JobId
+                        join p in Db.PlantHires on j.Id equals p.JobId
                         where !j.WhenEnded.HasValue && p.PlantId == plantId
                         select j).Distinct();
 

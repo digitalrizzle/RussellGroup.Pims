@@ -1,13 +1,20 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Job
 
+<h2>Job</h2>
+
 <div>
-    @if (ViewBag.Title == "Details") { <h4>@ViewBag.Title</h4> }
-	<hr />
+    <h4>@Html.GetAction()</h4>
+    <hr />
+
+    @if (@Html.IsAction("Delete"))
+    {
+        <h3>Are you sure you want to delete this job and its hire transactions?</h3>
+    }
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Description)
         </dd>
@@ -15,7 +22,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.WhenStarted)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.WhenStarted)
         </dd>
@@ -23,7 +29,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.WhenEnded)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.WhenEnded)
         </dd>
@@ -31,7 +36,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.ProjectManager)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.ProjectManager)
         </dd>
@@ -39,7 +43,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.QuantitySurveyor)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.QuantitySurveyor)
         </dd>
@@ -47,7 +50,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.Comment)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Comment)
         </dd>
@@ -55,17 +57,29 @@
         <dt>
             @Html.DisplayNameFor(model => model.PlantHires)
         </dt>
-
         <dd>
-            @Html.ActionLink(Model.PlantHires.Where(f => !f.WhenEnded.HasValue).Count().ToString(), "Index", "PlantHire", new { id = Model.JobId }, null)
+            @if (Model.PlantHires.Count > 0)
+            {
+                <text>@Html.ActionLink(Model.PlantHires.Count.ToString(), "Index", "PlantHire", new { id = Model.Id }, null)</text>
+            }
+            else
+            {
+                <text>0</text>
+            }
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.InventoryHires)
         </dt>
-
         <dd>
-            @Html.ActionLink(Model.InventoryHires.Where(f => !f.WhenEnded.HasValue).Count().ToString(), "Index", "InventoryHire", new { id = Model.JobId }, null)
+            @if (Model.InventoryHires.Count > 0)
+            {
+                <text>@Html.ActionLink(Model.InventoryHires.Count.ToString(), "Index", "InventoryHire", new { id = Model.Id }, null)</text>
+            }
+            else
+            {
+                <text>0</text>
+            }
         </dd>
     </dl>
 
@@ -79,14 +93,16 @@
             {
                 if (User.IsAuthorized(Role.CanEdit))
                 {
-                    if (ViewBag.Title == "Details")
+                    if (Html.IsAction("Details"))
                     {
                         <text>
-                            @Html.ActionLink("Checkout", "Checkout", "Hire", new { id = Model.JobId }, null) |
-                            @Html.ActionLink("Checkin", "Checkin", "Hire", new { id = Model.JobId }, null) |
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.JobId }) |
+                            @Html.ActionLink("Checkout", "Checkout", "Hire", new { id = Model.Id }, null) |
+                            @Html.ActionLink("Checkin", "Checkin", "Hire", new { id = Model.Id }, null) |
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
                         </text>
-                    } else {
+                    }
+                    else
+                    {
                         @Html.AntiForgeryToken()
                         <input type="submit" value="Delete" class="btn btn-danger" />
                         <text>&nbsp;</text>

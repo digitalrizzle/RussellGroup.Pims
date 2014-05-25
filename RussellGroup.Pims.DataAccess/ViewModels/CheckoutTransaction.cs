@@ -25,7 +25,7 @@ namespace RussellGroup.Pims.DataAccess.ViewModels
         {
             get
             {
-                return Job != null ? Job.JobId : (int?)null;
+                return Job != null ? Job.Id : (int?)null;
             }
         }
     }

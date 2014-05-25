@@ -11,9 +11,17 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        @if (@Model.Job != null) { <h4>@Model.Job.Description</h4> }
+        @if (@Model.Job != null)
+        {
+            <h4>@Model.Job.Description</h4>
+        }
+
         <hr />
-        @Html.ValidationSummary(true)
+
+        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+        {
+            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.Docket, new { @class = "control-label col-md-2" })
@@ -55,8 +63,8 @@
         var nextPlant = 0, nextInventory = 0;
 
         $(document).ready(function () {
-            @foreach (var plant in Model.Plants) { <text>addPlantFormField("@plant.Description", "@plant.PlantId");</text> }
-            @foreach (var inventory in Model.Inventories) { <text>addInventoryFormField("@inventory.Key.Description", "@inventory.Key.InventoryId", "@inventory.Value");</text> }
+            @foreach (var plant in Model.Plants) { <text>addPlantFormField("@plant.Description", "@plant.Id");</text> }
+            @foreach (var inventory in Model.Inventories) { <text>addInventoryFormField("@inventory.Key.Description", "@inventory.Key.Id", "@inventory.Value");</text> }
 
             addPlantFormField("", "");
             addInventoryFormField("", "", "");
@@ -124,7 +132,7 @@
                     suggestion: Handlebars.compile([
                             '<p class="typeahead-description">{{description}}</p>',
                             '<p class="typeahead-id">{{xid}}</p>'
-                        ].join(""))
+                    ].join(""))
                 }
             });
 
@@ -145,5 +153,5 @@
                 });
             }
         }
-</script>
+    </script>
 }

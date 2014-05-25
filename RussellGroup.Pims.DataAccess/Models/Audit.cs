@@ -11,7 +11,7 @@ namespace RussellGroup.Pims.DataAccess.Models
     public class Audit
     {
         [ScaffoldColumn(false)]
-        public int AuditId { get; set; }
+        public int Id { get; set; }
 
         [Display(Name = "when changed")]
         [DataType(DataType.Date)]

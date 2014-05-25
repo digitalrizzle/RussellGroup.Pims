@@ -17,7 +17,7 @@ namespace RussellGroup.Pims.DataMigration
             var inventory = new Inventory
             {
                 XInventoryId = reader.GetValue("Inv no"),
-                CategoryId = TargetContext.Categories.Single(f => f.Name == categoryName).CategoryId,
+                CategoryId = TargetContext.Categories.Single(f => f.Name == categoryName).Id,
                 Description = reader.GetValue("Description"),
                 Rate = reader.GetValueOrNull<decimal>("Rate"),
                 Cost = reader.GetValueOrNull<decimal>("Cost"),

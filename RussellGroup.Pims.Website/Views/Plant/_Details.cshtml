@@ -1,13 +1,30 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
+<h2>Plant</h2>
+
 <div>
-    @if (ViewBag.Title == "Details") { <h4>@ViewBag.Title</h4> }
+    <h4>@Html.GetAction()</h4>
     <hr />
+
+    @if (@Html.IsAction("Delete"))
+    {
+        if (!Model.CanDelete)
+        {
+            <div class="alert alert-info">
+                <h4>Cannot delete</h4>
+                <p>This plant item cannot be deleted because it has a job associated to it. Delete the jobs that have this item as hired.</p>
+            </div>
+        }
+        else
+        {
+            <h3>Are you sure you want to delete this plant item?</h3>
+        }
+    }
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.XPlantId)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.XPlantId)
         </dd>
@@ -15,7 +32,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.XPlantNewId)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.XPlantNewId)
         </dd>
@@ -23,7 +39,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Description)
         </dd>
@@ -31,7 +46,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.WhenPurchased)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.WhenPurchased)
         </dd>
@@ -39,7 +53,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.WhenDisused)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.WhenDisused)
         </dd>
@@ -47,7 +60,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.Rate)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Rate)
         </dd>
@@ -55,7 +67,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.Cost)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Cost)
         </dd>
@@ -63,7 +74,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.Serial)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Serial)
         </dd>
@@ -71,7 +81,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.FixedAssetCode)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.FixedAssetCode)
         </dd>
@@ -79,7 +88,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.IsElectrical)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.IsElectrical)
         </dd>
@@ -87,7 +95,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.IsTool)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.IsTool)
         </dd>
@@ -95,7 +102,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.Category)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Category.Name)
         </dd>
@@ -103,27 +109,30 @@
         <dt>
             @Html.DisplayNameFor(model => model.Status)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Status.Name)
         </dd>
 
         <dt>
+            @Html.DisplayNameFor(model => model.Condition)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Condition.Name)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Comment)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Comment)
         </dd>
 
         <dt>
-            @Html.Encode("jobs")
+            jobs
         </dt>
-
         <dd>
-            @Html.ActionLink(Model.PlantHires.Where(f => !f.Job.WhenEnded.HasValue).Count().ToString(), "Jobs", new { id = Model.PlantId })
+            @Html.ActionLink(Model.PlantHires.Count.ToString(), "Jobs", new { id = Model.Id })
         </dd>
-
     </dl>
 
     <hr />
@@ -136,11 +145,11 @@
             {
                 if (User.IsAuthorized(Role.CanEdit))
                 {
-                    if (ViewBag.Title == "Details")
+                    if (Html.IsAction("Details"))
                     {
-                        <text>@Html.ActionLink("Edit", "Edit", new { id = Model.PlantId }) | </text>
+                        <text>@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) | </text>
                     }
-                    else
+                    else if (Model.CanDelete)
                     {
                         @Html.AntiForgeryToken()
                         <input type="submit" value="Delete" class="btn btn-danger" />

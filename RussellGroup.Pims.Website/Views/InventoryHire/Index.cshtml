@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Inventory Hire Transactions";
+    var hires = Model.InventoryHires.FirstOrDefault();
 }
 
 <h2>@ViewBag.Title</h2>
@@ -9,34 +10,35 @@
 
 @if (User.IsAuthorized(Role.CanEdit))
 {
-    <p>@Html.ActionLink("Create New", "Create", new { id = Model.JobId })</p>
+    <p>@Html.ActionLink("Create New", "Create", new { id = Model.Id })</p>
 }
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().InventoryHireId)
+                @Html.DisplayNameFor(model => hires.Id)
             </th>
             <th>
-                @Html.Encode("inventory id")
+                inventory id
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Docket)
+                @Html.DisplayNameFor(model => hires.Docket)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().WhenStarted)
+                @Html.DisplayNameFor(model => hires.WhenStarted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().WhenEnded)
+                @Html.DisplayNameFor(model => hires.WhenEnded)
             </th>
             <th class="right">
-                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Rate)
+                @Html.DisplayNameFor(model => hires.Rate)
             </th>
             <th class="right">
-                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Quantity)
+                @Html.DisplayNameFor(model => hires.Quantity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.InventoryHires.SingleOrDefault().Comment)
+                @Html.DisplayNameFor(model => hires.Comment)
             </th>
             <th></th>
         </tr>
@@ -47,7 +49,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.InventoryHireId)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Inventory.XInventoryId)
@@ -71,9 +73,9 @@
                     @Html.DisplayFor(modelItem => item.Comment)
                 </td>
                 <td>
-                    @if (User.IsAuthorized(Role.CanEdit)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.InventoryHireId }) |</text> }
-                    @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.InventoryHireId })
-                    @if (User.IsAuthorized(Role.CanEdit)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.InventoryHireId })</text> }
+                    @if (User.IsAuthorized(Role.CanEdit)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.Id }) |</text> }
+                    @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.Id })
+                    @if (User.IsAuthorized(Role.CanEdit)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.Id })</text> }
                 </td>
             </tr>
         }

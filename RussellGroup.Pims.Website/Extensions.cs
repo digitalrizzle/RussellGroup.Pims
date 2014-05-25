@@ -29,6 +29,16 @@ namespace RussellGroup.Pims.Website
             return value ? "Yes" : "No";
         }
 
+        public static string GetAction(this HtmlHelper html)
+        {
+            return html.ViewContext.RouteData.GetRequiredString("action");
+        }
+
+        public static bool IsAction(this HtmlHelper html, string name)
+        {
+            return GetAction(html).Equals(name);
+        }
+
         public static string ActionLink(this Controller controller, string linkText, string actionName, object routeValues)
         {
             return string.Format("<a href=\"{0}\">{1}</a>", controller.Url.Action(actionName, routeValues), linkText);

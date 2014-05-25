@@ -11,13 +11,16 @@ namespace RussellGroup.Pims.DataAccess.Models
     public class Plant
     {
         [ScaffoldColumn(false)]
-        public int PlantId { get; set; }
+        public int Id { get; set; }
 
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
 
         [ForeignKey("Status")]
         public int StatusId { get; set; }
+
+        [ForeignKey("Condition")]
+        public int ConditionId { get; set; }
 
         [Obsolete]
         [Display(Name = "id")]
@@ -64,11 +67,22 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "status")]
         public virtual Status Status { get; set; }
 
+        [Display(Name = "condition")]
+        public virtual Condition Condition { get; set; }
+
         [Display(Name = "comments")]
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
         [Display(Name = "hire")]
         public virtual ICollection<PlantHire> PlantHires { get; set; }
+
+        public bool CanDelete
+        {
+            get
+            {
+                return PlantHires != null && PlantHires.Count == 0;
+            }
+        }
     }
 }
