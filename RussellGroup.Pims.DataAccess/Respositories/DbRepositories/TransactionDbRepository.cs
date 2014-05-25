@@ -17,7 +17,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
         public async Task<Job> GetJob(int? id)
         {
-            return await db.Jobs.SingleOrDefaultAsync(f => f.JobId == id);
+            return await db.Jobs.SingleOrDefaultAsync(f => f.Id == id);
         }
 
         public IQueryable<Job> Jobs
@@ -56,7 +56,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             // save plant
             foreach (var id in plantIds)
             {
-                var plant = await db.Plants.SingleOrDefaultAsync(f => f.PlantId == id);
+                var plant = await db.Plants.SingleOrDefaultAsync(f => f.Id == id);
 
                 var hire = new PlantHire
                 {
@@ -77,7 +77,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             // save inventory
             foreach (var pair in inventoryIdsAndQuantities)
             {
-                var inventory = await db.Inventories.SingleOrDefaultAsync(f => f.InventoryId == pair.Key);
+                var inventory = await db.Inventories.SingleOrDefaultAsync(f => f.Id == pair.Key);
 
                 var hire = new InventoryHire
                 {
@@ -101,7 +101,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             // save plant
             foreach (var id in plantHireIds)
             {
-                var hire = db.PlantHires.SingleOrDefault(f => f.PlantHireId == id && !f.WhenEnded.HasValue);
+                var hire = db.PlantHires.SingleOrDefault(f => f.Id == id && !f.WhenEnded.HasValue);
 
                 if (hire != null)
                 {
@@ -120,7 +120,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
                 var id = pair.Key;
                 var quantity = pair.Value;
 
-                var hire = db.InventoryHires.SingleOrDefault(f => f.InventoryHireId == id && !f.WhenEnded.HasValue);
+                var hire = db.InventoryHires.SingleOrDefault(f => f.Id == id && !f.WhenEnded.HasValue);
 
                 if (hire != null)
                 {

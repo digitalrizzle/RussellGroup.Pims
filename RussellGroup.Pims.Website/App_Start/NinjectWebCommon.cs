@@ -71,7 +71,7 @@ namespace RussellGroup.Pims.Website.App_Start
 
             // for repositories
             kernel.Bind<IRepository<Category>>().To<DbRepository<Category>>();
-            kernel.Bind<IRepository<Job>>().To<DbRepository<Job>>();
+            kernel.Bind<IJobRepository>().To<JobDbRepository>();
             kernel.Bind<IInventoryRepository>().To<InventoryDbRepository>();
             kernel.Bind<IPlantRepository>().To<PlantDbRepository>();
             kernel.Bind<IHireRepository<PlantHire>>().To<HireDbRepository<PlantHire>>();

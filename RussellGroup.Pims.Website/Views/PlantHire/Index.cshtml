@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Plant Hire Transactions";
+    var hires = Model.PlantHires.FirstOrDefault();
 }
 
 <h2>@ViewBag.Title</h2>
@@ -9,31 +10,32 @@
 
 @if (User.IsAuthorized(Role.CanEdit))
 {
-    <p>@Html.ActionLink("Create New", "Create", new { id = Model.JobId })</p>
+    <p>@Html.ActionLink("Create New", "Create", new { id = Model.Id })</p>
 }
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().PlantHireId)
+                @Html.DisplayNameFor(model => hires.Id)
             </th>
             <th>
-                @Html.Encode("plant id")
+                plant id
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Docket)
+                @Html.DisplayNameFor(model => hires.Docket)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().WhenStarted)
+                @Html.DisplayNameFor(model => hires.WhenStarted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().WhenEnded)
+                @Html.DisplayNameFor(model => hires.WhenEnded)
             </th>
             <th class="right">
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Rate)
+                @Html.DisplayNameFor(model => hires.Rate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.SingleOrDefault().Comment)
+                @Html.DisplayNameFor(model => hires.Comment)
             </th>
             <th></th>
         </tr>
@@ -44,7 +46,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PlantHireId)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Plant.XPlantId)
@@ -65,9 +67,9 @@
                     @Html.DisplayFor(modelItem => item.Comment)
                 </td>
                 <td>
-                    @if (User.IsAuthorized(Role.CanEdit)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.PlantHireId }) |</text> }
-                    @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.PlantHireId })
-                    @if (User.IsAuthorized(Role.CanEdit)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.PlantHireId })</text> }
+                    @if (User.IsAuthorized(Role.CanEdit)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.Id }) |</text> }
+                    @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.Id })
+                    @if (User.IsAuthorized(Role.CanEdit)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.Id })</text> }
                 </td>
             </tr>
         }

@@ -32,7 +32,9 @@ namespace RussellGroup.Pims.DataMigration
             while (reader.Read())
             {
                 if (TargetContext != null) TargetContext.Dispose();
+
                 TargetContext = new PimsDbContext();
+                TargetContext.SetContextUserName("System");
 
                 Console.Write("{0}\r", ++row);
 

@@ -147,8 +147,18 @@ dt, dd {
     line-height: 2;
 }
 
+.dl-horizontal > dd:after {
+  display: table;
+  content: "";
+  clear: both;
+}
+
 footer {
     font-size: smaller;
+}
+
+.dataTables_filter input {
+    font-weight: normal;
 }
 
 /* typeahead */
@@ -162,6 +172,10 @@ footer {
     height: 26px;
 }
 
+.twitter-typeahead .tt-hint {
+    top: inherit !important;
+}
+
 .input-group .twitter-typeahead {
     display: inline !important;
 }
@@ -170,8 +184,8 @@ footer {
     border-radius: inherit !important;
 }
 
-.tt-input-group {
-    padding-bottom: 10px;
+.tt-dropdown-menu {
+    margin: 5px 0 0;
 }
 
 .typeahead-description {
@@ -181,8 +195,4 @@ footer {
 .typeahead-id {
     display: inline;
     font-family: 'Courier New', Courier, monospace;
-}
-
-.dataTables_filter input {
-    font-weight: normal;
 }

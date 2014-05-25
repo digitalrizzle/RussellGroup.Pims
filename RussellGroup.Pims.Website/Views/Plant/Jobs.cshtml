@@ -1,30 +1,30 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
 @{
-    ViewBag.Title = Model.Description;
+    ViewBag.Title = "Jobs for " + Model.Description;
+    var item = Model.PlantHires.FirstOrDefault();
 }
 
 <h2>@ViewBag.Title</h2>
-<h4>Jobs</h4>
 
 <table class="table">
     <thead>
         <tr>
             <th></th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.XJobId)
+                @Html.DisplayNameFor(model => item.Job.XJobId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.Description)
+                @Html.DisplayNameFor(model => item.Job.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.WhenStarted)
+                @Html.DisplayNameFor(model => item.Job.WhenStarted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.WhenEnded)
+                @Html.DisplayNameFor(model => item.Job.WhenEnded)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlantHires.Single().Job.ProjectManager)
+                @Html.DisplayNameFor(model => item.Job.ProjectManager)
             </th>
             <th></th>
         </tr>
@@ -38,7 +38,7 @@
                 "bProcessing": true,
                 "bServerSide": true,
                 "bStateSave": true,
-                "sAjaxSource": '@Url.Content("~/Plant/GetJobsDataTableResult?id=" + Model.PlantId)',
+                "sAjaxSource": '@Url.Content("~/Plant/GetJobsDataTableResult?id=" + Model.Id)',
                 "sPaginationType": 'full_numbers',
                 "aoColumns": [
                     { "sWidth": "0%" },

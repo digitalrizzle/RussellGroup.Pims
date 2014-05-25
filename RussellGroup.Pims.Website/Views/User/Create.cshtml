@@ -1,99 +1,11 @@
 ﻿@model RussellGroup.Pims.Website.Models.UserRolesViewModel
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create User";
 }
 
-<h2>User</h2>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+@Html.Partial("_Form")
 
-    <div class="form-horizontal">
-        <h4>@ViewBag.Title</h4>
-        <hr />
-
-        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
-        {
-            <div class="form-group">
-                <div class="col-md-2"></div>
-                <div class="col-md-10">
-                    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
-                </div>
-            </div>
-        }
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.User.UserName, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.User.UserName, new { @class = "col-span-5" })
-                @Html.ValidationMessageFor(model => model.User.UserName)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Roles, new { @class = "control-label col-md-2" })
-            <div class="col-md-10" style="margin-top:-3px">
-                <table id="roles-table" class="dataTables_wrapper-no-pagination">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th><input type="checkbox" class="check-all" /></th>
-                            <th>role</th>
-                            <th>description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int index = 0; index < Model.Roles.Count; index++)
-                        {
-                            <tr>
-                                <td>@Html.HiddenFor(model => model.Roles[index].Id)</td>
-                                <td>@Html.EditorFor(model => model.Roles[index].IsChecked)</td>
-                                <td>@Html.HiddenFor(model => model.Roles[index].Name)@Html.DisplayFor(model => model.Roles[index].Name)</td>
-                                <td>@Html.HiddenFor(model => model.Roles[index].Description)@Html.DisplayFor(model => model.Roles[index].Description)</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-primary" />
-                &nbsp;
-                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn-cancel" })
-            </div>
-        </div>
-    </div>
-}
 @section scripts {
-    <script>
-        $(document).ready(function () {
-            $('#roles-table').dataTable({
-                "bStateSave": false,
-                "bFilter": false,
-                "bInfo": false,
-                "bPaginate": false,
-                "aoColumns": [
-                    { "sWidth": "0%" },
-                    { "sWidth": "5%" },
-                    { "sWidth": "20%" },
-                    { "sWidth": "75%" }
-                ],
-                "aoColumnDefs": [
-                    { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [1] }
-                ]
-            });
-        });
-
-        // adjusts the datatable container because pagination is hidden
-        $('[id$="-table"]').on('draw.dt', function () {
-            $('[id$="-table_wrapper"]').css('padding-bottom', 0);
-        });
-
-        $('.check-all').on('click', function () {
-            $(this).closest('table').find(':checkbox').prop('checked', this.checked);
-        });
-    </script>
+    @Scripts.Render("~/Scripts/view-user-form.js")
 }

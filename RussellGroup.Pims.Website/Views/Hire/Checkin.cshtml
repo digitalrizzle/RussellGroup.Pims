@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Checkin";
+    var plantHires = Model.PlantHires.FirstOrDefault();
+    var inventoryHires = Model.InventoryHires.FirstOrDefault();
 }
 
 <h2>@ViewBag.Title</h2>
@@ -13,7 +15,12 @@
     <div class="form-horizontal">
         <h4>@Model.Job.Description</h4>
         <hr />
-        @Html.ValidationSummary(true)
+
+        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+        {
+            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+        }
+
         @Html.HiddenFor(model => model.JobId)
 
         <div class="form-group">
@@ -33,16 +40,16 @@
                             <th></th>
                             <th><input type="checkbox" class="check-all" /></th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PlantHires.Single().Plant.XPlantId)
+                                @Html.DisplayNameFor(model => plantHires.Plant.XPlantId)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PlantHires.Single().Plant.XPlantNewId)
+                                @Html.DisplayNameFor(model => plantHires.Plant.XPlantNewId)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PlantHires.Single().Docket)
+                                @Html.DisplayNameFor(model => plantHires.Docket)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.PlantHires.Single().Plant.Description)
+                                @Html.DisplayNameFor(model => plantHires.Plant.Description)
                             </th>
                         </tr>
                     </thead>
@@ -51,7 +58,7 @@
                         {
                             <tr>
                                 <td>@Html.Encode(item.PlantId)</td>
-                                <td><input name="@("plant-hire-id-field" + item.PlantHireId)" value="@item.PlantHireId" type="checkbox" /></td>
+                                <td><input name="@("plant-hire-id-field" + item.Id)" value="@item.Id" type="checkbox" /></td>
                                 <td>@Html.DisplayFor(modelItem => item.Plant.XPlantId)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Plant.XPlantNewId)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Docket)</td>
@@ -72,16 +79,16 @@
                             <th></th>
                             <th><input type="checkbox" class="check-all" /></th>
                             <th>
-                                @Html.DisplayNameFor(model => model.InventoryHires.Single().Inventory.XInventoryId)
+                                @Html.DisplayNameFor(model => inventoryHires.Inventory.XInventoryId)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.InventoryHires.Single().Inventory.Quantity)
+                                @Html.DisplayNameFor(model => inventoryHires.Inventory.Quantity)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.InventoryHires.Single().Docket)
+                                @Html.DisplayNameFor(model => inventoryHires.Docket)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => model.InventoryHires.Single().Inventory.Description)
+                                @Html.DisplayNameFor(model => inventoryHires.Inventory.Description)
                             </th>
                         </tr>
                     </thead>
@@ -90,9 +97,9 @@
                         {
                             <tr>
                                 <td>@Html.Encode(item.InventoryId)</td>
-                                <td><input name="@("inventory-hire-id-field" + item.InventoryHireId)" value="@item.InventoryHireId" type="checkbox" /></td>
+                                <td><input name="@("inventory-hire-id-field" + item.Id)" value="@item.Id" type="checkbox" /></td>
                                 <td>@Html.DisplayFor(model => item.Inventory.XInventoryId)</td>
-                                <td><input name="@("inventory-hire-quantity-field" + item.InventoryHireId)" value="@item.Quantity" type="number" /></td>
+                                <td><input name="@("inventory-hire-quantity-field" + item.Id)" value="@item.Quantity" type="number" /></td>
                                 <td>@Html.DisplayFor(model => item.Docket)</td>
                                 <td>@Html.DisplayFor(model => item.Inventory.Description)</td>
                             </tr>
@@ -113,51 +120,51 @@
 }
 
 @section scripts {
-<script>
-    $(document).ready(function () {
-        // set checkboxes if there is a postback
-        @foreach (var hire in Model.PlantHires.Where(f => f.IsChecked)) { <text>$('input[name="plant-hire-id-field@(hire.PlantHireId)"]').prop('checked', true);</text> }
-        @foreach (var hire in Model.InventoryHires.Where(f => f.IsChecked)) { <text>$('input[name="inventory-hire-id-field@(hire.InventoryHireId)"]').prop('checked', true);</text> }
+    <script>
+        $(document).ready(function () {
+            // set checkboxes if there is a postback
+            @foreach (var hire in Model.PlantHires.Where(f => f.IsChecked)) { <text>$('input[name="plant-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
+            @foreach (var hire in Model.InventoryHires.Where(f => f.IsChecked)) { <text>$('input[name="inventory-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
 
-        $('#plant-hire-table').dataTable({
-            "bProcessing": true,
-            "bStateSave": false,
-            "sPaginationType": 'full_numbers',
-            "aoColumns": [
-                { "sWidth": "0%" },
-                { "sWidth": "5%" },
-                { "sWidth": "15%" },
-                { "sWidth": "15%" },
-                { "sWidth": "15%" },
-                { "sWidth": "50%" }
-            ],
-            "aoColumnDefs": [
-                { "bVisible": false, "aTargets": [0] },
-                { "bSortable": false, "aTargets": [1] }
-            ]
+            $('#plant-hire-table').dataTable({
+                "bProcessing": true,
+                "bStateSave": false,
+                "sPaginationType": 'full_numbers',
+                "aoColumns": [
+                    { "sWidth": "0%" },
+                    { "sWidth": "5%" },
+                    { "sWidth": "15%" },
+                    { "sWidth": "15%" },
+                    { "sWidth": "15%" },
+                    { "sWidth": "50%" }
+                ],
+                "aoColumnDefs": [
+                    { "bVisible": false, "aTargets": [0] },
+                    { "bSortable": false, "aTargets": [1] }
+                ]
+            });
+
+            $('#inventory-hire-table').dataTable({
+                "bProcessing": true,
+                "bStateSave": false,
+                "sPaginationType": 'full_numbers',
+                "aoColumns": [
+                    { "sWidth": "0%" },
+                    { "sWidth": "5%" },
+                    { "sWidth": "15%" },
+                    { "sWidth": "15%" },
+                    { "sWidth": "15%" },
+                    { "sWidth": "50%" }
+                ],
+                "aoColumnDefs": [
+                    { "bVisible": false, "aTargets": [0] },
+                    { "bSortable": false, "aTargets": [1] }
+                ]
+            });
         });
 
-        $('#inventory-hire-table').dataTable({
-            "bProcessing": true,
-            "bStateSave": false,
-            "sPaginationType": 'full_numbers',
-            "aoColumns": [
-                { "sWidth": "0%" },
-                { "sWidth": "5%" },
-                { "sWidth": "15%" },
-                { "sWidth": "15%" },
-                { "sWidth": "15%" },
-                { "sWidth": "50%" }
-            ],
-            "aoColumnDefs": [
-                { "bVisible": false, "aTargets": [0] },
-                { "bSortable": false, "aTargets": [1] }
-            ]
+        $('.check-all').on('click', function () {
+            $(this).closest('table').find(':checkbox').prop('checked', this.checked);
         });
-    });
-
-    $('.check-all').on('click', function () {
-        $(this).closest('table').find(':checkbox').prop('checked', this.checked);
-    });
-</script>
+    </script>
 }

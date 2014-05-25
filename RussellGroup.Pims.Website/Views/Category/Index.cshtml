@@ -14,7 +14,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CategoryId)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -31,7 +31,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CategoryId)
+                    @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
@@ -40,9 +40,9 @@
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
                 <td>
-                    @if (User.IsAuthorized(Role.CanEditCategories)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.CategoryId }) |</text> }
-                    @Html.ActionLink("Details", "Details", new { id = item.CategoryId })
-                    @if (User.IsAuthorized(Role.CanEditCategories)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.CategoryId })</text> }
+                    @if (User.IsAuthorized(Role.CanEditCategories)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |</text> }
+                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+                    @if (User.IsAuthorized(Role.CanEditCategories)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.Id })</text> }
                 </td>
             </tr>
         }

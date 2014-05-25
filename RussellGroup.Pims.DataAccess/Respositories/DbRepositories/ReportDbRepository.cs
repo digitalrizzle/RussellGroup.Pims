@@ -64,7 +64,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
             var category = db.Categories.Find(categoryId);
 
             var hire = from j in db.Jobs
-                       join h in db.InventoryHires on j.JobId equals h.JobId
+                       join h in db.InventoryHires on j.Id equals h.JobId
                        where h.Inventory.CategoryId == categoryId.Value && !h.WhenEnded.HasValue
                        group h by j into g
                        select new InventoryHireInJobReportModel

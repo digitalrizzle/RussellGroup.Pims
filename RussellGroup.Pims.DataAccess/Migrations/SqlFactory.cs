@@ -33,7 +33,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             GenerateAuditTrigger(tableName, primaryKeyName1, primaryKeyName2);
         }
 
-        public void GenerateAuditTrigger(string tableName, string primaryKeyName1)
+        public void GenerateAuditTrigger(string tableName, string primaryKeyName1 = "Id")
         {
             GenerateAuditTrigger(tableName, primaryKeyName1, null);
         }

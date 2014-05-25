@@ -31,13 +31,13 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var plants = _repository.GetAll();
 
-            var unknown = plants.Count(f => f.Status.StatusId == Status.Unknown);
-            var available = plants.Count(f => f.Status.StatusId == Status.Available);
-            var unavailable = plants.Count(f => f.Status.StatusId == Status.Unavailable);
-            var missing = plants.Count(f => f.Status.StatusId == Status.Missing);
-            var stolen = plants.Count(f => f.Status.StatusId == Status.Stolen);
-            var underRepair = plants.Count(f => f.Status.StatusId == Status.UnderRepair);
-            var writtenOff = plants.Count(f => f.Status.StatusId == Status.WrittenOff);
+            var unknown = plants.Count(f => f.Status.Id == Status.Unknown);
+            var available = plants.Count(f => f.Status.Id == Status.Available);
+            var unavailable = plants.Count(f => f.Status.Id == Status.Unavailable);
+            var missing = plants.Count(f => f.Status.Id == Status.Missing);
+            var stolen = plants.Count(f => f.Status.Id == Status.Stolen);
+            var underRepair = plants.Count(f => f.Status.Id == Status.UnderRepair);
+            var writtenOff = plants.Count(f => f.Status.Id == Status.WrittenOff);
 
             var data = new[]
             {

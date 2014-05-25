@@ -71,7 +71,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var hire = new PlantHire() 
             {
                 Job = job,
-                JobId = job.JobId,
+                JobId = job.Id,
                 WhenStarted = DateTime.Now
             };
 
@@ -84,7 +84,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "PlantHireId,PlantId,JobId,Docket,WhenStarted,WhenEnded,Rate,Comment")] PlantHire hire)
+        public async Task<ActionResult> Create([Bind(Include = "PlantId,JobId,Docket,WhenStarted,WhenEnded,Rate,Comment")] PlantHire hire)
         {
             if (ModelState.IsValid)
             {
@@ -116,7 +116,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "PlantHireId,PlantId,JobId,Docket,WhenStarted,WhenEnded,Rate,Comment")] PlantHire hire)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,PlantId,JobId,Docket,WhenStarted,WhenEnded,Rate,Comment")] PlantHire hire)
         {
             if (ModelState.IsValid)
             {
@@ -171,7 +171,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var plants = _repository.Plants.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XPlantId);
 
-            ViewBag.Plants = new SelectList(plants, "PlantId", "XPlantId", hire.PlantId);
+            ViewBag.Plants = new SelectList(plants, "Id", "XPlantId", hire.PlantId);
 
             return base.View(hire);
         }

@@ -25,7 +25,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
 
         public Task<Job> GetJob(int? id)
         {
-            return Db.Jobs.SingleOrDefaultAsync(f => f.JobId == id);
+            return Db.Jobs.SingleOrDefaultAsync(f => f.Id == id);
         }
 
         public IQueryable<Job> Jobs

@@ -11,6 +11,7 @@ namespace RussellGroup.Pims.DataAccess.Respositories
     {
         IQueryable<Category> Categories { get; }
         IQueryable<Status> Statuses { get; }
+        IQueryable<Condition> Conditions { get; }
 
         IQueryable<Job> GetJobs(int plantId);
     }

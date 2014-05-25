@@ -17,7 +17,7 @@ namespace RussellGroup.Pims.DataMigration
             var key = reader.GetValue(SourcePrimaryKeyColumnName);
             var sourcePlant = reader.GetValue("Plant no");
             var sourceJob = reader.GetValue("Job ID");
-            var docket = reader.GetValue("Doc no");
+            var docket = reader.GetValue("Doc no") ?? "Unknown";
             var returnDocket = reader.GetValue("Return doc no");
             var comments = reader.GetValue("Comments");
 
@@ -36,8 +36,8 @@ namespace RussellGroup.Pims.DataMigration
 
                 var hire = new PlantHire
                     {
-                        PlantId = plant.PlantId,
-                        JobId = job.JobId,
+                        PlantId = plant.Id,
+                        JobId = job.Id,
                         Docket = docket,
                         ReturnDocket = returnDocket,
                         WhenStarted = whenStarted,

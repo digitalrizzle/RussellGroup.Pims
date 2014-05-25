@@ -31,9 +31,9 @@ namespace RussellGroup.Pims.DataMigration
 
                 var hire = new InventoryHire
                 {
-                    InventoryId = inventory.InventoryId,
-                    JobId = TargetContext.Jobs.Single(f => f.XJobId == sourceJob).JobId,
-                    Docket = reader.GetValue("Doc no"),
+                    InventoryId = inventory.Id,
+                    JobId = TargetContext.Jobs.Single(f => f.XJobId == sourceJob).Id,
+                    Docket = reader.GetValue("Doc no") ?? "Unknown",
                     ReturnDocket = reader.GetValue("Return doc no"),
                     WhenStarted = whenStarted,
                     WhenEnded = whenEnded,

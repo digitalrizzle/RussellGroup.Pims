@@ -11,7 +11,7 @@ namespace RussellGroup.Pims.DataAccess.Models
     public class Inventory
     {
         [ScaffoldColumn(false)]
-        public int InventoryId { get; set; }
+        public int Id { get; set; }
 
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
@@ -54,6 +54,14 @@ namespace RussellGroup.Pims.DataAccess.Models
             get
             {
                 return WhenDisused.HasValue;
+            }
+        }
+
+        public bool CanDelete
+        {
+            get
+            {
+                return InventoryHires != null && InventoryHires.Count == 0;
             }
         }
     }

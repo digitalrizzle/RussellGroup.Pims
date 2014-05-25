@@ -46,7 +46,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 .Where(f => f.StatusId == 2 && (f.XPlantId.StartsWith(hint) || f.Description.Contains(hint)))
                 .Take(5)
                 .OrderBy(f => f.Description)
-                .Select(f => new { id = f.PlantId, description = f.Description, xid = f.XPlantId })
+                .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantId })
                 .ToArray();
 
             var json = Json(result, JsonRequestBehavior.AllowGet);
@@ -63,7 +63,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 .Where(f => !f.WhenDisused.HasValue && (f.XInventoryId.StartsWith(hint) || f.Description.Contains(hint)))
                 .Take(5)
                 .OrderBy(f => f.Description)
-                .Select(f => new { id = f.InventoryId, description = f.Description, xid = f.XInventoryId })
+                .Select(f => new { id = f.Id, description = f.Description, xid = f.XInventoryId })
                 .ToArray();
 
             var json = Json(result, JsonRequestBehavior.AllowGet);
@@ -86,8 +86,8 @@ namespace RussellGroup.Pims.Website.Controllers
             if (string.IsNullOrWhiteSpace(docket)) ModelState.AddModelError("Docket", "A docket number is required.");
             if (plantIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkout.");
 
-            foreach (var id in plantIds) plants.Add(_repository.Plants.Single(f => f.PlantId == id));
-            foreach (var pair in inventoryIdsAndQuantities) inventoriesAndQuantities.Add(new KeyValuePair<Inventory, int?>(_repository.Inventories.Single(f => f.InventoryId == pair.Key), pair.Value));
+            foreach (var id in plantIds) plants.Add(_repository.Plants.Single(f => f.Id == id));
+            foreach (var pair in inventoryIdsAndQuantities) inventoriesAndQuantities.Add(new KeyValuePair<Inventory, int?>(_repository.Inventories.Single(f => f.Id == pair.Key), pair.Value));
 
             var transaction = new CheckoutTransaction()
             {
@@ -156,12 +156,12 @@ namespace RussellGroup.Pims.Website.Controllers
             var plantHires = _repository.GetActivePlantHiresInJob(jobId).ToList();
             var inventoryHires = _repository.GetActiveInventoryHiresInJob(jobId).ToList();
 
-            foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.PlantHireId)) hire.IsChecked = true;
+            foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.Id)) hire.IsChecked = true;
 
-            foreach (var hire in inventoryHires) if (inventoryHireIdsAndQuantities.Any(f => f.Key == hire.InventoryHireId))
+            foreach (var hire in inventoryHires) if (inventoryHireIdsAndQuantities.Any(f => f.Key == hire.Id))
             {
                 hire.IsChecked = true;
-                hire.Quantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.InventoryHireId).Value;
+                hire.Quantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.Id).Value;
             }
 
             var transaction = new CheckinTransaction
@@ -195,7 +195,7 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var jobs = _repository.Jobs.OrderByDescending(f => f.WhenStarted);
 
-            ViewBag.Jobs = new SelectList(jobs, "JobId", "Description", transaction.JobId);
+            ViewBag.Jobs = new SelectList(jobs, "Id", "Description", transaction.JobId);
 
             return base.View(transaction);
         }

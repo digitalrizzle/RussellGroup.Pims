@@ -11,7 +11,7 @@ namespace RussellGroup.Pims.DataAccess.Models
     public class PlantHire
     {
         [ScaffoldColumn(false)]
-        public int PlantHireId { get; set; }
+        public int Id { get; set; }
 
         [ForeignKey("Plant")]
         public int PlantId { get; set; }
@@ -19,6 +19,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         [ForeignKey("Job")]
         public int JobId { get; set; }
 
+        [Required]
         [Display(Name = "docket")]
         public string Docket { get; set; }
 

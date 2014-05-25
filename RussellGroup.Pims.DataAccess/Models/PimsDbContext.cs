@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.Common;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ namespace RussellGroup.Pims.DataAccess.Models
     {
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Condition> Conditions { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<InventoryHire> InventoryHires { get; set; }
         public DbSet<Job> Jobs { get; set; }
@@ -28,6 +30,8 @@ namespace RussellGroup.Pims.DataAccess.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
 
         public void SetContextUserName(string userName)

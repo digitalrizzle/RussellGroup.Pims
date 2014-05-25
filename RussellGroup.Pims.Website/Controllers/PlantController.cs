@@ -77,14 +77,14 @@ namespace RussellGroup.Pims.Website.Controllers
             var displayData = filtered
                 .Select(c => new string[]
                 {
-                    c.PlantId.ToString(),
+                    c.Id.ToString(),
                     c.XPlantId,
                     c.XPlantNewId,
                     c.Description,
                     c.Category != null ? c.Category.Name : string.Empty,
-                    _repository.GetJobs(c.PlantId).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetJobs(c.PlantId).Count().ToString(), "Jobs", new { id = c.PlantId }),
+                    _repository.GetJobs(c.Id).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetJobs(c.Id).Count().ToString(), "Jobs", new { id = c.Id }),
                     c.Status.Name,
-                    this.CrudLinks(new { id = c.PlantId }, canEdit)
+                    this.CrudLinks(new { id = c.Id }, canEdit)
                 });
 
             var result = new
@@ -153,13 +153,13 @@ namespace RussellGroup.Pims.Website.Controllers
             var displayData = ordered
                 .Select(c => new string[]
                 {
-                    c.JobId.ToString(),
+                    c.Id.ToString(),
                     c.XJobId,
                     c.Description,
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.ProjectManager,
-                    this.ActionLink("Details", "Details", "Job", new { id = c.JobId })
+                    this.ActionLink("Details", "Details", "Job", new { id = c.Id })
                 });
 
             // filter for sSearch
@@ -216,7 +216,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "PlantId,CategoryId,StatusId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
+        public async Task<ActionResult> Create([Bind(Include = "CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
         {
             if (ModelState.IsValid)
             {
@@ -249,7 +249,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "PlantId,CategoryId,StatusId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
         {
             if (ModelState.IsValid)
             {
@@ -303,12 +303,15 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var categories = _repository.Categories.OrderBy(f => f.Name);
             var category = plant != null ? plant.CategoryId : 0;
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", category);
 
-            var statuses = _repository.Statuses.OrderBy(f => f.StatusId);
+            var statuses = _repository.Statuses.OrderBy(f => f.Id);
             var status = plant != null ? plant.StatusId : 0;
+            ViewBag.Statuses = new SelectList(statuses, "Id", "Name", status);
 
-            ViewBag.Categories = new SelectList(categories, "CategoryId", "Name", category);
-            ViewBag.Statuses = new SelectList(statuses, "StatusId", "Name", status);
+            var conditions = _repository.Conditions.OrderBy(f => f.Id);
+            var condition = plant != null ? plant.ConditionId : 0;
+            ViewBag.Conditions = new SelectList(conditions, "Id", "Name", condition);
 
             return base.View(plant);
         }
