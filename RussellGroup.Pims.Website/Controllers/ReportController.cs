@@ -1,5 +1,5 @@
 ﻿using RussellGroup.Pims.DataAccess.Models;
-using RussellGroup.Pims.DataAccess.Respositories;
+using RussellGroup.Pims.DataAccess.Repositories;
 using RussellGroup.Pims.DataAccess.ViewModels;
 using System;
 using System.Collections.Generic;

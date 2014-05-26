@@ -13,7 +13,7 @@ namespace RussellGroup.Pims.Website.App_Start
     using Ninject.Web.Common;
     using Ninject.Web.Mvc.FilterBindingSyntax;
     using RussellGroup.Pims.Website.Helpers;
-    using RussellGroup.Pims.DataAccess.Respositories;
+    using RussellGroup.Pims.DataAccess.Repositories;
     using RussellGroup.Pims.DataAccess.Models;
 
     public static class NinjectWebCommon

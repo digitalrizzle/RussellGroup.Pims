@@ -1,5 +1,5 @@
 ﻿using RussellGroup.Pims.DataAccess.Models;
-using RussellGroup.Pims.DataAccess.Respositories;
+using RussellGroup.Pims.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;

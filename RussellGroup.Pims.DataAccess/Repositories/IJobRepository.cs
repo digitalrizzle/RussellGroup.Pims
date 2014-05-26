@@ -5,10 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RussellGroup.Pims.DataAccess.Respositories
+namespace RussellGroup.Pims.DataAccess.Repositories
 {
-    public interface IInventoryRepository : IRepository<Inventory>
+    public interface IJobRepository : IRepository<Job>
     {
-        IQueryable<Category> Categories { get; }
     }
 }

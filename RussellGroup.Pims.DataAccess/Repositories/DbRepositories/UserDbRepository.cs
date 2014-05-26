@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace RussellGroup.Pims.DataAccess.Respositories
+namespace RussellGroup.Pims.DataAccess.Repositories
 {
     public class UserDbRepository : DbRepository<ApplicationUser>, IUserRepository
     {
