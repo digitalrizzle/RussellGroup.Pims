@@ -131,7 +131,7 @@
             jobs
         </dt>
         <dd>
-            @Html.ActionLink(Model.PlantHires.Count.ToString(), "Jobs", new { id = Model.Id })
+            @Html.ActionLink(Model.PlantHires.Select(f => f.Job).Distinct().Count().ToString(), "Jobs", new { id = Model.Id })
         </dd>
     </dl>
 
