@@ -8,7 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
-using RussellGroup.Pims.DataAccess.Respositories;
+using RussellGroup.Pims.DataAccess.Repositories;
 
 namespace RussellGroup.Pims.Website.Controllers
 {

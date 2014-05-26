@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RussellGroup.Pims.DataAccess.Respositories
+namespace RussellGroup.Pims.DataAccess.Repositories
 {
     public class JobDbRepository : DbRepository<Job>, IJobRepository
     {

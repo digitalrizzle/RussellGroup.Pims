@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RussellGroup.Pims.DataAccess.Respositories
+namespace RussellGroup.Pims.DataAccess.Repositories
 {
     // http://www.codeproject.com/Articles/228865/Csharp-IDisposable-pattern-on-sub-classes
     public interface IRepository<T> : IDisposable

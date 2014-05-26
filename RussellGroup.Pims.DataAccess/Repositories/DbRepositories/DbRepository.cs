@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace RussellGroup.Pims.DataAccess.Respositories
+namespace RussellGroup.Pims.DataAccess.Repositories
 {
     // http://www.codeproject.com/Articles/228865/Csharp-IDisposable-pattern-on-sub-classes
     public class DbRepository<T> : IRepository<T> where T : class

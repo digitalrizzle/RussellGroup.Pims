@@ -40,10 +40,12 @@ namespace RussellGroup.Pims.DataMigration
                     plantHire.Delete();
                     inventoryHire.Delete();
                     job.Delete();
+                    plant.Delete();
+                    inventory.Delete();
 
                     categories.Delete().Import();
-                    plant.Delete().Import();
-                    inventory.Delete().Import();
+                    plant.Import();
+                    inventory.Import();
                     job.Import();
 
                     plantHire.Import(0, importCap);
