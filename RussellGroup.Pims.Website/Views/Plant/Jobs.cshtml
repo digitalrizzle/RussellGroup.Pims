@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Jobs for " + Model.Description;
-    var item = Model.PlantHires.FirstOrDefault();
+    var job = Model.PlantHires.FirstOrDefault().Job;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -12,19 +12,19 @@
         <tr>
             <th></th>
             <th>
-                @Html.DisplayNameFor(model => item.Job.XJobId)
+                @Html.DisplayNameFor(model => job.XJobId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => item.Job.Description)
+                @Html.DisplayNameFor(model => job.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => item.Job.WhenStarted)
+                @Html.DisplayNameFor(model => job.WhenStarted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => item.Job.WhenEnded)
+                @Html.DisplayNameFor(model => job.WhenEnded)
             </th>
             <th>
-                @Html.DisplayNameFor(model => item.Job.ProjectManager)
+                @Html.DisplayNameFor(model => job.ProjectManager)
             </th>
             <th></th>
         </tr>

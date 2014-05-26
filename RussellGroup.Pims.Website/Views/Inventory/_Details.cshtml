@@ -82,7 +82,7 @@
             jobs
         </dt>
         <dd>
-            @Html.Encode(Model.InventoryHires.Count)
+            @Html.Encode(Model.InventoryHires.Select(f => f.Job).Distinct().Count())
         </dd>
 
     </dl>
