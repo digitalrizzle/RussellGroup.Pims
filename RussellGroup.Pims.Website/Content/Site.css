@@ -188,6 +188,10 @@ footer {
     margin: 5px 0 0;
 }
 
+.tt-input-group {
+    padding-bottom: 10px;
+}
+
 .typeahead-description {
     font-weight: bold;
 }
