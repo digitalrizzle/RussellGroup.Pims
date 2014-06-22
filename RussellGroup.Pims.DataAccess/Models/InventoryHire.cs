@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public int Id { get; set; }
 
         [ForeignKey("Inventory")]
+        [DisplayName("inventory id")]
         public int InventoryId { get; set; }
 
         [ForeignKey("Job")]

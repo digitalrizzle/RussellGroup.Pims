@@ -21,12 +21,12 @@ else
                     inventory id
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.InventoryHires.First().Inventory.Description)
+                    @Html.DisplayNameFor(model => model.InventoryHires.First().Inventory.Description)
                 </th>
-                <th class="right">
+                <th class="text-right">
                     quantity<br />in system
                 </th>
-                <th class="right col-md-1">
+                <th class="text-right col-md-1">
                     quantity<br />counted
                 </th>
                 <th class="col-md-5">
@@ -52,12 +52,12 @@ else
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(m => inventory.XInventoryId)
+                            @Html.DisplayFor(model => inventory.XInventoryId)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => inventory.Description)
+                            @Html.DisplayFor(model => inventory.Description)
                         </td>
-                        <td class="right">
+                        <td class="text-right">
                             @Html.Encode(Model.InventoryHires.Where(f => f.Inventory == inventory).Sum(f => f.Quantity))
                         </td>
                         <td></td>

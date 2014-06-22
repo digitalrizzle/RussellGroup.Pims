@@ -14,14 +14,14 @@
     padding-right: 30px;
 }
 
-input, textarea {
+/*input, textarea {
     border: 1px solid #abadb3;
 }
 
 input[type=text], input[type=number] {
     padding-left: 4px;
     height: 28px !important;
-}
+}*/
 
 input[type=number] {
     text-align: right;
@@ -35,9 +35,9 @@ table input[type=checkbox] {
     height: inherit !important;
 }
 
-select {
+/*select {
     height: 28px;
-}
+}*/
 
 /* styles for validation helpers */
 .field-validation-error {
@@ -73,71 +73,23 @@ input[type="checkbox"].input-validation-error {
     border-radius: 0;
 }
 
-.control-label {
+/*.control-label {
     margin-top: -3px !important;
-}
+}*/
 
-.center {
+/*.center {
     text-align: center;
 }
 
 .right {
     text-align: right;
-}
+}*/
 
-.input-group-addon {
+/*.input-group-addon {
     width: inherit;
     padding: 4px 12px 5px 12px;
     top: 0px;
-}
-
-.col-span-1 {
-  width: 85px;
-}
-
-.col-span-2 {
-  width: 160px;
-}
-
-.col-span-3 {
-  width: 240px;
-}
-
-.col-span-4 {
-  width: 320px;
-}
-
-.col-span-5 {
-  width: 400px;
-}
-
-.col-span-6 {
-  width: 480px;
-}
-
-.col-span-7 {
-  width: 560px;
-}
-
-.col-span-8 {
-  width: 640px;
-}
-
-.col-span-9 {
-  width: 720px;
-}
-
-.col-span-10 {
-  width: 800px;
-}
-
-.col-span-11 {
-  width: 880px;
-}
-
-.col-span-12 {
-  width: 960px;
-}
+}*/
 
 th {
     text-align: left;
@@ -166,7 +118,7 @@ footer {
     display: inline !important;
     float: none;
 }
-
+/*
 .twitter-typeahead input[disabled] {
     border: 1px solid #abadb3;
     height: 26px;
@@ -190,6 +142,10 @@ footer {
 
 .tt-input-group {
     padding-bottom: 10px;
+}*/
+
+.tt-dropdown-menu {
+    width: 360px;
 }
 
 .typeahead-description {

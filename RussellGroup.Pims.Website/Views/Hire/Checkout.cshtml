@@ -23,19 +23,20 @@
             @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
         }
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Docket") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Docket, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Docket)
-                @Html.ValidationMessageFor(model => model.Docket)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Docket, new { @class = "form-control" })
             </div>
+            @Html.ValidationMessageFor(model => model.Docket, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("JobId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Job, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.JobId, ViewBag.Jobs as SelectList)
+            <div class="col-md-5">
+                @Html.DropDownListFor(model => model.JobId, ViewBag.Jobs as SelectList, new { @class = "form-control" })
             </div>
+            @Html.ValidationMessageFor(model => model.JobId, null, new { @class = "help-block form-control-feedback" })
         </div>
 
         <div class="form-group">
@@ -76,7 +77,7 @@
             var span = '<span id="plant-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
             var div = [
                 '<div class="input-group tt-input-group">',
-                    '<input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" class="col-span-6 typeahead" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" />',
+                    '<input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" class="col-md-6 typeahead" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" />',
                     '<input id="plant-id-field' + next + '" name="plant-id-field' + next + '" type="hidden" value="' + id + '" />',
                 '</div>'].join("");
 
@@ -98,7 +99,7 @@
             var div = [
                 '<div class="input-group tt-input-group">',
                     '<input type="text" id="inventory-quantity-field' + ++next + '" name="inventory-quantity-field' + next + '" value="' + quantity + '" placeholder="quantity" style="width: 80px; margin-right: 5px" />',
-                    '<input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" class="col-span-6 typeahead" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" />',
+                    '<input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" class="col-md-6 typeahead" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" />',
                     '<input id="inventory-id-field' + next + '" name="inventory-id-field' + next + '" type="hidden" value="' + id + '" />',
                 '</div>'].join("");
 

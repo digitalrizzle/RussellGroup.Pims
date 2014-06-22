@@ -106,9 +106,9 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = _repository
                 .GetAll()
                 .Where(f => f.Type.Contains(hint))
-                .OrderBy(f => f.Type)
                 .Select(f => new { value = f.Type })
                 .Distinct()
+                .OrderBy(f => f)
                 .Take(5)
                 .ToArray();
 

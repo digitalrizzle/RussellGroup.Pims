@@ -14,80 +14,81 @@
         {
             @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
         }
+        
+        @Html.HiddenFor(model => model.Id)
 
-        @if (Html.IsAction("Edit"))
-        {
-            <text>@Html.HiddenFor(model => model.Id)</text>
-        }
-
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("XInventoryId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.XInventoryId, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.XInventoryId)
-                @Html.ValidationMessageFor(model => model.XInventoryId)
+            <div class="col-md-2">
+                @Html.EditorFor(m => m.XInventoryId, new { htmlAttributes = new { @class = "form-control" } })
             </div>
+            @Html.ValidationMessageFor(model => model.XInventoryId, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Description") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Description, new { @class = "col-span-10" })
-                @Html.ValidationMessageFor(model => model.Description)
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
             </div>
+            @Html.ValidationMessageFor(model => model.Description, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group @(ViewData.ModelState.IsValidField("WhenPurchased") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.WhenPurchased, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-2">
                 <div class="input-group">
-                    @Html.TextBoxFor(model => model.WhenPurchased, "{0:d/MM/yyyy}", new { @class = "col-span-1" })
-                    <span id="WhenPurchased-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+                    @Html.TextBoxFor(model => model.WhenPurchased, "{0:d/MM/yyyy}", new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span id="WhenPurchased-icon" class="glyphicon glyphicon-calendar"></span>
+                    </span>
                 </div>
-                @Html.ValidationMessageFor(model => model.WhenPurchased)
             </div>
+            @Html.ValidationMessageFor(model => model.WhenPurchased, null, new { @class = "form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group @(ViewData.ModelState.IsValidField("WhenDisused") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.WhenDisused, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-2">
                 <div class="input-group">
-                    @Html.TextBoxFor(model => model.WhenDisused, "{0:d/MM/yyyy}", new { @class = "col-span-1" })
-                    <span id="WhenDisused-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+                    @Html.TextBoxFor(model => model.WhenDisused, "{0:d/MM/yyyy}", new { @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span id="WhenDisused-icon" class="glyphicon glyphicon-calendar"></span>
+                    </span>
                 </div>
-                @Html.ValidationMessageFor(model => model.WhenDisused)
             </div>
+            @Html.ValidationMessageFor(model => model.WhenPurchased, null, new { @class = "form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Rate") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Rate, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Rate)
-                @Html.ValidationMessageFor(model => model.Rate)
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control" } })
             </div>
+            @Html.ValidationMessageFor(model => model.Rate, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Cost") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Cost, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Cost)
-                @Html.ValidationMessageFor(model => model.Cost)
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.Cost, new { htmlAttributes = new { @class = "form-control" } })
             </div>
+            @Html.ValidationMessageFor(model => model.Cost, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Quantity") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Quantity)
-                @Html.ValidationMessageFor(model => model.Quantity)
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
             </div>
+            @Html.ValidationMessageFor(model => model.Quantity, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("CategoryId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Category, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.CategoryId, ViewBag.Categories as SelectList)
-                @Html.ValidationMessageFor(model => model.CategoryId)
+            <div class="col-md-4">
+                @Html.DropDownListFor(model => model.CategoryId, ViewBag.Categories as SelectList, new { @class = "form-control" })
             </div>
+            @Html.ValidationMessageFor(model => model.CategoryId, null, new { @class = "help-block form-control-feedback" })
         </div>
 
         <div class="form-group">

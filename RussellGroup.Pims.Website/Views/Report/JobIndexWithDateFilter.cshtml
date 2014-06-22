@@ -7,23 +7,34 @@
 <h2>@ViewBag.Title</h2>
 
 <div class="form-horizontal" style="margin-left: -50px; margin-top: 20px">
+
     <div class="form-group">
-        <label class="control-label col-sm-2">Dated from:</label>
-        <div class="input-group">
-            @Html.TextBox("WhenStarted", (ViewBag.WhenStarted as string), "{0:d/MM/yyyy}", new { @class = "col-span-1" })
-            <span id="WhenStarted-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+        @Html.Label("Dated from:", new { @class = "control-label col-md-2" })
+        <div class="col-md-2">
+            <div class="input-group">
+                @Html.TextBox("WhenStarted", (ViewBag.WhenStarted as string), "{0:d/MM/yyyy}", new { @class = "form-control" })
+                <span id="WhenStarted-icon" class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
         </div>
     </div>
+
     <div class="form-group">
-        <label class="control-label col-sm-2">to:</label>
-        <div class="input-group">
-            @Html.TextBox("WhenEnded", (ViewBag.WhenEnded as string), "{0:d/MM/yyyy}", new { @class = "col-span-1" })
-            <span id="WhenEnded-icon" class="input-group-addon glyphicon glyphicon-calendar"></span>
+        @Html.Label("to:", new { @class = "control-label col-md-2" })
+        <div class="col-md-2">
+            <div class="input-group">
+                @Html.TextBox("WhenEnded", (ViewBag.WhenEnded as string), "{0:d/MM/yyyy}", new { @class = "form-control" })
+                <span id="WhenEnded-icon" class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
         </div>
     </div>
+
 </div>
 
-<div style="clear: both">
+<div class="clearfix">
     <hr />
 </div>
 
@@ -46,10 +57,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.ProjectManager)
             </th>
-            <th class="right">
+            <th class="text-right">
                 Plant
             </th>
-            <th class="right">
+            <th class="text-right">
                 Inventory
             </th>
             <th></th>
@@ -75,9 +86,9 @@
                     { "sWidth": "10%" },
                     { "sWidth": "10%" },
                     { "sWidth": "15%" },
-                    { "sWidth": "5%", "sClass": "right" },
-                    { "sWidth": "5%", "sClass": "right" },
-                    { "sWidth": "25%", "sClass": "right" }
+                    { "sWidth": "5%", "sClass": "text-right" },
+                    { "sWidth": "5%", "sClass": "text-right" },
+                    { "sWidth": "25%", "sClass": "text-right" }
                 ],
                 "aoColumnDefs": [
                     { "bVisible": false, "aTargets": [0] },

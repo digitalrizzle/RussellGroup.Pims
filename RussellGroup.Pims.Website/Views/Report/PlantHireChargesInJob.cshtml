@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
     ViewBag.Title = "Plant in job - detailed";
+    var hires = Model.PlantHires.FirstOrDefault();
 }
 
 <h2>@Model.Description</h2>
@@ -26,16 +27,16 @@ else
                     plant id
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.Serial)
+                    @Html.DisplayNameFor(model => hires.Plant.Serial)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.Description)
+                    @Html.DisplayNameFor(model => hires.Plant.Description)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Docket)
+                    @Html.DisplayNameFor(model => hires.Docket)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().ReturnDocket)
+                    @Html.DisplayNameFor(model => hires.ReturnDocket)
                 </th>
                 <th>
                     start
@@ -43,13 +44,13 @@ else
                 <th>
                     end
                 </th>
-                <th class="right">
+                <th class="text-right">
                     days
                 </th>
-                <th class="right">
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Rate)
+                <th class="text-right">
+                    @Html.DisplayNameFor(model => hires.Rate)
                 </th>
-                <th class="right">
+                <th class="text-right">
                     cost
                 </th>
             </tr>
@@ -74,29 +75,29 @@ else
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(m => item.Plant.XPlantId)
+                            @Html.DisplayFor(model => item.Plant.XPlantId)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Plant.Serial)
+                            @Html.DisplayFor(model => item.Plant.Serial)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Plant.Description)
+                            @Html.DisplayFor(model => item.Plant.Description)
                             <br />
-                            @Html.DisplayFor(m => item.Comment)
+                            @Html.DisplayFor(model => item.Comment)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Docket)
+                            @Html.DisplayFor(model => item.Docket)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.ReturnDocket)
+                            @Html.DisplayFor(model => item.ReturnDocket)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.WhenStarted)
+                            @Html.DisplayFor(model => item.WhenStarted)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.WhenEnded)
+                            @Html.DisplayFor(model => item.WhenEnded)
                         </td>
-                        <td class="right">
+                        <td class="text-right">
                             @if (item.WhenStarted.HasValue && item.WhenEnded.HasValue)
                             {
                                 <text>@Html.Encode(item.WhenEnded.Value.Subtract(item.WhenStarted.Value).Days)</text>
@@ -106,10 +107,10 @@ else
                                 <text>@Html.Encode(DateTime.Now.Subtract(item.WhenStarted.Value).Days)</text>
                             }
                         </td>
-                        <td class="right">
-                            @Html.DisplayFor(m => item.Rate)
+                        <td class="text-right">
+                            @Html.DisplayFor(model => item.Rate)
                         </td>
-                        <td class="right">
+                        <td class="text-right">
                             @if (item.WhenStarted.HasValue && item.WhenEnded.HasValue)
                             {
                                 cost = item.WhenEnded.Value.Subtract(item.WhenStarted.Value).Days * item.Rate.Value;
@@ -124,13 +125,13 @@ else
                     </tr>
                 }
                 <tr>
-                    <td colspan="10" class="right"><strong>@Html.Encode(string.Format("${0:0.00}", total))</strong></td>
+                    <td colspan="10" class="text-right"><strong>@Html.Encode(string.Format("${0:0.00}", total))</strong></td>
                     @{grand += total;}
                 </tr>
             }
             <tr>
                 <td><strong>TOTAL</strong></td>
-                <td colspan="9" class="right"><strong>@Html.Encode(string.Format("${0:0.00}", grand))</strong></td>
+                <td colspan="9" class="text-right"><strong>@Html.Encode(string.Format("${0:0.00}", grand))</strong></td>
             </tr>
         </tbody>
     </table>
