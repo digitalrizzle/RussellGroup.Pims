@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
     ViewBag.Title = "Plant in job";
+    var hires = Model.PlantHires.FirstOrDefault();
 }
 
 <h2>@Model.Description</h2>
@@ -24,25 +25,25 @@ else
                     plant id
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.Serial)
+                    @Html.DisplayNameFor(model => hires.Plant.Serial)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.Description)
+                    @Html.DisplayNameFor(model => hires.Plant.Description)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Docket)
+                    @Html.DisplayNameFor(model => hires.Docket)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().WhenStarted)
+                    @Html.DisplayNameFor(model => hires.WhenStarted)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Comment)
+                    @Html.DisplayNameFor(model => hires.Comment)
                 </th>
                 <th>
                     additional comments
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.PlantHires.First().Plant.XPlantNewId)
+                    @Html.DisplayNameFor(model => hires.Plant.XPlantNewId)
                 </th>
             </tr>
         </thead>
@@ -61,27 +62,27 @@ else
                             <span style="border: 1px solid black; padding: 5px 10px">N</span>
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Plant.XPlantId)
+                            @Html.DisplayFor(model => item.Plant.XPlantId)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Plant.Serial)
+                            @Html.DisplayFor(model => item.Plant.Serial)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Plant.Description)
+                            @Html.DisplayFor(model => item.Plant.Description)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Docket)
+                            @Html.DisplayFor(model => item.Docket)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.WhenStarted)
+                            @Html.DisplayFor(model => item.WhenStarted)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Comment)
+                            @Html.DisplayFor(model => item.Comment)
                         </td>
                         <td>
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Plant.XPlantNewId)
+                            @Html.DisplayFor(model => item.Plant.XPlantNewId)
                         </td>
                     </tr>
                 }

@@ -15,25 +15,22 @@
             @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
         }
 
-        @if (Html.IsAction("Edit"))
-        {
-            <text>@Html.HiddenFor(model => model.Id)</text>
-        }
-
-        <div class="form-group">
+        @Html.HiddenFor(model => model.Id)
+        
+        <div class="form-group@(ViewData.ModelState.IsValidField("Name") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Name, new { @class = "col-span-7" })
-                @Html.ValidationMessageFor(model => model.Name)
+            <div class="col-md-6">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
             </div>
+            @Html.ValidationMessageFor(model => model.Name, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Type") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Type, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.Type, new { @class = "col-span-7 typeahead", placeholder = "begin typing a type..." })
-                @Html.ValidationMessageFor(model => model.Type)
+            <div class="col-md-4">
+                @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control", placeholder = "begin typing a type..." } })
             </div>
+            @Html.ValidationMessageFor(model => model.Type, null, new { @class = "help-block form-control-feedback" })
         </div>
 
         <div class="form-group">

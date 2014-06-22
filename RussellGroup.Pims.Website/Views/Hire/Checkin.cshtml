@@ -23,12 +23,12 @@
 
         @Html.HiddenFor(model => model.JobId)
 
-        <div class="form-group">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Docket") ? string.Empty : " has-error")">
             @Html.Label("return docket", new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Docket)
-                @Html.ValidationMessageFor(model => model.Docket)
+            <div class="col-md-2">
+                @Html.TextBoxFor(model => model.Docket, new { @class = "form-control" })
             </div>
+            @Html.ValidationMessageFor(model => model.Docket, null, new { @class = "help-block form-control-feedback" })
         </div>
 
         <div class="form-group">

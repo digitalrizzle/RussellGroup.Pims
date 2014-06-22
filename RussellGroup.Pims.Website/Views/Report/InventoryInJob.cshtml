@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
     ViewBag.Title = "Inventory in job";
+    var hires = Model.InventoryHires.FirstOrDefault();
 }
 
 <h2>@Model.Description</h2>
@@ -22,22 +23,22 @@ else
                     inventory id
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.InventoryHires.First().Inventory.Description)
+                    @Html.DisplayNameFor(model => hires.Inventory.Description)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.InventoryHires.First().Docket)
+                    @Html.DisplayNameFor(model => hires.Docket)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.InventoryHires.First().WhenStarted)
+                    @Html.DisplayNameFor(model => hires.WhenStarted)
                 </th>
-                <th class="right">
-                    @Html.DisplayNameFor(m => m.InventoryHires.First().Rate)
+                <th class="text-right">
+                    @Html.DisplayNameFor(model => hires.Rate)
                 </th>
-                <th class="right">
-                    @Html.DisplayNameFor(m => m.InventoryHires.First().Quantity)
+                <th class="text-right">
+                    @Html.DisplayNameFor(model => hires.Quantity)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(m => m.InventoryHires.First().Comment)
+                    @Html.DisplayNameFor(model => hires.Comment)
                 </th>
             </tr>
         </thead>
@@ -52,25 +53,25 @@ else
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(m => item.Inventory.XInventoryId)
+                            @Html.DisplayFor(model => item.Inventory.XInventoryId)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Inventory.Description)
+                            @Html.DisplayFor(model => item.Inventory.Description)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Docket)
+                            @Html.DisplayFor(model => item.Docket)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.WhenStarted)
+                            @Html.DisplayFor(model => item.WhenStarted)
                         </td>
-                        <td class="right">
-                            @Html.DisplayFor(m => item.Rate)
+                        <td class="text-right">
+                            @Html.DisplayFor(model => item.Rate)
                         </td>
-                        <td class="right">
-                            @Html.DisplayFor(m => item.Quantity)
+                        <td class="text-right">
+                            @Html.DisplayFor(model => item.Quantity)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Comment)
+                            @Html.DisplayFor(model => item.Comment)
                         </td>
                     </tr>
                 }
@@ -80,7 +81,7 @@ else
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="right"><strong>@Html.Encode(Model.InventoryHires.Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue).Sum(f => f.Quantity))</strong></td>
+                    <td class="text-right"><strong>@Html.Encode(Model.InventoryHires.Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue).Sum(f => f.Quantity))</strong></td>
                     <td></td>
                 </tr>
             }

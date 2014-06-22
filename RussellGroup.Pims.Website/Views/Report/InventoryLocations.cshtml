@@ -39,10 +39,10 @@ else
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(m => job.Job.XJobId)
+                        @Html.DisplayFor(model => job.Job.XJobId)
                     </td>
                     <td colspan="4">
-                        @Html.DisplayFor(m => job.Job.Description)
+                        @Html.DisplayFor(model => job.Job.Description)
                     </td>
                 </tr>
                 foreach (var item in job.InventoryHires)
@@ -53,13 +53,13 @@ else
                         <td>
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.WhenStarted)
+                            @Html.DisplayFor(model => item.WhenStarted)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Inventory.XInventoryId)
+                            @Html.DisplayFor(model => item.Inventory.XInventoryId)
                         </td>
                         <td>
-                            @Html.DisplayFor(m => item.Inventory.Description)
+                            @Html.DisplayFor(model => item.Inventory.Description)
                         </td>
                     </tr>
                 }
