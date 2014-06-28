@@ -17,24 +17,16 @@ namespace RussellGroup.Pims.Website.Helpers
 
         public PrincipalContext Context { get; private set; }
 
-        public ActiveDirectoryHelper(IUserRepository _repository)
+        public ActiveDirectoryHelper(IUserRepository repository)
         {
-            this._repository = _repository;
-        }
-
-        void IDisposable.Dispose()
-        {
-            _repository.Dispose();
-
-            if (Context != null)
-            {
-                Context.Dispose();
-            }
+            _repository = repository;
         }
 
         public ApplicationUser GetCurrentUser()
         {
-            return _repository.GetAll().SingleOrDefault(f => f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase));
+            return _repository.GetAll().SingleOrDefault(f =>
+                f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase)
+            );
         }
 
         public bool IsAuthenticated()
@@ -42,42 +34,24 @@ namespace RussellGroup.Pims.Website.Helpers
             return HttpContext.Current.User.Identity.IsAuthenticated;
         }
 
-        // gets the current user, and if disabled then returns false
-        // even if the user belongs to a group that is enabled
-        public bool IsAuthorized(string roles)
+        public bool IsAuthorized(string[] roles)
         {
-            ApplicationUser user = GetCurrentUser();
-
-            return IsAuthorized(user, roles);
+            return IsAuthorized(GetCurrentUser(), roles);
         }
 
-        private bool IsAuthorized(ApplicationUser user, string roles)
+        public bool IsAuthorized(ApplicationUser user, string[] roles)
         {
-            if (IsAuthenticated())
-            {
-                if (user != null && !user.LockoutEnabled)
-                {
-                    if (IsUserInRole(user, roles))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            if (!IsAuthenticated()) return false;
+            if (user == null || user.LockoutEnabled) return false;
+             
+            return IsUserInRole(user, roles);
         }
 
-        private bool IsUserInRole(ApplicationUser user, string roles)
+        private bool IsUserInRole(ApplicationUser user, string[] roles)
         {
-            foreach (var role in roles.Split(','))
-            {
-                if (user.Roles.Any(f => f.RoleId == _repository.GetAllRoles().Single(r => r.Name == role).Id))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return roles.Any(role =>
+                user.Roles.Any(f => f.RoleId == _repository.GetAllRoles().Single(r => r.Name == role).Id)
+            );
         }
     }
 }

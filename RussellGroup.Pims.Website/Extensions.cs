@@ -17,10 +17,9 @@ namespace RussellGroup.Pims.Website
         {
             using (var _repository = new UserDbRepository())
             {
-                using (var helper = new ActiveDirectoryHelper(_repository))
-                {
-                    return helper.IsAuthorized(string.Join(",", roles));
-                }
+                var helper = new ActiveDirectoryHelper(_repository);
+
+                return helper.IsAuthorized(roles);
             }
         }
 

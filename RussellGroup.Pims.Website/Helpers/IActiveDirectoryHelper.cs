@@ -6,8 +6,12 @@ using System.Web;
 
 namespace RussellGroup.Pims.Website.Helpers
 {
-    public interface IActiveDirectoryHelper : IDisposable
+    public interface IActiveDirectoryHelper
     {
-        bool IsAuthorized(string roles);
+        ApplicationUser GetCurrentUser();
+
+        bool IsAuthenticated();
+        bool IsAuthorized(string[] roles);
+        bool IsAuthorized(ApplicationUser user, string[] roles);
     }
 }
