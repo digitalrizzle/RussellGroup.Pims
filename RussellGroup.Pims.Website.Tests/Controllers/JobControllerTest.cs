@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RussellGroup.Pims.DataAccess.Models;
-using RussellGroup.Pims.DataAccess.Respositories;
+using RussellGroup.Pims.DataAccess.Repositories;
 using RussellGroup.Pims.Website.Controllers;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
     [TestClass]
     public class JobControllerTest
     {
-        private Mock<IRepository<Job>> repository;
+        private Mock<IJobRepository> repository;
         private JobController controller;
 
         #region Setup
@@ -24,7 +24,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
         [TestInitialize]
         public void Initialize()
         {
-            repository = new Mock<IRepository<Job>>();
+            repository = new Mock<IJobRepository>();
 
             controller = new JobController(repository.Object);
             controller.SetFakeAuthenticatedControllerContext();
@@ -39,7 +39,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
         {
             return new Job
             {
-                JobId = id,
+                Id = id,
                 XJobId = string.Format("X{0}", id),
                 Description = string.Format("Test Job {0}", id),
                 WhenStarted = DateTime.Now.AddDays(-28).Date,
