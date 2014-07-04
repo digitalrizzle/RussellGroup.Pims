@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RussellGroup.Pims.DataAccess.Models;
-using RussellGroup.Pims.DataAccess.Respositories;
+using RussellGroup.Pims.DataAccess.Repositories;
 using RussellGroup.Pims.Website.Controllers;
 using RussellGroup.Pims.Website.Models;
 using RussellGroup.Pims.Website.Tests;
