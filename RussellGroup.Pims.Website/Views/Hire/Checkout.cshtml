@@ -74,19 +74,28 @@
         function addPlantFormField(description, id) {
             var next = nextPlant;
 
-            var span = '<span id="plant-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
+            var span = [
+                '<span id="plant-field' + next + '-icon" class="input-group-addon">',
+                    '<span class="glyphicon glyphicon-minus-sign"></span>',
+                '</span>'].join("");
+
             var div = [
-                '<div class="input-group tt-input-group">',
-                    '<input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" class="col-md-6 typeahead" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" />',
+                '<div>',
+                    '<div class="input-group tt-input-group col-md-5">',
+                        '<input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" class="form-control" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" />',
+                    '</div>',
                     '<input id="plant-id-field' + next + '" name="plant-id-field' + next + '" type="hidden" value="' + id + '" />',
                 '</div>'].join("");
 
             $("#plant").append($(div));
-            $("#plant-field" + (next - 1)).parent().after($(span));
+            $("#plant-field" + (next - 1)).after($(span));
+
             wire("plant", "#plant-field" + next, "#plant-field" + (next - 1) + "-icon");
 
             if (id != "") {
-                $("#plant-field" + next).attr("disabled", "disabled");
+                var disabled = $("#plant-field" + next);
+                disabled.typeahead("destroy");
+                disabled.attr("disabled", "disabled");
             }
 
             nextPlant = next;
@@ -95,20 +104,29 @@
         function addInventoryFormField(description, id, quantity) {
             var next = nextInventory;
 
-            var span = '<span id="inventory-field' + next + '-icon" class="input-group-addon glyphicon glyphicon-minus-sign" style="left: -1px"></span>';
+            var span = [
+                '<span id="inventory-field' + next + '-icon" class="input-group-addon">',
+                    '<span class="glyphicon glyphicon-minus-sign" style="left: -1px">',
+                '</span>'].join("");
+
             var div = [
-                '<div class="input-group tt-input-group">',
-                    '<input type="text" id="inventory-quantity-field' + ++next + '" name="inventory-quantity-field' + next + '" value="' + quantity + '" placeholder="quantity" style="width: 80px; margin-right: 5px" />',
-                    '<input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" class="col-md-6 typeahead" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" />',
+                '<div>',
+                    '<input type="text" id="inventory-quantity-field' + ++next + '" name="inventory-quantity-field' + next + '" value="' + quantity + '" class="form-control" placeholder="quantity" style="width: 80px; margin-right: 5px; float: left" />',
+                    '<div class="input-group tt-input-group col-md-5">',
+                        '<input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" class="form-control" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" />',
+                    '</div>',
                     '<input id="inventory-id-field' + next + '" name="inventory-id-field' + next + '" type="hidden" value="' + id + '" />',
                 '</div>'].join("");
 
             $("#inventory").append($(div));
-            $("#inventory-field" + (next - 1)).parent().after($(span));
+            $("#inventory-field" + (next - 1)).after($(span));
+
             wire("inventory", "#inventory-field" + next, "#inventory-field" + (next - 1) + "-icon");
 
             if (id != "") {
-                $("#inventory-field" + next).attr("disabled", "disabled");
+                var disabled = $("#inventory-field" + next);
+                disabled.typeahead("destroy");
+                disabled.attr("disabled", "disabled");
             }
 
             nextInventory = next;
@@ -131,13 +149,14 @@
                 displayKey: "description",
                 templates: {
                     suggestion: Handlebars.compile([
-                            '<p class="typeahead-description">{{description}}</p>',
-                            '<p class="typeahead-id">{{xid}}</p>'
+                        '<p class="typeahead-description">{{description}}</p>',
+                        '<p class="typeahead-id">{{xid}}</p>'
                     ].join(""))
                 }
             });
 
             $(input).on("typeahead:selected", function (object, datum) {
+                $(this).typeahead("destroy");
                 $(this).attr("disabled", "disabled");
                 $(this).parent().parent().children("[id^=" + prefix + "-id-field]").val(datum.id);
 
@@ -149,8 +168,8 @@
 
             if (button) {
                 $(button).on("click", function () {
-                    $(this).prev().children(".hire-typeahead").typeahead("destroy");
-                    $(this).parent().remove();
+                    //$(this).prev().children(".twitter-typeahead").typeahead("destroy");
+                    $(this).parent().parent().remove();
                 });
             }
         }
