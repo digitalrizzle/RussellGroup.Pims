@@ -18,6 +18,7 @@ namespace RussellGroup.Pims.Website
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
+                      "~/Scripts/bootstrap-theme.js",
                       "~/Scripts/DataTables-1.9.4/media/js/jquery.dataTables.js",
                       "~/Scripts/bootstrap-datepicker.js",
                       "~/Scripts/bloodhound.js",

@@ -105,6 +105,11 @@ dt, dd {
   clear: both;
 }
 
+.form-horizontal .form-group .form-control-feedback {
+    position: inherit;
+    display: inline;
+}
+
 footer {
     font-size: smaller;
 }
@@ -138,16 +143,16 @@ footer {
 
 .tt-dropdown-menu {
     margin: 5px 0 0;
-}
+}*/
 
 .tt-input-group {
     padding-bottom: 10px;
-}*/
-
+}
+/*
 .tt-dropdown-menu {
     width: 360px;
 }
-
+*/
 .typeahead-description {
     font-weight: bold;
 }
