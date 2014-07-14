@@ -7,7 +7,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>@Html.GetAction()</h4>
+        <h4>@SiteMaps.Current.CurrentNode.Title</h4>
         <hr />
 
         @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
@@ -34,6 +34,8 @@
             </div>
             @Html.ValidationMessageFor(model => model.Type, null, new { @class = "help-block form-control-feedback" })
         </div>
+
+        <hr />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">

@@ -1,7 +1,7 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.PlantHire
 
 <div>
-    <h4>@Html.GetAction()</h4>
+    <h4>@SiteMaps.Current.CurrentNode.Title</h4>
     <hr />
 
     @if (@Html.IsAction("Delete"))
