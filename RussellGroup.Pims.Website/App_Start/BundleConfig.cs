@@ -18,7 +18,6 @@ namespace RussellGroup.Pims.Website
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/bootstrap-theme.js",
                       "~/Scripts/DataTables-1.9.4/media/js/jquery.dataTables.js",
                       "~/Scripts/bootstrap-datepicker.js",
                       "~/Scripts/bloodhound.js",
@@ -28,6 +27,7 @@ namespace RussellGroup.Pims.Website
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-theme.css",
                       "~/Content/DataTables-1.9.4/media/css/jquery.dataTables.css",
                       "~/Content/bootstrap-datepicker.css",
                       "~/Content/typeahead.css",

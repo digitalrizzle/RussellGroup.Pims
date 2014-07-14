@@ -62,7 +62,9 @@
         <div class="form-group@(ViewData.ModelState.IsValidField("ProjectManager") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.ProjectManager, new { @class = "control-label col-md-2" })
             <div class="col-md-4">
-                @Html.EditorFor(model => model.ProjectManager, new { htmlAttributes = new { @class = "form-control", placeholder = "begin typing a name..." } })
+                <div class="input-group tt-input-group">
+                    @Html.EditorFor(model => model.ProjectManager, new { htmlAttributes = new { @class = "form-control", placeholder = "begin typing a name..." } })
+                </div>
             </div>
             @Html.ValidationMessageFor(model => model.ProjectManager, null, new { @class = "help-block form-control-feedback" })
         </div>
@@ -70,7 +72,9 @@
         <div class="form-group@(ViewData.ModelState.IsValidField("QuantitySurveyor") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.QuantitySurveyor, new { @class = "control-label col-md-2" })
             <div class="col-md-4">
-                @Html.EditorFor(model => model.QuantitySurveyor, new { htmlAttributes = new { @class = "form-control", placeholder = "begin typing a name..." } })
+                <div class="input-group tt-input-group">
+                    @Html.EditorFor(model => model.QuantitySurveyor, new { htmlAttributes = new { @class = "form-control", placeholder = "begin typing a name..." } })
+                </div>
             </div>
             @Html.ValidationMessageFor(model => model.QuantitySurveyor, null, new { @class = "help-block form-control-feedback" })
         </div>

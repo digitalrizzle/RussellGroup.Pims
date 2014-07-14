@@ -14,15 +14,6 @@
     padding-right: 30px;
 }
 
-/*input, textarea {
-    border: 1px solid #abadb3;
-}
-
-input[type=text], input[type=number] {
-    padding-left: 4px;
-    height: 28px !important;
-}*/
-
 input[type=number] {
     text-align: right;
 }
@@ -34,10 +25,6 @@ input[type=number] {
 table input[type=checkbox] {
     height: inherit !important;
 }
-
-/*select {
-    height: 28px;
-}*/
 
 /* styles for validation helpers */
 .field-validation-error {
@@ -73,24 +60,6 @@ input[type="checkbox"].input-validation-error {
     border-radius: 0;
 }
 
-/*.control-label {
-    margin-top: -3px !important;
-}*/
-
-/*.center {
-    text-align: center;
-}
-
-.right {
-    text-align: right;
-}*/
-
-/*.input-group-addon {
-    width: inherit;
-    padding: 4px 12px 5px 12px;
-    top: 0px;
-}*/
-
 th {
     text-align: left;
 }
@@ -100,9 +69,9 @@ dt, dd {
 }
 
 .dl-horizontal > dd:after {
-  display: table;
-  content: "";
-  clear: both;
+    display: table;
+    content: "";
+    clear: both;
 }
 
 .form-horizontal .form-group .form-control-feedback {
@@ -119,40 +88,15 @@ footer {
 }
 
 /* typeahead */
+.tt-input-group {
+    width: 100%;
+}
+
 .twitter-typeahead {
     display: inline !important;
     float: none;
 }
-/*
-.twitter-typeahead input[disabled] {
-    border: 1px solid #abadb3;
-    height: 26px;
-}
 
-.twitter-typeahead .tt-hint {
-    top: inherit !important;
-}
-
-.input-group .twitter-typeahead {
-    display: inline !important;
-}
-
-.input-group .twitter-typeahead:first-child .tt-input {
-    border-radius: inherit !important;
-}
-
-.tt-dropdown-menu {
-    margin: 5px 0 0;
-}*/
-
-.tt-input-group {
-    padding-bottom: 10px;
-}
-/*
-.tt-dropdown-menu {
-    width: 360px;
-}
-*/
 .typeahead-description {
     font-weight: bold;
 }

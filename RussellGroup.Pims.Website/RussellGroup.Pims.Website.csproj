@@ -339,7 +339,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
     <None Include="MvcSiteMapSchema.xsd" />
     <None Include="Properties\PublishProfiles\pdbdev.pubxml" />
     <Content Include="Scripts\handlebars.amd.js" />
