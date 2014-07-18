@@ -3,6 +3,9 @@
 @{
     ViewBag.Title = "Reports for jobs by date";
 }
+@section head {
+    @Styles.Render("~/Content/jquery.datatable.css")
+}
 
 <h2>@ViewBag.Title</h2>
 
@@ -69,8 +72,7 @@
 </table>
 
 @section scripts {
-    @Scripts.Render("~/Scripts/view-datepickers.js")
-
+    @Scripts.Render("~/bundles/jquery.datatable.js")
     <script>
         $(document).ready(function () {
             $('.table').dataTable({

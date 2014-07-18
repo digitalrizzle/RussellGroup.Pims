@@ -3,9 +3,13 @@
 @{
     ViewBag.Title = "Edit User";
 }
+@section head {
+    @Styles.Render("~/Content/jquery.datatable.css")
+}
 
 @Html.Partial("_Form")
 
 @section scripts {
+    @Scripts.Render("~/bundles/jquery.datatable.js")
     @Scripts.Render("~/Scripts/view-user-form.js")
 }

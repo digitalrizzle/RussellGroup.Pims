@@ -87,6 +87,10 @@ footer {
     font-weight: normal;
 }
 
+.checkout-item {
+    margin-bottom: 5px;
+}
+
 /* typeahead */
 .tt-input-group {
     width: 100%;
