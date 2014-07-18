@@ -5,6 +5,9 @@
     var plantHires = Model.PlantHires.FirstOrDefault();
     var inventoryHires = Model.InventoryHires.FirstOrDefault();
 }
+@section head {
+    @Styles.Render("~/Content/jquery.datatable.css")
+}
 
 <h2>@ViewBag.Title</h2>
 
@@ -122,6 +125,7 @@
 }
 
 @section scripts {
+    @Scripts.Render("~/bundles/jquery.datatable.js")
     <script>
         $(document).ready(function () {
             // set checkboxes if there is a postback

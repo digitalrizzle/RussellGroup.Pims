@@ -4,6 +4,9 @@
     ViewBag.Title = "Plant Hire Transactions";
     var hires = Model.PlantHires.FirstOrDefault();
 }
+@section head {
+    @Styles.Render("~/Content/jquery.datatable.css")
+}
 
 <h2>@ViewBag.Title</h2>
 <h3>@Model.Description</h3>
@@ -77,6 +80,7 @@
 </table>
 
 @section scripts {
+    @Scripts.Render("~/bundles/jquery.datatable.js")
     <script>
         $(document).ready(function () {
             $('.table').dataTable({

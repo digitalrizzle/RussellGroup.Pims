@@ -3,6 +3,9 @@
 @{
     ViewBag.Title = "Checkout";
 }
+@section head {
+    @Styles.Render("~/Content/jquery.typeahead.css")
+}
 
 <h2>@ViewBag.Title</h2>
 
@@ -62,6 +65,7 @@
 }
 
 @section scripts {
+    @Scripts.Render("~/bundles/jquery.typeahead.js")
     <script>
         var nextPlant = 0, nextInventory = 0;
 
@@ -82,7 +86,7 @@
                 '</span>'].join("");
 
             var div = [
-                '<div>',
+                '<div class="checkout-item">',
                     '<div class="input-group col-md-5">',
                         '<input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" class="form-control" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" />',
                     '</div>',
@@ -112,7 +116,7 @@
                 '</span>'].join("");
 
             var div = [
-                '<div>',
+                '<div class="checkout-item">',
                     '<input type="text" id="inventory-quantity-field' + ++next + '" name="inventory-quantity-field' + next + '" value="' + quantity + '" class="form-control" placeholder="quantity" style="width: 80px; margin-right: 5px; float: left" />',
                     '<div class="input-group col-md-5">',
                         '<input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" class="form-control" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" />',
