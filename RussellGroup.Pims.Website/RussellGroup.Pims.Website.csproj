@@ -503,6 +503,7 @@
     <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\Report\InventoryHireChargesSummaryInJob.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RussellGroup.Pims.DataAccess\RussellGroup.Pims.DataAccess.csproj">
