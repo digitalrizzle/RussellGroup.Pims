@@ -56,8 +56,7 @@ namespace RussellGroup.Pims.Website.Controllers
             Func<Job, string> ordering = (c =>
                 sortColumnIndex == 1 ? c.XJobId :
                     sortColumnIndex == 2 ? c.Description :
-                        sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.ProjectManager);
+                        sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty);
 
             // sorting
             IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
@@ -73,12 +72,12 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Description,
                     c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.ProjectManager,
                     null,
                     null,
                     isDetailed ?
-                        string.Format("{0}",
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant Charges #50")
+                        string.Format("{0} | {1}",
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant Charges #50"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesSummaryInJob", new { id = c.Id }), "Inventory Charges")
                         ) :
                         string.Format("{0} | {1} | {2}",
                             string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant #51"),
@@ -123,8 +122,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 int id = Convert.ToInt32(row[0]);
                 var job = _repository.Jobs.Single(f => f.Id == id);
 
-                row[6] = job.PlantHires.Count(f => !f.WhenEnded.HasValue).ToString();
-                row[7] = job.InventoryHires.Count(f => !f.WhenEnded.HasValue).ToString();
+                row[5] = job.PlantHires.Count(f => !f.WhenEnded.HasValue).ToString();
+                row[6] = job.InventoryHires.Count(f => !f.WhenEnded.HasValue).ToString();
             }
 
             var result = new
@@ -192,6 +191,14 @@ namespace RussellGroup.Pims.Website.Controllers
             var whenEnded = ParseDate(Request["WhenEnded"]);
 
             return await JobView("PlantHireChargesInJob", id, whenStarted, whenEnded);
+        }
+
+        public async Task<ActionResult> InventoryHireChargesSummaryInJob(int? id)
+        {
+            var whenStarted = ParseDate(Request["WhenStarted"]);
+            var whenEnded = ParseDate(Request["WhenEnded"]);
+
+            return await JobView("InventoryHireChargesSummaryInJob", id, whenStarted, whenEnded);
         }
 
         private async Task<ActionResult> JobView(string viewName, int? id, DateTime whenStarted, DateTime whenEnded)
