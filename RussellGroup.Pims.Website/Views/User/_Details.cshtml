@@ -37,7 +37,7 @@
             @Html.DisplayNameFor(model => model.User.LockoutEnabled)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.User.LockoutEnabled)
+            @Html.Encode(Model.User.LockoutEnabled.ToYesNo())
         </dd>
 
         @if (Model.User.LockoutEndDateUtc.HasValue)
@@ -62,7 +62,10 @@
             {
                 if (Html.IsAction("Details"))
                 {
-                    <text>@Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }) | </text>
+                    <text>
+                        @Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = Model.User.Id }) |
+                    </text>
                 }
                 else
                 {
