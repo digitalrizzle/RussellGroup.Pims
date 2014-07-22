@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
+using DataTables.Mvc;
+using LinqKit;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -28,74 +30,54 @@ namespace RussellGroup.Pims.Website.Controllers
             return View();
         }
 
-        // this method has been adapted from the code described here:
-        // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
-        public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
+        // https://github.com/ALMMa/datatables.mvc
+        public JsonResult GetDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
-            IEnumerable<Plant> entries = _repository.GetAll();
-            var sortColumnIndex = model.iSortCol_0;
-            var canEdit = User.IsAuthorized(Role.CanEdit);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            var hint = model.Search != null ? model.Search.Value : string.Empty;
+            var sortColumn = model.Columns.GetSortedColumns().First();
+
+            var all = _repository.GetAll().AsExpandable();
+
+            // filter
+            var filtered = string.IsNullOrEmpty(hint)
+                ? all
+                : all.Where(f =>
+                    f.XPlantId.Contains(hint) ||
+                    f.XPlantNewId.Contains(hint) ||
+                    f.Category.Name.Contains(hint) ||
+                    f.Status.Name.Contains(hint));
 
             // ordering
-            Func<Plant, string> ordering = (c =>
-                sortColumnIndex == 1 ? c.XPlantId :
-                    sortColumnIndex == 2 ? c.XPlantNewId :
-                        sortColumnIndex == 3 ? c.Description :
-                            sortColumnIndex == 4 ? c.Category.Name : c.Status.Name);
+            var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
+            Func<Plant, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
 
             // sorting
-            IEnumerable<Plant> ordered = model.sSortDir_0 == "asc" ?
-                entries.OrderBy(ordering) :
-                entries.OrderByDescending(ordering);
+            var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
+                ? filtered.OrderBy(ordering)
+                : filtered.OrderByDescending(ordering);
 
-            // filter for sSearch
-            string hint = (model.sSearch ?? string.Empty).ToUpperInvariant();
-            IEnumerable<Plant> searched;
-
-            if (string.IsNullOrEmpty(hint))
-            {
-                searched = ordered;
-            }
-            else
-            {
-                // don't include in the search the id as it is hidden from the display
-                searched = ordered.Where(f =>
-                    (f.XPlantId != null && f.XPlantId.ToUpperInvariant().Contains(hint)) ||
-                    (f.XPlantNewId != null && f.XPlantNewId.ToUpperInvariant().Contains(hint)) ||
-                    (f.Description != null && f.Description.ToUpperInvariant().Contains(hint)) ||
-                    (f.Category != null && f.Category.Name.ToUpperInvariant().Contains(hint)) ||
-                    (f.Status != null && f.Status.Name.ToUpperInvariant().Contains(hint))
-                );
-            }
-
-            // filter for the display
-            var filtered = searched
-                .Skip(searched.Count() > model.iDisplayLength ? model.iDisplayStart : 0)
-                .Take(searched.Count() > model.iDisplayLength ? model.iDisplayLength : searched.Count());
-
-            // get the display values
-            var displayData = filtered
-                .Select(c => new string[]
+            var paged = sorted
+                .Skip(model.Start)
+                .Take(model.Length)
+                .ToList()
+                .Select(c => new
                 {
-                    c.Id.ToString(),
+                    c.Id,
                     c.XPlantId,
                     c.XPlantNewId,
                     c.Description,
-                    c.Category != null ? c.Category.Name : string.Empty,
-                    _repository.GetJobs(c.Id).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetJobs(c.Id).Count().ToString(), "Jobs", new { id = c.Id }),
-                    c.Status.Name,
-                    this.CrudLinks(new { id = c.Id }, canEdit)
+                    Category = c.Category != null ? c.Category.Name : string.Empty,
+                    Jobs = _repository.GetJobs(c.Id).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetJobs(c.Id).Count().ToString(), "Jobs", new { id = c.Id }),
+                    Status = c.Status.Name,
+                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
-            var result = new
-            {
-                sEcho = model.sEcho,
-                iTotalRecords = _repository.GetAll().Count(),
-                iTotalDisplayRecords = searched.Count(),
-                aaData = displayData
-            };
-
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
         }
 
         // GET: /Plant/Details/5
@@ -128,79 +110,55 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(plant);
         }
 
-        // this method has been adapted from the code described here:
-        // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
-        public JsonResult GetJobsDataTableResult(JqueryDataTableParameterModel model)
+        // https://github.com/ALMMa/datatables.mvc
+        public JsonResult GetJobDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
-            int id = Convert.ToInt32(Request["id"]);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
 
-            var entries = _repository.GetJobs(id);
-            var sortColumnIndex = model.iSortCol_0;
+            var id = Convert.ToInt32(Request["id"]);
+            var hint = model.Search != null ? model.Search.Value : string.Empty;
+            var sortColumn = model.Columns.GetSortedColumns().First();
+
+            var all = _repository.GetJobs(id).AsExpandable();
+
+            // filter
+            var filtered = string.IsNullOrEmpty(hint)
+                ? all
+                : all.Where(f =>
+                    f.XJobId.Contains(hint) ||
+                    f.Description.Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
+                    f.ProjectManager.Contains(hint));
 
             // ordering
-            Func<Job, string> ordering = (c =>
-                sortColumnIndex == 1 ? c.XJobId :
-                    sortColumnIndex == 2 ? c.Description :
-                        sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.ProjectManager);
+            var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
+            Func<Job, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
 
             // sorting
-            IEnumerable<Job> ordered = model.sSortDir_0 == "asc" ?
-                entries.OrderBy(ordering) :
-                entries.OrderByDescending(ordering);
+            var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
+                ? filtered.OrderBy(ordering)
+                : filtered.OrderByDescending(ordering);
 
-            // get the display values
-            var displayData = ordered
-                .Select(c => new string[]
+            var paged = sorted
+                .Skip(model.Start)
+                .Take(model.Length)
+                .ToList()
+                .Select(f => new
                 {
-                    c.Id.ToString(),
-                    c.XJobId,
-                    c.Description,
-                    c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
-                    c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.ProjectManager,
-                    this.ActionLink("Details", "Details", "Job", new { id = c.Id })
+                    f.Id,
+                    f.XJobId,
+                    f.Description,
+                    WhenStarted = f.WhenStarted.HasValue ? f.WhenStarted.Value.ToShortDateString() : string.Empty,
+                    WhenEnded = f.WhenEnded.HasValue ? f.WhenEnded.Value.ToShortDateString() : string.Empty,
+                    f.ProjectManager,
+                    CrudLinks = this.CrudLinks(new { id = f.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
-            // filter for sSearch
-            string hint = model.sSearch;
-            List<string[]> searched = new List<string[]>();
-
-            if (string.IsNullOrEmpty(hint))
-            {
-                searched.AddRange(displayData);
-            }
-            else
-            {
-                foreach (string[] row in displayData)
-                {
-                    // don't include in the search the id as it is hidden from the display
-                    // don't include in the search the CRUD links either
-                    for (int index = 0; index < row.Length - 1; index++)
-                    {
-                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(hint, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            searched.Add(row);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // filter for the display
-            var filtered = searched
-                .Skip(searched.Count > model.iDisplayLength ? model.iDisplayStart : 0)
-                .Take(searched.Count > model.iDisplayLength ? model.iDisplayLength : searched.Count);
-
-            var result = new
-            {
-                sEcho = model.sEcho,
-                iTotalRecords = entries.Count(),
-                iTotalDisplayRecords = searched.Count(),
-                aaData = filtered
-            };
-
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
         }
 
         // GET: /Plant/Create

@@ -16,7 +16,7 @@
     <p>@Html.ActionLink("Create New", "Create", new { id = Model.Id })</p>
 }
 
-<table class="table">
+<table class="table display table-striped table-hover order-column table-responsive" width="100%">
     <thead>
         <tr>
             <th>
@@ -69,10 +69,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Comment)
                 </td>
-                <td>
-                    @if (User.IsAuthorized(Role.CanEdit)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.Id }) |</text> }
+                <td class="text-center">
+                    @if (User.IsAuthorized(Role.CanEdit))
+                    { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.Id }) |</text> }
                     @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.Id })
-                    @if (User.IsAuthorized(Role.CanEdit)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.Id })</text> }
+                    @if (User.IsAuthorized(Role.CanEdit))
+                    { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.Id })</text> }
                 </td>
             </tr>
         }
@@ -84,23 +86,14 @@
     <script>
         $(document).ready(function () {
             $('.table').dataTable({
-                "bProcessing": true,
-                "bStateSave": true,
-                "sPaginationType": 'full_numbers',
-                "aoColumns": [
-                    { "sWidth": "0%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "35%" },
-                    { "sWidth": "15%", "sClass": "text-right" }
-                ],
-                "aoColumnDefs": [
-                    { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [7] }
-                ],
+                "order": [[2, "desc"]],
+                "processing": true,
+                "stateSave": true,
+                "paginationType": 'full',
+                "columnDefs": [
+                    { "visible": false, "targets": [0] },
+                    { "sortable": false, "targets": [7] }
+                ]
             });
         });
     </script>

@@ -12,7 +12,7 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
+<table class="table display table-striped table-hover order-column table-responsive" width="100%">
     <thead>
         <tr>
             <th>
@@ -36,22 +36,19 @@
     <script>
         $(document).ready(function () {
             $('.table').dataTable({
-                "bProcessing": true,
-                "bServerSide": true,
-                "bStateSave": true,
-                "sAjaxSource": '@Url.Content("~/User/GetDataTableResult")',
-                "sPaginationType": 'full_numbers',
-                "aoColumns": [
-                    { "sWidth": "0%" },
-                    { "sWidth": "30%" },
-                    { "sWidth": "35%" },
-                    { "sWidth": "15%", "sClass": "text-center" },
-                    { "sWidth": "20%", "sClass": "text-right" }
-                ],
-                "aoColumnDefs": [
-                    { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [2, 4] }
-                ],
+                "order": [[1, "asc"]],
+                "processing": true,
+                "stateSave": true,
+                "paginationType": 'full',
+                "serverSide": true,
+                "ajax": "@Url.Content("~/User/GetDataTableResult")",
+                "columns": [
+                    { "data": "Id", "visible": false },
+                    { "data": "UserName" },
+                    { "data": "Role", "sortable": false },
+                    { "data": "LockoutEnabled", "className": "text-center" },
+                    { "data": "CrudLinks", "sortable": false, "className": "text-center" }
+                ]
             });
         });
     </script>

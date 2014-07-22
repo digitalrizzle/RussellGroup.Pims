@@ -1,4 +1,5 @@
-﻿using RussellGroup.Pims.DataAccess.Models;
+﻿using DataTables.Mvc;
+using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
 using RussellGroup.Pims.DataAccess.ViewModels;
 using System;
@@ -9,6 +10,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using LinqKit;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -44,97 +46,64 @@ namespace RussellGroup.Pims.Website.Controllers
             return View("CategoryIndex", await _repository.Categories.ToListAsync());
         }
 
-        // this method has been adapted from the code described here:
-        // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
-        public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
+        // https://github.com/ALMMa/datatables.mvc
+        public JsonResult GetDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
-            IEnumerable<Job> entries = _repository.Jobs;
-            bool isDetailed = bool.Parse(Request["bDetailed"] ?? false.ToString());
-            var sortColumnIndex = int.Parse(Request["iSortCol_0"]);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            var hint = model.Search != null ? model.Search.Value : string.Empty;
+            bool isDetailed = bool.Parse(Request["detailed"] ?? false.ToString());
+            var sortColumn = model.Columns.GetSortedColumns().First();
+
+            var all = _repository.Jobs.AsExpandable();
+
+            // filter
+            var filtered = string.IsNullOrEmpty(hint)
+                ? all
+                : all.Where(f =>
+                    f.XJobId.Contains(hint) ||
+                    f.Description.Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint));
 
             // ordering
-            Func<Job, string> ordering = (c =>
-                sortColumnIndex == 1 ? c.XJobId :
-                    sortColumnIndex == 2 ? c.Description :
-                        sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty);
+            var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
+            Func<Job, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
 
             // sorting
-            IEnumerable<Job> ordered = Request["sSortDir_0"] == "asc" ?
-                entries.OrderBy(ordering) :
-                entries.OrderByDescending(ordering);
+            var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
+                ? filtered.OrderBy(ordering)
+                : filtered.OrderByDescending(ordering);
 
-            // get the display values
-            var displayData = ordered
-                .Select(c => new string[]
+            var paged = sorted
+                .Skip(model.Start)
+                .Take(model.Length)
+                .ToList()
+                .Select(c => new
                 {
-                    c.Id.ToString(),
+                    c.Id,
                     c.XJobId,
                     c.Description,
-                    c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
-                    c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    null,
-                    null,
-                    isDetailed ?
-                        string.Format("{0} | {1}",
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant Charges #50"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesSummaryInJob", new { id = c.Id }), "Inventory Charges")
+                    WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
+                    WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
+                    PlantHires = c.PlantHires.Count(f => !f.WhenEnded.HasValue),
+                    InventoryHires = c.InventoryHires.Count(f => !f.WhenEnded.HasValue),
+                    CrudLinks = isDetailed ?
+                        string.Format("{0}&nbsp;| {1}",
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesSummaryInJob", new { id = c.Id }), "Inventory&nbsp;Charges")
                         ) :
-                        string.Format("{0} | {1} | {2}",
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant #51"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory #56"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake #70")
+                        string.Format("{0}&nbsp;| {1}&nbsp;| {2}",
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant&nbsp;#51"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory&nbsp;#56"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake&nbsp;#70")
                         )
                 });
 
-            // filter for sSearch
-            string hint = Request["sSearch"];
-            List<string[]> searched = new List<string[]>();
-
-            if (string.IsNullOrEmpty(hint))
-            {
-                searched.AddRange(displayData);
-            }
-            else
-            {
-                foreach (string[] row in displayData)
-                {
-                    // don't include in the search the id as it is hidden from the display
-                    // don't include in the search the CRUD links either
-                    for (int index = 0; index < row.Length - 1; index++)
-                    {
-                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(hint, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            searched.Add(row);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // filter for the display
-            var filtered = searched
-                .Skip(searched.Count > model.iDisplayLength ? model.iDisplayStart : 0)
-                .Take(searched.Count > model.iDisplayLength ? model.iDisplayLength : searched.Count);
-
-            // add the counts of plant and inventory items
-            foreach (string[] row in filtered)
-            {
-                int id = Convert.ToInt32(row[0]);
-                var job = _repository.Jobs.Single(f => f.Id == id);
-
-                row[5] = job.PlantHires.Count(f => !f.WhenEnded.HasValue).ToString();
-                row[6] = job.InventoryHires.Count(f => !f.WhenEnded.HasValue).ToString();
-            }
-
-            var result = new
-            {
-                sEcho = model.sEcho,
-                iTotalRecords = _repository.Jobs.Count(),
-                iTotalDisplayRecords = searched.Count(),
-                aaData = filtered
-            };
-
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
         }
 
         public async Task<ActionResult> PlantLocations(int? id)
