@@ -13,7 +13,7 @@
 {
     <p>@Html.ActionLink("Create New", "Create")</p>
 }
-<table class="table">
+<table class="table display table-striped table-hover order-column table-responsive" width="100%">
     <thead>
         <tr>
             <th></th>
@@ -45,25 +45,22 @@
     <script>
         $(document).ready(function () {
             $('.table').dataTable({
-                "bProcessing": true,
-                "bServerSide": true,
-                "bStateSave": true,
-                "sAjaxSource": '@Url.Content("~/Plant/GetDataTableResult")',
-                "sPaginationType": 'full_numbers',
-                "aoColumns": [
-                    { "sWidth": "0%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "30%" },
-                    { "sWidth": "20%" },
-                    { "sWidth": "5%", "sClass": "text-right" },
-                    { "sWidth": "10%" },
-                    { "sWidth": "15%", "sClass": "text-right" }
-                ],
-                "aoColumnDefs": [
-                    { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [5, 7] }
-                ],
+                "order": [[1, "asc"]],
+                "processing": true,
+                "stateSave": true,
+                "paginationType": 'full',
+                "serverSide": true,
+                "ajax": "@Url.Content("~/Plant/GetDataTableResult")",
+                "columns": [
+                    { "data": "Id", "visible": false },
+                    { "data": "XPlantId" },
+                    { "data": "XPlantNewId" },
+                    { "data": "Description" },
+                    { "data": "Category", "name": "Category.Name" },
+                    { "data": "Jobs", "sortable": false, "className": "text-right" },
+                    { "data": "Status", "name": "Status.Name" },
+                    { "data": "CrudLinks", "sortable": false, "className": "text-center" }
+                ]
             });
         });
     </script>

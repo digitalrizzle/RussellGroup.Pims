@@ -13,7 +13,7 @@
 {
     <p>@Html.ActionLink("Create New", "Create")</p>
 }
-<table class="table">
+<table class="table display table-striped table-hover order-column table-responsive" width="100%">
     <thead>
         <tr>
             <th>
@@ -42,10 +42,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Type)
                 </td>
-                <td>
-                    @if (User.IsAuthorized(Role.CanEditCategories)) { <text>@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |</text> }
+                <td class="text-center">
+                    @if (User.IsAuthorized(Role.CanEditCategories))
+                    { <text>@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |</text> }
                     @Html.ActionLink("Details", "Details", new { id = item.Id })
-                    @if (User.IsAuthorized(Role.CanEditCategories)) { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.Id })</text> }
+                    @if (User.IsAuthorized(Role.CanEditCategories))
+                    { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.Id })</text> }
                 </td>
             </tr>
         }
@@ -57,19 +59,14 @@
     <script>
         $(document).ready(function () {
             $('.table').dataTable({
-                "bProcessing": true,
-                "bStateSave": true,
-                "sPaginationType": 'full_numbers',
-                "aoColumns": [
-                    { "sWidth": "0%" },
-                    { "sWidth": "50%" },
-                    { "sWidth": "35%" },
-                    { "sWidth": "15%", "sClass": "text-right" }
-                ],
-                "aoColumnDefs": [
-                    { "bVisible": false, "aTargets": [0] },
-                    { "bSortable": false, "aTargets": [3] }
-                ],
+                "order": [[1, "asc"]],
+                "processing": true,
+                "stateSave": true,
+                "paginationType": 'full',
+                "columnDefs": [
+                    { "visible": false, "targets": [0] },
+                    { "sortable": false, "targets": [3] }
+                ]
             });
         });
     </script>

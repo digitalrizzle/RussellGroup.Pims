@@ -21,7 +21,7 @@ namespace RussellGroup.Pims.Website
             //    "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery.datatable.js").Include(
-                "~/Scripts/DataTables-1.9.4/media/js/jquery.dataTables.js",
+                "~/Scripts/DataTables-1.10.0/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap.js"));
 
              bundles.Add(new ScriptBundle("~/bundles/jquery.typeahead.js").Include(
@@ -36,7 +36,7 @@ namespace RussellGroup.Pims.Website
                 .Include("~/Content/bootstrap-datepicker.css", new CssRewriteUrlTransformWrapper()));
 
             bundles.Add(new StyleBundle("~/Content/jquery.datatable.css")
-                .Include("~/Content/DataTables-1.9.4/media/css/jquery.dataTables.css", new CssRewriteUrlTransformWrapper()));
+                .Include("~/Content/dataTables.bootstrap.css", new CssRewriteUrlTransformWrapper()));
 
             bundles.Add(new StyleBundle("~/Content/jquery.typeahead.css")
                 .Include("~/Content/typeahead.css", new CssRewriteUrlTransformWrapper()));

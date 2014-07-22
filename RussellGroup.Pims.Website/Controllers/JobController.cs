@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
+using DataTables.Mvc;
+using LinqKit;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -28,78 +30,54 @@ namespace RussellGroup.Pims.Website.Controllers
             return View("Index");
         }
 
-        // this method has been adapted from the code described here:
-        // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
-        public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
+        // https://github.com/ALMMa/datatables.mvc
+        public JsonResult GetDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
-            IQueryable<Job> entries = _repository.GetAll();
-            var sortColumnIndex = model.iSortCol_0;
-            var canEdit = User.IsAuthorized(Role.CanEdit);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            var hint = model.Search != null ? model.Search.Value : string.Empty;
+            var sortColumn = model.Columns.GetSortedColumns().First();
+
+            var all = _repository.GetAll().AsExpandable();
+
+            // filter
+            var filtered = string.IsNullOrEmpty(hint)
+                ? all
+                : all.Where(f =>
+                    f.XJobId.Contains(hint) ||
+                    f.Description.Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
+                    f.ProjectManager.Contains(hint));
 
             // ordering
-            Func<Job, string> ordering = (c =>
-                sortColumnIndex == 1 ? c.XJobId :
-                    sortColumnIndex == 2 ? c.Description :
-                        sortColumnIndex == 3 ? (c.WhenStarted.HasValue ? c.WhenStarted.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                            sortColumnIndex == 4 ? (c.WhenEnded.HasValue ? c.WhenEnded.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) : c.ProjectManager);
+            var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
+            Func<Job, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
 
             // sorting
-            IEnumerable<Job> ordered = model.sSortDir_0 == "asc" ?
-                entries.OrderBy(ordering) :
-                entries.OrderByDescending(ordering);
+            var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
+                ? filtered.OrderBy(ordering)
+                : filtered.OrderByDescending(ordering);
 
-            // get the display values
-            var displayData = ordered
-                .Select(c => new string[]
+            var paged = sorted
+                .Skip(model.Start)
+                .Take(model.Length)
+                .ToList()
+                .Select(c => new
                 {
-                    c.Id.ToString(),
+                    c.Id,
                     c.XJobId,
                     c.Description,
-                    c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
-                    c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
+                    WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
+                    WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.ProjectManager,
-                    this.CrudAndHireLinks(c.WhenEnded.HasValue, new { id = c.Id }, canEdit)
+                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
-            // filter for sSearch
-            string hint = model.sSearch;
-            List<string[]> searched = new List<string[]>();
-
-            if (string.IsNullOrEmpty(hint))
-            {
-                searched.AddRange(displayData);
-            }
-            else
-            {
-                foreach (string[] row in displayData)
-                {
-                    // don't include in the search the id as it is hidden from the display
-                    // don't include in the search the CRUD links either
-                    for (int index = 0; index < row.Length - 1; index++)
-                    {
-                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(hint, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            searched.Add(row);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // filter for the display
-            var filtered = searched
-                .Skip(searched.Count > model.iDisplayLength ? model.iDisplayStart : 0)
-                .Take(searched.Count > model.iDisplayLength ? model.iDisplayLength : searched.Count);
-
-            var result = new
-            {
-                sEcho = model.sEcho,
-                iTotalRecords = _repository.GetAll().Count(),
-                iTotalDisplayRecords = searched.Count(),
-                aaData = filtered
-            };
-
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
         }
 
         // GET: /Job/Details/5

@@ -9,6 +9,9 @@ using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
+using DataTables.Mvc;
+using LinqKit;
+using System.Data.Entity.SqlServer;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -28,80 +31,56 @@ namespace RussellGroup.Pims.Website.Controllers
             return View();
         }
 
-        // this method has been adapted from the code described here:
-        // http://www.codeproject.com/KB/aspnet/JQuery-DataTables-MVC.aspx
-        public JsonResult GetDataTableResult(JqueryDataTableParameterModel model)
+        // https://github.com/ALMMa/datatables.mvc
+        public JsonResult GetDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
-            IEnumerable<Inventory> entries = _repository.GetAll();
-            var sortColumnIndex = model.iSortCol_0;
-            var canEdit = User.IsAuthorized(Role.CanEdit);
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            var hint = model.Search != null ? model.Search.Value : string.Empty;
+            var sortColumn = model.Columns.GetSortedColumns().First();
+
+            var all = _repository.GetAll().AsExpandable();
+
+            // filter
+            var filtered = string.IsNullOrEmpty(hint)
+                ? all
+                : all.Where(f =>
+                    f.XInventoryId.Contains(hint) ||
+                    f.Description.Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenPurchased).Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenDisused).Contains(hint) ||
+                    SqlFunctions.StringConvert((double)f.Quantity).Contains(hint) ||
+                    f.Category.Name.Contains(hint));
 
             // ordering
-            Func<Inventory, string> ordering = (c =>
-                sortColumnIndex == 1 ? c.XInventoryId :
-                    sortColumnIndex == 2 ? c.Description :
-                        sortColumnIndex == 3 ? (c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                            sortColumnIndex == 4 ? (c.WhenDisused.HasValue ? c.WhenDisused.Value.ToString(MvcApplication.DATE_TIME_FORMAT) : string.Empty) :
-                                sortColumnIndex == 5 ? c.Quantity.ToString() : c.Category.Name);
+            var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
+            Func<Inventory, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
 
             // sorting
-            IEnumerable<Inventory> ordered = model.sSortDir_0 == "asc" ?
-                entries.OrderBy(ordering) :
-                entries.OrderByDescending(ordering);
+            var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
+                ? filtered.OrderBy(ordering)
+                : filtered.OrderByDescending(ordering);
 
-            // get the display values
-            var displayData = ordered
-                .Select(c => new string[]
+            var paged = sorted
+                .Skip(model.Start)
+                .Take(model.Length)
+                .ToList()
+                .Select(c => new
                 {
-                    c.Id.ToString(),
+                    c.Id,
                     c.XInventoryId,
                     c.Description,
-                    c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToShortDateString() : string.Empty,
-                    c.WhenDisused.HasValue ? c.WhenDisused.Value.ToShortDateString() : string.Empty,
-                    c.Quantity.ToString(),
-                    c.Category != null ? c.Category.Name : string.Empty,
-                    this.CrudLinks(new { id = c.Id }, canEdit)
+                    WhenPurchased = c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToShortDateString() : string.Empty,
+                    WhenDisused = c.WhenDisused.HasValue ? c.WhenDisused.Value.ToShortDateString() : string.Empty,
+                    c.Quantity,
+                    Category = c.Category.Name,
+                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
-            // filter for sSearch
-            string hint = model.sSearch;
-            List<string[]> searched = new List<string[]>();
-
-            if (string.IsNullOrEmpty(hint))
-            {
-                searched.AddRange(displayData);
-            }
-            else
-            {
-                foreach (string[] row in displayData)
-                {
-                    // don't include in the search the id as it is hidden from the display
-                    // don't include in the search the CRUD links either
-                    for (int index = 0; index < row.Length - 1; index++)
-                    {
-                        if (!string.IsNullOrEmpty(row[index]) && row[index].IndexOf(hint, StringComparison.OrdinalIgnoreCase) >= 0)
-                        {
-                            searched.Add(row);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            // filter for the display
-            var filtered = searched
-                .Skip(searched.Count > model.iDisplayLength ? model.iDisplayStart : 0)
-                .Take(searched.Count > model.iDisplayLength ? model.iDisplayLength : searched.Count);
-
-            var result = new
-            {
-                sEcho = model.sEcho,
-                iTotalRecords = _repository.GetAll().Count(),
-                iTotalDisplayRecords = searched.Count(),
-                aaData = filtered
-            };
-
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
         }
 
         // GET: /Inventory/Details/5

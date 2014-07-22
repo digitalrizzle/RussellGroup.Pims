@@ -3,7 +3,9 @@ using RussellGroup.Pims.DataAccess.Repositories;
 using RussellGroup.Pims.Website.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -13,6 +15,11 @@ namespace RussellGroup.Pims.Website
 {
     public static class Extensions
     {
+        public static readonly Expression<Func<DateTime?, string>> LittleEndianDateString = (date) =>
+            (SqlFunctions.DateName("day", date).Trim() + "/" +
+            SqlFunctions.StringConvert((double)date.Value.Month).Trim() + "/" +
+            SqlFunctions.DateName("year", date).Trim());
+
         public static bool IsAuthorized(this IPrincipal user, params string[] roles)
         {
             using (var _repository = new UserDbRepository())
@@ -56,7 +63,7 @@ namespace RussellGroup.Pims.Website
 
             if (canEdit)
             {
-                return string.Format("{0} | {1} | {2}", edit, details, delete);
+                return string.Format("{0}&nbsp;| {1}&nbsp;| {2}", edit, details, delete);
             }
             else
             {
@@ -127,6 +134,35 @@ namespace RussellGroup.Pims.Website
             }
 
             return pairs.Distinct();
+        }
+
+        public static IComparable GetValue(this object entity, IEnumerable<string> propertyNames)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException("entity");
+            }
+
+            if (propertyNames == null)
+            {
+                throw new ArgumentNullException("propertyNames");
+            }
+
+            var property = entity.GetType().GetProperty(propertyNames.First());
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            var value = property.GetValue(entity);
+
+            if (propertyNames.Count() > 1)
+            {
+                value = GetValue(value, propertyNames.Skip(1));
+            }
+
+            return value as IComparable;
         }
     }
 }
