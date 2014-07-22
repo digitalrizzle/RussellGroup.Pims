@@ -89,14 +89,14 @@
             @Html.DisplayNameFor(model => model.IsElectrical)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.IsElectrical)
+            @Html.Encode(Model.IsElectrical.ToYesNo())
         </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.IsTool)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.IsTool)
+            @Html.Encode(Model.IsTool.ToYesNo())
         </dd>
 
         <dt>
@@ -147,7 +147,10 @@
                 {
                     if (Html.IsAction("Details"))
                     {
-                        <text>@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) | </text>
+                        <text>
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
+                        </text>
                     }
                     else if (Model.CanDelete)
                     {

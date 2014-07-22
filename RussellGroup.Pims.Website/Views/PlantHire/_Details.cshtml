@@ -80,7 +80,10 @@
                 {
                     if (Html.IsAction("Details"))
                     {
-                        <text>@Html.ActionLink("Edit", "Edit", new { id = Model.JobId, hireId = Model.Id }) | </text>
+                        <text>
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.JobId, hireId = Model.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = Model.JobId, hireId = Model.Id }) |
+                        </text>
                     }
                     else
                     {
