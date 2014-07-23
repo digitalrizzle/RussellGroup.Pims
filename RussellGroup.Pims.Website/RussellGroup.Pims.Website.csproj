@@ -267,6 +267,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\DataTables-1.10.0\css\dataTables.jqueryui.scss" />
+    <Content Include="connectionStrings.config" />
     <None Include="MvcSiteMapSchema.xsd" />
     <None Include="Properties\PublishProfiles\pdbdev.pubxml" />
     <Content Include="Scripts\DataTables-1.10.0\dataTables.autoFill.js" />

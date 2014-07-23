@@ -74,7 +74,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.ProjectManager,
-                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
+                    CrudLinks = CrudAndHireLinks(c.WhenEnded.HasValue, new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
             return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
