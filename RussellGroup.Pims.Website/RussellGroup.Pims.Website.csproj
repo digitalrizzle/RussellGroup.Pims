@@ -241,12 +241,18 @@
     <Content Include="Content\DataTables-1.10.0\images\xls_hover.png" />
     <Content Include="Content\DataTables-1.10.0\swf\copy_csv_xls.swf" />
     <Content Include="Content\DataTables-1.10.0\swf\copy_csv_xls_pdf.swf" />
+    <Content Include="Content\dataTables.bootstrap.css" />
     <Content Include="Content\dominion_constructors.png" />
     <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\sort_asc.png" />
+    <Content Include="images\sort_asc_disabled.png" />
+    <Content Include="images\sort_both.png" />
+    <Content Include="images\sort_desc.png" />
+    <Content Include="images\sort_desc_disabled.png" />
     <Content Include="Scripts\bloodhound.js" />
     <Content Include="Scripts\bloodhound.min.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
@@ -284,6 +290,7 @@
     <Content Include="Scripts\DataTables-1.10.0\dataTables.tableTools.min.js" />
     <Content Include="Scripts\DataTables-1.10.0\jquery.dataTables.js" />
     <Content Include="Scripts\DataTables-1.10.0\jquery.dataTables.min.js" />
+    <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\handlebars.amd.js" />
     <Content Include="Scripts\handlebars.amd.min.js" />
     <Content Include="Scripts\handlebars.js" />
