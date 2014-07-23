@@ -224,3 +224,4 @@ pip-log.txt
 *.ldb
 *.zip
 *.xml
+RussellGroup.Pims.Website/connectionStrings.config
