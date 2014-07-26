@@ -4,13 +4,13 @@
     ViewBag.Title = "Edit Category";
 }
 @section head {
-    @Styles.Render("~/Content/jquery.typeahead.css")
+    @Styles.Render("~/Content/typeahead")
 }
 
 @Html.Partial("_Form")
 
 @section scripts {
-    @Scripts.Render("~/bundles/jquery.typeahead.js")
+    @Scripts.Render("~/bundles/typeahead")
     <script>
         wire('Type', '@Url.Content("~/Category/GetTypeSuggestions?q=%QUERY")');
     </script>

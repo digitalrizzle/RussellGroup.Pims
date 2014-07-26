@@ -4,13 +4,13 @@
     ViewBag.Title = "Create Job";
 }
 @section head {
-    @Styles.Render("~/Content/jquery.typeahead.css")
+    @Styles.Render("~/Content/typeahead")
 }
 
 @Html.Partial("_Form")
 
 @section scripts {
-    @Scripts.Render("~/bundles/jquery.typeahead.js")
+    @Scripts.Render("~/bundles/typeahead")
     <script>
         wire('ProjectManager', '@Url.Content("~/Job/GetProjectManagerSuggestions?q=%QUERY")');
         wire('QuantitySurveyor', '@Url.Content("~/Job/GetQuantitySurveyorSuggestions?q=%QUERY")');

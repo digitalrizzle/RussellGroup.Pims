@@ -5,7 +5,7 @@
     var hires = Model.InventoryHires.FirstOrDefault();
 }
 @section head {
-    @Styles.Render("~/Content/jquery.datatable.css")
+    @Styles.Render("~/Content/datatables")
 }
 
 <h2>@ViewBag.Title</h2>
@@ -87,14 +87,14 @@
     </tbody>
 </table>
 @section scripts {
-    @Scripts.Render("~/bundles/jquery.datatable.js")
+    @Scripts.Render("~/bundles/datatables")
     <script>
         $(document).ready(function () {
             $('.table').dataTable({
                 "order": [[2, "desc"]],
                 "processing": true,
                 "stateSave": true,
-                "paginationType": 'full',
+                "pagingType": 'full',
                 "columnDefs": [
                     { "visible": false, "targets": [0] },
                     { "sortable": false, "targets": [8] }
