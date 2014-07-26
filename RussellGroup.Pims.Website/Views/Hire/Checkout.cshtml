@@ -4,7 +4,7 @@
     ViewBag.Title = "Checkout";
 }
 @section head {
-    @Styles.Render("~/Content/jquery.typeahead.css")
+    @Styles.Render("~/Content/typeahead")
 }
 
 <h2>@ViewBag.Title</h2>
@@ -65,7 +65,7 @@
 }
 
 @section scripts {
-    @Scripts.Render("~/bundles/jquery.typeahead.js")
+    @Scripts.Render("~/bundles/typeahead")
     <script>
         var nextPlant = 0, nextInventory = 0;
 

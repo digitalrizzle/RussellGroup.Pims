@@ -20,11 +20,11 @@ namespace RussellGroup.Pims.Website
             //bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
             //    "~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/jquery.datatable.js").Include(
+            bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
                 "~/Scripts/DataTables-1.10.0/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap.js"));
 
-             bundles.Add(new ScriptBundle("~/bundles/jquery.typeahead.js").Include(
+            bundles.Add(new ScriptBundle("~/bundles/typeahead").Include(
                 "~/Scripts/bloodhound.js",
                 "~/Scripts/handlebars.js",
                 "~/Scripts/typeahead.bundle.js",
@@ -35,14 +35,16 @@ namespace RussellGroup.Pims.Website
                 .Include("~/Content/bootstrap-theme.css", new CssRewriteUrlTransformWrapper())
                 .Include("~/Content/bootstrap-datepicker.css", new CssRewriteUrlTransformWrapper()));
 
-            bundles.Add(new StyleBundle("~/Content/jquery.datatable.css")
+            bundles.Add(new StyleBundle("~/Content/datatables")
                 .Include("~/Content/dataTables.bootstrap.css", new CssRewriteUrlTransformWrapper()));
 
-            bundles.Add(new StyleBundle("~/Content/jquery.typeahead.css")
+            bundles.Add(new StyleBundle("~/Content/typeahead")
                 .Include("~/Content/typeahead.css", new CssRewriteUrlTransformWrapper()));
 
-            bundles.Add(new StyleBundle("~/Content/overrides.css")
+            bundles.Add(new StyleBundle("~/Content/overrides")
                 .Include("~/Content/Site.css", new CssRewriteUrlTransformWrapper()));
+
+            //BundleTable.EnableOptimizations = true;
         }
 
         public class CssRewriteUrlTransformWrapper : IItemTransform

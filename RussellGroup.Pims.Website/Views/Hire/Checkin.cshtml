@@ -6,7 +6,7 @@
     var inventoryHires = Model.InventoryHires.FirstOrDefault();
 }
 @section head {
-    @Styles.Render("~/Content/jquery.datatable.css")
+    @Styles.Render("~/Content/datatables")
 }
 
 <h2>@ViewBag.Title</h2>
@@ -125,7 +125,7 @@
 }
 
 @section scripts {
-    @Scripts.Render("~/bundles/jquery.datatable.js")
+    @Scripts.Render("~/bundles/datatables")
     <script>
         $(document).ready(function () {
             // set checkboxes if there is a postback

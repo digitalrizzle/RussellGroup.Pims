@@ -5,7 +5,7 @@
     var job = Model.PlantHires.FirstOrDefault().Job;
 }
 @section head {
-    @Styles.Render("~/Content/jquery.datatable.css")
+    @Styles.Render("~/Content/datatables")
 }
 
 <h2>@ViewBag.Title</h2>
@@ -35,14 +35,14 @@
 </table>
 
 @section scripts {
-    @Scripts.Render("~/bundles/jquery.datatable.js")
+    @Scripts.Render("~/bundles/datatables")
     <script>
     $(document).ready(function () {
         $('.table').dataTable({
             "order": [[1, "asc"]],
             "processing": true,
             "stateSave": true,
-            "paginationType": 'full',
+            "pagingType": 'full',
             "serverSide": true,
             "ajax": "@Url.Content("~/Plant/GetJobDataTableResult?id=" + Model.Id)",
             "columns": [

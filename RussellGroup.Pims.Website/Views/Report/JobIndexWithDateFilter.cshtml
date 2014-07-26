@@ -4,7 +4,7 @@
     ViewBag.Title = "Reports for jobs by date";
 }
 @section head {
-    @Styles.Render("~/Content/jquery.datatable.css")
+    @Styles.Render("~/Content/datatables")
 }
 
 <h2>@ViewBag.Title</h2>
@@ -69,14 +69,14 @@
 </table>
 
 @section scripts {
-    @Scripts.Render("~/bundles/jquery.datatable.js")
+    @Scripts.Render("~/bundles/datatables")
     <script>
         $(document).ready(function () {
             $('.table').dataTable({
                 "order": [[3, "desc"]],
                 "processing": true,
                 "stateSave": true,
-                "paginationType": 'full',
+                "pagingType": 'full',
                 "serverSide": true,
                 "ajax": "@Url.Content("~/Report/GetDataTableResult?detailed=true")",
                 "columns": [
@@ -95,8 +95,7 @@
                         window.open(this.href + getFilterUrlParameters(), '_blank');
                     });
                 }
-            })
-            .on;
+            });
         });
 
         function getFilterUrlParameters() {
