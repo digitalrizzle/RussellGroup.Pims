@@ -225,3 +225,4 @@ pip-log.txt
 *.zip
 *.xml
 RussellGroup.Pims.Website/connectionStrings.config
+RussellGroup.Pims.Website/Scripts/_references.js

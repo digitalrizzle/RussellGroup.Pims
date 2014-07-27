@@ -92,9 +92,10 @@ namespace RussellGroup.Pims.Website.Controllers
                     PlantHires = c.PlantHires.Count(f => !f.WhenEnded.HasValue),
                     InventoryHires = c.InventoryHires.Count(f => !f.WhenEnded.HasValue),
                     CrudLinks = isDetailed ?
-                        string.Format("{0}&nbsp;| {1}",
+                        string.Format("{0}&nbsp;| {1}&nbsp;({2})",
                             string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesSummaryInJob", new { id = c.Id }), "Inventory&nbsp;Charges")
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesSummaryInJob", new { id = c.Id }), "Inventory&nbsp;Charges"),
+                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("DownloadInventoryHireChargesSummaryInJobCsv", new { id = c.Id }), "csv")
                         ) :
                         string.Format("{0}&nbsp;| {1}&nbsp;| {2}",
                             string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant&nbsp;#51"),
@@ -168,6 +169,15 @@ namespace RussellGroup.Pims.Website.Controllers
             var whenEnded = ParseDate(Request["WhenEnded"]);
 
             return await JobView("InventoryHireChargesSummaryInJob", id, whenStarted, whenEnded);
+        }
+
+        public FileContentResult DownloadInventoryHireChargesSummaryInJobCsv(int? id)
+        {
+            var whenStarted = ParseDate(Request["WhenStarted"]);
+            var whenEnded = ParseDate(Request["WhenEnded"]);
+            var fileName = string.Format("InventoryHireChargesSummaryInJob-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+            return File(_repository.GetInventoryChargesCsv(id, whenStarted, whenEnded), "text/csv", fileName);
         }
 
         private async Task<ActionResult> JobView(string viewName, int? id, DateTime whenStarted, DateTime whenEnded)
