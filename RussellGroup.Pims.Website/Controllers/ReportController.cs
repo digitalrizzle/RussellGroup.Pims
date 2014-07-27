@@ -55,7 +55,7 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             var hint = model.Search != null ? model.Search.Value : string.Empty;
-            bool isDetailed = bool.Parse(Request["detailed"] ?? false.ToString());
+            bool isFiltered = bool.Parse(Request["filtered"] ?? false.ToString());
             var sortColumn = model.Columns.GetSortedColumns().First();
 
             var all = _repository.Jobs.AsExpandable();
@@ -89,12 +89,12 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Description,
                     WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    PlantHires = c.PlantHires.Count(f => !f.WhenEnded.HasValue),
-                    InventoryHires = c.InventoryHires.Count(f => !f.WhenEnded.HasValue),
-                    CrudLinks = isDetailed ?
+                    PlantHires = c.PlantHires.Count(),
+                    InventoryHires = c.InventoryHires.Sum(f => f.Quantity),
+                    CrudLinks = isFiltered ?
                         string.Format("{0}&nbsp;| {1}&nbsp;({2})",
                             string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesSummaryInJob", new { id = c.Id }), "Inventory&nbsp;Charges"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesSummaryInJob", new { id = c.Id }), "Inventory&nbsp;Summary"),
                             string.Format("<a href=\"{0}\">{1}</a>", Url.Action("DownloadInventoryHireChargesSummaryInJobCsv", new { id = c.Id }), "csv")
                         ) :
                         string.Format("{0}&nbsp;| {1}&nbsp;| {2}",
