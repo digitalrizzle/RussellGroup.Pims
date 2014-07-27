@@ -83,7 +83,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
+        public async Task<ActionResult> Create([Bind(Include = "InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
             {
@@ -115,7 +115,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,InventoryId,JobId,Docket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
             {
