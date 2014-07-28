@@ -99,7 +99,8 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public ActionResult Create()
         {
-            return View();
+            var job = new Job { WhenStarted = DateTime.Now };
+            return View(job);
         }
 
         // POST: /Job/Create
