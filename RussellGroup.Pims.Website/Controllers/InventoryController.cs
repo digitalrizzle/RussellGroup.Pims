@@ -102,7 +102,8 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public ActionResult Create()
         {
-            return View();
+            var inventory = new Inventory { WhenPurchased = DateTime.Now };
+            return View(inventory);
         }
 
         // POST: /Inventory/Create
