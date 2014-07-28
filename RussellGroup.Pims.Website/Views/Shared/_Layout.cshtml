@@ -45,6 +45,23 @@
         </footer>
     </div>
     @Scripts.Render("~/bundles/js")
+    <script>
+        var isDirty = false;
+        var handler = window.attachEvent || window.addEventListener;
+        var unloadEvent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; // make IE7, IE8 compitable
+
+        handler(unloadEvent, function (e) { // for >=IE7, Chrome, Firefox
+            if (isDirty) {
+                var confirmationMessage = 'There are unsaved changes.';
+                (e || window.handler).returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+        });
+
+        $("form").submit(function () { isDirty = false; });
+        $("input,checkbox,textarea,radio,select").change(function () { isDirty = true; });
+        $(":input[type='text']").keyup(function () { isDirty = true; }); // another IE fix
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

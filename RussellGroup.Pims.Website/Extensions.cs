@@ -16,9 +16,9 @@ namespace RussellGroup.Pims.Website
     public static class Extensions
     {
         public static readonly Expression<Func<DateTime?, string>> LittleEndianDateString = (date) =>
-            (SqlFunctions.DateName("day", date).Trim() + "/" +
-            SqlFunctions.StringConvert((double)date.Value.Month).Trim() + "/" +
-            SqlFunctions.DateName("year", date).Trim());
+            (SqlFunctions.DateName("day", date) + "/" +
+            ("0" + SqlFunctions.StringConvert((double)date.Value.Month).Trim()).Substring(date.Value.Month / 10, 2) + "/" +
+            SqlFunctions.DateName("year", date));
 
         public static bool IsAuthorized(this IPrincipal user, params string[] roles)
         {
@@ -33,6 +33,21 @@ namespace RussellGroup.Pims.Website
         public static string ToYesNo(this bool value)
         {
             return value ? "Yes" : "No";
+        }
+
+        public static string ToYesNo(this bool? value)
+        {
+            if (value.HasValue)
+            {
+                return ToYesNo(value.Value);
+            }
+
+            return null;
+        }
+
+        public static string ConvertCrlfToBr(this string value)
+        {
+            return value.Replace(Environment.NewLine, "<br />");
         }
 
         public static string GetAction(this HtmlHelper html)
