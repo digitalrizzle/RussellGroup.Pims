@@ -12,9 +12,12 @@ namespace RussellGroup.Pims.DataAccess.Repositories
     // http://www.codeproject.com/Articles/228865/Csharp-IDisposable-pattern-on-sub-classes
     public class DbRepository<T> : IRepository<T> where T : class
     {
-        private bool _disposed;
+        protected PimsDbContext Db { get; private set; }
 
-        protected readonly PimsDbContext Db = new PimsDbContext();
+        public DbRepository(PimsDbContext context)
+        {
+            Db = context;
+        }
 
         protected string UserName
         {
@@ -39,7 +42,20 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public virtual async Task<int> UpdateAsync(T item)
         {
-            Db.Entry(item).State = EntityState.Modified;
+            try
+            {
+                Db.Entry(item).State = EntityState.Modified;
+            }
+            catch (InvalidOperationException)
+            {
+                // attaching failed, so find the existing and detach it, then try again
+                var existing = Db.Set<T>().Find(EntityHelper.Instance.GetKeyValues<T>(Db, item));
+                Db.Entry(existing).State = EntityState.Detached;
+
+                Db.Set<T>().Attach(item);
+                Db.Entry(item).State = EntityState.Modified;
+            }
+
             return await Db.SaveChangesAsync();
         }
 
@@ -48,27 +64,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             var item = await FindAsync(keyValues);
             Db.Set<T>().Remove(item);
             return await Db.SaveChangesAsync();
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                Db.Dispose();
-            }
-
-            _disposed = true;
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize((object)this);
         }
     }
 }

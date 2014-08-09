@@ -21,7 +21,7 @@ namespace RussellGroup.Pims.Website
             //    "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
-                "~/Scripts/DataTables-1.10.0/jquery.dataTables.js",
+                "~/Scripts/DataTables-1.10.1/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/typeahead").Include(

@@ -12,9 +12,9 @@ namespace RussellGroup.Pims.Website
 {
     public class AuthorizationFilter : AuthorizeAttribute
     {
-        private readonly IActiveDirectoryHelper helper;
+        private readonly IIdentityHelper helper;
 
-        public AuthorizationFilter(IActiveDirectoryHelper helper)
+        public AuthorizationFilter(IIdentityHelper helper)
         {
             this.helper = helper;
         }

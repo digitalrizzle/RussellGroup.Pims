@@ -20,9 +20,9 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly IInventoryRepository _repository;
 
-        public InventoryController(IInventoryRepository _repository)
+        public InventoryController(IInventoryRepository repository)
         {
-            this._repository = _repository;
+            _repository = repository;
         }
 
         // GET: /Inventory/
@@ -179,15 +179,6 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             await _repository.RemoveAsync(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         private new ActionResult View()

@@ -22,9 +22,10 @@ namespace RussellGroup.Pims.Website
 
         public static bool IsAuthorized(this IPrincipal user, params string[] roles)
         {
-            using (var _repository = new UserDbRepository())
+            using (var context = new PimsDbContext())
             {
-                var helper = new ActiveDirectoryHelper(_repository);
+                var repository = new UserDbRepository(context);
+                var helper = new IdentityHelper(repository);
 
                 return helper.IsAuthorized(roles);
             }

@@ -13,11 +13,11 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 {
     public class UserDbRepository : DbRepository<ApplicationUser>, IUserRepository
     {
-        private bool _disposed;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
 
-        public UserDbRepository()
+        public UserDbRepository(PimsDbContext context)
+            : base(context)
         {
             _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(Db) { AutoSaveChanges = false });
             _userManager.UserValidator = new UserValidator<ApplicationUser>(_userManager) { AllowOnlyAlphanumericUserNames = false };
@@ -151,23 +151,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         public IQueryable<ApplicationRole> GetAllRoles()
         {
             return _roleManager.Roles;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                _userManager.Dispose();
-                _roleManager.Dispose();
-            }
-
-            _disposed = true;
-            base.Dispose(disposing);
         }
     }
 }

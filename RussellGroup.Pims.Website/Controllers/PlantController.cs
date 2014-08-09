@@ -19,9 +19,9 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly IPlantRepository _repository;
 
-        public PlantController(IPlantRepository _repository)
+        public PlantController(IPlantRepository repository)
         {
-            this._repository = _repository;
+            _repository = repository;
         }
 
         // GET: /Plant/
@@ -242,15 +242,6 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             await _repository.RemoveAsync(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         private new ActionResult View()

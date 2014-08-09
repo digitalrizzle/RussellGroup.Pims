@@ -73,7 +73,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 {
                     c.Id,
                     c.UserName,
-                    Role = c.Roles != null ? string.Join(", ", roles.Where(r => c.Roles.Select(i => i.RoleId).Contains(r.Id)).Select(r => r.Name)) : string.Empty,
+                    Role = c.Roles != null ? string.Join(", ", roles.Where(r => c.Roles.Select(i => i.RoleId).Contains(r.Id)).OrderBy(r => r.Precedence).Select(r => r.Name)) : string.Empty,
                     LockoutEnabled = c.LockoutEnabled.ToYesNo(),
                     CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });

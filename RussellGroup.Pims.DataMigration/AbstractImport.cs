@@ -34,7 +34,7 @@ namespace RussellGroup.Pims.DataMigration
                 if (TargetContext != null) TargetContext.Dispose();
 
                 TargetContext = new PimsDbContext();
-                TargetContext.SetContextUserName("System");
+                TargetContext.SetContextUserName(PimsDbContext.DefaultContextUserName);
 
                 Console.Write("{0}\r", ++row);
 

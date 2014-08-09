@@ -12,6 +12,8 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class PimsDbContext : IdentityDbContext<ApplicationUser>
     {
+        public const string DefaultContextUserName = "System";
+
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Condition> Conditions { get; set; }

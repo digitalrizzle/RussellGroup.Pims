@@ -1,18 +1,14 @@
 ﻿$(document).ready(function () {
     $('#roles-table').dataTable({
-        "bStateSave": false,
-        "bFilter": false,
-        "bInfo": false,
-        "bPaginate": false,
-        "aoColumns": [
-            { "sWidth": "0%" },
-            { "sWidth": "5%" },
-            { "sWidth": "20%" },
-            { "sWidth": "75%" }
-        ],
-        "aoColumnDefs": [
-            { "bVisible": false, "aTargets": [0] },
-            { "bSortable": false, "aTargets": [1] }
+        "order": [[1, "asc"]],
+        "processing": false,
+        "stateSave": false,
+        "lengthChange": false,
+        "searching": false,
+        "paging": false,
+        "columnDefs": [
+            { "visible": false, "targets": [0] },
+            { "sortable": false, "targets": [1] }
         ]
     });
 });

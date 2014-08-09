@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using DataTables.Mvc;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -14,8 +15,10 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 
 namespace NZPost.Votext3.Website.Tests.Controllers
@@ -44,7 +47,7 @@ namespace NZPost.Votext3.Website.Tests.Controllers
             var users = new[]
             {
                 GetUser("43b59d67-2096-4fd7-a711-01fb525ae03b", "BRETT-PC\\Brett", "brett.fisher@zoho.com", roles: allRoles),
-                GetUser("ab547f90-7edd-4752-ad1c-48d3c26a400c", "constructors\\jassen", "", roles: allRoles),
+                GetUser("ab547f90-7edd-4752-ad1c-48d3c26a400c", "constructors\\alister.kuypers", "", roles: allRoles),
                 GetUser("9a50e2d1-3e6b-49f8-9763-52705a4abebe", "RUSPDB\\PDBDev", "", true, new DateTime(1999, 12, 31), roles: allRoles.Where(f => f.Name == Role.CanView))
             };
 
@@ -110,13 +113,13 @@ namespace NZPost.Votext3.Website.Tests.Controllers
         {
             var roles = new List<ApplicationRole>
             {
+                GetRole("98a92488-06cd-4403-aaa7-c02d57ad9233", Role.CanView),
                 GetRole("f5437545-d921-4f6b-88e4-04de8de58778", Role.CanEdit),
                 GetRole("fdfc1500-f9e4-44ad-96f5-965e5dacc3cf", Role.CanEditCategories),
-                GetRole("f2603874-4d32-4186-85c0-18030d84fbda", Role.CanEditUsers),
-                GetRole("98a92488-06cd-4403-aaa7-c02d57ad9233", Role.CanView)
+                GetRole("f2603874-4d32-4186-85c0-18030d84fbda", Role.CanEditUsers)
             };
 
-            return roles.AsQueryable();
+            return roles.OrderBy(f => f.Precedence).AsQueryable();
         }
 
         private ApplicationRole GetFirstRole()
@@ -151,36 +154,48 @@ namespace NZPost.Votext3.Website.Tests.Controllers
         {
             // Arrange
             _mockRepository.Setup(f => f.GetAll()).Returns(GetAllUsers);
+            _mockRepository.Setup(f => f.GetAllRoles()).Returns(GetAllRoles());
 
-            var parameters = new JqueryDataTableParameterModel()
+            var columns = new[]
             {
-                iSortCol_0 = 1,
-                sSortDir_0 = "asc",
-                iDisplayLength = 10,
-                iDisplayStart = 0,
-                sSearch = string.Empty
+                new Column(string.Empty, "Id", false, false, string.Empty, false),
+                new Column("UserName", "UserName", true, true, string.Empty, false),
+                new Column("Role", "Role", false, false, string.Empty, false),
+                new Column("LockoutEnabled", "LockoutEnabled", false, true, string.Empty, false),
+                new Column(string.Empty, "CrudLinks", false, false, string.Empty, false)
+            };
+
+            columns[1].SetColumnOrdering(1, "asc");
+
+            var parameters = new DefaultDataTablesRequest()
+            {
+                Draw = 1,
+                Start = 0,
+                Length = 10,
+                Search = null,
+                Columns = new ColumnCollection(columns)
             };
 
             // Act
             var result = _controller.GetDataTableResult(parameters);
-            var data = result.GetJqueryDataTableAaData();
+            var data = result.GetJqueryDataTableData();
 
             // Assert
             Assert.AreEqual(3, data.Count());
 
             Assert.AreEqual("43b59d67-2096-4fd7-a711-01fb525ae03b", data[0][0]);
             Assert.AreEqual("BRETT-PC\\Brett", data[0][1]);
-            Assert.AreEqual("brett.fisher@zoho.com", data[0][2]);
+            Assert.AreEqual("CanView, CanEdit, CanEditCategories, CanEditUsers", data[0][2]);
             Assert.AreEqual("No", data[0][3]);
 
             Assert.AreEqual("ab547f90-7edd-4752-ad1c-48d3c26a400c", data[1][0]);
-            Assert.AreEqual("constructors\\jassen", data[1][1]);
-            Assert.AreEqual("", data[1][2]);
+            Assert.AreEqual("constructors\\alister.kuypers", data[1][1]);
+            Assert.AreEqual("CanView, CanEdit, CanEditCategories, CanEditUsers", data[1][2]);
             Assert.AreEqual("No", data[1][3]);
 
             Assert.AreEqual("9a50e2d1-3e6b-49f8-9763-52705a4abebe", data[2][0]);
             Assert.AreEqual("RUSPDB\\PDBDev", data[2][1]);
-            Assert.AreEqual("", data[2][2]);
+            Assert.AreEqual("CanView", data[2][2]);
             Assert.AreEqual("Yes", data[2][3]);
         }
 
