@@ -24,7 +24,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
         [TestInitialize]
         public void Initialize()
         {
-            repository = new Mock<IJobRepository>();
+            repository = new Mock<IJobRepository>(MockBehavior.Strict);
 
             controller = new JobController(repository.Object);
             controller.SetFakeAuthenticatedControllerContext();

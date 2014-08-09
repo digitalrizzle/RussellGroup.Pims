@@ -19,9 +19,9 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly IJobRepository _repository;
 
-        public JobController(IJobRepository _repository)
+        public JobController(IJobRepository repository)
         {
-            this._repository = _repository;
+            _repository = repository;
         }
 
         // GET: /Job/
@@ -212,15 +212,6 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             await _repository.RemoveAsync(id);
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         private string CrudAndHireLinks(bool isComplete, object routeValues, bool canEdit)

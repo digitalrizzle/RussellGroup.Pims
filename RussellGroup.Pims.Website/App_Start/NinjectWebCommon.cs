@@ -59,7 +59,7 @@ namespace RussellGroup.Pims.Website.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             // for authorisation
-            kernel.Bind<IActiveDirectoryHelper>().To<ActiveDirectoryHelper>();
+            kernel.Bind<IIdentityHelper>().To<IdentityHelper>();
 
             kernel.BindFilter<AuthorizationFilter>(FilterScope.Action, 0)
                 .WhenActionMethodHas<PimsAuthorizeAttribute>()

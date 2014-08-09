@@ -52,14 +52,5 @@ namespace RussellGroup.Pims.Website.Controllers
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

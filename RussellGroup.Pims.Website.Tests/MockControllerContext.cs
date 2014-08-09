@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Subtext.TestLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,12 @@ namespace RussellGroup.Pims.Website.Tests
 
             controller.ControllerContext = controllerContext;
             controller.Url = new UrlHelper(controllerContext.RequestContext);
+
+            var httpSimulator = new HttpSimulator().SimulateRequest();
+
+            var identity = new GenericIdentity("Tester");
+            var principal = new GenericPrincipal(identity, null);
+            HttpContext.Current.User = principal;
         }
     }
 }

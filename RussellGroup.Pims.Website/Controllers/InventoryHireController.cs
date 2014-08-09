@@ -17,9 +17,9 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly IHireRepository<InventoryHire> _repository;
 
-        public InventoryHireController(IHireRepository<InventoryHire> _repository)
+        public InventoryHireController(IHireRepository<InventoryHire> repository)
         {
-            this._repository = _repository;
+            _repository = repository;
         }
 
         // GET: /InventoryHire/5
@@ -150,15 +150,6 @@ namespace RussellGroup.Pims.Website.Controllers
             int id = (await _repository.FindAsync(hireId)).JobId;
             await _repository.RemoveAsync(hireId);
             return RedirectToAction("Index", new { id = id });
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         private new ActionResult View()

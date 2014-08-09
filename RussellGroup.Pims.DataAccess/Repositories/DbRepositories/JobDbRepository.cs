@@ -9,6 +9,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 {
     public class JobDbRepository : DbRepository<Job>, IJobRepository
     {
+        public JobDbRepository(PimsDbContext context) : base(context) { }
+
         public override async Task<int> RemoveAsync(params object[] keyValues)
         {
             var job = await FindAsync(keyValues);

@@ -10,7 +10,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 {
     public class HireDbRepository<T> : DbRepository<T>, IHireRepository<T> where T : class
     {
-        public HireDbRepository()
+        public HireDbRepository(PimsDbContext context) : base(context)
         {
             // ensure that only PlantHire or InventoryHire is used as the generic type argument
             var arg = this.GetType().GetGenericArguments()[0];
