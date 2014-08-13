@@ -19,9 +19,9 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly IReportRepository _repository;
 
-        public ReportController(IReportRepository _repository)
+        public ReportController(IReportRepository repository)
         {
-            this._repository = _repository;
+            _repository = repository;
         }
 
         // GET: /Report/Jobs
@@ -212,15 +212,6 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             return date;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

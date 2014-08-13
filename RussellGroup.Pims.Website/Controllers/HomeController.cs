@@ -12,9 +12,9 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly IPlantRepository _repository;
 
-        public HomeController(IPlantRepository _repository)
+        public HomeController(IPlantRepository repository)
         {
-            this._repository = _repository;
+            _repository = repository;
         }
 
         public ActionResult Index()

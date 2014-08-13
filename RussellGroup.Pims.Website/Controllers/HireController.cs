@@ -17,9 +17,9 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly ITransactionRepository _repository;
 
-        public HireController(ITransactionRepository _repository)
+        public HireController(ITransactionRepository repository)
         {
-            this._repository = _repository;
+            _repository = repository;
         }
 
         #region Checkout
@@ -43,7 +43,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var result = _repository
                 .Plants
-                .Where(f => f.StatusId == 2 && (f.XPlantId.StartsWith(hint) || f.Description.Contains(hint)))
+                .Where(f => f.StatusId == Status.Available && (f.XPlantId.StartsWith(hint) | f.Description.Contains(hint)))
                 .Take(5)
                 .OrderBy(f => f.Description)
                 .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantId })
@@ -60,7 +60,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var result = _repository
                 .Inventories
-                .Where(f => !f.WhenDisused.HasValue && (f.XInventoryId.StartsWith(hint) || f.Description.Contains(hint)))
+                .Where(f => !f.WhenDisused.HasValue && (f.XInventoryId.StartsWith(hint) | f.Description.Contains(hint)))
                 .Take(5)
                 .OrderBy(f => f.Description)
                 .Select(f => new { id = f.Id, description = f.Description, xid = f.XInventoryId })
@@ -176,15 +176,6 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         #endregion
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.Dispose();
-            }
-            base.Dispose(disposing);
-        }
 
         private new ActionResult View()
         {
