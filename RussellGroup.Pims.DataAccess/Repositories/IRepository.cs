@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Repositories
 {
-    // http://www.codeproject.com/Articles/228865/Csharp-IDisposable-pattern-on-sub-classes
     public interface IRepository<T>
     {
         Task<T> FindAsync(params object[] keyValues);
