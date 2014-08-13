@@ -42,20 +42,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public virtual async Task<int> UpdateAsync(T item)
         {
-            try
-            {
-                Db.Entry(item).State = EntityState.Modified;
-            }
-            catch (InvalidOperationException)
-            {
-                // attaching failed, so find the existing and detach it, then try again
-                var existing = Db.Set<T>().Find(EntityHelper.Instance.GetKeyValues<T>(Db, item));
-                Db.Entry(existing).State = EntityState.Detached;
-
-                Db.Set<T>().Attach(item);
-                Db.Entry(item).State = EntityState.Modified;
-            }
-
+            Db.Entry(item).State = EntityState.Modified;
             return await Db.SaveChangesAsync();
         }
 
