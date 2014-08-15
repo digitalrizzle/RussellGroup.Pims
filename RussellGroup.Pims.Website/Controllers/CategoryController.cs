@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
+using DataTables.Mvc;
+using LinqKit;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -26,6 +28,50 @@ namespace RussellGroup.Pims.Website.Controllers
         public async Task<ActionResult> Index()
         {
             return View(await _repository.GetAll().ToListAsync());
+        }
+
+        // https://github.com/ALMMa/datatables.mvc
+        public JsonResult GetDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            var hint = model.Search != null ? model.Search.Value : string.Empty;
+            var sortColumn = model.Columns.GetSortedColumns().First();
+
+            var all = _repository.GetAll().AsExpandable();
+
+            // filter
+            var filtered = string.IsNullOrEmpty(hint)
+                ? all
+                : all.Where(f =>
+                    f.Name.Contains(hint) ||
+                    f.Type.Contains(hint));
+
+            // ordering
+            var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
+            Func<Category, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
+
+            // sorting
+            var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
+                ? filtered.OrderBy(ordering)
+                : filtered.OrderByDescending(ordering);
+
+            var paged = sorted
+                .Skip(model.Start)
+                .Take(model.Length)
+                .ToList()
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Name,
+                    c.Type,
+                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
+                });
+
+            return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
         }
 
         // GET: /Category/Details/5

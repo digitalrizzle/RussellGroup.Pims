@@ -15,7 +15,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public int Id { get; set; }
 
         [ForeignKey("Plant")]
-        [DisplayName("inventory id")]
+        [DisplayName("plant id")]
         public int PlantId { get; set; }
 
         [ForeignKey("Job")]

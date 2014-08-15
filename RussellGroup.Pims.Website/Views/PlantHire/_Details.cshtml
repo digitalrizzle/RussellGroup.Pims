@@ -13,25 +13,29 @@
 
     <dl class="dl-horizontal">
         <dt>
-            @Html.Encode("job")
+            job
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Job.Description)
         </dd>
 
         <dt>
-            @Html.Encode("plant id")
+            plant id
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Plant.XPlantId)
         </dd>
 
         <dt>
+            plant description
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Plant.Description)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Docket)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Docket)
         </dd>
@@ -39,7 +43,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.ReturnDocket)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.ReturnDocket)
         </dd>
@@ -47,7 +50,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.WhenStarted)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.WhenStarted)
         </dd>
@@ -55,7 +57,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.WhenEnded)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.WhenEnded)
         </dd>
@@ -63,7 +64,6 @@
         <dt>
             @Html.DisplayNameFor(model => model.Rate)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Rate)
         </dd>
@@ -71,11 +71,9 @@
         <dt>
             @Html.DisplayNameFor(model => model.Comment)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.Comment)
         </dd>
-
     </dl>
 
     <hr />

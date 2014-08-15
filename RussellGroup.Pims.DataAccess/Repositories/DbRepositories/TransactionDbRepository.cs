@@ -110,7 +110,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     db.Entry(hire).State = EntityState.Modified;
                 }
 
-                hire.Plant.StatusId = 2; // available
+                hire.Plant.StatusId = Status.Available;
                 db.Entry(hire.Plant).State = EntityState.Modified;
             }
 
