@@ -14,19 +14,22 @@ namespace RussellGroup.Pims.Website.Helpers
     public class IdentityHelper : IIdentityHelper
     {
         private readonly IUserRepository _repository;
+        private readonly ApplicationUser _currentUser;
 
         public PrincipalContext Context { get; private set; }
 
         public IdentityHelper(IUserRepository repository)
         {
             _repository = repository;
+
+            _currentUser = _repository.GetAll().SingleOrDefault(f =>
+                    f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase)
+                );
         }
 
         public ApplicationUser GetCurrentUser()
         {
-            return _repository.GetAll().SingleOrDefault(f =>
-                f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase)
-            );
+            return _currentUser;
         }
 
         public bool IsAuthenticated()
@@ -43,7 +46,7 @@ namespace RussellGroup.Pims.Website.Helpers
         {
             if (!IsAuthenticated()) return false;
             if (user == null || user.LockoutEnabled) return false;
-             
+
             return IsUserInRole(user, roles);
         }
 

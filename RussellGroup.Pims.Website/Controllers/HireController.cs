@@ -184,7 +184,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(CheckoutTransaction transaction)
         {
-            var jobs = _repository.Jobs.OrderByDescending(f => f.WhenStarted);
+            var jobs = _repository.Jobs.Where(f => !f.WhenEnded.HasValue).OrderBy(f => f.Description);
 
             ViewBag.Jobs = new SelectList(jobs, "Id", "Description", transaction.JobId);
 

@@ -210,6 +210,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Edit([Bind(Include = "Id,CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
         {
+            // TODO: prevent status change to unavailable
             if (ModelState.IsValid)
             {
                 await _repository.UpdateAsync(plant);
@@ -251,6 +252,8 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(Plant plant)
         {
+            ViewBag.IsUnavailable = plant != null ? plant.PlantHires.Any(f => !f.WhenEnded.HasValue) : false;
+
             var categories = _repository.Categories.OrderBy(f => f.Name);
             var category = plant != null ? plant.CategoryId : 0;
             ViewBag.Categories = new SelectList(categories, "Id", "Name", category);

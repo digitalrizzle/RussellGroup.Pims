@@ -9,7 +9,14 @@
     <div class="form-horizontal">
         <h4>@SiteMaps.Current.CurrentNode.Title</h4>
         <hr />
-
+        @if (ViewBag.IsUnavailable)
+        {
+            <div class="alert alert-warning">
+                <h4>Cannot change status</h4>
+                <p>This plant item is hired out. It can be edited, except the status cannot be change.</p>
+            </div>
+        }
+        
         @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
         {
             @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
@@ -126,7 +133,14 @@
         <div class="form-group@(ViewData.ModelState.IsValidField("StatusId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @Html.DropDownListFor(model => model.StatusId, ViewBag.Statuses as SelectList, new { @class = "form-control" })
+                @if (ViewBag.IsUnavailable)
+                {
+                    <text>@Html.DropDownListFor(model => model.StatusId, ViewBag.Statuses as SelectList, new { @class = "form-control", disabled = "disabled" })</text>
+                }
+                else
+                {
+                    <text>@Html.DropDownListFor(model => model.StatusId, ViewBag.Statuses as SelectList, new { @class = "form-control" })</text>
+                }
             </div>
             @Html.ValidationMessageFor(model => model.StatusId, null, new { @class = "help-block form-control-feedback" })
         </div>

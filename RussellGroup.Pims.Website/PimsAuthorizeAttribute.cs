@@ -12,11 +12,11 @@ namespace RussellGroup.Pims.Website
 {
     public class AuthorizationFilter : AuthorizeAttribute
     {
-        private readonly IIdentityHelper helper;
+        private readonly IIdentityHelper _helper;
 
         public AuthorizationFilter(IIdentityHelper helper)
         {
-            this.helper = helper;
+            _helper = helper;
         }
 
         [Inject]
@@ -24,7 +24,7 @@ namespace RussellGroup.Pims.Website
 
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
-            if (!helper.IsAuthorized(Roles))
+            if (!_helper.IsAuthorized(Roles))
             {
                 filterContext.Result = new RedirectResult("~/Home/Unauthorized");
             }
