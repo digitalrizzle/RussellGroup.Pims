@@ -70,7 +70,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
                 db.PlantHires.Add(hire);
 
-                plant.StatusId = 3; // unavailable
+                plant.StatusId = Status.Unavailable;
                 db.Entry(plant).State = EntityState.Modified;
             }
 

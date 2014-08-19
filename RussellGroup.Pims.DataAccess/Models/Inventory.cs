@@ -61,7 +61,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         {
             get
             {
-                return InventoryHires != null && InventoryHires.Count == 0;
+                return InventoryHires != null && !InventoryHires.Any();
             }
         }
     }

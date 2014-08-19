@@ -1,5 +1,9 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
+@{
+    var jobs = Model.PlantHires.Select(f => f.Job).Distinct().Count();
+}
+
 <h2>Plant</h2>
 
 <div>
@@ -131,7 +135,14 @@
             jobs
         </dt>
         <dd>
-            @Html.ActionLink(Model.PlantHires.Select(f => f.Job).Distinct().Count().ToString(), "Jobs", new { id = Model.Id })
+            @if (jobs == 0)
+            {
+                <text>0</text>
+            }
+            else
+            {
+                <text>@Html.ActionLink(jobs.ToString(), "Jobs", new { id = Model.Id })</text>
+            }
         </dd>
     </dl>
 

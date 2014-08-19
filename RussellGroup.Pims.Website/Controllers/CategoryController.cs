@@ -25,9 +25,9 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Category/
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            return View(await _repository.GetAll().ToListAsync());
+            return View("Index");
         }
 
         // https://github.com/ALMMa/datatables.mvc
@@ -135,8 +135,23 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEditCategories)]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Type")] Category category)
+        public async Task<ActionResult> Edit(int? id, FormCollection collection)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Category category = await _repository.FindAsync(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (!TryUpdateModel<Category>(category, "Name,Type".Split(',')))
+            {
+                ModelState.AddModelError(string.Empty, "The item could not be updated.");
+            }
+
             if (ModelState.IsValid)
             {
                 await _repository.UpdateAsync(category);
@@ -185,7 +200,16 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEditCategories)]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            await _repository.RemoveAsync(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var category = await _repository.FindAsync(id);
+            if (category == null)
+            {
+                return HttpNotFound();
+            }
+            await _repository.RemoveAsync(category);
             return RedirectToAction("Index");
         }
     }

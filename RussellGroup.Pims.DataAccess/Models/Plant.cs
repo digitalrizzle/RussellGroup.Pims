@@ -81,7 +81,15 @@ namespace RussellGroup.Pims.DataAccess.Models
         {
             get
             {
-                return PlantHires != null && PlantHires.Count == 0;
+                return PlantHires != null && !PlantHires.Any();
+            }
+        }
+
+        public bool IsUnavailable
+        {
+            get
+            {
+                return PlantHires != null ? PlantHires.Any(f => !f.WhenEnded.HasValue) : false;
             }
         }
     }

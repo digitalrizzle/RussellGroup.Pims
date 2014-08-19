@@ -13,6 +13,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         IQueryable<T> GetAll();
         Task<int> AddAsync(T item);
         Task<int> UpdateAsync(T item);
-        Task<int> RemoveAsync(params object[] keyValues);
+        Task<int> RemoveAsync(T item);
     }
 }

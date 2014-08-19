@@ -25,7 +25,7 @@ namespace RussellGroup.Pims.DataMigration
             try { whenStarted = reader.GetDateTime("Start date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
             try { whenEnded = reader.GetDateTime("End date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }                
 
-            if (inventory != null)
+            if (inventory != null && sourceJob != null)
             {
                 if (rate.HasValue && rate == 0) rate = inventory.Rate;
 

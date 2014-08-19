@@ -30,7 +30,7 @@ namespace RussellGroup.Pims.DataMigration
 
             var plant = TargetContext.Plants.SingleOrDefault(f => f.XPlantId == sourcePlant);
 
-            if (plant != null)
+            if (plant != null && sourceJob != null)
             {
                 var job = TargetContext.Jobs.Single(f => f.XJobId == sourceJob);
 

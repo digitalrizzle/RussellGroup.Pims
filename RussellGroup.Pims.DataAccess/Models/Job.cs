@@ -17,6 +17,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "id")]
         public string XJobId { get; set; }
 
+        [Required]
         [Display(Name = "description")]
         public string Description { get; set; }
 

@@ -28,7 +28,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // GET: /Inventory/
         public ActionResult Index()
         {
-            return View();
+            return View("Index");
         }
 
         // https://github.com/ALMMa/datatables.mvc
@@ -90,12 +90,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await _repository.FindAsync(id);
+            var inventory = await _repository.FindAsync(id);
             if (inventory == null)
             {
                 return HttpNotFound();
             }
-            return View(inventory);
+            return View("Details", inventory);
         }
 
         // GET: /Inventory/Create
@@ -103,7 +103,7 @@ namespace RussellGroup.Pims.Website.Controllers
         public ActionResult Create()
         {
             var inventory = new Inventory { WhenPurchased = DateTime.Now };
-            return View(inventory);
+            return View("Create", inventory);
         }
 
         // POST: /Inventory/Create
@@ -120,7 +120,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(inventory);
+            return View("Create", inventory);
         }
 
         // GET: /Inventory/Edit/5
@@ -131,12 +131,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await _repository.FindAsync(id);
+            var inventory = await _repository.FindAsync(id);
             if (inventory == null)
             {
                 return HttpNotFound();
             }
-            return View(inventory);
+            return View("Edit", inventory);
         }
 
         // POST: /Inventory/Edit/5
@@ -145,14 +145,28 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,CategoryId,XInventoryId,Description,WhenPurchased,WhenDisused,Rate,Cost,Quantity")] Inventory inventory)
+        public async Task<ActionResult> Edit(int? id, FormCollection collection)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                await _repository.UpdateAsync(inventory);
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            return View(inventory);
+            var plant = await _repository.FindAsync(id);
+            if (plant == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (TryUpdateModel<Inventory>(plant, "Id,CategoryId,XInventoryId,Description,WhenPurchased,WhenDisused,Rate,Cost,Quantity".Split(',')))
+            {
+                if (ModelState.IsValid)
+                {
+                    await _repository.UpdateAsync(plant);
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View("Edit", plant);
         }
 
         // GET: /Inventory/Delete/5
@@ -163,30 +177,34 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Inventory inventory = await _repository.FindAsync(id);
+            var inventory = await _repository.FindAsync(id);
             if (inventory == null)
             {
                 return HttpNotFound();
             }
-            return View(inventory);
+            return View("Delete", inventory);
         }
 
         // POST: /Inventory/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int? id)
         {
-            await _repository.RemoveAsync(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var inventory = await _repository.FindAsync(id);
+            if (inventory == null)
+            {
+                return HttpNotFound();
+            }
+            await _repository.RemoveAsync(inventory);
             return RedirectToAction("Index");
         }
 
-        private new ActionResult View()
-        {
-            return View(null);
-        }
-
-        private ActionResult View(Inventory inventory)
+        private ActionResult View(string viewName, Inventory inventory)
         {
             var categories = _repository.Categories.OrderBy(f => f.Name);
             var category = inventory != null ? inventory.CategoryId : 0;

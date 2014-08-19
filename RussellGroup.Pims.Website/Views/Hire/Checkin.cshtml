@@ -17,12 +17,11 @@
 
     <div class="form-horizontal">
         <h4>@Model.Job.Description</h4>
-        <hr />
-
         @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
         {
             @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
         }
+        <hr />
 
         @Html.HiddenFor(model => model.JobId)
 
