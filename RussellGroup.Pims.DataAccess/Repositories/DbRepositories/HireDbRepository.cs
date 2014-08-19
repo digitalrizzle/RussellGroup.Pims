@@ -23,6 +23,17 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             throw new NotSupportedException();
         }
 
+        public override async Task<int> RemoveAsync(T item)
+        {
+            // set plant back to available when hire is deleted
+            if (item is PlantHire)
+            {
+                (item as PlantHire).Plant.StatusId = Status.Available;
+            }
+
+            return await base.RemoveAsync(item);
+        }
+
         public Task<Job> GetJob(int? id)
         {
             return Db.Jobs.SingleOrDefaultAsync(f => f.Id == id);

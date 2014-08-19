@@ -27,7 +27,7 @@ namespace RussellGroup.Pims.Website.Controllers
         // GET: /Plant/
         public ActionResult Index()
         {
-            return View();
+            return View("Index");
         }
 
         // https://github.com/ALMMa/datatables.mvc
@@ -87,12 +87,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await _repository.FindAsync(id);
+            var plant = await _repository.FindAsync(id);
             if (plant == null)
             {
                 return HttpNotFound();
             }
-            return View(plant);
+            return View("Details", plant);
         }
 
         // GET: /Plant/Jobs/5
@@ -102,12 +102,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await _repository.FindAsync(id);
+            var plant = await _repository.FindAsync(id);
             if (plant == null)
             {
                 return HttpNotFound();
             }
-            return View(plant);
+            return View("Jobs", plant);
         }
 
         // https://github.com/ALMMa/datatables.mvc
@@ -147,15 +147,15 @@ namespace RussellGroup.Pims.Website.Controllers
                 .Skip(model.Start)
                 .Take(model.Length)
                 .ToList()
-                .Select(f => new
+                .Select(c => new
                 {
-                    f.Id,
-                    f.XJobId,
-                    f.Description,
-                    WhenStarted = f.WhenStarted.HasValue ? f.WhenStarted.Value.ToShortDateString() : string.Empty,
-                    WhenEnded = f.WhenEnded.HasValue ? f.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    f.ProjectManager,
-                    CrudLinks = this.CrudLinks(new { id = f.Id }, User.IsAuthorized(Role.CanEdit))
+                    c.Id,
+                    c.XJobId,
+                    c.Description,
+                    WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
+                    WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
+                    c.ProjectManager,
+                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
             return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
@@ -166,7 +166,7 @@ namespace RussellGroup.Pims.Website.Controllers
         public ActionResult Create()
         {
             var plant = new Plant { WhenPurchased = DateTime.Now };
-            return View(plant);
+            return View("Create", plant);
         }
 
         // POST: /Plant/Create
@@ -183,7 +183,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return RedirectToAction("Index");
             }
 
-            return View(plant);
+            return View("Create", plant);
         }
 
         // GET: /Plant/Edit/5
@@ -194,12 +194,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await _repository.FindAsync(id);
+            var plant = await _repository.FindAsync(id);
             if (plant == null)
             {
                 return HttpNotFound();
             }
-            return View(plant);
+            return View("Edit", plant);
         }
 
         // POST: /Plant/Edit/5
@@ -208,15 +208,32 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
+        public async Task<ActionResult> Edit(int? id, FormCollection collection)
         {
-            // TODO: prevent status change to unavailable
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                await _repository.UpdateAsync(plant);
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            return View(plant);
+            var plant = await _repository.FindAsync(id);
+            if (plant == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (TryUpdateModel<Plant>(plant, "Id,CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment".Split(',')))
+            {
+                if (plant.IsUnavailable)
+                {
+                    ModelState.AddModelError(string.Empty, "The status cannot be changed if the plant item is checked out.");
+                }
+                if (ModelState.IsValid)
+                {
+                    await _repository.UpdateAsync(plant);
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View("Edit", plant);
         }
 
         // GET: /Plant/Delete/5
@@ -227,33 +244,35 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Plant plant = await _repository.FindAsync(id);
+            var plant = await _repository.FindAsync(id);
             if (plant == null)
             {
                 return HttpNotFound();
             }
-            return View(plant);
+            return View("Delete", plant);
         }
 
         // POST: /Plant/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int? id)
         {
-            await _repository.RemoveAsync(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var plant = await _repository.FindAsync(id);
+            if (plant == null)
+            {
+                return HttpNotFound();
+            }
+            await _repository.RemoveAsync(plant);
             return RedirectToAction("Index");
         }
 
-        private new ActionResult View()
+        private ActionResult View(string viewName, Plant plant)
         {
-            return View(null);
-        }
-
-        private ActionResult View(Plant plant)
-        {
-            ViewBag.IsUnavailable = plant != null ? plant.PlantHires.Any(f => !f.WhenEnded.HasValue) : false;
-
             var categories = _repository.Categories.OrderBy(f => f.Name);
             var category = plant != null ? plant.CategoryId : 0;
             ViewBag.Categories = new SelectList(categories, "Id", "Name", category);
@@ -266,7 +285,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var condition = plant != null ? plant.ConditionId : 0;
             ViewBag.Conditions = new SelectList(conditions, "Id", "Name", condition);
 
-            return base.View(plant);
+            return base.View(viewName, plant);
         }
     }
 }

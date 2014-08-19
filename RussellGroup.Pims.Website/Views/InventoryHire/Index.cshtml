@@ -40,64 +40,31 @@
             <th class="text-right">
                 @Html.DisplayNameFor(model => hires.Quantity)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => hires.Comment)
-            </th>
             <th></th>
         </tr>
     </thead>
 
-    <tbody>
-        @foreach (var item in Model.InventoryHires)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Inventory.XInventoryId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Docket)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.WhenStarted)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.WhenEnded)
-                </td>
-                <td class="text-right">
-                    @Html.DisplayFor(modelItem => item.Rate)
-                </td>
-                <td class="text-right">
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comment)
-                </td>
-                <td class="text-center">
-                    @if (User.IsAuthorized(Role.CanEdit))
-                    { <text>@Html.ActionLink("Edit", "Edit", new { id = item.JobId, hireId = item.Id }) |</text> }
-                    @Html.ActionLink("Details", "Details", new { id = item.JobId, hireId = item.Id })
-                    @if (User.IsAuthorized(Role.CanEdit))
-                    { <text> | @Html.ActionLink("Delete", "Delete", new { id = item.JobId, hireId = item.Id })</text> }
-                </td>
-            </tr>
-        }
-    </tbody>
 </table>
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
         $(document).ready(function () {
             $('.table').dataTable({
-                "order": [[2, "desc"]],
+                "order": [[3, "desc"]],
                 "processing": true,
                 "stateSave": true,
                 "pagingType": 'full',
-                "columnDefs": [
-                    { "visible": false, "targets": [0] },
-                    { "sortable": false, "targets": [8] }
+                "serverSide": true,
+                "ajax": "@Url.Content("~/InventoryHire/GetDataTableResult?id=" + Model.Id)",
+                "columns": [
+                    { "data": "Id", "visible": false },
+                    { "data": "XInventoryId", "name": "Inventory.XInventoryId" },
+                    { "data": "Docket" },
+                    { "data": "WhenStarted" },
+                    { "data": "WhenEnded" },
+                    { "data": "Rate", "className": "text-right" },
+                    { "data": "Quantity", "className": "text-right" },
+                    { "data": "CrudLinks", "sortable": false, "className": "text-right" }
                 ]
             });
         });

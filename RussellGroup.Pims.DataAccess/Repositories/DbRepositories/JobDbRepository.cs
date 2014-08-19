@@ -11,21 +11,36 @@ namespace RussellGroup.Pims.DataAccess.Repositories
     {
         public JobDbRepository(PimsDbContext context) : base(context) { }
 
-        public override async Task<int> RemoveAsync(params object[] keyValues)
+        public override async Task<int> RemoveAsync(Job job)
         {
-            var job = await FindAsync(keyValues);
+            // remove hire is done using the repositories so that
+            // they are correctly removed, i.e. plant items have
+            // their status updated to unavailable
 
-            foreach (var hire in job.PlantHires.ToArray())
+            var plantHires = job.PlantHires.ToList();
+            var inventoryHires = job.InventoryHires.ToList();
+
+            if (plantHires.Any())
             {
-                Db.PlantHires.Remove(hire);
+                var plantHireRepository = new HireDbRepository<PlantHire>(Db);
+
+                foreach (var hire in job.PlantHires.ToList())
+                {
+                    await plantHireRepository.RemoveAsync(hire);
+                }
             }
 
-            foreach (var hire in job.InventoryHires.ToArray())
+            if (inventoryHires.Any())
             {
-                Db.InventoryHires.Remove(hire);
+                var inventoryHireRepository = new HireDbRepository<InventoryHire>(Db);
+
+                foreach (var hire in job.InventoryHires.ToList())
+                {
+                    Db.InventoryHires.Remove(hire);
+                }
             }
 
-            return await base.RemoveAsync(keyValues);
+            return await base.RemoveAsync(job);
         }
     }
 }

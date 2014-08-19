@@ -9,7 +9,7 @@
     <div class="form-horizontal">
         <h4>@SiteMaps.Current.CurrentNode.Title</h4>
         <hr />
-        @if (ViewBag.IsUnavailable)
+        @if (Model.IsUnavailable)
         {
             <div class="alert alert-warning">
                 <h4>Cannot change status</h4>
@@ -133,7 +133,7 @@
         <div class="form-group@(ViewData.ModelState.IsValidField("StatusId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Status, new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @if (ViewBag.IsUnavailable)
+                @if (Model.IsUnavailable)
                 {
                     <text>@Html.DropDownListFor(model => model.StatusId, ViewBag.Statuses as SelectList, new { @class = "form-control", disabled = "disabled" })</text>
                 }

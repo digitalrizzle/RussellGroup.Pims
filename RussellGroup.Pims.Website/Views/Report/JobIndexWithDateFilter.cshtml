@@ -10,7 +10,6 @@
 <h2>@ViewBag.Title</h2>
 
 <div class="form-horizontal" style="margin-left: -50px; margin-top: 20px">
-
     <div class="form-group">
         @Html.Label("Dated from:", new { @class = "control-label col-md-2" })
         <div class="col-md-2">
@@ -34,7 +33,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <div class="clearfix">
@@ -72,6 +70,8 @@
     @Scripts.Render("~/bundles/datatables")
     <script>
         $(document).ready(function () {
+            hasIsDirtyPrompt = false;
+
             $('.table').dataTable({
                 "order": [[3, "desc"]],
                 "processing": true,

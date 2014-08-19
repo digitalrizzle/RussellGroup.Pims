@@ -46,9 +46,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return await Db.SaveChangesAsync();
         }
 
-        public virtual async Task<int> RemoveAsync(params object[] keyValues)
+        public virtual async Task<int> RemoveAsync(T item)
         {
-            var item = await FindAsync(keyValues);
             Db.Set<T>().Remove(item);
             return await Db.SaveChangesAsync();
         }

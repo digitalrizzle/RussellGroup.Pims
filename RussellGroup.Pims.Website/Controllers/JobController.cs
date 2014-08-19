@@ -87,7 +87,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await _repository.FindAsync(id);
+            var job = await _repository.FindAsync(id);
             if (job == null)
             {
                 return HttpNotFound();
@@ -100,7 +100,7 @@ namespace RussellGroup.Pims.Website.Controllers
         public ActionResult Create()
         {
             var job = new Job { WhenStarted = DateTime.Now };
-            return View(job);
+            return View("Create", job);
         }
 
         // POST: /Job/Create
@@ -128,12 +128,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await _repository.FindAsync(id);
+            var job = await _repository.FindAsync(id);
             if (job == null)
             {
                 return HttpNotFound();
             }
-            return View(job);
+            return View("Edit", job);
         }
 
         // POST: /Job/Edit/5
@@ -142,13 +142,27 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
+        public async Task<ActionResult> Edit(int? id, FormCollection collection)
         {
-            if (ModelState.IsValid)
+            if (id == null)
             {
-                await _repository.UpdateAsync(job);
-                return RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var job = await _repository.FindAsync(id);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (TryUpdateModel<Job>(job, "Id,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment".Split(',')))
+            {
+                if (ModelState.IsValid)
+                {
+                    await _repository.UpdateAsync(job);
+                    return RedirectToAction("Index");
+                }
+            }
+
             return View("Edit", job);
         }
 
@@ -196,21 +210,30 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Job job = await _repository.FindAsync(id);
+            var job = await _repository.FindAsync(id);
             if (job == null)
             {
                 return HttpNotFound();
             }
-            return View(job);
+            return View("Delete", job);
         }
 
         // POST: /Job/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int? id)
         {
-            await _repository.RemoveAsync(id);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var job = await _repository.FindAsync(id);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
+            await _repository.RemoveAsync(job);
             return RedirectToAction("Index");
         }
 

@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="container body-content">
-        @if (ViewBag.IsHome == null)
+        @if (ViewBag.HasBreadcrumb == null || ViewBag.HasBreadcrumb)
         {
         <div class="breadcrumb">
             @Html.MvcSiteMap().SiteMapPath()
@@ -46,12 +46,12 @@
     </div>
     @Scripts.Render("~/bundles/js")
     <script>
-        var isDirty = false;
+        var hasIsDirtyPrompt = true, isDirty = false;
         var handler = window.attachEvent || window.addEventListener;
         var unloadEvent = window.attachEvent ? 'onbeforeunload' : 'beforeunload'; // make IE7, IE8 compitable
 
         handler(unloadEvent, function (e) { // for >=IE7, Chrome, Firefox
-            if (isDirty) {
+            if (hasIsDirtyPrompt && isDirty) {
                 var confirmationMessage = 'There are unsaved changes.';
                 (e || window.handler).returnValue = confirmationMessage;
                 return confirmationMessage;

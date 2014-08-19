@@ -36,7 +36,7 @@ namespace RussellGroup.Pims.DataMigration.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
         [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=C:\\Users\\Brett\\Downloads\\2" +
-            "0140327_DCL PLANT.mdb")]
+            "0140817_DCL PLANT.mdb")]
         public string OleDbConnectionString {
             get {
                 return ((string)(this["OleDbConnectionString"]));

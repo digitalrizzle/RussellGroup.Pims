@@ -12,10 +12,12 @@ namespace RussellGroup.Pims.DataMigration
     {
         protected override void Map(OleDbDataReader reader)
         {
+            var description = reader.GetValue("Description") ?? "Unnamed";
+
             var job = new Job
             {
                 XJobId = reader.GetValue("Job ID"),
-                Description = reader.GetValue("Description"),
+                Description = description,
                 WhenStarted = reader.GetDateTime("Start date"),
                 WhenEnded = reader.GetDateTime("End date"),
                 ProjectManager = reader.GetValue("Project Manager"),
