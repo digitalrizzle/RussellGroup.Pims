@@ -15,6 +15,7 @@ namespace RussellGroup.Pims.Website.Helpers
     {
         private readonly IUserRepository _repository;
         private readonly ApplicationUser _currentUser;
+        private readonly IEnumerable<ApplicationRole> _roles;
 
         public PrincipalContext Context { get; private set; }
 
@@ -25,6 +26,8 @@ namespace RussellGroup.Pims.Website.Helpers
             _currentUser = _repository.GetAll().SingleOrDefault(f =>
                     f.UserName.Equals(HttpContext.Current.User.Identity.Name, StringComparison.OrdinalIgnoreCase)
                 );
+
+            _roles = _repository.GetAllRoles().ToList();
         }
 
         public ApplicationUser GetCurrentUser()
@@ -53,7 +56,7 @@ namespace RussellGroup.Pims.Website.Helpers
         private bool IsUserInRole(ApplicationUser user, string[] roles)
         {
             return roles.Any(role =>
-                user.Roles.Any(f => f.RoleId == _repository.GetAllRoles().Single(r => r.Name == role).Id)
+                user.Roles.Any(f => f.RoleId == _roles.Single(r => r.Name == role).Id)
             );
         }
     }
