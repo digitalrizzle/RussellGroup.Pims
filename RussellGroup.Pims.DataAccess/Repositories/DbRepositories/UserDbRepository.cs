@@ -70,16 +70,21 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         public async Task<IdentityResult> UpdateAsync(ApplicationUser user, IEnumerable<string> roles)
         {
             Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
-            Db.Users.Attach(user);
 
-            var storedUser = Db.Entry(user).GetDatabaseValues();
-            var wasLockoutEnabled = (bool)storedUser["LockoutEnabled"];
+            IdentityResult result = null;
+            var storedUser = await _userManager.FindByIdAsync(user.Id);
+            var wasLockoutEnabled = storedUser.LockoutEnabled;
 
-            var result = await _userManager.UpdateAsync(user);
+            //var result = await _userManager.UpdateAsync(user);
 
-            if (!result.Succeeded)
+            //if (!result.Succeeded)
+            //{
+            //    return result;
+            //}
+
+            if (!user.UserName.Equals(storedUser.UserName, StringComparison.OrdinalIgnoreCase))
             {
-                return result;
+                return new IdentityResult("The user name cannot be changed. Delete this user and create a new user.");
             }
 
             if (!wasLockoutEnabled && user.LockoutEnabled)
@@ -132,7 +137,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return result;
         }
 
-        public new async Task<IdentityResult> RemoveAsync(params object[] keyValues)
+        public async Task<IdentityResult> RemoveAsync(params object[] keyValues)
         {
             Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
 
