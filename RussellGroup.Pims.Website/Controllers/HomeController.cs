@@ -22,6 +22,11 @@ namespace RussellGroup.Pims.Website.Controllers
             return View();
         }
 
+        public ActionResult Help()
+        {
+            return View();
+        }
+
         public ActionResult Unauthorized()
         {
             return View();
