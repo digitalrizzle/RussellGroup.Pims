@@ -266,7 +266,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="connectionStrings.config" />
+    <None Include="connectionStrings.config" />
     <Content Include="Content\DataTables-1.10.1\css\dataTables.responsive.scss" />
     <Content Include="Content\DataTables-1.10.1\css\dataTables.jqueryui.scss" />
     <None Include="MvcSiteMapSchema.xsd" />

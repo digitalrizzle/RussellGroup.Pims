@@ -13,12 +13,12 @@ namespace RussellGroup.Pims.Website.Helpers
     {
         public static MvcHtmlString GetCopyright(this HtmlHelper html)
         {
-            return new MvcHtmlString(GetVersionInfo().LegalCopyright);
+            return new MvcHtmlString(GetVersionInfo().LegalCopyright + " " + DateTime.Now.Year);
         }
 
         public static MvcHtmlString GetVersion(this HtmlHelper html)
         {
-            return new MvcHtmlString(GetVersionInfo().FileVersion);
+            return new MvcHtmlString(Assembly.GetExecutingAssembly().GetName().Version.ToString());
         }
 
         private static FileVersionInfo GetVersionInfo()
