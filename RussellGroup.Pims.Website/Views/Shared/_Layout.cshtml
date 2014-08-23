@@ -37,11 +37,15 @@
         <div class="breadcrumb">
             @Html.MvcSiteMap().SiteMapPath()
         </div>
+        <div id="environment" class="pull-right">
+            @System.Configuration.ConfigurationManager.AppSettings["Environment"]
+        </div>
         }
         @RenderBody()
         <hr />
         <footer>
-            <small>Russell Group &copy; @DateTime.Now.Year</small>
+            <small>@Html.GetCopyright()</small>
+            <small class="pull-right">Version @Html.GetVersion()</small>
         </footer>
     </div>
     @Scripts.Render("~/bundles/js")
