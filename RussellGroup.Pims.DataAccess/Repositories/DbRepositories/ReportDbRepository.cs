@@ -27,20 +27,14 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             get { return db.Categories; }
         }
 
-        public IQueryable<PlantHire> GetActivePlantHiresInJob(int? jobId)
+        public IQueryable<PlantHire> GetActivePlantHiresInJob(int jobId)
         {
-            var job = db.Jobs.Find(jobId);
-            var hire = job.PlantHires.Where(f => !f.WhenEnded.HasValue).AsQueryable();
-
-            return hire;
+            return db.PlantHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
         }
 
-        public IQueryable<InventoryHire> GetActiveInventoryHiresInJob(int? jobId)
+        public IQueryable<InventoryHire> GetActiveInventoryHiresInJob(int jobId)
         {
-            var job = db.Jobs.Find(jobId);
-            var hire = job.InventoryHires.Where(f => !f.WhenEnded.HasValue).AsQueryable();
-
-            return hire;
+            return db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
         }
 
         public PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId)

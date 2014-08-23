@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "Guide";
+}
+
+<h2>@ViewBag.Title</h2>
+<p>This is a guide to this website and it explains what this site is and how to use it.</p>
+
+<ol>
+    <li><a href="#what-is-pims">What is PIMS?</a></li>
+    <li><a href="#terms">Terms</a></li>
+    <li><a href="#how-it-works">How it works</a></li>
+</ol>
+
+<h3 id="what-is-pims">What is PIMS?</h3>
+<p>
+    PIMS stands for Plant and Inventory Management System. In this system, the management is all about
+    knowing what is on hand, where they are, and how much they have been used. We collect this information
+    so that we can monitor the hire of plant and inventory in and out of the yard and ultimately bill the
+    hire to the customer.
+</p>
+
+<h3 id="terms">Terms</h3>
+<p>Here are some terms and what they mean that we'll use throughout this guide.</p>
+<table class="table display table-striped table-hover order-column table-responsive" width="100%">
+    <thead>
+        <tr>
+            <th>Term</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Plant</td>
+            <td>
+                Machinery that requires tracking specific to that item. Each item will have a
+                unique barcode used as an identity.
+            </td>
+        </tr>
+        <tr>
+            <td>Inventory</td>
+            <td>
+                Similar to plant, these are items that are identical to each other that require
+                tracking, and there may be many of them, but they do not need a unique identity.
+            </td>
+        </tr>
+        <tr>
+            <td>Hire</td>
+            <td>
+                The temporary assignment of a plant or inventory item.
+            </td>
+        </tr>
+        <tr>
+            <td>Job</td>
+            <td>
+                The project or task that a plant or inventory item is hired against.
+            </td>
+        </tr>
+        <tr>
+            <td>Transaction</td>
+            <td>
+                A transaction is the process of hiring a plant or inventory item in or
+                out of the yard.
+            </td>
+        </tr>
+        <tr>
+            <td>Checkout</td>
+            <td>
+                A transaction for hiring out a plant or inventory item.
+            </td>
+        </tr>
+        <tr>
+            <td>Checkin</td>
+            <td>
+                A transaction for returning a plant or inventory item from hire.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3 id="how-it-works">How it works</h3>
+<p>Here's how the system works:</p>
+<ol>
+    <li>The first thing to do is to make a job. It is against this job that all hire
+    relating to a particular job can be hired out against. A job will have a description,
+    when the job starts, its project manager and quantity surveyor.</li>
+    <li>As plant is hired out, a record of this is captured against its job. This record of
+    hire is called a transaction and it has a docket number, the plant ID, and when it was
+    hired out. This process of hiring out a plant item is called "checking out". The plant
+    item is no longer available to be checked out by other jobs because it is considered to
+    be in use.</li>
+    <li>Similarly to plant, inventory can also be hired out and this is recorded as well.
+    However, unlike a plant item which has a unique ID there may be several of the same
+    inventory item checked-out at one time. This quantity is recorded as part of the transaction
+    along with a docket number (which could be the same as the plant hired out) and when it
+    was hired out.</li>
+    <li>As plant and inventory is returned to the yard, these returns are also recorded as
+    transactions. This process is referred to as "checking in". Again, a new docket number
+    is issued along with when the plant and inventory was returned. The return date is important
+    because it not only tells the system that the items have been returned, it also makes them
+    available again for other jobs and determines the period of hire for billing.</li>
+    <li>At any point in time a report can be made of plant and inventory that is currently hired
+    or has been hired. This report can be used for billing.</li>
+    <li>When the job has finished, and all plant and inventory has been returned (or "checked in")
+    a date of completion is recorded against the job. Plant or inventory can no longer be
+    checked in or check out against this job since the job has finished.</li>
+</ol>

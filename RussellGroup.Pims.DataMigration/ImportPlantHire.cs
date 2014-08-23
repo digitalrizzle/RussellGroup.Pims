@@ -32,7 +32,9 @@ namespace RussellGroup.Pims.DataMigration
 
             if (plant != null && sourceJob != null)
             {
-                var job = TargetContext.Jobs.Single(f => f.XJobId == sourceJob);
+                var job = TargetContext.Jobs.SingleOrDefault(f => f.XJobId == sourceJob);
+
+                if (job == null) return;
 
                 var hire = new PlantHire
                     {
@@ -46,11 +48,11 @@ namespace RussellGroup.Pims.DataMigration
                         Comment = reader.GetValue("Comments")
                     };
 
-                TargetContext.PlantHires.Add(hire);
-
-                bool updatePlant = true;
+                bool addHire = false;
                 DateTime? whenDisused = hire.WhenEnded.HasValue ? hire.WhenEnded : hire.WhenStarted;
 
+                // don't add plant for these jobs
+                // these are duplicated in ImportInventoryHire
                 switch (job.XJobId)
                 {
                     case "940":  // available
@@ -83,11 +85,15 @@ namespace RussellGroup.Pims.DataMigration
                         plant.WhenDisused = whenDisused;
                         break;
                     default:
-                        updatePlant = false;
+                        addHire = true;
                         break;
                 }
 
-                if (updatePlant)
+                if (addHire)
+                {
+                    TargetContext.PlantHires.Add(hire);
+                }
+                else
                 {
                     TargetContext.Entry(plant).State = EntityState.Modified;
                 }

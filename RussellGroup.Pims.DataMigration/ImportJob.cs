@@ -13,13 +13,18 @@ namespace RussellGroup.Pims.DataMigration
         protected override void Map(OleDbDataReader reader)
         {
             var description = reader.GetValue("Description") ?? "Unnamed";
+            var whenEnded = reader.GetDateTime("End date");
+
+            // only include uncompleted jobs
+            if (whenEnded.HasValue)
+                return;
 
             var job = new Job
             {
                 XJobId = reader.GetValue("Job ID"),
                 Description = description,
                 WhenStarted = reader.GetDateTime("Start date"),
-                WhenEnded = reader.GetDateTime("End date"),
+                WhenEnded = whenEnded,
                 ProjectManager = reader.GetValue("Project Manager"),
                 QuantitySurveyor = reader.GetValue("QS"),
                 Comment = reader.GetValue("Comments")
