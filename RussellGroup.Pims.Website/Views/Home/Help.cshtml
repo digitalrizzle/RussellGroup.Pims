@@ -9,9 +9,28 @@
     <li><a href="#what-is-pims">What is PIMS?</a></li>
     <li><a href="#terms">Terms</a></li>
     <li><a href="#how-it-works">How it works</a></li>
+    <li>
+        <a href="#a-working-example">A working example</a>
+        <ol>
+            <li><a href="#make-a-new-job">Make a new job</a></li>
+            <li><a href="#make-changes-to-the-job">Make changes to the job</a></li>
+            <li><a href="#hiring-out-plant-and-inventory">Hiring out plant and inventory</a></li>
+            <li><a href="#what-has-been-hired-out">What has been hired out?</a></li>
+            <li><a href="#view-the-status-of-plant">View the status of plant</a></li>
+            <li><a href="#make-changes-to-the-transactions">Make changes to the transactions</a></li>
+            <li><a href="#checking-in">Checking in</a></li>
+            <li><a href="#deleting-a-transaction">Deleting a transaction</a></li>
+        </ol>
+    </li>
+    <li>Plant status</li>
+    <li>Categories</li>
+    <li>Creating new plant</li>
+    <li>Creating new inventory</li>
+    <li>Reports</li>
+    <li>User management</li>
 </ol>
 
-<h3 id="what-is-pims">What is PIMS?</h3>
+<h3 id="what-is-pims">1. What is PIMS?</h3>
 <p>
     PIMS stands for Plant and Inventory Management System. In this system, the management is all about
     knowing what is on hand, where they are, and how much they have been used. We collect this information
@@ -19,9 +38,9 @@
     hire to the customer.
 </p>
 
-<h3 id="terms">Terms</h3>
+<h3 id="terms">2. Terms</h3>
 <p>Here are some terms and what they mean that we'll use throughout this guide.</p>
-<table class="table display table-striped table-hover order-column table-responsive" width="100%">
+<table class="table display table-striped order-column table-responsive table-help-guide">
     <thead>
         <tr>
             <th>Term</th>
@@ -30,46 +49,46 @@
     </thead>
     <tbody>
         <tr>
-            <td>Plant</td>
+            <td class="help-guide-term">Plant</td>
             <td>
                 Machinery that requires tracking specific to that item. Each item will have a
                 unique barcode used as an identity.
             </td>
         </tr>
         <tr>
-            <td>Inventory</td>
+            <td class="help-guide-term">Inventory</td>
             <td>
                 Similar to plant, these are items that are identical to each other that require
                 tracking, and there may be many of them, but they do not need a unique identity.
             </td>
         </tr>
         <tr>
-            <td>Hire</td>
+            <td class="help-guide-term">Hire</td>
             <td>
                 The temporary assignment of a plant or inventory item.
             </td>
         </tr>
         <tr>
-            <td>Job</td>
+            <td class="help-guide-term">Job</td>
             <td>
                 The project or task that a plant or inventory item is hired against.
             </td>
         </tr>
         <tr>
-            <td>Transaction</td>
+            <td class="help-guide-term">Transaction</td>
             <td>
                 A transaction is the process of hiring a plant or inventory item in or
                 out of the yard.
             </td>
         </tr>
         <tr>
-            <td>Checkout</td>
+            <td class="help-guide-term">Checkout</td>
             <td>
                 A transaction for hiring out a plant or inventory item.
             </td>
         </tr>
         <tr>
-            <td>Checkin</td>
+            <td class="help-guide-term">Checkin</td>
             <td>
                 A transaction for returning a plant or inventory item from hire.
             </td>
@@ -77,30 +96,373 @@
     </tbody>
 </table>
 
-<h3 id="how-it-works">How it works</h3>
+<h3 id="how-it-works">3. How it works</h3>
 <p>Here's how the system works:</p>
+<ul>
+    <li>
+        The first thing to do is to make a job. It is against this job that all hire
+        relating to a particular job can be hired out against. A job will have a description,
+        when the job starts, its project manager and quantity surveyor.
+    </li>
+    <li>
+        As plant is hired out, a record of this is captured against its job. This record of
+        hire is called a transaction and it has a docket number, the plant ID, and when it was
+        hired out. This process of hiring out a plant item is called "checking out". The plant
+        item is no longer available to be checked out by other jobs because it is considered to
+        be in use.
+    </li>
+    <li>
+        Similarly to plant, inventory can also be hired out and this is recorded as well.
+        However, unlike a plant item which has a unique ID there may be several of the same
+        inventory item checked-out at one time. This quantity is recorded as part of the transaction
+        along with a docket number (which could be the same as the plant hired out) and when it
+        was hired out.
+    </li>
+    <li>
+        As plant and inventory is returned to the yard, these returns are also recorded as
+        transactions. This process is referred to as "checking in". Again, a new docket number
+        is issued along with when the plant and inventory was returned. The return date is important
+        because it not only tells the system that the items have been returned, it also makes them
+        available again for other jobs and determines the period of hire for billing.
+    </li>
+    <li>
+        At any point in time a report can be made of plant and inventory that is currently hired
+        or has been hired. This report can be used for billing.
+    </li>
+    <li>
+        When the job has finished, and all plant and inventory has been returned (or "checked in")
+        a date of completion is recorded against the job. Plant or inventory can no longer be
+        checked in or check out against this job since the job has finished.
+    </li>
+</ul>
+<p>So to summarise:</p>
 <ol>
-    <li>The first thing to do is to make a job. It is against this job that all hire
-    relating to a particular job can be hired out against. A job will have a description,
-    when the job starts, its project manager and quantity surveyor.</li>
-    <li>As plant is hired out, a record of this is captured against its job. This record of
-    hire is called a transaction and it has a docket number, the plant ID, and when it was
-    hired out. This process of hiring out a plant item is called "checking out". The plant
-    item is no longer available to be checked out by other jobs because it is considered to
-    be in use.</li>
-    <li>Similarly to plant, inventory can also be hired out and this is recorded as well.
-    However, unlike a plant item which has a unique ID there may be several of the same
-    inventory item checked-out at one time. This quantity is recorded as part of the transaction
-    along with a docket number (which could be the same as the plant hired out) and when it
-    was hired out.</li>
-    <li>As plant and inventory is returned to the yard, these returns are also recorded as
-    transactions. This process is referred to as "checking in". Again, a new docket number
-    is issued along with when the plant and inventory was returned. The return date is important
-    because it not only tells the system that the items have been returned, it also makes them
-    available again for other jobs and determines the period of hire for billing.</li>
-    <li>At any point in time a report can be made of plant and inventory that is currently hired
-    or has been hired. This report can be used for billing.</li>
-    <li>When the job has finished, and all plant and inventory has been returned (or "checked in")
-    a date of completion is recorded against the job. Plant or inventory can no longer be
-    checked in or check out against this job since the job has finished.</li>
+    <li>Make a job.</li>
+    <li>Checkout plant or inventory against the job.</li>
+    <li>Checkin plant or inventory as they come back to the yard.</li>
+    <li>Repeat checking in and out plant and inventory for the duration of the job as needed.</li>
+    <li>Complete the job by setting the completion date.</li>
+</ol>
+<p>
+    That's it! All the data is captured during these steps and so reports can be generated to bill
+    the customer.
+</p>
+
+<h3 id="a-working-example">4. A working example</h3>
+<p>
+    In this section we're going to go through an example, step by step, to show just how to make a
+    job and check out, and in, plant and inventory.
+</p>
+<h4 id="make-a-new-job">4.1. Make a new job</h4>
+<p>The first step is to make our job.</p>
+<ol>
+    <li>On the main menu, click <strong>Jobs</strong>.</li>
+    <li>Just below the main menu, click <strong>Create new</strong>.</li>
+    <li>
+        Fill in each of the blank boxes next to each label. Here's what each of them mean:
+        <table class="table display table-striped order-column table-responsive table-help-guide">
+            <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Example</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="help-guide-term">id</td>
+                    <td>1001</td>
+                    <td>
+                        This is an identifier for a job; a short code. This isn't automatically
+                        assigned, so you'll need to come up with the ID yourself. It doesn't need
+                        to be unique but it may be more useful to you if it is.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">description</td>
+                    <td>My first PIMS job</td>
+                    <td>
+                        The name of the job. This name will also be shown on the billing reports.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">when started</td>
+                    <td>30/9/2014</td>
+                    <td>
+                        In regards to the billing, when the job started. You can either type in a
+                        date, or you can click the small calendar icon which will show a calendar
+                        from which you can choose a date.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">when ended</td>
+                    <td><i>leave this blank</i></td>
+                    <td>
+                        In regards to the billing, when the job completed. Leave this blank until
+                        the job has actually finished otherwise you will not be able to check in
+                        or out any plant or inventory.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">project manager</td>
+                    <td>James T. Kirk</td>
+                    <td>
+                        The project manager for the job. Start typing a name and as you type a
+                        list of names will appear. If you find one that suits, just click on it
+                        to complete the name (it saves you having to type!) If the name you want
+                        isn't there, that's ok, just continue typing in the name.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">quantity surveyor</td>
+                    <td>Spock</td>
+                    <td>
+                        The quantity surveyor for the job. Similarly to the project manager,
+                        as you begin to type a list of names will appear.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">comments</td>
+                    <td>This job is being run in parallel with the old Plant DCL database.</td>
+                    <td>
+                        Enter any other relevant information for the job in the comments. This
+                        is free text so type whatever you want. It will not impact the job.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+    <li>When you done entering the data for the job, click the <strong>Create</strong> button.</li>
+    <li>That's it! We just made a new job.</li>
+</ol>
+<div class="alert alert-danger">
+    If you entered something wrong, like accidentally entering a name for the <strong>when started</strong>
+    date then a red description with what is wrong will appear next to the problem. Go back and have a
+    look at the problem, correct it, then click <strong>Create</strong> again. The job will only be created
+    if everything has been entered as expected by the system.
+</div>
+<h4 id="make-changes-to-the-job">4.2. Make changes to the job</h4>
+<p>
+    We made a mistake in creating our job. We entered the wrong date! All we need to do is to find our job
+    and edit it. Here's what we do:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Jobs</strong>.</li>
+    <li>
+        A list of all jobs will show. On the right hand side of the page is a search box. Click in this box
+        and begin typing either the name of the job, the ID, or even the date. Anything that matches what
+        you started to type will narrow the list of jobs (this is called filtering) and will make it easier
+        to find our job. In this example, click in the search box and start typing "1001".
+    </li>
+    <li>Find our job in the filtered list, then on the right hand click <strong>Edit</strong>.</li>
+    <li>
+        We're now back to job and we can make our changes. Change the <strong>when started</strong> date to
+        1/10/2014.
+    </li>
+    <li>Click the <strong>Save</strong> button to save our changes.</li>
+    <li>That's it! We just made made changes to our job.</li>
+</ol>
+<h4 id="hiring-out-plant-and-inventory">4.3. Checkout plant and inventory</h4>
+<p>
+    Now that we've set up our job, we can start hiring out plant and inventory against it. The process of
+    hiring out plant and inventory from the yard is called a "checkout".
+</p>
+<p>
+    Here's an analogy. Say that our yard is actually a library and the plant and inventory are books. We
+    go to the library and find what we need, sometimes several books at once, then go to the librarian to
+    check out the books. Because the books have been checked out they are no longer available to use by
+    anyone else. When we're done with the books we return them to the library and the librarian will check
+    the books back into the library and they will become available to use again by someone else.
+</p>
+<p>
+    So PIMS is our computer system of the library which records what has been checked in and out, and the
+    users of PIMS (that's you) are the librarians.
+</p>
+<p>
+    Let's check out some of our plant and inventory.
+</p>
+<ol>
+    <li>On the main menu, click <strong>Jobs</strong>.</li>
+    <li>Find our job "1001" by using the search.</li>
+    <li>
+        On the right hand side of our searched job, click on <strong>Checkout</strong>. We're now at the
+        page where we can enter our checkout details.
+    </li>
+    <li>
+        We need a docket number, so for our example let's use 90001. In the box next to the <strong>docket</strong>
+        label type "90001".
+    </li>
+    <li>
+        Leave the <strong>job</strong> set to "My first PIMS job". When we searched for our job in the job list
+        page and clicked <strong>Checkout</strong> it automatically set it to the job we wanted. If we
+        searched for the wrong job we could change it here.
+    </li>
+    <li>
+        Click in the <strong>plant hire</strong> box and start typing the number "55724" which is the ID
+        for the "Tandem Axle Trailer". As you begin to  type a list of plant will appear. Click on the correct
+        item in the list. Once you click on the item the box will become greyed-out and you will no longer
+        be able to type in it.
+    </li>
+    <li>
+        We want to add one more plant item for hire. This time will use the name "Tex 19PE Jack Hammer"
+        which has an ID "55522". Click in the new <strong>plant hire</strong> box that appeared below the
+        plant we just entered and begin typing the name "Tex 19PE Jack Hammer". Once you have entered enough
+        it should appear in the list. Select the item so that the box becomes greyed-out.
+    </li>
+    <li>
+        Now we'll checkout some inventory. Click in the box beside the <strong>inventory hire</strong>
+        that says "begin typing an inventory item..." and start typing the ID "DD" for "Divvy Daggs".
+        Select "Divvy Daggs" in the list that appears. Now go back to the smaller box that says "quantity"
+        and enter 10.
+    </li>
+    <li>Click the <strong>Checkout</strong> button to checkout our plant and inventory.</li>
+    <li>That's it! We just checked our some plant and inventory to our job.</li>
+</ol>
+<div class="alert alert-danger">
+    When entering the ID or description of plant or inventory you must select it in the list that appears.
+    You will know when it has been selected because the box where you started typing will change to grey.
+</div>
+<div class="alert alert-info">
+    If you made a mistake entering a plant or inventory item, click that minus sign at the end of the
+    greyed-out box. This will remove the item.
+</div>
+<h4 id="what-has-been-hired-out">4.4. What has been hired out?</h4>
+<p>
+    Now that we've hired out some plant and inventory, what happens if we want to see what's been hired
+    out? What we're wanting to know here is what are the transactions of the job? We're now going to
+    view exactly what transactions have occurred.
+</p>
+<ol>
+    <li>On the main menu, click <strong>Jobs</strong> and find our job "1001" by using the search.</li>
+    <li>
+        On the right hand side of our searched job, click on <strong>Details</strong>. We're now at the
+        page where we can see the details of our job including how many transactions for the job have
+        occurred.
+    </li>
+    <li>
+        Click on the link next to the <strong>plant hire</strong> label. We can now see a list of all
+        the plant transactions.
+    </li>
+    <li>
+        Click back on the browser to return to the job details page and this time click on the link next
+        to the <strong>inventory hire</strong> label. We can now see a list of all the inventory transactions.
+    </li>
+</ol>
+<h4 id="view-the-status-of-plant">4.5. View the status of plant</h4>
+<p>
+    When we checkout plant we are telling PIMS that the plant is in use and cannot be used by any other job.
+    For every plant in PIMS there is a status, and when checking out plant the status changes from "available"
+    to "unavailable". So how do we see what plant is available and what isn't? We can find out by looking at
+    the plant listing.
+</p>
+<ol>
+    <li>On the main menu, click <strong>Plant</strong>.</li>
+    <li>Just like searching for jobs, find our plant "55724" by using the search.</li>
+    <li>In the filtered list, examine the line for our plant and note the status. It will say, "Unavailable".</li>
+    <li>We can find out more information about our plant by clicking on the <strong>Details</strong> link.</li>
+</ol>
+<div class="alert alert-info">
+    Inventory does not have a status since they are not unique items like plant.
+</div>
+<h4 id="make-changes-to-the-transactions">4.6. Make changes to the transactions</h4>
+<p>
+    We made a mistake when checking out our plant and inventory. For the "Tandem Axle Trailer" plant
+    item we hired it out the day before, so we need to amend the date. For the "Divvy Daggs" we
+    also hired it out the day before and hired out 20 of them instead of 10. Let's make our amendments.
+</p>
+<ol>
+    <li>
+        Go to the plant hire transactions page as in the previous section. (Hint: go to the job details page.)
+    </li>
+    <li>
+        In the plant transactions listing locate the "Tandem Axle Trailer" line and click on the
+        <strong>Edit</strong> link. We can now edit the transaction.
+    </li>
+    <li>
+        Change the date to the day before.
+    </li>
+    <li>
+        Click the <strong>Save</strong> button. We've just corrected our transaction!
+    </li>
+    <li>
+        Now, go to the plant inventory transactions page as in the previous section. (Hint: go to the job
+        details page.)
+    </li>
+    <li>
+        In the inventory transactions listing locate the "Divvy Daggs" line and click on the
+        <strong>Edit</strong> link.
+    </li>
+    <li>
+        Change the date to the day before and the quantity to 20.
+    </li>
+    <li>
+        Click the <strong>Save</strong> button. We've just corrected our transaction!
+    </li>
+</ol>
+<h4 id="checking-in">4.7. Checking in</h4>
+<p>
+    Let's say that our plant and inventory have returned to the yard, so we need to check them back
+    into the system. Remember, it's like returning the books to the library and the librarian is
+    telling their computer system that the book has been returned and can be taken out by someone else.
+</p>
+<ol>
+    <li>
+        On the main menu, click <strong>Jobs</strong> and find our job "1001" by using the search.
+    </li>
+    <li>
+        On the right hand side of our searched job, click on <strong>Checkin</strong>. We're now at the
+        page where we can see our plant and inventory that is currently hired out.
+    </li>
+    <li>
+        We need another docket number, so for our example let's use 90002. In the box next to the
+        <strong>return docket</strong> label type "90002".
+    </li>
+    <li>
+        You'll see there are two sections: one for plant hire and the other for inventory hire.
+    </li>
+    <li>
+        For the plant hire, check the checkbox beside "Tandem Axle Trailer". Leave the "Tex 19PE Jack
+        Hammer" unchecked for now.
+    </li>
+    <li>
+        For the inventory hire, check the checbox beside "Divvy Daggs".
+    </li>
+    <li>
+        Click the <strong>Checkin</strong> button. We've just checked in some plant and inventory!
+    </li>
+    <li>
+        Go to the job details page for our job and take a look at the transactions. You'll now
+        see that it says there are items that have been checked in.
+    </li>
+    <li>
+        Now go to the plant listing page (as in section 4.5) and examine the status of our plant. It will
+        say, "Available" because it has been checked in and can now by used by other jobs.
+    </li>
+</ol>
+<div class="alert alert-info">
+    PIMS knows when an item has been checked in by having an <strong>ended</strong> date in its transaction
+    which can also be set on the plant or inventory hire transaction edit pages. But it's a lot faster and
+    easier to use the <strong>Checkin</strong> page to do this. It assumes that the current date is the date
+    that it was returned to the yard.
+</div>
+<h4 id="deleting-a-transaction">4.8. Deleting a transaction</h4>
+<p>
+    Our last task for this working example is to delete a transaction. We may want to do this when we have
+    accidentally checked out plant or inventory. For our example, we didn't mean to check out the plant
+    "Tex 19PE Jack Hammer", so we're going to delete the transaction.
+</p>
+<ol>
+    <li>
+        Go to the plant hire transactions page as in the previous section. (Hint: go to the job details page.)
+    </li>
+    <li>
+        In the plant transactions listing locate the "Tandem Axle Trailer" line and click on the
+        <strong>Delete</strong> link.
+    </li>
+    <li>
+        We're now prompted to confirm the deletion. Click the <strong>Delete</strong> button.
+    </li>
+    <li>
+        That's it! Our transaction has now been deleted.
+    </li>
 </ol>
