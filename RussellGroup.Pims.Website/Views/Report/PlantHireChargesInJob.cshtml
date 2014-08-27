@@ -100,7 +100,7 @@ else
                         <td class="text-right">
                             @if (item.WhenStarted.HasValue)
                             {
-                                <text>@Html.Encode(DateTime.Now.Subtract(ViewBag.WhenStarted).Days)</text>
+                                <text>@DateTime.Now.Subtract(ViewBag.WhenStarted).Days</text>
                             }
                         </td>
                         <td class="text-right">

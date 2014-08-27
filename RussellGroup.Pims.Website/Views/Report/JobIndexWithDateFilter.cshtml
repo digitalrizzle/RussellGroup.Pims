@@ -70,8 +70,6 @@
     @Scripts.Render("~/bundles/datatables")
     <script>
         $(document).ready(function () {
-            hasIsDirtyPrompt = false;
-
             $('.table').dataTable({
                 "order": [[3, "desc"]],
                 "processing": true,

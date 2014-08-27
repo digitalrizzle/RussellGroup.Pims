@@ -49,6 +49,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 : all.Where(f =>
                     f.XPlantId.Contains(hint) ||
                     f.XPlantNewId.Contains(hint) ||
+                    f.Description.Contains(hint) ||
                     f.Category.Name.Contains(hint) ||
                     f.Status.Name.Contains(hint));
 
@@ -220,7 +221,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<Plant>(plant, "Id,CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment".Split(',')))
+            if (TryUpdateModel<Plant>(plant, "CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment".Split(',')))
             {
                 if (plant.IsUnavailable)
                 {

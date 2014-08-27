@@ -157,7 +157,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<Inventory>(plant, "Id,CategoryId,XInventoryId,Description,WhenPurchased,WhenDisused,Rate,Cost,Quantity".Split(',')))
+            if (TryUpdateModel<Inventory>(plant, "CategoryId,XInventoryId,Description,WhenPurchased,WhenDisused,Rate,Cost,Quantity".Split(',')))
             {
                 if (ModelState.IsValid)
                 {
