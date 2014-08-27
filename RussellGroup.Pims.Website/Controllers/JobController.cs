@@ -154,7 +154,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<Job>(job, "Id,XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment".Split(',')))
+            if (TryUpdateModel<Job>(job, "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment".Split(',')))
             {
                 if (ModelState.IsValid)
                 {

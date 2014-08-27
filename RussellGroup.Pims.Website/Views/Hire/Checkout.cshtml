@@ -69,14 +69,14 @@
         var nextPlant = 0, nextInventory = 0;
 
         $(document).ready(function () {
-            @foreach (var plant in Model.Plants) { <text>addPlantFormField("@plant.Description", "@plant.Id");</text> }
-            @foreach (var inventory in Model.Inventories) { <text>addInventoryFormField("@inventory.Key.Description", "@inventory.Key.Id", "@inventory.Value");</text> }
+            @foreach (var plant in Model.Plants) { <text>addPlantFormField("@plant.Description", "@plant.Id", "@plant.XPlantId");</text> }
+            @foreach (var inventory in Model.Inventories) { <text>addInventoryFormField("@inventory.Key.Description", "@inventory.Key.Id", "@inventory.Key.XInventoryId", "@inventory.Value");</text> }
 
-            addPlantFormField("", "");
-            addInventoryFormField("", "", "");
+            addPlantFormField("", "", "");
+            addInventoryFormField("", "", "", "");
         });
 
-        function addPlantFormField(description, id) {
+        function addPlantFormField(description, id, xid) {
             var next = nextPlant;
 
             var span = [
@@ -99,6 +99,7 @@
 
             if (id != "") {
                 var disabled = $("#plant-field" + next);
+                disabled.val('[' + xid + ']  ' + disabled.val());
                 disabled.typeahead("destroy");
                 disabled.attr("disabled", "disabled");
             }
@@ -106,7 +107,7 @@
             nextPlant = next;
         }
 
-        function addInventoryFormField(description, id, quantity) {
+        function addInventoryFormField(description, id, xid, quantity) {
             var next = nextInventory;
 
             var span = [
@@ -130,6 +131,7 @@
 
             if (id != "") {
                 var disabled = $("#inventory-field" + next);
+                disabled.val('[' + xid + ']  ' + disabled.val());
                 disabled.typeahead("destroy");
                 disabled.attr("disabled", "disabled");
             }
@@ -161,19 +163,20 @@
             });
 
             $(input).on("typeahead:selected", function (object, datum) {
-                $(this).typeahead("destroy");
-                $(this).attr("disabled", "disabled");
-                $(this).parent().parent().children("[id^=" + prefix + "-id-field]").val(datum.id);
+                var selected = $(this);
+                selected.val('[' + datum.xid + ']  ' + selected.val());
+                selected.typeahead("destroy");
+                selected.attr("disabled", "disabled");
+                selected.parent().parent().children("[id^=" + prefix + "-id-field]").val(datum.id);
 
                 if (prefix == "plant")
-                    addPlantFormField("", "");
+                    addPlantFormField("", "", "");
                 else
-                    addInventoryFormField("", "", "");
+                    addInventoryFormField("", "", "", "");
             });
 
             if (button) {
                 $(button).on("click", function () {
-                    //$(this).prev().children(".twitter-typeahead").typeahead("destroy");
                     $(this).parent().parent().remove();
                 });
             }

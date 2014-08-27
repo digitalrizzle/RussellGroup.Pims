@@ -170,19 +170,19 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit(int? id, FormCollection collection)
+        public async Task<ActionResult> Edit(int? id, int? hireId, FormCollection collection)
         {
-            if (id == null)
+            if (hireId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var hire = await _repository.FindAsync(id);
+            var hire = await _repository.FindAsync(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<InventoryHire>(hire, "Id,InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,Comment".Split(',')))
+            if (TryUpdateModel<InventoryHire>(hire, "InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,Comment".Split(',')))
             {
                 if (ModelState.IsValid)
                 {
