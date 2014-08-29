@@ -60,18 +60,18 @@
         <dd>
             @using (Html.BeginForm())
             {
-                if (Html.IsAction("Details"))
+                if (Html.IsAction("Delete"))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="submit" value="Delete" class="btn btn-danger" />
+                    <text>&nbsp;</text>
+                }
+                else
                 {
                     <text>
                         @Html.ActionLink("Edit", "Edit", new { id = Model.User.Id }) |
                         @Html.ActionLink("Delete", "Delete", new { id = Model.User.Id }) |
                     </text>
-                }
-                else
-                {
-                    @Html.AntiForgeryToken()
-                    <input type="submit" value="Delete" class="btn btn-danger" />
-                    <text>&nbsp;</text>
                 }
                 @Html.ActionLink("Cancel", "Index", new { id = Model.User.Id })
             }

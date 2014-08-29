@@ -97,18 +97,21 @@
             {
                 if (User.IsAuthorized(Role.CanEdit))
                 {
-                    if (Html.IsAction("Details"))
+                    if (Html.IsAction("Delete"))
+                    {
+                        if (Model.CanDelete)
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="submit" value="Delete" class="btn btn-danger" />
+                            <text>&nbsp;</text>
+                        }
+                    }
+                    else
                     {
                         <text>
                             @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
                             @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
                         </text>
-                    }
-                    else if (Model.CanDelete)
-                    {
-                        @Html.AntiForgeryToken()
-                        <input type="submit" value="Delete" class="btn btn-danger" />
-                        <text>&nbsp;</text>
                     }
                 }
                 @Html.ActionLink("Cancel", "Index")

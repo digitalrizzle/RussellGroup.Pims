@@ -62,7 +62,7 @@
             {
                 var all = Model.PlantHires.Count;
                 var checkedIn = Model.PlantHires.Count(f => f.WhenEnded.HasValue);
-                
+
                 <text>@Html.ActionLink(string.Format("{0} total transactions, {1} checked in", all, checkedIn), "Index", "PlantHire", new { id = Model.Id }, null)</text>
             }
             else
@@ -99,20 +99,25 @@
             {
                 if (User.IsAuthorized(Role.CanEdit))
                 {
-                    if (Html.IsAction("Details"))
-                    {
-                        <text>
-                            @Html.ActionLink("Checkout", "Checkout", "Hire", new { id = Model.Id }, null) |
-                            @Html.ActionLink("Checkin", "Checkin", "Hire", new { id = Model.Id }, null) |
-                            @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-                        </text>
-                    }
-                    else
+                    if (Html.IsAction("Delete"))
                     {
                         @Html.AntiForgeryToken()
                         <input type="submit" value="Delete" class="btn btn-danger" />
                         <text>&nbsp;</text>
+                    }
+                    else
+                    {
+                        if (!Model.WhenEnded.HasValue)
+                        {
+                            <text>
+                                @Html.ActionLink("Checkout", "Checkout", "Hire", new { id = Model.Id }, null) |
+                                @Html.ActionLink("Checkin", "Checkin", "Hire", new { id = Model.Id }, null) |
+                            </text>
+                        }
+                        <text>
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
+                        </text>
                     }
                 }
                 @Html.ActionLink("Cancel", "Index")
