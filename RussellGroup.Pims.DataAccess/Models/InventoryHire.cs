@@ -44,6 +44,9 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "quantity")]
         public int? Quantity { get; set; }
 
+        [Display(Name = "return quantity")]
+        public int? ReturnQuantity { get; set; }
+
         [Display(Name = "comments")]
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }

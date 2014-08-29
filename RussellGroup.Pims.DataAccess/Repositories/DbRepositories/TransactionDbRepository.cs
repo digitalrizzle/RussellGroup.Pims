@@ -77,6 +77,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             // save inventory
             foreach (var pair in inventoryIdsAndQuantities)
             {
+                var quantity = pair.Value;
+
                 var inventory = await db.Inventories.SingleOrDefaultAsync(f => f.Id == pair.Key);
 
                 var hire = new InventoryHire
@@ -87,10 +89,13 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     WhenStarted = DateTime.Now,
                     WhenEnded = null,
                     Rate = inventory.Rate,
-                    Quantity = pair.Value
+                    Quantity = quantity
                 };
 
                 db.InventoryHires.Add(hire);
+
+                // update the inventory quantity
+                hire.Inventory.Quantity -= quantity.GetValueOrDefault();
             }
 
             await db.SaveChangesAsync();
@@ -118,7 +123,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             foreach (var pair in inventoryHireIdsAndQuantities)
             {
                 var id = pair.Key;
-                var quantity = pair.Value;
+                var returnQuantity = pair.Value;
 
                 var hire = db.InventoryHires.SingleOrDefault(f => f.Id == id && !f.WhenEnded.HasValue);
 
@@ -126,9 +131,12 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 {
                     hire.ReturnDocket = returnDocket;
                     hire.WhenEnded = DateTime.Now;
-                    hire.Quantity = quantity;
+                    hire.ReturnQuantity = returnQuantity;
                     db.Entry(hire).State = EntityState.Modified;
                 }
+
+                // update the inventory quantity
+                hire.Inventory.Quantity += returnQuantity.GetValueOrDefault();
             }
 
             await db.SaveChangesAsync();

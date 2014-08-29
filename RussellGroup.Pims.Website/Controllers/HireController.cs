@@ -122,6 +122,12 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
+            // set the return quantity to the original quantity
+            foreach (var hire in job.InventoryHires)
+            {
+                hire.ReturnQuantity = hire.Quantity;
+            }
+
             var transaction = new CheckinTransaction
             {
                 Job = job,
@@ -158,10 +164,17 @@ namespace RussellGroup.Pims.Website.Controllers
 
             foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.Id)) hire.IsChecked = true;
 
-            foreach (var hire in inventoryHires) if (inventoryHireIdsAndQuantities.Any(f => f.Key == hire.Id))
+            foreach (var hire in inventoryHires)
             {
-                hire.IsChecked = true;
-                hire.Quantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.Id).Value;
+                if (inventoryHireIdsAndQuantities.Any(f => f.Key == hire.Id))
+                {
+                    hire.IsChecked = true;
+                    hire.ReturnQuantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.Id).Value;
+                }
+                else
+                {
+                    hire.ReturnQuantity = hire.Quantity;
+                }
             }
 
             var transaction = new CheckinTransaction

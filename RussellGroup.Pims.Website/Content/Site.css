@@ -45,10 +45,6 @@ ol {
             right: 10px; /* space between number and text */
         }
 
-table input[type=checkbox] {
-    height: inherit !important;
-}
-
 /* styles for validation helpers */
 .field-validation-error {
     color: #b94a48;
@@ -83,10 +79,6 @@ input[type="checkbox"].input-validation-error {
     border-radius: 0;
 }
 
-th {
-    text-align: left;
-}
-
 dt, dd {
     line-height: 2;
 }
@@ -112,6 +104,28 @@ footer {
 
 .checkout-item {
     margin-bottom: 5px;
+}
+
+/* table corrections */
+
+th {
+    text-align: left;
+}
+
+table.dataTable thead .sorting:after {
+    content: "\00a0";
+}
+
+table.dataTable thead .sorting_asc:after {
+    content: "\00a0";
+}
+
+table.dataTable thead .sorting_desc:after {
+    content: "\00a0";
+}
+
+table input[type=checkbox] {
+    height: inherit !important;
 }
 
 /* typeahead */
