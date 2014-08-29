@@ -7,7 +7,7 @@
 
     @if (@Html.IsAction("Delete"))
     {
-         <h3>Are you sure you want to delete this hire transaction?</h3>
+        <h3>Are you sure you want to delete this hire transaction?</h3>
     }
     <hr />
 
@@ -95,18 +95,18 @@
             {
                 if (User.IsAuthorized(Role.CanEdit))
                 {
-                    if (Html.IsAction("Details"))
+                    if (Html.IsAction("Delete"))
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                        <text>&nbsp;</text>
+                    }
+                    else
                     {
                         <text>
                             @Html.ActionLink("Edit", "Edit", new { id = Model.JobId, hireId = Model.Id }) |
                             @Html.ActionLink("Delete", "Delete", new { id = Model.JobId, hireId = Model.Id }) |
                         </text>
-                    }
-                    else
-                    {
-                        @Html.AntiForgeryToken()
-                        <input type="submit" value="Delete" class="btn btn-danger" />
-                        <text>&nbsp;</text>
                     }
                 }
                 @Html.ActionLink("Cancel", "Index", new { id = Model.JobId })
