@@ -39,7 +39,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "cost")]
         public decimal? Cost { get; set; }
 
-        [Display(Name = "quantity")]
+        [Display(Name = "yard quantity")]
         public int Quantity { get; set; }
 
         [Display(Name = "category")]

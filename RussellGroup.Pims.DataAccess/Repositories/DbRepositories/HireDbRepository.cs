@@ -10,7 +10,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 {
     public class HireDbRepository<T> : DbRepository<T>, IHireRepository<T> where T : class
     {
-        public HireDbRepository(PimsDbContext context) : base(context)
+        public HireDbRepository(PimsDbContext context)
+            : base(context)
         {
             // ensure that only PlantHire or InventoryHire is used as the generic type argument
             var arg = this.GetType().GetGenericArguments()[0];
@@ -23,12 +24,61 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             throw new NotSupportedException();
         }
 
+        public override async Task<int> AddAsync(T item)
+        {
+            // adjust the inventory quantity
+            if (item is InventoryHire)
+            {
+                var hire = item as InventoryHire;
+
+                if (hire.ReturnQuantity.HasValue)
+                {
+                    hire.Inventory.Quantity -= hire.ReturnQuantity.Value - hire.Quantity.Value;
+                }
+                else
+                {
+                    hire.Inventory.Quantity -= hire.Quantity.Value;
+                }
+            }
+            return await base.AddAsync(item);
+        }
+
+        public override async Task<int> UpdateAsync(T item)
+        {
+            // adjust the inventory quantity
+            if (item is InventoryHire)
+            {
+                var hire = item as InventoryHire;
+                var originalHire = await Db.InventoryHires.AsNoTracking().SingleOrDefaultAsync(f => f.Id == hire.Id);
+
+                hire.Inventory.Quantity += originalHire.Quantity.GetValueOrDefault() - hire.Quantity.GetValueOrDefault();
+                hire.Inventory.Quantity += hire.ReturnQuantity.GetValueOrDefault() - originalHire.ReturnQuantity.GetValueOrDefault();
+            }
+
+            return await base.UpdateAsync(item);
+        }
+
         public override async Task<int> RemoveAsync(T item)
         {
             // set plant back to available when hire is deleted
             if (item is PlantHire)
             {
                 (item as PlantHire).Plant.StatusId = Status.Available;
+            }
+
+            // otherwise adjust the inventory quantity
+            if (item is InventoryHire)
+            {
+                var hire = item as InventoryHire;
+
+                if (hire.ReturnQuantity.HasValue)
+                {
+                    hire.Inventory.Quantity += hire.ReturnQuantity.Value - hire.Quantity.Value;
+                }
+                else
+                {
+                    hire.Inventory.Quantity += hire.Quantity.Value;
+                }
             }
 
             return await base.RemoveAsync(item);

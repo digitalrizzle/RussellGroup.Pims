@@ -14,7 +14,7 @@
         {
             @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
         }
-        
+
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.JobId)
 
@@ -82,6 +82,14 @@
                 @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
             </div>
             @Html.ValidationMessageFor(model => model.Quantity, null, new { @class = "help-block form-control-feedback" })
+        </div>
+
+        <div class="form-group@(ViewData.ModelState.IsValidField("ReturnQuantity") ? string.Empty : " has-error")">
+            @Html.LabelFor(model => model.ReturnQuantity, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                @Html.EditorFor(model => model.ReturnQuantity, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            @Html.ValidationMessageFor(model => model.ReturnQuantity, null, new { @class = "help-block form-control-feedback" })
         </div>
 
         <div class="form-group@(ViewData.ModelState.IsValidField("Comment") ? string.Empty : " has-error")">

@@ -84,7 +84,7 @@
                                 @Html.DisplayNameFor(model => inventoryHires.Inventory.XInventoryId)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => inventoryHires.Inventory.Quantity)
+                                @Html.DisplayNameFor(model => inventoryHires.ReturnQuantity)
                             </th>
                             <th>
                                 @Html.DisplayNameFor(model => inventoryHires.Docket)
@@ -101,7 +101,7 @@
                                 <td>@Html.Encode(item.InventoryId)</td>
                                 <td><input name="@("inventory-hire-id-field" + item.Id)" value="@item.Id" type="checkbox" /></td>
                                 <td>@Html.DisplayFor(model => item.Inventory.XInventoryId)</td>
-                                <td><input name="@("inventory-hire-quantity-field" + item.Id)" value="@item.Quantity" type="number" /></td>
+                                <td><input name="@("inventory-hire-quantity-field" + item.Id)" value="@item.ReturnQuantity" type="number" /></td>
                                 <td>@Html.DisplayFor(model => item.Docket)</td>
                                 <td>@Html.DisplayFor(model => item.Inventory.Description)</td>
                             </tr>

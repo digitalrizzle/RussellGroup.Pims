@@ -80,13 +80,13 @@ namespace RussellGroup.Pims.Website.Controllers
                 .ToList()
                 .Select(c => new
                 {
-                    c.Id,
                     c.Inventory.XInventoryId,
                     c.Docket,
                     WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.Rate,
                     c.Quantity,
+                    c.ReturnQuantity,
                     CrudLinks = this.CrudLinks(new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
@@ -138,7 +138,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,Comment")] InventoryHire hire)
+        public async Task<ActionResult> Create([Bind(Include = "InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,ReturnQuantity,Comment")] InventoryHire hire)
         {
             if (ModelState.IsValid)
             {
@@ -182,7 +182,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<InventoryHire>(hire, "InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,Comment".Split(',')))
+            if (TryUpdateModel<InventoryHire>(hire, "InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,ReturnQuantity,Comment".Split(',')))
             {
                 if (ModelState.IsValid)
                 {

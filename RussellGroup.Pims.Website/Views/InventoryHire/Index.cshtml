@@ -20,9 +20,6 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => hires.Id)
-            </th>
-            <th>
                 inventory id
             </th>
             <th>
@@ -39,6 +36,9 @@
             </th>
             <th class="text-right">
                 @Html.DisplayNameFor(model => hires.Quantity)
+            </th>
+            <th class="text-right">
+                @Html.DisplayNameFor(model => hires.ReturnQuantity)
             </th>
             <th></th>
         </tr>
@@ -57,13 +57,13 @@
                 "serverSide": true,
                 "ajax": "@Url.Content("~/InventoryHire/GetDataTableResult?id=" + Model.Id)",
                 "columns": [
-                    { "data": "Id", "visible": false },
                     { "data": "XInventoryId", "name": "Inventory.XInventoryId" },
                     { "data": "Docket" },
                     { "data": "WhenStarted" },
                     { "data": "WhenEnded" },
                     { "data": "Rate", "className": "text-right" },
                     { "data": "Quantity", "className": "text-right" },
+                    { "data": "ReturnQuantity", "className": "text-right" },
                     { "data": "CrudLinks", "sortable": false, "className": "text-right" }
                 ]
             });
