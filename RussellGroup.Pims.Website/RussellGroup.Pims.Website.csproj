@@ -453,7 +453,6 @@
     <Content Include="Views\Report\InventoryStocktakeInJob.cshtml" />
     <Content Include="Views\User\_Form.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
-    <Content Include="Views\Report\InventoryHireChargesSummaryInJob.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
