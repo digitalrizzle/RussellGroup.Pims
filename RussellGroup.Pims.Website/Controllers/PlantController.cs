@@ -11,6 +11,7 @@ using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
 using DataTables.Mvc;
 using LinqKit;
+using System.Data.Entity.SqlServer;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -73,7 +74,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.XPlantNewId,
                     c.Description,
                     Category = c.Category != null ? c.Category.Name : string.Empty,
-                    Jobs = _repository.GetJobs(c.Id).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetJobs(c.Id).Count().ToString(), "Jobs", new { id = c.Id }),
+                    Hire = _repository.GetPlantHire(c.Id).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetPlantHire(c.Id).Count().ToString(), "PlantHire", new { id = c.Id }),
                     Status = c.Status.Name,
                     CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
@@ -97,7 +98,7 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Plant/Jobs/5
-        public async Task<ActionResult> Jobs(int? id)
+        public async Task<ActionResult> PlantHire(int? id)
         {
             if (id == null)
             {
@@ -108,11 +109,11 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
-            return View("Jobs", plant);
+            return View("PlantHire", plant);
         }
 
         // https://github.com/ALMMa/datatables.mvc
-        public JsonResult GetJobDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
+        public JsonResult GetPlantHireDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
             if (model == null)
             {
@@ -123,21 +124,22 @@ namespace RussellGroup.Pims.Website.Controllers
             var hint = model.Search != null ? model.Search.Value : string.Empty;
             var sortColumn = model.Columns.GetSortedColumns().First();
 
-            var all = _repository.GetJobs(id).AsExpandable();
+            var all = _repository.GetPlantHire(id).AsExpandable();
 
             // filter
             var filtered = string.IsNullOrEmpty(hint)
                 ? all
                 : all.Where(f =>
-                    f.XJobId.Contains(hint) ||
-                    f.Description.Contains(hint) ||
+                    f.Plant.XPlantId.Contains(hint) ||
+                    f.Docket.Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
-                    f.ProjectManager.Contains(hint));
+                    SqlFunctions.StringConvert(f.Rate).Contains(hint) ||
+                    f.Comment.Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
-            Func<Job, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
+            Func<PlantHire, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
 
             // sorting
             var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
@@ -151,12 +153,13 @@ namespace RussellGroup.Pims.Website.Controllers
                 .Select(c => new
                 {
                     c.Id,
-                    c.XJobId,
-                    c.Description,
-                    WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
+                    c.Plant.XPlantId,
+                    c.Docket,
+                    WhenStarted = c.WhenStarted.ToShortDateString(),
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.ProjectManager,
-                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
+                    c.Rate,
+                    c.Comment,
+                    CrudLinks = this.CrudLinks("PlantHire", new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
             return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
@@ -221,12 +224,15 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<Plant>(plant, "CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment".Split(',')))
+            // ensure the status isn't updated if it is checked out
+            var includeProperties = "CategoryId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment";
+            if (!plant.IsCheckedOut)
             {
-                if (plant.IsUnavailable)
-                {
-                    ModelState.AddModelError(string.Empty, "The status cannot be changed if the plant item is checked out.");
-                }
+                includeProperties += ",StatusId";
+            }
+
+            if (TryUpdateModel<Plant>(plant, includeProperties.Split(',')))
+            {
                 if (ModelState.IsValid)
                 {
                     await _repository.UpdateAsync(plant);
@@ -280,7 +286,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var statuses = _repository.Statuses.OrderBy(f => f.Id);
             var status = plant != null ? plant.StatusId : 0;
-            ViewBag.Statuses = new SelectList(statuses, "Id", "Name", status);
+            ViewBag.Statuses = new SelectList(statuses, "Id", "Name", plant.IsCheckedOut ? Status.CheckedOut : status);
 
             var conditions = _repository.Conditions.OrderBy(f => f.Id);
             var condition = plant != null ? plant.ConditionId : 0;

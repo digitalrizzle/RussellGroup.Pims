@@ -43,7 +43,8 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var result = _repository
                 .Plants
-                .Where(f => f.StatusId == Status.Available && (f.XPlantId.StartsWith(hint) | f.Description.Contains(hint)))
+                // f.IsCheckedIn can't be used because it isn't queryable
+                .Where(f => f.PlantHires.All(h => h.WhenEnded.HasValue) && !f.WhenDisused.HasValue && (f.XPlantId.StartsWith(hint) | f.Description.Contains(hint)))
                 .Take(5)
                 .OrderBy(f => f.Description)
                 .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantId })
@@ -159,16 +160,16 @@ namespace RussellGroup.Pims.Website.Controllers
 
             // ModelState is invalid, so repopulate
             var job = await _repository.GetJob(jobId);
-            var plantHires = _repository.GetActivePlantHiresInJob(jobId).ToList();
-            var inventoryHires = _repository.GetActiveInventoryHiresInJob(jobId).ToList();
+            var plantHires = _repository.GetCheckedOutPlantHiresInJob(jobId).ToList();
+            var inventoryHires = _repository.GetCheckedOutInventoryHiresInJob(jobId).ToList();
 
-            foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.Id)) hire.IsChecked = true;
+            foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.Id)) hire.IsSelected = true;
 
             foreach (var hire in inventoryHires)
             {
                 if (inventoryHireIdsAndQuantities.Any(f => f.Key == hire.Id))
                 {
-                    hire.IsChecked = true;
+                    hire.IsSelected = true;
                     hire.ReturnQuantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.Id).Value;
                 }
                 else

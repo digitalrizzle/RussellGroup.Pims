@@ -40,11 +40,49 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     hire.Inventory.Quantity -= hire.Quantity.Value;
                 }
             }
-            return await base.AddAsync(item);
+
+            var result = await base.AddAsync(item);
+
+            // update the plant status to checked out
+            if (item is PlantHire)
+            {
+                var hire = item as PlantHire;
+
+                if (hire.Plant == null)
+                {
+                    await Db.Entry(hire).Reference(f => f.Plant).LoadAsync();
+                }
+
+                hire.Plant.StatusId = Status.CheckedOut;
+
+                await Db.SaveChangesAsync();
+            }
+
+            return result;
         }
 
         public override async Task<int> UpdateAsync(T item)
         {
+            // update the plant status to checked out
+            if (item is PlantHire)
+            {
+                var hire = item as PlantHire;
+
+                if (hire.Plant == null)
+                {
+                    await Db.Entry(hire).Reference(f => f.Plant).LoadAsync();
+                }
+
+                if (hire.IsCheckedOut)
+                {
+                    hire.Plant.StatusId = Status.CheckedOut;
+                }
+                else if (hire.Plant.IsCheckedIn && (hire.Plant.StatusId == Status.Unknown || hire.Plant.StatusId == Status.CheckedOut))
+                {
+                    hire.Plant.StatusId = Status.Available;
+                }
+            }
+
             // adjust the inventory quantity
             if (item is InventoryHire)
             {
@@ -60,10 +98,16 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public override async Task<int> RemoveAsync(T item)
         {
-            // set plant back to available when hire is deleted
+            // set plant back to available whenever possible
             if (item is PlantHire)
             {
-                (item as PlantHire).Plant.StatusId = Status.Available;
+                var hire = item as PlantHire;
+
+                // only set the status if it is truly available
+                if (hire.Plant.IsCheckedOut && (hire.Plant.StatusId == Status.Unknown || hire.Plant.StatusId == Status.CheckedOut))
+                {
+                    hire.Plant.StatusId = Status.Available;
+                }
             }
 
             // otherwise adjust the inventory quantity

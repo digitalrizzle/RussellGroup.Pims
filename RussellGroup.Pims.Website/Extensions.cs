@@ -73,9 +73,25 @@ namespace RussellGroup.Pims.Website
 
         public static string CrudLinks(this Controller controller, object routeValues, bool canEdit)
         {
-            var edit = ActionLink(controller, "Edit", "Edit", routeValues);
-            var details = ActionLink(controller, "Details", "Details", routeValues);
-            var delete = ActionLink(controller, "Delete", "Delete", routeValues);
+            return CrudLinks(controller, null, routeValues, canEdit);
+        }
+
+        public static string CrudLinks(this Controller controller, string controllerName, object routeValues, bool canEdit)
+        {
+            string edit, details, delete;
+
+            if (controllerName == null)
+            {
+                 edit = ActionLink(controller, "Edit", "Edit", routeValues);
+                 details = ActionLink(controller, "Details", "Details", routeValues);
+                 delete = ActionLink(controller, "Delete", "Delete", routeValues);
+            }
+            else
+            {
+                edit = ActionLink(controller, "Edit", "Edit", controllerName, routeValues);
+                details = ActionLink(controller, "Details", "Details", controllerName, routeValues);
+                delete = ActionLink(controller, "Delete", "Delete", controllerName, routeValues);
+            }
 
             if (canEdit)
             {

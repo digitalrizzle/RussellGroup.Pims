@@ -1,7 +1,7 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
 @{
-    var jobs = Model.PlantHires.Select(f => f.Job).Distinct().Count();
+    var hire = Model.PlantHires.Count();
 }
 
 <h2>Plant</h2>
@@ -132,16 +132,16 @@
         </dd>
 
         <dt>
-            jobs
+            plant hire
         </dt>
         <dd>
-            @if (jobs == 0)
+            @if (hire == 0)
             {
                 <text>0</text>
             }
             else
             {
-                <text>@Html.ActionLink(jobs.ToString(), "Jobs", new { id = Model.Id })</text>
+                <text>@Html.ActionLink(string.Format("{0} transactions", hire), "PlantHire", new { id = Model.Id })</text>
             }
         </dd>
     </dl>

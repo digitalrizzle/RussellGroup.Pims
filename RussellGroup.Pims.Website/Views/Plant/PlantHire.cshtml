@@ -1,49 +1,42 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.Job
+﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
 @{
-    ViewBag.Title = "Plant Hire Transactions";
-    var hires = Model.PlantHires.FirstOrDefault();
+    ViewBag.Title = "Plant hire for " + Model.Description;
+    var hire = Model.PlantHires.FirstOrDefault();
 }
 @section head {
     @Styles.Render("~/Content/datatables")
 }
 
 <h2>@ViewBag.Title</h2>
-<h3>@Model.Description</h3>
-
-@if (User.IsAuthorized(Role.CanEdit))
-{
-    <p>@Html.ActionLink("Create New", "Create", new { id = Model.Id })</p>
-}
 
 <table class="table display table-striped table-hover order-column table-responsive">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => hires.Id)
+                @Html.DisplayNameFor(model => hire.Id)
             </th>
             <th>
                 plant id
             </th>
             <th>
-                @Html.DisplayNameFor(model => hires.Docket)
+                @Html.DisplayNameFor(model => hire.Docket)
             </th>
             <th>
-                @Html.DisplayNameFor(model => hires.WhenStarted)
+                @Html.DisplayNameFor(model => hire.WhenStarted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => hires.WhenEnded)
+                @Html.DisplayNameFor(model => hire.WhenEnded)
             </th>
             <th class="text-right">
-                @Html.DisplayNameFor(model => hires.Rate)
+                @Html.DisplayNameFor(model => hire.Rate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => hires.Comment)
+                @Html.DisplayNameFor(model => hire.Comment)
             </th>
             <th></th>
         </tr>
     </thead>
-
 </table>
 
 @section scripts {
@@ -51,12 +44,12 @@
     <script>
         $(document).ready(function () {
             $('.table').dataTable({
-                "order": [[3, "desc"]],
+                "order": [[1, "asc"]],
                 "processing": true,
                 "stateSave": true,
                 "pagingType": 'full',
                 "serverSide": true,
-                "ajax": "@Url.Content("~/PlantHire/GetDataTableResult?id=" + Model.Id)",
+                "ajax": "@Url.Content("~/Plant/GetPlantHireDataTableResult?id=" + Model.Id)",
                 "columns": [
                     { "data": "Id", "visible": false },
                     { "data": "XPlantId", "name": "Plant.XPlantId" },

@@ -38,7 +38,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var unknown = plants.Count(f => f.Status.Id == Status.Unknown);
             var available = plants.Count(f => f.Status.Id == Status.Available);
-            var unavailable = plants.Count(f => f.Status.Id == Status.Unavailable);
+            var unavailable = plants.Count(f => f.Status.Id == Status.CheckedOut);
             var missing = plants.Count(f => f.Status.Id == Status.Missing);
             var stolen = plants.Count(f => f.Status.Id == Status.Stolen);
             var underRepair = plants.Count(f => f.Status.Id == Status.UnderRepair);

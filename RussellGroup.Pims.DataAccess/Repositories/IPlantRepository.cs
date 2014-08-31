@@ -13,6 +13,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         IQueryable<Status> Statuses { get; }
         IQueryable<Condition> Conditions { get; }
 
-        IQueryable<Job> GetJobs(int plantId);
+        IQueryable<PlantHire> GetPlantHire(int plantId);
     }
 }

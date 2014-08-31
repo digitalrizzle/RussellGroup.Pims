@@ -44,11 +44,13 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             factory.GenerateAuditTrigger("AspNetUserLogins", "ProviderKey", "UserId");
 
             // seed
+            //CreateUser(context, new ApplicationUser { UserName = @"DOMAIN\user name" }, new string[] { Role.CanView, Role.CanEdit, Role.CanEditCategories, Role.CanEditUsers });
+
             var statuses = new List<Status>
             {
                 new Status { Id = Status.Unknown, Name = "Unknown" },
                 new Status { Id = Status.Available, Name = "Available" },
-                new Status { Id = Status.Unavailable, Name = "Unavailable" },
+                new Status { Id = Status.CheckedOut, Name = "Checked out" },
                 new Status { Id = Status.Missing, Name = "Missing" },
                 new Status { Id = Status.Stolen, Name = "Stolen" },
                 new Status { Id = Status.UnderRepair, Name = "Under repair" },

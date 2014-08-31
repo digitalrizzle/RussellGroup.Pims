@@ -13,7 +13,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
     {
         Task<IdentityResult> AddAsync(ApplicationUser user, IEnumerable<string> roles);
         Task<IdentityResult> UpdateAsync(ApplicationUser user, IEnumerable<string> roles);
-        new Task<IdentityResult> RemoveAsync(params object[] keyValues);
+        Task<IdentityResult> RemoveAsync(params object[] keyValues);
         IQueryable<ApplicationRole> GetAllRoles();
     }
 }

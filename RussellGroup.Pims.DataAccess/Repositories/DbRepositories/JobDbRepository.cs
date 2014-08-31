@@ -17,14 +17,14 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             // they are correctly removed, i.e. plant items have
             // their status updated to unavailable
 
-            var plantHires = job.PlantHires.ToList();
-            var inventoryHires = job.InventoryHires.ToList();
+            var plantHires = job.PlantHires != null ? job.PlantHires.ToList() : new List<PlantHire>();
+            var inventoryHires = job.InventoryHires != null ? job.InventoryHires.ToList() : new List<InventoryHire>();
 
             if (plantHires.Any())
             {
                 var plantHireRepository = new HireDbRepository<PlantHire>(Db);
 
-                foreach (var hire in job.PlantHires.ToList())
+                foreach (var hire in plantHires)
                 {
                     await plantHireRepository.RemoveAsync(hire);
                 }
@@ -34,7 +34,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             {
                 var inventoryHireRepository = new HireDbRepository<InventoryHire>(Db);
 
-                foreach (var hire in job.InventoryHires.ToList())
+                foreach (var hire in inventoryHires)
                 {
                     Db.InventoryHires.Remove(hire);
                 }
