@@ -24,7 +24,7 @@ namespace RussellGroup.Pims.DataMigration
             DateTime? whenStarted = null;
             DateTime? whenEnded = null;
             try { whenStarted = reader.GetDateTime("Start date"); }
-            catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
+            catch { Trace.WriteLine(string.Format("Bad date: \"{0}\", skipping import", key)); }
             try { whenEnded = reader.GetDateTime("End date"); }
             catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
 
@@ -35,18 +35,19 @@ namespace RussellGroup.Pims.DataMigration
                 var job = TargetContext.Jobs.SingleOrDefault(f => f.XJobId == sourceJob);
 
                 if (job == null) return;
+                if (whenStarted == null) return;
 
                 var hire = new PlantHire
-                    {
-                        PlantId = plant.Id,
-                        JobId = job.Id,
-                        Docket = docket,
-                        ReturnDocket = returnDocket,
-                        WhenStarted = whenStarted,
-                        WhenEnded = whenEnded,
-                        Rate = reader.GetValueOrNull<decimal>("Rate"),
-                        Comment = reader.GetValue("Comments")
-                    };
+                {
+                    PlantId = plant.Id,
+                    JobId = job.Id,
+                    Docket = docket,
+                    ReturnDocket = returnDocket,
+                    WhenStarted = whenStarted.Value,
+                    WhenEnded = whenEnded,
+                    Rate = reader.GetValueOrNull<decimal>("Rate"),
+                    Comment = reader.GetValue("Comments")
+                };
 
                 bool addHire = false;
                 DateTime? whenDisused = hire.WhenEnded.HasValue ? hire.WhenEnded : hire.WhenStarted;
@@ -56,32 +57,29 @@ namespace RussellGroup.Pims.DataMigration
                 switch (job.XJobId)
                 {
                     case "940":  // available
-                        plant.StatusId = 2;
+                        plant.StatusId = Status.Available;
                         break;
-                    case "941":  // unavailable
-                        plant.StatusId = 3;
+                    case "941":  // in the yard but unavailable
+                        plant.StatusId = Status.WrittenOff;
                         plant.WhenDisused = whenDisused;
                         break;
-                    case "950":  // missing
-                        plant.StatusId = 4;
-                        plant.WhenDisused = whenDisused;
-                        break;
+                    case "950":  // missing (which is now classified as stolen)
                     case "960":  // stolen
                     case "961":
                     case "962":
                     case "963":
-                        plant.StatusId = 5;
+                        plant.StatusId = Status.Stolen;
                         plant.WhenDisused = whenDisused;
                         break;
                     case "970":  // repairs
-                        plant.StatusId = 6;
+                        plant.StatusId = Status.UnderRepair;
                         plant.WhenDisused = whenDisused;
                         break;
                     case "980":  // written off
                     case "981":
                     case "982":
                     case "984":
-                        plant.StatusId = 7;
+                        plant.StatusId = Status.WrittenOff;
                         plant.WhenDisused = whenDisused;
                         break;
                     default:

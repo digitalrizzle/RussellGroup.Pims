@@ -14,18 +14,17 @@ namespace RussellGroup.Pims.DataMigration
         {
             var ordinal = reader.GetOrdinal("Electrical Item?");
             var categoryName = reader.GetValue("Category");
-            var whenDisused = reader.GetDateTime("End date");
 
             var plant = new Plant
             {
                 XPlantId = reader.GetValue("Plant no"),
                 XPlantNewId = reader.GetValue("PlantNew no"),
                 CategoryId = TargetContext.Categories.Single(f => f.Name == categoryName).Id,
-                StatusId = whenDisused.HasValue ? Status.Unavailable : Status.Unknown,
+                StatusId = Status.Unknown,
                 ConditionId = Condition.Unknown,
                 Description = reader.GetValue("Description"),
                 WhenPurchased = reader.GetDateTime("Start date"),
-                WhenDisused = whenDisused, 
+                WhenDisused = reader.GetDateTime("End date"), 
                 Rate = reader.GetValueOrNull<decimal>("Rate").Value,
                 Cost = reader.GetValueOrNull<decimal>("Cost") ?? 0,
                 Serial = reader.GetValue("Serial number"),
