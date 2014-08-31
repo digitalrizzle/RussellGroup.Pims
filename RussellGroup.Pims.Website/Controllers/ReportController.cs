@@ -92,10 +92,8 @@ namespace RussellGroup.Pims.Website.Controllers
                     PlantHires = c.PlantHires.Count(),
                     InventoryHires = c.InventoryHires.Sum(f => f.Quantity),
                     CrudLinks = isFiltered ?
-                        string.Format("{0}&nbsp;| {1}&nbsp;({2})",
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesSummaryInJob", new { id = c.Id }), "Inventory&nbsp;Summary"),
-                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("DownloadInventoryHireChargesSummaryInJobCsv", new { id = c.Id }), "csv")
+                        string.Format("{0}",
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50")
                         ) :
                         string.Format("{0}&nbsp;| {1}&nbsp;| {2}",
                             string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant&nbsp;#51"),
@@ -161,14 +159,6 @@ namespace RussellGroup.Pims.Website.Controllers
             var whenEnded = ParseDate(Request["WhenEnded"]);
 
             return await JobView("PlantHireChargesInJob", id, whenStarted, whenEnded);
-        }
-
-        public async Task<ActionResult> InventoryHireChargesSummaryInJob(int? id)
-        {
-            var whenStarted = ParseDate(Request["WhenStarted"]);
-            var whenEnded = ParseDate(Request["WhenEnded"]);
-
-            return await JobView("InventoryHireChargesSummaryInJob", id, whenStarted, whenEnded);
         }
 
         public FileContentResult DownloadInventoryHireChargesSummaryInJobCsv(int? id)
