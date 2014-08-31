@@ -41,15 +41,15 @@ namespace RussellGroup.Pims.DataMigration
                 // these are duplicated in ImportPlantHire
                 switch (job.XJobId)
                 {
-                    case "940":  // available
-                    case "941":  // in the yard but unavailable
-                    case "950":  // missing
-                    case "960":  // stolen
+                    case "940":
+                    case "941":
+                    case "950":
+                    case "960":
                     case "961":
                     case "962":
                     case "963":
-                    case "970":  // repairs
-                    case "980":  // written off
+                    case "970":
+                    case "980":
                     case "981":
                     case "982":
                     case "984":

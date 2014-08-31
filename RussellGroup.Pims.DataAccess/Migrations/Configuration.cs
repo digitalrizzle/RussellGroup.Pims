@@ -51,7 +51,6 @@ namespace RussellGroup.Pims.DataAccess.Migrations
                 new Status { Id = Status.Unknown, Name = "Unknown" },
                 new Status { Id = Status.Available, Name = "Available" },
                 new Status { Id = Status.CheckedOut, Name = "Checked out" },
-                new Status { Id = Status.Missing, Name = "Missing" },
                 new Status { Id = Status.Stolen, Name = "Stolen" },
                 new Status { Id = Status.UnderRepair, Name = "Under repair" },
                 new Status { Id = Status.WrittenOff, Name = "Written off" }

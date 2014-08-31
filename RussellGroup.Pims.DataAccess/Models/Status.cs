@@ -13,10 +13,9 @@ namespace RussellGroup.Pims.DataAccess.Models
         public const int Unknown = 1;
         public const int Available = 2;
         public const int CheckedOut = 3;
-        public const int Missing = 4;
-        public const int Stolen = 5;
-        public const int UnderRepair = 6;
-        public const int WrittenOff = 7;
+        public const int Stolen = 4;
+        public const int UnderRepair = 5;
+        public const int WrittenOff = 6;
 
         [ScaffoldColumn(false)]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.None)]
