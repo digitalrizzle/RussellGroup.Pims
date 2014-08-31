@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Repositories
 {
-    public interface ITransactionRepository : IDisposable
+    public interface ITransactionRepository
     {
         Task<Job> GetJob(int? id);
 

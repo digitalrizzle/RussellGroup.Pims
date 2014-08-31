@@ -44,9 +44,13 @@ namespace RussellGroup.Pims.Website.Controllers
             var result = _repository
                 .Plants
                 // f.IsCheckedIn can't be used because it isn't queryable
-                .Where(f => f.PlantHires.All(h => h.WhenEnded.HasValue) && !f.WhenDisused.HasValue && (f.XPlantId.StartsWith(hint) | f.Description.Contains(hint)))
+                .Where(f =>
+                    !f.WhenDisused.HasValue &&
+                    (f.Description.Contains(hint) || f.XPlantId.StartsWith(hint)) &&
+                    f.PlantHires.All(h => h.WhenEnded.HasValue) &&
+                    (f.StatusId == Status.Unknown || f.StatusId == Status.Available))
                 .Take(5)
-                .OrderBy(f => f.Description)
+                .OrderBy(f => f.XPlantId)
                 .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantId })
                 .ToArray();
 
@@ -61,9 +65,11 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var result = _repository
                 .Inventories
-                .Where(f => !f.WhenDisused.HasValue && (f.XInventoryId.StartsWith(hint) | f.Description.Contains(hint)))
+                .Where(f =>
+                    !f.WhenDisused.HasValue &&
+                    (f.XInventoryId.StartsWith(hint) | f.Description.Contains(hint)))
                 .Take(5)
-                .OrderBy(f => f.Description)
+                .OrderBy(f => f.XInventoryId)
                 .Select(f => new { id = f.Id, description = f.Description, xid = f.XInventoryId })
                 .ToArray();
 
