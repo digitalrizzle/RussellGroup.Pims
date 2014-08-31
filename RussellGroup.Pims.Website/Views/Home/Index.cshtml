@@ -5,11 +5,21 @@
 
 <div style="margin-top: 50px">
     <h2>Plant</h2>
-    <div class="processing">
+    <div class="processing-plant">
         Gathering data for the chart...
     </div>
-    <div class="processed">
-        <div id="pieChart"></div>
+    <div class="processed-plant">
+        <div id="pieChart-plant"></div>
+    </div>
+</div>
+<hr />
+<div>
+    <h2>Condition</h2>
+    <div class="processing-condition">
+        Gathering data for the chart...
+    </div>
+    <div class="processed-condition">
+        <div id="pieChart-condition"></div>
     </div>
 </div>
 
@@ -23,18 +33,23 @@
         // Here is some more information about charts
         // https://google-developers.appspot.com/chart/interactive/docs/gallery/piechart
 
-        $('.processed').hide();
+        $('.processed-plant').hide();
+        $('.processed-condition').hide();
 
         // Load the Visualization API and the chart package
         google.load('visualization', '1.0', { 'packages': ['corechart'] });
 
         // Set a callback to run when the Google Visualization API is loaded
-        google.setOnLoadCallback(drawPieChart);
+        google.setOnLoadCallback(drawCharts);
+
+        function drawCharts() {
+            drawPlantChart();
+            drawConditionChart();
+        }
 
         // Callback that creates and populates a data table,
-        // instantiates the pie chart, passes in the data and
-        // draws it
-        function drawPieChart() {
+        // instantiates the pie chart, passes in the data and draws it
+        function drawPlantChart() {
             var jsonText = $.ajax({
                 url: '@Url.Content("~/Home/GetPlantData")',
                 dataType: "json",
@@ -59,43 +74,57 @@
                 'is3D': true,
                 'width': 900,
                 'height': 300,
-                'chartArea': { left:20, top:0, width:'100%', height:'100%' },
-                'colors': ['#0ea31b', '#1e90ff', '#dc0000', '#ffd700', '#ff33cc', '#808080', '#000000'],
+                'chartArea': { left: 20, top: 0, width: '100%', height: '100%' },
+                'colors': ['#0ea31b', '#1e90ff', '#dc0000', '#ffd700', '#808080', '#000000'],
                 'sliceVisibilityThreshold': 0,
                 'tooltip': { text: 'percentage' }
             };
 
             // Instantiate and draw the chart, passing in some options
-            var chart = new google.visualization.PieChart(document.getElementById('pieChart'));
+            var chart = new google.visualization.PieChart(document.getElementById('pieChart-plant'));
             chart.draw(data, options);
 
-            // Add a handler for when a part of the chart is selected
-            google.visualization.events.addListener(chart, 'select', function (e) {
-                var selection = chart.getSelection();
+            $('.processing-plant').hide();
+            $('.processed-plant').show();
+        }
 
-                var row = -1;
+        function drawConditionChart() {
+            var jsonText = $.ajax({
+                url: '@Url.Content("~/Home/GetConditionData")',
+                dataType: "json",
+                nocache: true,
+                async: false
+            }).responseText;
 
-                for (var i = 0; i < selection.length; i++) {
+            jsonData = $.parseJSON(jsonText);
 
-                    var item = selection[i];
+            // Create the data table
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Condition');
+            data.addColumn('number', 'Value');
 
-                    if (item.row != null && item.column != null) {
-                        row = item.row;
-                    } else if (item.row != null) {
-                        row = item.row;
-                    } else if (item.column != null) {
-                        row = -1;
-                    }
-                }
-
-                // Add one for the id since the rows are zero-based
-                if (row >= 0) {
-                    downloadReport(row + 1);
-                }
+            //for (item in jsonData) {
+            jsonData.map(function (item) {
+                data.addRows([[item.key, item.value]]);
             });
 
-            $('.processing').hide();
-            $('.processed').show();
+            // Set chart options
+            var options = {
+                'is3D': true,
+                'width': 900,
+                'height': 300,
+                'chartArea': { left: 20, top: 0, width: '100%', height: '100%' },
+                'colors': ['#dc0000', '#0ea31b', '#1e90ff', '#ffd700', '#808080'],
+                'sliceVisibilityThreshold': 0,
+                'tooltip': { text: 'percentage' }
+            };
+
+            // Instantiate and draw the chart, passing in some options
+            var chart = new google.visualization.PieChart(document.getElementById('pieChart-condition'));
+            chart.draw(data, options);
+
+            $('.processing-condition').hide();
+            $('.processed-condition').show();
         }
     </script>
 }

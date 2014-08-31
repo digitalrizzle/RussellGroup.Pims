@@ -36,23 +36,43 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             var plants = _repository.GetAll();
 
-            var unknown = plants.Count(f => f.Status.Id == Status.Unknown);
-            var available = plants.Count(f => f.Status.Id == Status.Available);
-            var unavailable = plants.Count(f => f.Status.Id == Status.CheckedOut);
-            var missing = plants.Count(f => f.Status.Id == Status.Missing);
-            var stolen = plants.Count(f => f.Status.Id == Status.Stolen);
-            var underRepair = plants.Count(f => f.Status.Id == Status.UnderRepair);
-            var writtenOff = plants.Count(f => f.Status.Id == Status.WrittenOff);
+            var unknown = plants.Count(f => f.StatusId == Status.Unknown);
+            var available = plants.Count(f => f.StatusId == Status.Available);
+            var checkedout = plants.Count(f => f.StatusId == Status.CheckedOut);
+            var stolen = plants.Count(f => f.StatusId == Status.Stolen);
+            var underRepair = plants.Count(f => f.StatusId == Status.UnderRepair);
+            var writtenOff = plants.Count(f => f.StatusId == Status.WrittenOff);
 
             var data = new[]
             {
                 new { key = "available", value = available },
-                new { key = "unavailable", value = unavailable },
-                new { key = "missing", value = missing },
+                new { key = "checked out", value = checkedout },
                 new { key = "unknown", value = unknown },
                 new { key = "stolen", value = stolen },
                 new { key = "under repair", value = underRepair },
                 new { key = "written off", value = writtenOff },
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult GetConditionData()
+        {
+            var plants = _repository.GetAll();
+
+            var unknown = plants.Count(f => f.ConditionId == Condition.Unknown);
+            var poor = plants.Count(f => f.ConditionId == Condition.Poor);
+            var fair = plants.Count(f => f.ConditionId == Condition.Fair);
+            var good = plants.Count(f => f.ConditionId == Condition.Good);
+            var excellent = plants.Count(f => f.ConditionId == Condition.Excellent);
+
+            var data = new[]
+            {
+                new { key = "excellent", value = excellent },
+                new { key = "good", value = good },
+                new { key = "fair", value = fair },
+                new { key = "poor", value = poor },
+                new { key = "unknown", value = unknown },
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
