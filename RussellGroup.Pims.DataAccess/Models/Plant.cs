@@ -85,7 +85,15 @@ namespace RussellGroup.Pims.DataAccess.Models
             }
         }
 
-        public bool IsUnavailable
+        public bool IsCheckedIn
+        {
+            get
+            {
+                return PlantHires != null ? PlantHires.All(f => f.WhenEnded.HasValue) : true;
+            }
+        }
+
+        public bool IsCheckedOut
         {
             get
             {

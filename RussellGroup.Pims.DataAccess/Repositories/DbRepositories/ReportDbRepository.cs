@@ -117,11 +117,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                                 .Where(f => (f.WhenStarted < whenEnded.AddDays(1) && f.WhenEnded >= whenStarted) || (f.WhenStarted < whenEnded.AddDays(1) && !f.WhenEnded.HasValue))
                                 .OrderBy(f => f.Inventory.XInventoryId))
                             {
-                                if (item.WhenStarted.HasValue)
-                                {
-                                    quantity += 1;
-                                    cost = DateTime.Now.Subtract(whenStarted).Days * item.Rate.Value;
-                                }
+                                quantity += 1;
+                                cost = DateTime.Now.Subtract(whenStarted).Days * item.Rate.Value;
 
                                 totalQuantity += 1;
                                 totalCost += cost;

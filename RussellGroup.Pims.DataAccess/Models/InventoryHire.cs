@@ -28,10 +28,11 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "return docket")]
         public string ReturnDocket { get; set; }
 
+        [Required]
         [Display(Name = "started")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime? WhenStarted { get; set; }
+        public DateTime WhenStarted { get; set; }
 
         [Display(Name = "ended")]
         [DataType(DataType.Date)]
@@ -58,6 +59,14 @@ namespace RussellGroup.Pims.DataAccess.Models
         public virtual Job Job { get; set; }
 
         [NotMapped]
-        public bool IsChecked { get; set; }
+        public bool IsSelected { get; set; }
+
+        public bool IsCheckedOut
+        {
+            get
+            {
+                return !WhenEnded.HasValue;
+            }
+        }
     }
 }

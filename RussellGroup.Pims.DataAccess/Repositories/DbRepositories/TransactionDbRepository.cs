@@ -35,20 +35,14 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             get { return db.Inventories; }
         }
 
-        public IQueryable<PlantHire> GetActivePlantHiresInJob(int? jobId)
+        public IQueryable<PlantHire> GetCheckedOutPlantHiresInJob(int? jobId)
         {
-            var job = db.Jobs.Find(jobId);
-            var hire = job.PlantHires.Where(f => !f.WhenEnded.HasValue).AsQueryable();
-
-            return hire;
+            return db.PlantHires.Where(f => f.JobId == jobId && f.IsCheckedOut);
         }
 
-        public IQueryable<InventoryHire> GetActiveInventoryHiresInJob(int? jobId)
+        public IQueryable<InventoryHire> GetCheckedOutInventoryHiresInJob(int? jobId)
         {
-            var job = db.Jobs.Find(jobId);
-            var hire = job.InventoryHires.Where(f => !f.WhenEnded.HasValue).AsQueryable();
-
-            return hire;
+            return db.InventoryHires.Where(f => f.JobId == jobId && f.IsCheckedOut);
         }
 
         public async Task Checkout(Job job, string docket, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
@@ -70,7 +64,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
                 db.PlantHires.Add(hire);
 
-                plant.StatusId = Status.Unavailable;
+                plant.StatusId = Status.CheckedOut;
                 db.Entry(plant).State = EntityState.Modified;
             }
 
@@ -106,7 +100,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             // save plant
             foreach (var id in plantHireIds)
             {
-                var hire = db.PlantHires.SingleOrDefault(f => f.Id == id && !f.WhenEnded.HasValue);
+                var hire = db.PlantHires.SingleOrDefault(f => f.Id == id && f.IsCheckedOut);
 
                 if (hire != null)
                 {
@@ -115,8 +109,12 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     db.Entry(hire).State = EntityState.Modified;
                 }
 
-                hire.Plant.StatusId = Status.Available;
-                db.Entry(hire.Plant).State = EntityState.Modified;
+                // only set the status if it is truly available
+                if (hire.Plant.IsCheckedIn)
+                {
+                    hire.Plant.StatusId = Status.Available;
+                    db.Entry(hire.Plant).State = EntityState.Modified;
+                }
             }
 
             // save inventory
@@ -125,7 +123,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 var id = pair.Key;
                 var returnQuantity = pair.Value;
 
-                var hire = db.InventoryHires.SingleOrDefault(f => f.Id == id && !f.WhenEnded.HasValue);
+                var hire = db.InventoryHires.SingleOrDefault(f => f.Id == id && f.IsCheckedOut);
 
                 if (hire != null)
                 {

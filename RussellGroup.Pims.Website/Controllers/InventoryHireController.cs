@@ -82,7 +82,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 {
                     c.Inventory.XInventoryId,
                     c.Docket,
-                    WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
+                    WhenStarted = c.WhenStarted.ToShortDateString(),
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.Rate,
                     c.Quantity,

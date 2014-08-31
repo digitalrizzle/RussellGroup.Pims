@@ -26,14 +26,9 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             get { return Db.Conditions; }
         }
 
-        public IQueryable<Job> GetJobs(int plantId)
+        public IQueryable<PlantHire> GetPlantHire(int plantId)
         {
-            var jobs = (from j in Db.Jobs
-                        join p in Db.PlantHires on j.Id equals p.JobId
-                        where !j.WhenEnded.HasValue && p.PlantId == plantId
-                        select j).Distinct();
-
-            return jobs;
+            return Db.PlantHires.Where(f => f.PlantId == plantId);
         }
     }
 }

@@ -84,7 +84,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     c.Plant.XPlantId,
                     c.Docket,
-                    WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
+                    WhenStarted = c.WhenStarted.ToShortDateString(),
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.Rate,
                     c.Comment,
@@ -142,6 +142,13 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Create([Bind(Include = "PlantId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Comment")] PlantHire hire)
         {
+            var plant = await _repository.Plants.SingleOrDefaultAsync(f => f.Id == hire.PlantId);
+
+            if (plant != null && plant.IsCheckedOut)
+            {
+                ModelState.AddModelError("PlantId", "The plant doesn't exist or is already checked out.");
+            }
+
             if (ModelState.IsValid)
             {
                 await _repository.AddAsync(hire);
@@ -184,7 +191,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<PlantHire>(hire, "PlantId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Comment".Split(',')))
+            // PlantId isn't included as we do not want to update the plant item
+            if (TryUpdateModel<PlantHire>(hire, "JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Comment".Split(',')))
             {
                 if (ModelState.IsValid)
                 {

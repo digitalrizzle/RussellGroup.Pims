@@ -12,7 +12,7 @@ namespace RussellGroup.Pims.DataAccess.Models
     {
         public const int Unknown = 1;
         public const int Available = 2;
-        public const int Unavailable = 3;
+        public const int CheckedOut = 3;
         public const int Missing = 4;
         public const int Stolen = 5;
         public const int UnderRepair = 6;

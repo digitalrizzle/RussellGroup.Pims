@@ -21,7 +21,14 @@
         <div class="form-group@(ViewData.ModelState.IsValidField("PlantId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.PlantId, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownListFor(model => model.PlantId, ViewBag.Plants as SelectList, new { @class = "form-control" })
+                @if (Html.IsAction("Edit"))
+                {
+                    @Html.DropDownListFor(model => model.PlantId, ViewBag.Plants as SelectList, new { @class = "form-control", disabled = "disabled" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.PlantId, ViewBag.Plants as SelectList, new { @class = "form-control" })
+                }
             </div>
             @Html.ValidationMessageFor(model => model.PlantId, null, new { @class = "help-block form-control-feedback" })
         </div>
