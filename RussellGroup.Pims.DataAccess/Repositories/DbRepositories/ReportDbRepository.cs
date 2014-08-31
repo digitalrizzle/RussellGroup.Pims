@@ -13,35 +13,38 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 {
     public class ReportDbRepository : IReportRepository
     {
-        private bool _disposed;
+        protected PimsDbContext Db { get; private set; }
 
-        protected PimsDbContext db = new PimsDbContext();
+        public ReportDbRepository(PimsDbContext context)
+        {
+            Db = context;
+        }
 
         public IQueryable<Job> Jobs
         {
-            get { return db.Jobs; }
+            get { return Db.Jobs; }
         }
 
         public IQueryable<Category> Categories
         {
-            get { return db.Categories; }
+            get { return Db.Categories; }
         }
 
         public IQueryable<PlantHire> GetActivePlantHiresInJob(int jobId)
         {
-            return db.PlantHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
+            return Db.PlantHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
         }
 
         public IQueryable<InventoryHire> GetActiveInventoryHiresInJob(int jobId)
         {
-            return db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
+            return Db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
         }
 
         public PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId)
         {
-            var category = db.Categories.Find(categoryId);
+            var category = Db.Categories.Find(categoryId);
 
-            var hire = from h in db.PlantHires
+            var hire = from h in Db.PlantHires
                        where h.Plant.CategoryId == categoryId.Value && !h.WhenEnded.HasValue
                        orderby h.Job.XJobId, h.WhenStarted
                        select h;
@@ -57,10 +60,10 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public InventoryLocationsReportModel GetInventoryLocationsByCategory(int? categoryId)
         {
-            var category = db.Categories.Find(categoryId);
+            var category = Db.Categories.Find(categoryId);
 
-            var hire = from j in db.Jobs
-                       join h in db.InventoryHires on j.Id equals h.JobId
+            var hire = from j in Db.Jobs
+                       join h in Db.InventoryHires on j.Id equals h.JobId
                        where h.Inventory.CategoryId == categoryId.Value && !h.WhenEnded.HasValue
                        group h by j into g
                        select new InventoryHireInJobReportModel
@@ -86,7 +89,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 {
                     using (var csv = new CsvWriter(writer))
                     {
-                        var job = db.Jobs.Find(jobId);
+                        var job = Db.Jobs.Find(jobId);
 
                         csv.WriteField(string.Format("Created: {0}", DateTime.Now.ToString("dd/MM/yyyy h:mm:ss tt"))); csv.NextRecord();
                         csv.WriteField(string.Format("Job: {0}", job.Description)); csv.NextRecord();
@@ -134,27 +137,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
                 return memory.ToArray();
             }
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize((object)this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                db.Dispose();
-            }
-
-            _disposed = true;
         }
     }
 }

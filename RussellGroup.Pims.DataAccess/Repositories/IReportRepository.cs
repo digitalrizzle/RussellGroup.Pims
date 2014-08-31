@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Repositories
 {
-    public interface IReportRepository : IDisposable
+    public interface IReportRepository
     {
         IQueryable<Job> Jobs { get; }
         IQueryable<Category> Categories { get; }
