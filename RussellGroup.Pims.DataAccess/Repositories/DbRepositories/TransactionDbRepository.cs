@@ -48,12 +48,12 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public IQueryable<PlantHire> GetCheckedOutPlantHiresInJob(int? jobId)
         {
-            return Db.PlantHires.Where(f => f.JobId == jobId && f.IsCheckedOut);
+            return Db.PlantHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
         }
 
         public IQueryable<InventoryHire> GetCheckedOutInventoryHiresInJob(int? jobId)
         {
-            return Db.InventoryHires.Where(f => f.JobId == jobId && f.IsCheckedOut);
+            return Db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
         }
 
         public async Task Checkout(Job job, string docket, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
@@ -111,7 +111,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             // save plant
             foreach (var id in plantHireIds)
             {
-                var hire = Db.PlantHires.SingleOrDefault(f => f.Id == id && f.IsCheckedOut);
+                var hire = Db.PlantHires.SingleOrDefault(f => f.Id == id && !f.WhenEnded.HasValue);
 
                 if (hire != null)
                 {
@@ -134,7 +134,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 var id = pair.Key;
                 var returnQuantity = pair.Value;
 
-                var hire = Db.InventoryHires.SingleOrDefault(f => f.Id == id && f.IsCheckedOut);
+                var hire = Db.InventoryHires.SingleOrDefault(f => f.Id == id && !f.WhenEnded.HasValue);
 
                 if (hire != null)
                 {

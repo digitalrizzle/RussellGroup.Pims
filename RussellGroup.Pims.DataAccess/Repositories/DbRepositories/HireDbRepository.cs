@@ -26,21 +26,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public override async Task<int> AddAsync(T item)
         {
-            // adjust the inventory quantity
-            if (item is InventoryHire)
-            {
-                var hire = item as InventoryHire;
-
-                if (hire.ReturnQuantity.HasValue)
-                {
-                    hire.Inventory.Quantity -= hire.ReturnQuantity.Value - hire.Quantity.Value;
-                }
-                else
-                {
-                    hire.Inventory.Quantity -= hire.Quantity.Value;
-                }
-            }
-
             var result = await base.AddAsync(item);
 
             // update the plant status to checked out
@@ -58,6 +43,28 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 await Db.SaveChangesAsync();
             }
 
+            // adjust the inventory quantity
+            if (item is InventoryHire)
+            {
+                var hire = item as InventoryHire;
+
+                if (hire.Inventory == null)
+                {
+                    await Db.Entry(hire).Reference(f => f.Inventory).LoadAsync();
+                }
+
+                if (hire.ReturnQuantity.HasValue)
+                {
+                    hire.Inventory.Quantity -= hire.ReturnQuantity.GetValueOrDefault() - hire.Quantity.GetValueOrDefault();
+                }
+                else
+                {
+                    hire.Inventory.Quantity -= hire.Quantity.GetValueOrDefault();
+                }
+
+                await Db.SaveChangesAsync();
+            }
+
             return result;
         }
 
@@ -68,10 +75,10 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             {
                 var hire = item as PlantHire;
 
-                if (hire.Plant == null)
-                {
-                    await Db.Entry(hire).Reference(f => f.Plant).LoadAsync();
-                }
+                //if (hire.Plant == null)
+                //{
+                //    await Db.Entry(hire).Reference(f => f.Plant).LoadAsync();
+                //}
 
                 if (hire.IsCheckedOut)
                 {
@@ -88,6 +95,11 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             {
                 var hire = item as InventoryHire;
                 var originalHire = await Db.InventoryHires.AsNoTracking().SingleOrDefaultAsync(f => f.Id == hire.Id);
+
+                //if (hire.Inventory == null)
+                //{
+                //    await Db.Entry(hire).Reference(f => f.Inventory).LoadAsync();
+                //}
 
                 hire.Inventory.Quantity += originalHire.Quantity.GetValueOrDefault() - hire.Quantity.GetValueOrDefault();
                 hire.Inventory.Quantity += hire.ReturnQuantity.GetValueOrDefault() - originalHire.ReturnQuantity.GetValueOrDefault();
@@ -117,11 +129,11 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
                 if (hire.ReturnQuantity.HasValue)
                 {
-                    hire.Inventory.Quantity += hire.ReturnQuantity.Value - hire.Quantity.Value;
+                    hire.Inventory.Quantity += hire.ReturnQuantity.GetValueOrDefault() - hire.Quantity.GetValueOrDefault();
                 }
                 else
                 {
-                    hire.Inventory.Quantity += hire.Quantity.Value;
+                    hire.Inventory.Quantity += hire.Quantity.GetValueOrDefault();
                 }
             }
 

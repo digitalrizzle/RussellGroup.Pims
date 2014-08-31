@@ -191,7 +191,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            // PlantId isn't included as we do not want to update the plant item
+            // PlantId isn't included as we do not want to update this
             if (TryUpdateModel<PlantHire>(hire, "JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Comment".Split(',')))
             {
                 if (ModelState.IsValid)

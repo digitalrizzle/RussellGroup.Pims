@@ -98,19 +98,13 @@ else
                             @Html.DisplayFor(model => item.WhenEnded)
                         </td>
                         <td class="text-right">
-                            @if (item.WhenStarted.HasValue)
-                            {
-                                <text>@DateTime.Now.Subtract(ViewBag.WhenStarted).Days</text>
-                            }
+                            @DateTime.Now.Subtract(ViewBag.WhenStarted).Days
                         </td>
                         <td class="text-right">
                             @Html.DisplayFor(model => item.Rate)
                         </td>
                         <td class="text-right">
-                            @if (item.WhenStarted.HasValue)
-                            {
-                                cost = DateTime.Now.Subtract(ViewBag.WhenStarted).Days * item.Rate.Value;
-                            }
+                            @{cost = DateTime.Now.Subtract(ViewBag.WhenStarted).Days * item.Rate.Value;}
                             @Html.Encode(cost)
                             @{total += cost;}
                         </td>

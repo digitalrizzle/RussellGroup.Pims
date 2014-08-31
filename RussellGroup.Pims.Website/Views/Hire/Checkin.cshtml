@@ -128,8 +128,8 @@
     <script>
         $(document).ready(function () {
             // set checkboxes if there is a postback
-            @foreach (var hire in Model.PlantHires.Where(f => f.IsChecked)) { <text>$('input[name="plant-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
-            @foreach (var hire in Model.InventoryHires.Where(f => f.IsChecked)) { <text>$('input[name="inventory-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
+            @foreach (var hire in Model.PlantHires.Where(f => f.IsSelected)) { <text>$('input[name="plant-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
+            @foreach (var hire in Model.InventoryHires.Where(f => f.IsSelected)) { <text>$('input[name="inventory-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
 
             $('#plant-hire-table').dataTable({
                 "order": [[1, "asc"]],
