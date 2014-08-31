@@ -143,7 +143,7 @@ namespace RussellGroup.Pims.Website.Controllers
             if (ModelState.IsValid)
             {
                 await _repository.AddAsync(hire);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { id = hire.JobId });
             }
             return View(hire);
         }
@@ -182,7 +182,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<InventoryHire>(hire, "InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,ReturnQuantity,Comment".Split(',')))
+            // InventoryId isn't included as we do not want to update this
+            if (TryUpdateModel<InventoryHire>(hire, "JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,ReturnQuantity,Comment".Split(',')))
             {
                 if (ModelState.IsValid)
                 {

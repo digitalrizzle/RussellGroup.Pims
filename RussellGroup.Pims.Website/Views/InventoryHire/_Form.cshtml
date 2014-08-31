@@ -21,7 +21,14 @@
         <div class="form-group@(ViewData.ModelState.IsValidField("InventoryId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.InventoryId, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.DropDownListFor(model => model.InventoryId, ViewBag.Inventories as SelectList, new { @class = "form-control" })
+                @if (Html.IsAction("Edit"))
+                {
+                    @Html.DropDownListFor(model => model.InventoryId, ViewBag.Inventories as SelectList, new { @class = "form-control", disabled = "disabled" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(model => model.InventoryId, ViewBag.Inventories as SelectList, new { @class = "form-control" })
+                }
             </div>
             @Html.ValidationMessageFor(model => model.InventoryId, null, new { @class = "help-block form-control-feedback" })
         </div>
