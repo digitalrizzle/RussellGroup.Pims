@@ -8,11 +8,23 @@
 
 <h2>@Model.Description</h2>
 <h3>@ViewBag.Title</h3>
-<h4>Project Manager: @Html.Encode(Model.ProjectManager)</h4>
+<h4>
+    Project Manager:
+    @{
+        if (string.IsNullOrWhiteSpace(Model.ProjectManager))
+        {
+            <text><i>Not assigned</i></text>
+        }
+        else
+        {
+            <text>@Model.ProjectManager</text>
+        }
+    }
+</h4>
 
-@if (Model.PlantHires.Count(f => !f.WhenEnded.HasValue) == 0)
+@if (Model.PlantHires.All(f => f.WhenEnded.HasValue))
 {
-    <p>There is no plant hire for this job.</p>
+    <p>There is no plant currently checked out (hired) for this job.</p>
 }
 else
 {
@@ -79,8 +91,7 @@ else
                         <td>
                             @Html.DisplayFor(model => item.Comment)
                         </td>
-                        <td>
-                        </td>
+                        <td></td>
                         <td>
                             @Html.DisplayFor(model => item.Plant.XPlantNewId)
                         </td>

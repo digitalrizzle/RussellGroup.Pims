@@ -460,6 +460,9 @@
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Home\Help.cshtml" />
+    <Content Include="Views\Report\YardPlantStocktake.cshtml" />
+    <Content Include="Views\Report\YardStocktake.cshtml" />
+    <Content Include="Views\Report\YardInventoryStocktake.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

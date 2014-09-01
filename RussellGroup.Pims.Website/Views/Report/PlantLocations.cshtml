@@ -7,7 +7,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-@if (Model.PlantHireInJobs.Count() == 0)
+@if (!Model.PlantHireInJobs.Any())
 {
     <p>There are no jobs for this category.</p>
 }

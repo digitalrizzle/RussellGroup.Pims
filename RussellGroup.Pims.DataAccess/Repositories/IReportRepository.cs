@@ -16,6 +16,10 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId);
         InventoryLocationsReportModel GetInventoryLocationsByCategory(int? categoryId);
 
+        IEnumerable<Plant> GetPlantCheckedIn();
+        IEnumerable<Inventory> GetInventoryCheckedIn();
+
+        [Obsolete]
         byte[] GetInventoryChargesCsv(int? jobId, DateTime whenStarted, DateTime whenEnded);
     }
 }

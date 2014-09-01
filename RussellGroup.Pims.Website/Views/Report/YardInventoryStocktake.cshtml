@@ -1,0 +1,72 @@
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Inventory>
+
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = "Yard Inventory Stocktake";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (!Model.Any())
+{
+    <p>All inventory is checked out (hired).</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.XInventoryId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th class="text-right">
+                    @Html.DisplayNameFor(model => model.Rate)
+                </th>
+                <th class="text-right">
+                    @Html.DisplayNameFor(model => model.Quantity)
+                </th>
+                <th class="text-right">
+                    hires
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var category in Model
+                .Select(f => f.Category)
+                .Distinct()
+                .OrderBy(f => f.Name)
+                .ToList())
+            {
+                <tr>
+                    <td colspan="5"><strong>@category.Name</strong></td>
+                </tr>
+                foreach (var inventory in Model
+                    .Where(f => f.Category == category && f.InventoryHires.All(h => h.WhenEnded.HasValue))
+                    .OrderBy(f => f.XInventoryId))
+                {
+                    <tr>
+                        <td>
+                            @inventory.XInventoryId
+                        </td>
+                        <td>
+                            @inventory.Description
+                        </td>
+                        <td>
+                            @inventory.Rate
+                        </td>
+                        <td>
+                            @inventory.Quantity
+                        </td>
+                        <td class="text-right">
+                            @inventory.InventoryHires.Count()
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

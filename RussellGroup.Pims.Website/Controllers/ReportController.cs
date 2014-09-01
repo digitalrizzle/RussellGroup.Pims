@@ -95,10 +95,12 @@ namespace RussellGroup.Pims.Website.Controllers
                         string.Format("{0}",
                             string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50")
                         ) :
-                        string.Format("{0}&nbsp;| {1}&nbsp;| {2}",
+                        string.Format("{0}&nbsp;| {1}",
                             string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant&nbsp;#51"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory&nbsp;#56"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake&nbsp;#70")
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory&nbsp;#56")
+
+                            // this report seems redundant
+                            //string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake&nbsp;#70")
                         )
                 });
 
@@ -161,6 +163,7 @@ namespace RussellGroup.Pims.Website.Controllers
             return await JobView("PlantHireChargesInJob", id, whenStarted, whenEnded);
         }
 
+        [Obsolete]
         public FileContentResult DownloadInventoryHireChargesSummaryInJobCsv(int? id)
         {
             var whenStarted = ParseDate(Request["WhenStarted"]);
@@ -168,6 +171,21 @@ namespace RussellGroup.Pims.Website.Controllers
             var fileName = string.Format("InventoryHireChargesSummaryInJob-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
 
             return File(_repository.GetInventoryChargesCsv(id, whenStarted, whenEnded), "text/csv", fileName);
+        }
+
+        public ActionResult YardStocktake()
+        {
+            return View("YardStocktake");
+        }
+
+        public ActionResult YardPlantStocktake()
+        {
+            return View("YardPlantStocktake", _repository.GetPlantCheckedIn());
+        }
+
+        public ActionResult YardInventoryStocktake()
+        {
+            return View("YardInventoryStocktake", _repository.GetInventoryCheckedIn());
         }
 
         private async Task<ActionResult> JobView(string viewName, int? id, DateTime whenStarted, DateTime whenEnded)

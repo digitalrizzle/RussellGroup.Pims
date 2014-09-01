@@ -1,0 +1,72 @@
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Plant>
+
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = "Yard Plant Stocktake";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@if (!Model.Any())
+{
+    <p>All plant is checked out (hired).</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.XPlantId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Status)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Condition)
+                </th>
+                <th class="text-right">
+                    hires
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var category in Model
+                .Select(f => f.Category)
+                .Distinct()
+                .OrderBy(f => f.Name)
+                .ToList())
+            {
+                <tr>
+                    <td colspan="5"><strong>@category.Name</strong></td>
+                </tr>
+                foreach (var plant in Model
+                    .Where(f => f.Category == category && f.PlantHires.All(h => h.WhenEnded.HasValue))
+                    .OrderBy(f => f.XPlantId))
+                {
+                    <tr>
+                        <td>
+                            @plant.XPlantId
+                        </td>
+                        <td>
+                            @plant.Description
+                        </td>
+                        <td>
+                            @plant.Status.Name
+                        </td>
+                        <td>
+                            @plant.Condition.Name
+                        </td>
+                        <td class="text-right">
+                            @plant.PlantHires.Count()
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

@@ -10,9 +10,9 @@
 <h3>@ViewBag.Title</h3>
 <h4>Project Manager: @Html.Encode(Model.ProjectManager)</h4>
 
-@if (Model.InventoryHires.Count(f => !f.WhenEnded.HasValue) == 0)
+@if (Model.InventoryHires.All(f => f.WhenEnded.HasValue))
 {
-    <p>There is no inventory hire for this job.</p>
+    <p>There is no inventory currently checked out (hired) for this job.</p>
 }
 else
 {
