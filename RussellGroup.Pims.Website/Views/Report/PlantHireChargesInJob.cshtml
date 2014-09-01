@@ -13,7 +13,7 @@
 
 @if (Model.PlantHires
     .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-    .Count(f => !f.WhenEnded.HasValue) == 0)
+    .All(f => f.WhenEnded.HasValue))
 {
     <p>There is no plant hire for this job in the given period.</p>
 }

@@ -81,6 +81,17 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return model;
         }
 
+        public IEnumerable<Plant> GetPlantCheckedIn()
+        {
+            return Db.Plants.Where(f => f.PlantHires.All(h => h.WhenEnded.HasValue)).ToList();
+        }
+
+        public IEnumerable<Inventory> GetInventoryCheckedIn()
+        {
+            return Db.Inventories.Where(f => f.InventoryHires.All(h => h.WhenEnded.HasValue)).ToList();
+        }
+
+        [Obsolete]
         public byte[] GetInventoryChargesCsv(int? jobId, DateTime whenStarted, DateTime whenEnded)
         {
             using (var memory = new MemoryStream())
