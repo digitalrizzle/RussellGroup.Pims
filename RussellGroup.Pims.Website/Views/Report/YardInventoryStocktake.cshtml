@@ -42,7 +42,7 @@ else
                 .ToList())
             {
                 <tr>
-                    <td colspan="5"><strong>@category.Name</strong></td>
+                    <td colspan="5"><h4>@category.Name</h4></td>
                 </tr>
                 foreach (var inventory in Model
                     .Where(f => f.Category == category && f.InventoryHires.All(h => h.WhenEnded.HasValue))

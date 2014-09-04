@@ -51,7 +51,7 @@
         // instantiates the pie chart, passes in the data and draws it
         function drawPlantChart() {
             var jsonText = $.ajax({
-                url: '@Url.Content("~/Home/GetPlantData")',
+                url: '@Url.Content("~/Report/GetPlantData")',
                 dataType: "json",
                 nocache: true,
                 async: false
@@ -90,7 +90,7 @@
 
         function drawConditionChart() {
             var jsonText = $.ajax({
-                url: '@Url.Content("~/Home/GetConditionData")',
+                url: '@Url.Content("~/Report/GetConditionData")',
                 dataType: "json",
                 nocache: true,
                 async: false

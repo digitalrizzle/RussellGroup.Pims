@@ -39,10 +39,11 @@ else
             @foreach (var category in Model.InventoryHires
                 .Select(f => f.Inventory.Category)
                 .Distinct()
-                .OrderBy(f => f.Name).ToList())
+                .OrderBy(f => f.Name)
+                .ToList())
             {
                 <tr>
-                    <td colspan="5"><strong>@Html.Encode(category.Name)</strong></td>
+                    <td colspan="5"><strong>@category.Name</strong></td>
                 </tr>
                 foreach (var inventory in Model.InventoryHires
                     .Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue)

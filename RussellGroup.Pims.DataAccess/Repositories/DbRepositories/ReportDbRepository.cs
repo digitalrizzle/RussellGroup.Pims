@@ -25,6 +25,11 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             get { return Db.Jobs; }
         }
 
+        public IQueryable<Plant> Plants
+        {
+            get { return Db.Plants; }
+        }
+
         public IQueryable<Category> Categories
         {
             get { return Db.Categories; }
@@ -81,14 +86,14 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return model;
         }
 
-        public IEnumerable<Plant> GetPlantCheckedIn()
+        public IQueryable<Plant> GetPlantCheckedIn()
         {
-            return Db.Plants.Where(f => f.PlantHires.All(h => h.WhenEnded.HasValue)).ToList();
+            return Db.Plants.Where(f => f.PlantHires.All(h => h.WhenEnded.HasValue));
         }
 
-        public IEnumerable<Inventory> GetInventoryCheckedIn()
+        public IQueryable<Inventory> GetInventoryCheckedIn()
         {
-            return Db.Inventories.Where(f => f.InventoryHires.All(h => h.WhenEnded.HasValue)).ToList();
+            return Db.Inventories.Where(f => f.InventoryHires.All(h => h.WhenEnded.HasValue));
         }
 
         [Obsolete]

@@ -4,5 +4,10 @@
 
 <h2>@ViewBag.Title</h2>
 
+<div class="alert alert-warning">
+    <p>It may take some time to run these reports.</p>
+</div>
+
 <p>@Html.ActionLink("Plant", "YardPlantStocktake", null, new { target = "_blank" })</p>
+<p>@Html.ActionLink("Plant Status", "PlantStatus", null, new { target = "_blank" })</p>
 <p>@Html.ActionLink("Inventory", "YardInventoryStocktake", null, new { target = "_blank" })</p>

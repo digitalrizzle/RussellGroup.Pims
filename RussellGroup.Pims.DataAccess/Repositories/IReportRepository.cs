@@ -11,13 +11,14 @@ namespace RussellGroup.Pims.DataAccess.Repositories
     public interface IReportRepository
     {
         IQueryable<Job> Jobs { get; }
+        IQueryable<Plant> Plants { get; }
         IQueryable<Category> Categories { get; }
 
         PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId);
         InventoryLocationsReportModel GetInventoryLocationsByCategory(int? categoryId);
 
-        IEnumerable<Plant> GetPlantCheckedIn();
-        IEnumerable<Inventory> GetInventoryCheckedIn();
+        IQueryable<Plant> GetPlantCheckedIn();
+        IQueryable<Inventory> GetInventoryCheckedIn();
 
         [Obsolete]
         byte[] GetInventoryChargesCsv(int? jobId, DateTime whenStarted, DateTime whenEnded);
