@@ -463,6 +463,7 @@
     <Content Include="Views\Report\YardPlantStocktake.cshtml" />
     <Content Include="Views\Report\YardStocktake.cshtml" />
     <Content Include="Views\Report\YardInventoryStocktake.cshtml" />
+    <Content Include="Views\Report\PlantStatus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

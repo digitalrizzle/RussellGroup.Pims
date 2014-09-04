@@ -24,6 +24,54 @@ namespace RussellGroup.Pims.Website.Controllers
             _repository = repository;
         }
 
+        // plant status chart data
+        public JsonResult GetPlantData()
+        {
+            var plants = _repository.Plants;
+
+            var unknown = plants.Count(f => f.StatusId == Status.Unknown);
+            var available = plants.Count(f => f.StatusId == Status.Available);
+            var checkedout = plants.Count(f => f.StatusId == Status.CheckedOut);
+            var stolen = plants.Count(f => f.StatusId == Status.Stolen);
+            var underRepair = plants.Count(f => f.StatusId == Status.UnderRepair);
+            var writtenOff = plants.Count(f => f.StatusId == Status.WrittenOff);
+
+            var data = new[]
+            {
+                new { key = "available", value = available },
+                new { key = "checked out", value = checkedout },
+                new { key = "unknown", value = unknown },
+                new { key = "stolen", value = stolen },
+                new { key = "under repair", value = underRepair },
+                new { key = "written off", value = writtenOff },
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        // plant condition chart data
+        public JsonResult GetConditionData()
+        {
+            var plants = _repository.Plants;
+
+            var unknown = plants.Count(f => f.ConditionId == Condition.Unknown);
+            var poor = plants.Count(f => f.ConditionId == Condition.Poor);
+            var fair = plants.Count(f => f.ConditionId == Condition.Fair);
+            var good = plants.Count(f => f.ConditionId == Condition.Good);
+            var excellent = plants.Count(f => f.ConditionId == Condition.Excellent);
+
+            var data = new[]
+            {
+                new { key = "excellent", value = excellent },
+                new { key = "good", value = good },
+                new { key = "fair", value = fair },
+                new { key = "poor", value = poor },
+                new { key = "unknown", value = unknown },
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: /Report/Jobs
         public ActionResult Jobs()
         {
@@ -178,14 +226,19 @@ namespace RussellGroup.Pims.Website.Controllers
             return View("YardStocktake");
         }
 
-        public ActionResult YardPlantStocktake()
+        public async Task<ActionResult> PlantStatus()
         {
-            return View("YardPlantStocktake", _repository.GetPlantCheckedIn());
+            return View("PlantStatus", await _repository.Plants.ToListAsync());
         }
 
-        public ActionResult YardInventoryStocktake()
+        public async Task<ActionResult> YardPlantStocktake()
         {
-            return View("YardInventoryStocktake", _repository.GetInventoryCheckedIn());
+            return View("YardPlantStocktake", await _repository.GetPlantCheckedIn().ToListAsync());
+        }
+
+        public async Task<ActionResult> YardInventoryStocktake()
+        {
+            return View("YardInventoryStocktake", await _repository.GetInventoryCheckedIn().ToListAsync());
         }
 
         private async Task<ActionResult> JobView(string viewName, int? id, DateTime whenStarted, DateTime whenEnded)

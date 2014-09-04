@@ -39,10 +39,10 @@ else
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(model => job.Job.XJobId)
+                        <strong>@job.Job.XJobId</strong>
                     </td>
                     <td colspan="4">
-                        @Html.DisplayFor(model => job.Job.Description)
+                        <strong>@job.Job.Description</strong>
                     </td>
                 </tr>
                 foreach (var item in job.InventoryHires)
@@ -67,7 +67,7 @@ else
             <tr>
                 <td><strong>TOTAL</strong></td>
                 <td>
-                    <strong>@Html.Encode(Model.InventoryHireInJobs.Count()) items</strong>
+                    <strong>@Model.InventoryHireInJobs.Count() items</strong>
                 </td>
                 <td></td>
                 <td></td>

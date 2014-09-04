@@ -9,7 +9,7 @@
 
 @if (!Model.Any())
 {
-    <p>All plant is checked out (hired).</p>
+    <p>There is no plant in the system.</p>
 }
 else
 {
@@ -42,7 +42,7 @@ else
                 .ToList())
             {
                 <tr>
-                    <td colspan="5"><strong>@category.Name</strong></td>
+                    <td colspan="5"><h4>@category.Name</h4></td>
                 </tr>
                 foreach (var plant in Model
                     .Where(f => f.Category == category && f.PlantHires.All(h => h.WhenEnded.HasValue))

@@ -44,12 +44,18 @@ else
         </thead>
 
         <tbody>
-            @foreach (var category in Model.InventoryHires.Select(f => f.Inventory.Category).Distinct().OrderBy(f => f.Name).ToList())
+            @foreach (var category in Model.InventoryHires
+                .Select(f => f.Inventory.Category)
+                .Distinct()
+                .OrderBy(f => f.Name)
+                .ToList())
             {
                 <tr>
-                    <td colspan="7"><strong>@Html.Encode(category.Name)</strong></td>
+                    <td colspan="7"><strong>@category.Name</strong></td>
                 </tr>
-                foreach (var item in Model.InventoryHires.Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue).OrderBy(f => f.Inventory.XInventoryId))
+                foreach (var item in Model.InventoryHires
+                    .Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue)
+                    .OrderBy(f => f.Inventory.XInventoryId))
                 {
                     <tr>
                         <td>
