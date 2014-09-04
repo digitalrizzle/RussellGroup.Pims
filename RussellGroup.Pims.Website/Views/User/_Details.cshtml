@@ -73,7 +73,7 @@
                         @Html.ActionLink("Delete", "Delete", new { id = Model.User.Id }) |
                     </text>
                 }
-                @Html.ActionLink("Cancel", "Index", new { id = Model.User.Id })
+                <a href="#" onclick="history.go(-1);return true;">Back</a>
             }
         </dd>
     </dl>
