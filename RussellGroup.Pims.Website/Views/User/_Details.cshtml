@@ -1,13 +1,14 @@
 ﻿@model RussellGroup.Pims.Website.Models.UserRolesViewModel
 
-<h2>User</h2>
+<h3>@ViewBag.Title</h3>
+<h4>@Model.User.UserName</h4>
 
 <div>
-    <h4>@SiteMaps.Current.CurrentNode.Title</h4>
-
     @if (@Html.IsAction("Delete"))
     {
-        <h3>Are you sure you want to delete this user?</h3>
+        <div class="alert alert-warning">
+            <p>Are you sure you want to delete this user?</p>
+        </div>
     }
     <hr />
 
@@ -73,7 +74,7 @@
                         @Html.ActionLink("Delete", "Delete", new { id = Model.User.Id }) |
                     </text>
                 }
-                <a href="#" onclick="history.go(-1);return true;">Back</a>
+                @Html.ActionLink("Cancel", "Index")
             }
         </dd>
     </dl>

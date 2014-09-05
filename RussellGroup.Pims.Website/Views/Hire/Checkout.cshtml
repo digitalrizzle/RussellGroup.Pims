@@ -7,24 +7,25 @@
     @Styles.Render("~/Content/typeahead")
 }
 
-<h2>@ViewBag.Title</h2>
+<h3>@ViewBag.Title</h3>
+@if (Model.Job != null)
+{
+    <h4>@Model.Job.XJobId</h4>
+    <h5>@Model.Job.Description</h5>
+}
+
+<hr />
+
+@if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+{
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+}
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        @if (@Model.Job != null)
-        {
-            <h4>@Model.Job.Description</h4>
-        }
-        <hr />
-
-        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
-        {
-            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
-        }
-
         <div class="form-group@(ViewData.ModelState.IsValidField("Docket") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Docket, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
@@ -57,7 +58,7 @@
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Checkout" class="btn btn-primary" />
                 &nbsp;
-                @Html.ActionLink("Cancel", "Index", "Job", null, new { @class = "btn-cancel" })
+                @Html.ActionLink("Cancel", "Index", "Job")
             </div>
         </div>
     </div>

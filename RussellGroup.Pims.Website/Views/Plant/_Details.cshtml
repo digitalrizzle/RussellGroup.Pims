@@ -1,14 +1,10 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
-@{
-    var hire = Model.PlantHires.Count();
-}
-
-<h2>Plant</h2>
+<h3>@ViewBag.Title</h3>
+<h4>@Model.XPlantId</h4>
+<h5>@Model.Description</h5>
 
 <div>
-    <h4>@SiteMaps.Current.CurrentNode.Title</h4>
-
     @if (@Html.IsAction("Delete"))
     {
         if (!Model.CanDelete)
@@ -20,7 +16,9 @@
         }
         else
         {
-            <h3>Are you sure you want to delete this plant item?</h3>
+            <div class="alert alert-warning">
+                <p>Are you sure you want to delete this plant item?</p>
+            </div>
         }
     }
     <hr />
@@ -135,13 +133,13 @@
             plant hire
         </dt>
         <dd>
-            @if (hire == 0)
+            @if (Model.PlantHires.Any())
             {
-                <text>0</text>
+                <text>@Html.ActionLink(string.Format("{0} transactions", Model.PlantHires.Count), "PlantHire", new { id = Model.Id })</text>
             }
             else
             {
-                <text>@Html.ActionLink(string.Format("{0} transactions", hire), "PlantHire", new { id = Model.Id })</text>
+                <text>0</text>
             }
         </dd>
     </dl>
@@ -173,7 +171,7 @@
                         </text>
                     }
                 }
-                <a href="#" onclick="history.go(-1);return true;">Back</a>
+                @Html.ActionLink("Cancel", "Index")
             }
         </dd>
     </dl>

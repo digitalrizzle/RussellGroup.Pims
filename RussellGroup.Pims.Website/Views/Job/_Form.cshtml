@@ -1,21 +1,18 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Job
 
-<h2>Job</h2>
+@if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+{
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+}
+
+<hr />
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+    @Html.HiddenFor(model => model.Id)
+
     <div class="form-horizontal">
-        <h4>@SiteMaps.Current.CurrentNode.Title</h4>
-        <hr />
-
-        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
-        {
-            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
-        }
-
-        @Html.HiddenFor(model => model.Id)
 
         <div class="form-group@(ViewData.ModelState.IsValidField("XJobId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.XJobId, new { @class = "control-label col-md-2" })
@@ -100,7 +97,7 @@
                     <input type="submit" value="Create" class="btn btn-primary" />
                 }
                 &nbsp;
-                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn-cancel" })
+                @Html.ActionLink("Cancel", "Index")
             </div>
         </div>
     </div>

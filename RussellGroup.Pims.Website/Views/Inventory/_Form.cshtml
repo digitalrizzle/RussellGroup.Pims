@@ -1,21 +1,18 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Inventory
 
-<h2>Inventory</h2>
+@if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+{
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+}
+
+<hr />
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>@SiteMaps.Current.CurrentNode.Title</h4>
-        <hr />
+    @Html.HiddenFor(model => model.Id)
 
-        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
-        {
-            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
-        }
-        
-        @Html.HiddenFor(model => model.Id)
+    <div class="form-horizontal">
 
         <div class="form-group@(ViewData.ModelState.IsValidField("XInventoryId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.XInventoryId, new { @class = "control-label col-md-2" })
@@ -104,7 +101,7 @@
                     <input type="submit" value="Create" class="btn btn-primary" />
                 }
                 &nbsp;
-                @Html.ActionLink("Cancel", "Index", null, new { @class = "btn-cancel" })
+                @Html.ActionLink("Cancel", "Index")
             </div>
         </div>
     </div>

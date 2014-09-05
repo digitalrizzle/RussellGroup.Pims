@@ -1,11 +1,13 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Job
 
 @{
-    ViewBag.Title = "Create Job";
+    ViewBag.Title = "New Job";
 }
 @section head {
     @Styles.Render("~/Content/typeahead")
 }
+
+<h3>@ViewBag.Title</h3>
 
 @Html.Partial("_Form")
 
