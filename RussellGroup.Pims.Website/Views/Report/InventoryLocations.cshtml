@@ -2,10 +2,11 @@
 
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
-    ViewBag.Title = string.Format("Inventory Locations for {0}", Model.Category.Name);
+    ViewBag.Title = "Inventory Locations";
 }
 
 <h2>@ViewBag.Title</h2>
+<h3>@Model.Category.Name</h3>
 
 @if (!Model.InventoryHireInJobs.Any())
 {
