@@ -2,12 +2,13 @@
 
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
-    ViewBag.Title = "Plant in job";
+    ViewBag.Title = "Plant in Job";
     var hires = Model.PlantHires.FirstOrDefault();
 }
 
-<h2>@Model.Description</h2>
-<h3>@ViewBag.Title</h3>
+<h4>@ViewBag.Title</h4>
+<h2>@Model.XJobId</h2>
+<h3>@Model.Description</h3>
 <h4>
     Project Manager:
     @{

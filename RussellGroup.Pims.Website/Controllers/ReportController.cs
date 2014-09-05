@@ -82,7 +82,9 @@ namespace RussellGroup.Pims.Website.Controllers
         public ActionResult JobsWithDateFilter()
         {
             var now = DateTime.Now.Date;
-            ViewBag.WhenStarted = now.AddMonths(-1);
+            var lastMonth = now.AddMonths(-1);
+
+            ViewBag.WhenStarted = new DateTime(lastMonth.Year, lastMonth.Month, 1);
             ViewBag.WhenEnded = now;
 
             return View("JobIndexWithDateFilter");

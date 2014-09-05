@@ -2,13 +2,26 @@
 
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
-    ViewBag.Title = "Inventory in job";
+    ViewBag.Title = "Inventory in Job";
     var hires = Model.InventoryHires.FirstOrDefault();
 }
 
-<h2>@Model.Description</h2>
-<h3>@ViewBag.Title</h3>
-<h4>Project Manager: @Html.Encode(Model.ProjectManager)</h4>
+<h4>@ViewBag.Title</h4>
+<h2>@Model.XJobId</h2>
+<h3>@Model.Description</h3>
+<h4>
+    Project Manager:
+    @{
+        if (string.IsNullOrWhiteSpace(Model.ProjectManager))
+        {
+            <text><i>Not assigned</i></text>
+        }
+        else
+        {
+            <text>@Model.ProjectManager</text>
+        }
+    }
+</h4>
 
 @if (Model.InventoryHires.All(f => f.WhenEnded.HasValue))
 {
@@ -50,46 +63,49 @@ else
                 .OrderBy(f => f.Name)
                 .ToList())
             {
-                <tr>
-                    <td colspan="7"><strong>@category.Name</strong></td>
-                </tr>
-                foreach (var item in Model.InventoryHires
-                    .Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue)
-                    .OrderBy(f => f.Inventory.XInventoryId))
+                if (Model.InventoryHires.Any(f => f.Inventory.Category == category && !f.WhenEnded.HasValue))
                 {
                     <tr>
-                        <td>
-                            @Html.DisplayFor(model => item.Inventory.XInventoryId)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Inventory.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Docket)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.WhenStarted)
-                        </td>
-                        <td class="text-right">
-                            @Html.DisplayFor(model => item.Rate)
-                        </td>
-                        <td class="text-right">
-                            @Html.DisplayFor(model => item.Quantity)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Comment)
-                        </td>
+                        <td colspan="7"><strong>@category.Name</strong></td>
+                    </tr>
+                    foreach (var item in Model.InventoryHires
+                        .Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue)
+                        .OrderBy(f => f.Inventory.XInventoryId))
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => item.Inventory.XInventoryId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Inventory.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Docket)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.WhenStarted)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(model => item.Rate)
+                            </td>
+                            <td class="text-right">
+                                @Html.DisplayFor(model => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Comment)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td><strong>TOTAL</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right"><strong>@Html.Encode(Model.InventoryHires.Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue).Sum(f => f.Quantity))</strong></td>
+                        <td></td>
                     </tr>
                 }
-                <tr>
-                    <td><strong>TOTAL</strong></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-right"><strong>@Html.Encode(Model.InventoryHires.Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue).Sum(f => f.Quantity))</strong></td>
-                    <td></td>
-                </tr>
             }
         </tbody>
     </table>

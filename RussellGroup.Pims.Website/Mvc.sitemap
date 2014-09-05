@@ -46,9 +46,9 @@
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Reports" controller="Report" clickable="false" visibilityProvider="RussellGroup.Pims.Website.TrimEmptyGroupingNodesVisibilityProvider, RussellGroup.Pims.Website">
       <mvcSiteMapNode title="Jobs #51, #56" action="Jobs" />
-      <mvcSiteMapNode title="Jobs by date #50" action="JobsWithDateFilter" />
+      <mvcSiteMapNode title="Charges #50" action="JobsWithDateFilter" />
       <mvcSiteMapNode title="Categories #69, #71" action="Categories" />
-      <mvcSiteMapNode title="Yard stocktake" action="YardStocktake" />
+      <mvcSiteMapNode title="Yard" action="YardStocktake" />
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Users" controller="User" action="Index">
       <mvcSiteMapNode title="Create" action="Create" visibility="SiteMapPathHelper,!*" />

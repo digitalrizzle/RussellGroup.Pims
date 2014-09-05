@@ -2,11 +2,25 @@
 
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
-    ViewBag.Title = "Inventory stocktake in job";
+    ViewBag.Title = "Inventory Stocktake in Job";
 }
 
-<h2>@Model.Description</h2>
-<h3>@ViewBag.Title</h3>
+<h4>@ViewBag.Title</h4>
+<h2>@Model.XJobId</h2>
+<h3>@Model.Description</h3>
+<h4>
+    Project Manager:
+    @{
+        if (string.IsNullOrWhiteSpace(Model.ProjectManager))
+        {
+            <text><i>Not assigned</i></text>
+        }
+        else
+        {
+            <text>@Model.ProjectManager</text>
+        }
+    }
+</h4>
 
 @if (Model.InventoryHires.All(f => f.WhenEnded.HasValue))
 {
