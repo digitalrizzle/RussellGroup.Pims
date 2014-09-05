@@ -1,11 +1,13 @@
 ﻿@model RussellGroup.Pims.Website.Models.UserRolesViewModel
 
 @{
-    ViewBag.Title = "Create User";
+    ViewBag.Title = "New User";
 }
 @section head {
     @Styles.Render("~/Content/datatables")
 }
+
+<h3>@ViewBag.Title</h3>
 
 @Html.Partial("_Form")
 

@@ -109,7 +109,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
-            return View("PlantHire", plant);
+            return View("PlantHireIndex", plant);
         }
 
         // https://github.com/ALMMa/datatables.mvc
@@ -131,6 +131,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 ? all
                 : all.Where(f =>
                     f.Plant.XPlantId.Contains(hint) ||
+                    f.Job.XJobId.Contains(hint) ||
                     f.Docket.Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
@@ -152,8 +153,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 .ToList()
                 .Select(c => new
                 {
-                    c.Id,
                     c.Plant.XPlantId,
+                    c.Job.XJobId,
                     c.Docket,
                     WhenStarted = c.WhenStarted.ToShortDateString(),
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,

@@ -1,11 +1,13 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Category
 
 @{
-    ViewBag.Title = "Create Category";
+    ViewBag.Title = "New Category";
 }
 @section head {
     @Styles.Render("~/Content/typeahead")
 }
+
+<h3>@ViewBag.Title</h3>
 
 @Html.Partial("_Form")
 

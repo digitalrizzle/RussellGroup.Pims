@@ -113,15 +113,15 @@ th {
 }
 
 table.dataTable thead .sorting:after {
-    content: "\00a0";
+    content: "\00a0\00a0";
 }
 
 table.dataTable thead .sorting_asc:after {
-    content: "\00a0";
+    content: "\00a0\00a0";
 }
 
 table.dataTable thead .sorting_desc:after {
-    content: "\00a0";
+    content: "\00a0\00a0";
 }
 
 table input[type=checkbox] {

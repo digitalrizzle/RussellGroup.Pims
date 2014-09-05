@@ -433,7 +433,7 @@
     <Content Include="Views\InventoryHire\_Details.cshtml" />
     <Content Include="Views\InventoryHire\_Form.cshtml" />
     <Content Include="Views\Hire\Checkin.cshtml" />
-    <Content Include="Views\Plant\PlantHire.cshtml" />
+    <Content Include="Views\Plant\PlantHireIndex.cshtml" />
     <Content Include="Views\Category\Create.cshtml" />
     <Content Include="Views\Category\Delete.cshtml" />
     <Content Include="Views\Category\Details.cshtml" />

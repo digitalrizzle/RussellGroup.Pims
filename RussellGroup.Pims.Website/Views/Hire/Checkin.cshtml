@@ -9,22 +9,22 @@
     @Styles.Render("~/Content/datatables")
 }
 
-<h2>@ViewBag.Title</h2>
+<h3>@ViewBag.Title</h3>
+<h4>@Model.XJobId</h4>
+<h5>@Model.Description</h5>
+
+@if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+{
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+}
+<hr />
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.JobId)
 
     <div class="form-horizontal">
-        <h4>@Model.Job.Description</h4>
-        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
-        {
-            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
-        }
-        <hr />
-
-        @Html.HiddenFor(model => model.JobId)
-
         <div class="form-group@(ViewData.ModelState.IsValidField("Docket") ? string.Empty : " has-error")">
             @Html.Label("return docket", new { @class = "control-label col-md-2" })
             <div class="col-md-2">
@@ -117,7 +117,7 @@
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Checkin" class="btn btn-primary" />
                 &nbsp;
-                @Html.ActionLink("Cancel", "Index", "Job", null, new { @class = "btn-cancel" })
+                @Html.ActionLink("Cancel", "Index", "Job")
             </div>
         </div>
     </div>
