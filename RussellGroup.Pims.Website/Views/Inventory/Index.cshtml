@@ -43,25 +43,23 @@
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
-        $(document).ready(function () {
-            $('.table').dataTable({
-                "order": [[1, "asc"]],
-                "processing": true,
-                "stateSave": true,
-                "pagingType": 'full',
-                "serverSide": true,
-                "ajax": "@Url.Content("~/Inventory/GetDataTableResult")",
-                "columns": [
-                    { "data": "Id", "visible": false },
-                    { "data": "XInventoryId" },
-                    { "data": "Description" },
-                    { "data": "WhenPurchased" },
-                    { "data": "WhenDisused" },
-                    { "data": "Quantity", "className": "text-right" },
-                    { "data": "Category", "name": "Category.Name" },
-                    { "data": "CrudLinks", "sortable": false, "className": "text-center" }
-                ]
-            });
+        $('.table').DataTable({
+            "order": [[1, "asc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Content("~/Inventory/GetDataTableResult")",
+            "columns": [
+                { "data": "Id", "visible": false },
+                { "data": "XInventoryId" },
+                { "data": "Description" },
+                { "data": "WhenPurchased" },
+                { "data": "WhenDisused" },
+                { "data": "Quantity", "className": "text-right" },
+                { "data": "Category", "name": "Category.Name" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-center" }
+            ]
         });
     </script>
 }

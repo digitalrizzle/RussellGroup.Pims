@@ -40,24 +40,22 @@
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
-        $(document).ready(function () {
-            $('.table').dataTable({
-                "order": [[3, "desc"]],
-                "processing": true,
-                "stateSave": true,
-                "pagingType": 'full',
-                "serverSide": true,
-                "ajax": "@Url.Content("~/Job/GetDataTableResult")",
-                "columns": [
-                    { "data": "Id", "visible": false },
-                    { "data": "XJobId" },
-                    { "data": "Description" },
-                    { "data": "WhenStarted" },
-                    { "data": "WhenEnded" },
-                    { "data": "ProjectManager" },
-                    { "data": "CrudLinks", "sortable": false, "className": "text-right" }
-                ]
-            });
+        $('.table').DataTable({
+            "order": [[3, "desc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Content("~/Job/GetDataTableResult")",
+            "columns": [
+                { "data": "Id", "visible": false },
+                { "data": "XJobId" },
+                { "data": "Description" },
+                { "data": "WhenStarted" },
+                { "data": "WhenEnded" },
+                { "data": "ProjectManager" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-right" }
+            ]
         });
     </script>
 }

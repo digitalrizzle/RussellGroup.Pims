@@ -10,8 +10,8 @@
 }
 
 <h3>@ViewBag.Title</h3>
-<h4>@Model.XJobId</h4>
-<h5>@Model.Description</h5>
+<h4>@Model.Job.XJobId</h4>
+<h5>@Model.Job.Description</h5>
 
 @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
 {
@@ -130,28 +130,28 @@
             // set checkboxes if there is a postback
             @foreach (var hire in Model.PlantHires.Where(f => f.IsSelected)) { <text>$('input[name="plant-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
             @foreach (var hire in Model.InventoryHires.Where(f => f.IsSelected)) { <text>$('input[name="inventory-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
+        });
 
-            $('#plant-hire-table').dataTable({
-                "order": [[1, "asc"]],
-                "processing": true,
-                "stateSave": true,
-                "paging": false,
-                "columnDefs": [
-                    { "visible": false, "targets": [0] },
-                    { "sortable": false, "targets": [1] }
-                ]
-            });
+        $('#plant-hire-table').dataTable({
+            "order": [[1, "asc"]],
+            "processing": true,
+            "stateSave": true,
+            "paging": false,
+            "columnDefs": [
+                { "visible": false, "targets": [0] },
+                { "sortable": false, "targets": [1] }
+            ]
+        });
 
-            $('#inventory-hire-table').dataTable({
-                "order": [[1, "asc"]],
-                "processing": true,
-                "stateSave": true,
-                "paging": false,
-                "columnDefs": [
-                    { "visible": false, "targets": [0] },
-                    { "sortable": false, "targets": [1] }
-                ]
-            });
+        $('#inventory-hire-table').dataTable({
+            "order": [[1, "asc"]],
+            "processing": true,
+            "stateSave": true,
+            "paging": false,
+            "columnDefs": [
+                { "visible": false, "targets": [0] },
+                { "sortable": false, "targets": [1] }
+            ]
         });
 
         $('.check-all').on('click', function () {

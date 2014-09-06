@@ -44,25 +44,23 @@
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
-        $(document).ready(function () {
-            $('.table').dataTable({
-                "order": [[1, "asc"]],
-                "processing": true,
-                "stateSave": true,
-                "pagingType": 'full',
-                "serverSide": true,
-                "ajax": "@Url.Content("~/Plant/GetPlantHireDataTableResult?id=" + Model.Id)",
-                "columns": [
-                    { "data": "XPlantId", "name": "Plant.XPlantId" },
-                    { "data": "XJobId", "name": "Job.XJobId" },
-                    { "data": "Docket" },
-                    { "data": "WhenStarted" },
-                    { "data": "WhenEnded" },
-                    { "data": "Rate", "className": "text-right" },
-                    { "data": "Comment" },
-                    { "data": "CrudLinks", "sortable": false, "className": "text-right" }
-                ]
-            });
+        $('.table').DataTable({
+            "order": [[1, "asc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Content("~/Plant/GetPlantHireDataTableResult?id=" + Model.Id)",
+            "columns": [
+                { "data": "XPlantId", "name": "Plant.XPlantId" },
+                { "data": "XJobId", "name": "Job.XJobId" },
+                { "data": "Docket" },
+                { "data": "WhenStarted" },
+                { "data": "WhenEnded" },
+                { "data": "Rate", "className": "text-right" },
+                { "data": "Comment" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-right" }
+            ]
         });
     </script>
 }
