@@ -24,7 +24,7 @@
 </h4>
 <h5>Period: @ViewBag.WhenStarted.ToShortDateString() to @ViewBag.WhenEnded.ToShortDateString()</h5>
 
-@if (Model.PlantHires
+@if (Model.InventoryHires
     .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
     .All(f => f.WhenEnded.HasValue))
 {
