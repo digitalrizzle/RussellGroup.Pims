@@ -21,7 +21,7 @@ namespace RussellGroup.Pims.Website
             //    "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
-                "~/Scripts/DataTables-1.10.1/jquery.dataTables.js",
+                "~/Scripts/DataTables-1.10.2/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/typeahead").Include(
@@ -44,7 +44,7 @@ namespace RussellGroup.Pims.Website
             bundles.Add(new StyleBundle("~/Content/overrides")
                 .Include("~/Content/Site.css", new CssRewriteUrlTransformWrapper()));
 
-            //BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = true;
         }
 
         public class CssRewriteUrlTransformWrapper : IItemTransform

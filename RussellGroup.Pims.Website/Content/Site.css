@@ -98,15 +98,15 @@ footer {
     font-size: smaller;
 }
 
-.dataTables_filter input {
-    font-weight: normal;
-}
-
 .checkout-item {
     margin-bottom: 5px;
 }
 
 /* table corrections */
+
+.dataTables_filter input {
+    font-weight: normal;
+}
 
 th {
     text-align: left;
