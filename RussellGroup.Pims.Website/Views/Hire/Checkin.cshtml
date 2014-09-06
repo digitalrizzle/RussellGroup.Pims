@@ -101,7 +101,7 @@
                                 <td>@Html.Encode(item.InventoryId)</td>
                                 <td><input name="@("inventory-hire-id-field" + item.Id)" value="@item.Id" type="checkbox" /></td>
                                 <td>@Html.DisplayFor(model => item.Inventory.XInventoryId)</td>
-                                <td><input name="@("inventory-hire-quantity-field" + item.Id)" value="@item.ReturnQuantity" type="number" /></td>
+                                <td><input name="@("inventory-hire-quantity-field" + item.Id)" value="@item.ReturnQuantity" type="number" class="form-control input-sm" /></td>
                                 <td>@Html.DisplayFor(model => item.Docket)</td>
                                 <td>@Html.DisplayFor(model => item.Inventory.Description)</td>
                             </tr>
