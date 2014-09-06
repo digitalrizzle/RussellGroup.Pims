@@ -1,0 +1,93 @@
+﻿@model RussellGroup.Pims.Website.Models.SummaryOfHireChargesReportViewModel
+
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = "Summary of Plant and Inventory Hire Charges";
+}
+
+<h3>@ViewBag.Title</h3>
+<h5>Period: @Model.WhenStarted.ToShortDateString() to @Model.WhenEnded.ToShortDateString()</h5>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                job id
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Jobs.FirstOrDefault().Description)
+            </th>
+            <th class="text-right">
+                plant
+            </th>
+            <th class="text-right">
+                alum scaffolding
+            </th>
+            <th class="text-right">
+                other
+            </th>
+            <th class="text-right">
+                peri
+            </th>
+            <th class="text-right">
+                scaffolding
+            </th>
+            <th class="text-right">
+                shoreloading
+            </th>
+            <th class="text-right">
+                total
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var job in Model.ActiveJobs)
+        {
+            <tr>
+                <td>
+                    @job.XJobId
+                </td>
+                <td>
+                    @job.Description
+                </td>
+                <td class="text-right">
+                    @{var plantHireCharge = Model.GetPlantHireCharge(job);}
+                    @string.Format("{0:0.00}", plantHireCharge)
+                </td>
+                <td class="text-right">
+                    @{var alumScaffoldingHireCharge = Model.GetInventoryHireCharge(job, "Alum Scaffolding");}
+                    @string.Format("{0:0.00}", alumScaffoldingHireCharge)
+                </td>
+                <td class="text-right">
+                    @{var otherHireCharge = Model.GetInventoryHireCharge(job, "Other");}
+                    @string.Format("{0:0.00}", otherHireCharge)
+                </td>
+                <td class="text-right">
+                    @{var periHireCharge = Model.GetInventoryHireCharge(job, "Peri");}
+                    @string.Format("{0:0.00}", periHireCharge)
+                </td>
+                <td class="text-right">
+                    @{var scaffoldingHireCharge = Model.GetInventoryHireCharge(job, "Scaffolding");}
+                    @string.Format("{0:0.00}", scaffoldingHireCharge)
+                </td>
+                <td class="text-right">
+                    @{var shoreloadingHireCharge = Model.GetInventoryHireCharge(job, "Shoreloading");}
+                    @string.Format("{0:0.00}", shoreloadingHireCharge)
+                </td>
+                <td class="text-right">
+                    <strong>
+                    @(
+                          plantHireCharge
+                        + alumScaffoldingHireCharge
+                        + otherHireCharge
+                        + periHireCharge
+                        + scaffoldingHireCharge
+                        + shoreloadingHireCharge
+                    )
+                    </strong>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

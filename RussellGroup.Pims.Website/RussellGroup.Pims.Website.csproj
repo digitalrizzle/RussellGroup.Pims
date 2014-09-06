@@ -171,6 +171,7 @@
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\IIdentityHelper.cs" />
     <Compile Include="Helpers\VersionHelper.cs" />
+    <Compile Include="Models\SummaryOfHireChargesReportViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="PimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -269,6 +270,8 @@
     <None Include="connectionStrings.config" />
     <Content Include="Content\DataTables-1.10.1\css\dataTables.responsive.scss" />
     <Content Include="Content\DataTables-1.10.1\css\dataTables.jqueryui.scss" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
     <None Include="MvcSiteMapSchema.xsd" />
     <None Include="Properties\PublishProfiles\pdbdev.pubxml" />
     <Content Include="Scripts\DataTables-1.10.1\dataTables.autoFill.js" />
@@ -464,6 +467,8 @@
     <Content Include="Views\Report\YardStocktake.cshtml" />
     <Content Include="Views\Report\YardInventoryStocktake.cshtml" />
     <Content Include="Views\Report\PlantStatus.cshtml" />
+    <Content Include="Views\Report\InventoryHireChargesInJob.cshtml" />
+    <Content Include="Views\Report\SummaryOfHireCharges.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

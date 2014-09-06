@@ -2,8 +2,8 @@
 
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
-    ViewBag.Title = "Plant Hire Charges";
-    var hires = Model.PlantHires.FirstOrDefault();
+    ViewBag.Title = "Inventory Hire Charges";
+    var hires = Model.InventoryHires.FirstOrDefault();
 }
 
 <h4>@ViewBag.Title</h4>
@@ -28,7 +28,7 @@
     .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
     .All(f => f.WhenEnded.HasValue))
 {
-    <p>There is no plant hire for this job in the given period.</p>
+    <p>There is no inventory hire for this job in the given period.</p>
 }
 else
 {
@@ -37,13 +37,10 @@ else
         <thead>
             <tr>
                 <th>
-                    plant id
+                    inventory id
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => hires.Plant.Serial)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => hires.Plant.Description)
+                    @Html.DisplayNameFor(model => hires.Inventory.Description)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => hires.Docket)
@@ -64,38 +61,38 @@ else
                     @Html.DisplayNameFor(model => hires.Rate)
                 </th>
                 <th class="text-right">
+                    @Html.DisplayNameFor(model => hires.Quantity)
+                </th>
+                <th class="text-right">
                     cost
                 </th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var category in Model.PlantHires
+            @foreach (var categoryType in Model.InventoryHires
                 .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-                .Select(f => f.Plant.Category)
+                .Select(f => f.Inventory.Category.Type)
                 .Distinct()
-                .OrderBy(f => f.Name)
+                .OrderBy(f => f)
                 .ToList())
             {
                 int days = 0;
                 decimal total = 0, cost = 0;
                 <tr>
-                    <td colspan="10"><strong>@category.Name</strong></td>
+                    <td colspan="10"><strong>@categoryType</strong></td>
                 </tr>
-                foreach (var item in Model.PlantHires
-                    .Where(f => f.Plant.Category == category)
+                foreach (var item in Model.InventoryHires
+                    .Where(f => f.Inventory.Category.Type == categoryType)
                     .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
                     .OrderBy(f => f.WhenStarted))
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(model => item.Plant.XPlantId)
+                            @Html.DisplayFor(model => item.Inventory.XInventoryId)
                         </td>
                         <td>
-                            @Html.DisplayFor(model => item.Plant.Serial)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Plant.Description)
+                            @Html.DisplayFor(model => item.Inventory.Description)
                             <br />
                             @Html.DisplayFor(model => item.Comment)
                         </td>
@@ -116,7 +113,7 @@ else
                                 var whenStarted = ViewBag.WhenStarted > item.WhenStarted
                                     ? ViewBag.WhenStarted
                                     : item.WhenStarted;
-                                    
+
                                 days = item.WhenEnded.HasValue
                                     ? item.WhenEnded.Value.AddDays(1).Subtract(whenStarted).Days
                                     : ViewBag.WhenEnded.AddDays(1).Subtract(whenStarted).Days;
@@ -127,7 +124,10 @@ else
                             @Html.DisplayFor(model => item.Rate)
                         </td>
                         <td class="text-right">
-                            @{cost = days * item.Rate.Value;}
+                            @Html.DisplayFor(model => item.Quantity)
+                        </td>
+                        <td class="text-right">
+                            @{cost = days * item.Rate.Value * item.Quantity.Value;}
                             @cost
                             @{total += cost;}
                         </td>
