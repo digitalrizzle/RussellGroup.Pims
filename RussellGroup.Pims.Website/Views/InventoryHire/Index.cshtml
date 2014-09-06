@@ -49,25 +49,23 @@
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
-        $(document).ready(function () {
-            $('.table').dataTable({
-                "order": [[3, "desc"]],
-                "processing": true,
-                "stateSave": true,
-                "pagingType": 'full',
-                "serverSide": true,
-                "ajax": "@Url.Content("~/InventoryHire/GetDataTableResult?id=" + Model.Id)",
-                "columns": [
-                    { "data": "XInventoryId", "name": "Inventory.XInventoryId" },
-                    { "data": "Docket" },
-                    { "data": "WhenStarted" },
-                    { "data": "WhenEnded" },
-                    { "data": "Rate", "className": "text-right" },
-                    { "data": "Quantity", "className": "text-right" },
-                    { "data": "ReturnQuantity", "className": "text-right" },
-                    { "data": "CrudLinks", "sortable": false, "className": "text-right" }
-                ]
-            });
+        $('.table').DataTable({
+            "order": [[3, "desc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Content("~/InventoryHire/GetDataTableResult?id=" + Model.Id)",
+            "columns": [
+                { "data": "XInventoryId", "name": "Inventory.XInventoryId" },
+                { "data": "Docket" },
+                { "data": "WhenStarted" },
+                { "data": "WhenEnded" },
+                { "data": "Rate", "className": "text-right" },
+                { "data": "Quantity", "className": "text-right" },
+                { "data": "ReturnQuantity", "className": "text-right" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-right" }
+            ]
         });
     </script>
 }

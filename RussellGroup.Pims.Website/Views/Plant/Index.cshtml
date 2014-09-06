@@ -43,25 +43,23 @@
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
-        $(document).ready(function () {
-            $('.table').dataTable({
-                "order": [[1, "asc"]],
-                "processing": true,
-                "stateSave": true,
-                "pagingType": 'full',
-                "serverSide": true,
-                "ajax": "@Url.Content("~/Plant/GetDataTableResult")",
-                "columns": [
-                    { "data": "Id", "visible": false },
-                    { "data": "XPlantId" },
-                    { "data": "XPlantNewId" },
-                    { "data": "Description" },
-                    { "data": "Category", "name": "Category.Name" },
-                    { "data": "Hire", "sortable": false, "className": "text-right" },
-                    { "data": "Status", "name": "Status.Name" },
-                    { "data": "CrudLinks", "sortable": false, "className": "text-center" }
-                ]
-            });
+        $('.table').DataTable({
+            "order": [[1, "asc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Content("~/Plant/GetDataTableResult")",
+            "columns": [
+                { "data": "Id", "visible": false },
+                { "data": "XPlantId" },
+                { "data": "XPlantNewId" },
+                { "data": "Description" },
+                { "data": "Category", "name": "Category.Name" },
+                { "data": "Hire", "sortable": false, "className": "text-right" },
+                { "data": "Status", "name": "Status.Name" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-center" }
+            ]
         });
     </script>
 }

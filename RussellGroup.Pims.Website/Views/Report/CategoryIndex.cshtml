@@ -54,17 +54,15 @@
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
-        $(document).ready(function () {
-            $('.table').dataTable({
-                "order": [[1, "asc"]],
-                "processing": true,
-                "stateSave": true,
-                "pagingType": 'full',
-                "columnDefs": [
-                    { "visible": false, "targets": [0] },
-                    { "sortable": false, "targets": [3] }
-                ]
-            });
+        $('.table').DataTable({
+            "order": [[1, "asc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "columnDefs": [
+                { "visible": false, "targets": [0] },
+                { "sortable": false, "targets": [3] }
+            ]
         });
     </script>
 }

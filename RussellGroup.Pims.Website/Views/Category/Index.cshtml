@@ -33,21 +33,19 @@
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
-        $(document).ready(function () {
-            $('.table').dataTable({
-                "order": [[1, "asc"]],
-                "processing": true,
-                "stateSave": true,
-                "pagingType": 'full',
-                "serverSide": true,
-                "ajax": "@Url.Content("~/Category/GetDataTableResult")",
-                "columns": [
-                    { "data": "Id", "visible": false },
-                    { "data": "Name" },
-                    { "data": "Type" },
-                    { "data": "CrudLinks", "sortable": false, "className": "text-center" }
-                ]
-            });
+        $('.table').DataTable({
+            "order": [[1, "asc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Content("~/Category/GetDataTableResult")",
+            "columns": [
+                { "data": "Id", "visible": false },
+                { "data": "Name" },
+                { "data": "Type" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-center" }
+            ]
         });
     </script>
 }
