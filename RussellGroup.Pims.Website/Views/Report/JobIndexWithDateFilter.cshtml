@@ -39,6 +39,11 @@
     <hr />
 </div>
 
+<p>
+    <a id="summary" href="@Url.Action("SummaryOfHireCharges")">Financial Summary</a>
+</p>
+<br />
+
 <table class="table display table-striped table-hover order-column table-responsive" width="100%">
     <thead>
         <tr>
@@ -69,31 +74,34 @@
 @section scripts {
     @Scripts.Render("~/bundles/datatables")
     <script>
-        $(document).ready(function () {
-            $('.table').dataTable({
-                "order": [[3, "desc"]],
-                "processing": true,
-                "stateSave": true,
-                "pagingType": 'full',
-                "serverSide": true,
-                "ajax": "@Url.Content("~/Report/GetDataTableResult?filtered=true")",
-                "columns": [
-                    { "data": "Id", "visible": false },
-                    { "data": "XJobId" },
-                    { "data": "Description" },
-                    { "data": "WhenStarted" },
-                    { "data": "WhenEnded" },
-                    { "data": "PlantHires", "sortable": false, "className": "text-right" },
-                    { "data": "InventoryHires", "sortable": false, "className": "text-right" },
-                    { "data": "CrudLinks", "sortable": false, "className": "text-center" }
-                ],
-                "createdRow": function (row, data, index) {
-                    $("a", row).on("click", function (e) {
-                        e.preventDefault();
-                        window.open(this.href + getFilterUrlParameters(), '_blank');
-                    });
-                }
-            });
+        $('.table').dataTable({
+            "order": [[3, "desc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Content("~/Report/GetDataTableResult?filtered=true")",
+            "columns": [
+                { "data": "Id", "visible": false },
+                { "data": "XJobId" },
+                { "data": "Description" },
+                { "data": "WhenStarted" },
+                { "data": "WhenEnded" },
+                { "data": "PlantHires", "sortable": false, "className": "text-right" },
+                { "data": "InventoryHires", "sortable": false, "className": "text-right" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-center" }
+            ],
+            "createdRow": function (row, data, index) {
+                $("a", row).on("click", function (e) {
+                    e.preventDefault();
+                    window.open(this.href + getFilterUrlParameters(), '_blank');
+                });
+            }
+        });
+
+        $("#summary").on("click", function (e) {
+            e.preventDefault();
+            window.open(this.href + getFilterUrlParameters(), '_blank');
         });
 
         function getFilterUrlParameters() {

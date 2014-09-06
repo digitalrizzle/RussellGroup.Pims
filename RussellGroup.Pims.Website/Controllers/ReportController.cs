@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using LinqKit;
+using RussellGroup.Pims.Website.Models;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -82,9 +83,7 @@ namespace RussellGroup.Pims.Website.Controllers
         public ActionResult JobsWithDateFilter()
         {
             var now = DateTime.Now.Date;
-            var lastMonth = now.AddMonths(-1);
-
-            ViewBag.WhenStarted = new DateTime(lastMonth.Year, lastMonth.Month, 1);
+            ViewBag.WhenStarted = new DateTime(now.Year, now.Month, 1);
             ViewBag.WhenEnded = now;
 
             return View("JobIndexWithDateFilter");
@@ -142,12 +141,13 @@ namespace RussellGroup.Pims.Website.Controllers
                     PlantHires = c.PlantHires.Count(),
                     InventoryHires = c.InventoryHires.Sum(f => f.Quantity),
                     CrudLinks = isFiltered ?
-                        string.Format("{0}",
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50")
+                        string.Format("{0}&nbsp;| {1}",
+                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50"),
+                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("InventoryHireChargesInJob", new { id = c.Id }), "Inventory&nbsp;Charges")
                         ) :
                         string.Format("{0}&nbsp;| {1}",
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant&nbsp;#51"),
-                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory&nbsp;#56")
+                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant&nbsp;#51"),
+                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory&nbsp;#56")
 
                             // this report seems redundant
                             //string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake&nbsp;#70")
@@ -207,21 +207,35 @@ namespace RussellGroup.Pims.Website.Controllers
 
         public async Task<ActionResult> PlantHireChargesInJob(int? id)
         {
-            var whenStarted = ParseDate(Request["WhenStarted"]);
-            var whenEnded = ParseDate(Request["WhenEnded"]);
-
-            return await JobView("PlantHireChargesInJob", id, whenStarted, whenEnded);
+            return await JobView("PlantHireChargesInJob", id);
         }
 
-        [Obsolete]
-        public FileContentResult DownloadInventoryHireChargesSummaryInJobCsv(int? id)
+        public async Task<ActionResult> InventoryHireChargesInJob(int? id)
+        {
+
+            return await JobView("InventoryHireChargesInJob", id);
+        }
+
+        public async Task<ActionResult> SummaryOfHireCharges()
         {
             var whenStarted = ParseDate(Request["WhenStarted"]);
             var whenEnded = ParseDate(Request["WhenEnded"]);
-            var fileName = string.Format("InventoryHireChargesSummaryInJob-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
 
-            return File(_repository.GetInventoryChargesCsv(id, whenStarted, whenEnded), "text/csv", fileName);
+            var model = new SummaryOfHireChargesReportViewModel(
+                await _repository.Jobs.ToListAsync(),
+                whenStarted,
+                whenEnded);
+
+            return base.View("SummaryOfHireCharges", model);
         }
+
+        //[Obsolete]
+        //public FileContentResult DownloadInventoryHireChargesSummaryInJobCsv(int? id)
+        //{
+        //    var fileName = string.Format("InventoryHireChargesSummaryInJob-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+        //    return File(_repository.GetInventoryChargesCsv(id), "text/csv", fileName);
+        //}
 
         public ActionResult YardStocktake()
         {
@@ -243,14 +257,6 @@ namespace RussellGroup.Pims.Website.Controllers
             return View("YardInventoryStocktake", await _repository.GetInventoryCheckedIn().ToListAsync());
         }
 
-        private async Task<ActionResult> JobView(string viewName, int? id, DateTime whenStarted, DateTime whenEnded)
-        {
-            ViewBag.WhenStarted = whenStarted;
-            ViewBag.WhenEnded = whenEnded;
-
-            return await JobView(viewName, id);
-        }
-
         private async Task<ActionResult> JobView(string viewName, int? id)
         {
             if (id == null)
@@ -262,6 +268,10 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.WhenStarted = ParseDate(Request["WhenStarted"]);
+            ViewBag.WhenEnded = ParseDate(Request["WhenEnded"]);
+
             return View(viewName, job);
         }
 
