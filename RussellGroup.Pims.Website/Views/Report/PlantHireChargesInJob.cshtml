@@ -24,9 +24,11 @@
 </h4>
 <h5>Period: @ViewBag.WhenStarted.ToShortDateString() to @ViewBag.WhenEnded.ToShortDateString()</h5>
 
-@if (Model.PlantHires
-    .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-    .All(f => f.WhenEnded.HasValue))
+@if (!Model.PlantHires
+    .Where(f =>
+        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
+        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+    .Any())
 {
     <p>There is no plant hire for this job in the given period.</p>
 }
@@ -71,7 +73,9 @@ else
 
         <tbody>
             @foreach (var category in Model.PlantHires
-                .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+                .Where(f =>
+                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
+                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
                 .Select(f => f.Plant.Category)
                 .Distinct()
                 .OrderBy(f => f.Name)
