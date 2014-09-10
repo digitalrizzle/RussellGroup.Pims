@@ -12,6 +12,7 @@ using System.Web;
 using System.Web.Mvc;
 using LinqKit;
 using RussellGroup.Pims.Website.Models;
+using RussellGroup.Pims.DataAccess.ReportModels;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -229,13 +230,20 @@ namespace RussellGroup.Pims.Website.Controllers
             return base.View("SummaryOfHireCharges", model);
         }
 
-        //[Obsolete]
-        //public FileContentResult DownloadInventoryHireChargesSummaryInJobCsv(int? id)
-        //{
-        //    var fileName = string.Format("InventoryHireChargesSummaryInJob-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
+        public FileContentResult DownloadSummaryOfHireChargesCsv()
+        {
+            var fileName = string.Format("SummaryOfHireCharges-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
 
-        //    return File(_repository.GetInventoryChargesCsv(id), "text/csv", fileName);
-        //}
+            var whenStarted = ParseDate(Request["WhenStarted"]);
+            var whenEnded = ParseDate(Request["WhenEnded"]);
+
+            var model = new SummaryOfHireChargesReportViewModel(
+                _repository.Jobs.ToList(),
+                whenStarted,
+                whenEnded);
+
+            return File(_repository.SummaryOfHireChargesCsv(model), "text/csv", fileName);
+        }
 
         public ActionResult YardStocktake()
         {

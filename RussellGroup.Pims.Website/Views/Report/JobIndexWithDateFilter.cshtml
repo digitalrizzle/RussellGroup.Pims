@@ -40,7 +40,8 @@
 </div>
 
 <p>
-    <a id="summary" href="@Url.Action("SummaryOfHireCharges")">Financial Summary</a>
+    <a class="summary" href="@Url.Action("SummaryOfHireCharges")">Financial Summary</a>
+    (<a class="summary" href="@Url.Action("DownloadSummaryOfHireChargesCsv")">csv</a>)
 </p>
 <br />
 
@@ -99,7 +100,7 @@
             }
         });
 
-        $("#summary").on("click", function (e) {
+        $(".summary").on("click", function (e) {
             e.preventDefault();
             window.open(this.href + getFilterUrlParameters(), '_blank');
         });

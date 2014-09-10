@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace RussellGroup.Pims.Website.Models
+namespace RussellGroup.Pims.DataAccess.ReportModels
 {
     public class SummaryOfHireChargesReportViewModel
     {
