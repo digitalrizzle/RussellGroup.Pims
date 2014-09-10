@@ -185,6 +185,7 @@
     <Compile Include="TrimEmptyGroupingNodesVisibilityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-callout.css" />
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-datepicker3.css" />
     <Content Include="Content\bootstrap-theme.css" />

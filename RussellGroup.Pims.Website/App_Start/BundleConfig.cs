@@ -33,6 +33,7 @@ namespace RussellGroup.Pims.Website
             bundles.Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/bootstrap.css", new CssRewriteUrlTransformWrapper())
                 .Include("~/Content/bootstrap-theme.css", new CssRewriteUrlTransformWrapper())
+                .Include("~/Content/bootstrap-callout.css", new CssRewriteUrlTransformWrapper())
                 .Include("~/Content/bootstrap-datepicker.css", new CssRewriteUrlTransformWrapper()));
 
             bundles.Add(new StyleBundle("~/Content/datatables")
