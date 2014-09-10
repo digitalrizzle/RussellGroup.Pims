@@ -174,7 +174,6 @@
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\IIdentityHelper.cs" />
     <Compile Include="Helpers\VersionHelper.cs" />
-    <Compile Include="Models\SummaryOfHireChargesReportViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="PimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />

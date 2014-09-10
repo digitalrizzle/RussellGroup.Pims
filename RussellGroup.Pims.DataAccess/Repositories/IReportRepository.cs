@@ -20,7 +20,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         IQueryable<Plant> GetPlantCheckedIn();
         IQueryable<Inventory> GetInventoryCheckedIn();
 
-        [Obsolete]
-        byte[] GetInventoryChargesCsv(int? jobId, DateTime whenStarted, DateTime whenEnded);
+        byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportViewModel model);
     }
 }

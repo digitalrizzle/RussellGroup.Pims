@@ -1,4 +1,4 @@
-﻿@model RussellGroup.Pims.Website.Models.SummaryOfHireChargesReportViewModel
+﻿@model RussellGroup.Pims.DataAccess.ReportModels.SummaryOfHireChargesReportViewModel
 
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
@@ -15,7 +15,7 @@
                 job id
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Jobs.FirstOrDefault().Description)
+                description
             </th>
             <th class="text-right">
                 plant

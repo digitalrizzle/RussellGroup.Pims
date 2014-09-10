@@ -96,8 +96,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return Db.Inventories.Where(f => f.InventoryHires.All(h => h.WhenEnded.HasValue));
         }
 
-        [Obsolete]
-        public byte[] GetInventoryChargesCsv(int? jobId, DateTime whenStarted, DateTime whenEnded)
+        public byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportViewModel model)
         {
             using (var memory = new MemoryStream())
             {
@@ -105,47 +104,50 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 {
                     using (var csv = new CsvWriter(writer))
                     {
-                        var job = Db.Jobs.Find(jobId);
-
                         csv.WriteField(string.Format("Created: {0}", DateTime.Now.ToString("dd/MM/yyyy h:mm:ss tt"))); csv.NextRecord();
-                        csv.WriteField(string.Format("Job: {0}", job.Description)); csv.NextRecord();
-                        csv.WriteField(string.Format("Project Manager: {0}", job.ProjectManager)); csv.NextRecord();
-                        csv.WriteField(string.Format("From date: {0}", whenStarted.ToShortDateString())); csv.NextRecord();
-                        csv.WriteField(string.Format("To date: {0}", whenEnded.ToShortDateString())); csv.NextRecord();
+                        csv.WriteField(string.Format("From date: {0}", model.WhenStarted.ToShortDateString())); csv.NextRecord();
+                        csv.WriteField(string.Format("To date: {0}", model.WhenEnded.ToShortDateString())); csv.NextRecord();
                         csv.NextRecord();
 
                         // header
-                        csv.WriteField("Category");
-                        csv.WriteField("Quantity");
-                        csv.WriteField("Cost");
+                        csv.WriteField("Job ID");
+                        csv.WriteField("Description");
+                        csv.WriteField("Plant");
+                        csv.WriteField("Alum Scaffolding");
+                        csv.WriteField("Other");
+                        csv.WriteField("Peri");
+                        csv.WriteField("Scaffolding");
+                        csv.WriteField("Shoreloading");
+                        csv.WriteField("Total");
                         csv.NextRecord();
                         csv.NextRecord();   // not sure why another line is needed, but ASB does it! (sampled off their CSV export)
 
-                        foreach (var category in job.InventoryHires
-                            .Where(f => (f.WhenStarted < whenEnded.AddDays(1) && f.WhenEnded >= whenStarted) || (f.WhenStarted < whenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-                            .Select(f => f.Inventory.Category)
-                            .Distinct()
-                            .OrderBy(f => f.Name)
-                            .ToList())
+                        foreach (var job in model.ActiveJobs.ToList())
                         {
-                            int totalQuantity = 0, quantity = 0;
-                            decimal totalCost = 0, cost = 0;
+                            var plantHireCharge = model.GetPlantHireCharge(job);
+                            var alumScaffoldingHireCharge = model.GetInventoryHireCharge(job, "Alum Scaffolding");
+                            var otherHireCharge = model.GetInventoryHireCharge(job, "Other");
+                            var periHireCharge = model.GetInventoryHireCharge(job, "Peri");
+                            var scaffoldingHireCharge = model.GetInventoryHireCharge(job, "Scaffolding");
+                            var shoreloadingHireCharge = model.GetInventoryHireCharge(job, "Shoreloading");
 
-                            foreach (var item in job.InventoryHires
-                                .Where(f => f.Inventory.Category == category)
-                                .Where(f => (f.WhenStarted < whenEnded.AddDays(1) && f.WhenEnded >= whenStarted) || (f.WhenStarted < whenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-                                .OrderBy(f => f.Inventory.XInventoryId))
-                            {
-                                quantity += 1;
-                                cost = DateTime.Now.Subtract(whenStarted).Days * item.Rate.Value;
+                            var total =
+                                  plantHireCharge
+                                + alumScaffoldingHireCharge
+                                + otherHireCharge
+                                + periHireCharge
+                                + scaffoldingHireCharge
+                                + shoreloadingHireCharge;
 
-                                totalQuantity += 1;
-                                totalCost += cost;
-                            }
-
-                            csv.WriteField(category.Name);
-                            csv.WriteField(totalQuantity);
-                            csv.WriteField(totalCost);
+                            csv.WriteField(job.XJobId);
+                            csv.WriteField(job.Description);
+                            csv.WriteField(plantHireCharge);
+                            csv.WriteField(alumScaffoldingHireCharge);
+                            csv.WriteField(otherHireCharge);
+                            csv.WriteField(periHireCharge);
+                            csv.WriteField(scaffoldingHireCharge);
+                            csv.WriteField(shoreloadingHireCharge);
+                            csv.WriteField(total);
                             csv.NextRecord();
                         }
                     }
