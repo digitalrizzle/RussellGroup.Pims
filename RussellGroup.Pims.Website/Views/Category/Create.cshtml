@@ -1,7 +1,6 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Category
-
 @{
-    ViewBag.Title = "New Category";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
 }
 @section head {
     @Styles.Render("~/Content/typeahead")

@@ -1,7 +1,6 @@
 ﻿@model RussellGroup.Pims.Website.Models.UserRolesViewModel
-
 @{
-    ViewBag.Title = "User Details";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
 }
 
 @Html.Partial("_Details")

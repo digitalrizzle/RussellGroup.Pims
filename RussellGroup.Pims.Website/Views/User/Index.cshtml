@@ -1,7 +1,6 @@
 ﻿@model RussellGroup.Pims.Website.Models.UserRolesViewModel
-
 @{
-    ViewBag.Title = "Users";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
 }
 @section head {
     @Styles.Render("~/Content/datatables")

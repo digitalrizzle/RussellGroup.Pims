@@ -1,7 +1,6 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Job
-
 @{
-    ViewBag.Title = "Inventory Hire Transactions";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
     var hires = Model.InventoryHires.FirstOrDefault();
 }
 @section head {
