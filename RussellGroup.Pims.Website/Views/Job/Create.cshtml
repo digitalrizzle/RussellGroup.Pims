@@ -1,7 +1,6 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Job
-
 @{
-    ViewBag.Title = "New Job";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
 }
 @section head {
     @Styles.Render("~/Content/typeahead")

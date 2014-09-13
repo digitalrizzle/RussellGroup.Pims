@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Category>
-
 @{
-    ViewBag.Title = "Reports by category";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
 }
 @section head {
     @Styles.Render("~/Content/datatables")

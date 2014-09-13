@@ -1,7 +1,6 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Plant
-
 @{
-    ViewBag.Title = "Plant Hire";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
     var hire = Model.PlantHires.FirstOrDefault();
 }
 @section head {

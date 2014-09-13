@@ -1,7 +1,6 @@
 ﻿@model RussellGroup.Pims.DataAccess.ViewModels.CheckinTransaction
-
 @{
-    ViewBag.Title = "Checkin";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
     var plantHires = Model.PlantHires.FirstOrDefault();
     var inventoryHires = Model.InventoryHires.FirstOrDefault();
 }
