@@ -18,7 +18,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         IQueryable<PlantHire> GetCheckedOutPlantHiresInJob(int? jobId);
         IQueryable<InventoryHire> GetCheckedOutInventoryHiresInJob(int? jobId);
 
-        Task Checkout(Job job, string docket, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities);
-        Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryHireIdsAndQuantities);
+        Task Checkout(Job job, string docket, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities);
+        Task Checkin(string returnDocket, DateTime whenEnded, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryHireIdsAndQuantities);
     }
 }

@@ -56,7 +56,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return Db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
         }
 
-        public async Task Checkout(Job job, string docket, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        public async Task Checkout(Job job, string docket, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
             // save plant
             foreach (var id in plantIds)
@@ -68,7 +68,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     Plant = plant,
                     Job = job,
                     Docket = docket,
-                    WhenStarted = DateTime.Now,
+                    WhenStarted = whenStarted,
                     WhenEnded = null,
                     Rate = plant.Rate
                 };
@@ -91,7 +91,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     Inventory = inventory,
                     Job = job,
                     Docket = docket,
-                    WhenStarted = DateTime.Now,
+                    WhenStarted = whenStarted,
                     WhenEnded = null,
                     Rate = inventory.Rate,
                     Quantity = quantity
@@ -106,7 +106,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             await Db.SaveChangesAsync();
         }
 
-        public async Task Checkin(string returnDocket, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryHireIdsAndQuantities)
+        public async Task Checkin(string returnDocket, DateTime whenEnded, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryHireIdsAndQuantities)
         {
             // save plant
             foreach (var id in plantHireIds)
@@ -116,7 +116,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 if (hire != null)
                 {
                     hire.ReturnDocket = returnDocket;
-                    hire.WhenEnded = DateTime.Now;
+                    hire.WhenEnded = whenEnded;
                     Db.Entry(hire).State = EntityState.Modified;
                 }
 
@@ -139,7 +139,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 if (hire != null)
                 {
                     hire.ReturnDocket = returnDocket;
-                    hire.WhenEnded = DateTime.Now;
+                    hire.WhenEnded = whenEnded;
                     hire.ReturnQuantity = returnQuantity;
                     Db.Entry(hire).State = EntityState.Modified;
                 }
