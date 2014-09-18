@@ -12,8 +12,14 @@ namespace RussellGroup.Pims.DataAccess.ViewModels
         [Display(Name = "job")]
         public Job Job { get; set; }
 
+        [Required]
         [Display(Name = "docket")]
         public string Docket { get; set; }
+
+        [Display(Name = "when started")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime WhenStarted { get; set; }
 
         [Display(Name = "plant")]
         public virtual ICollection<Plant> Plants { get; set; }

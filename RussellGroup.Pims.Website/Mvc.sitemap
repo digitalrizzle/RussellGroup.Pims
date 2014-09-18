@@ -55,6 +55,6 @@
       <mvcSiteMapNode title="User Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
       <mvcSiteMapNode title="Delete User" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
     </mvcSiteMapNode>
-    <mvcSiteMapNode title="Guide" controller="Home" action="Help" />
+    <mvcSiteMapNode title="Help" controller="Home" action="Help" />
     </mvcSiteMapNode>
 </mvcSiteMap>

@@ -29,6 +29,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var transaction = new CheckoutTransaction()
             {
                 Docket = string.Empty,
+                WhenStarted = DateTime.Now.Date,
                 Job = await _repository.GetJob(id),
                 Plants = new List<Plant>(),
                 Inventories = new List<KeyValuePair<Inventory, int?>>()
@@ -80,35 +81,31 @@ namespace RussellGroup.Pims.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Checkout(FormCollection collection)
+        public async Task<ActionResult> Checkout(CheckoutTransaction transaction)
         {
-            var docket = collection["Docket"];
-            var jobId = Convert.ToInt32(collection["JobId"]);
+            var collection = Request.Form;
             var plantIds = collection.GetIds("plant-id-field");
             var inventoryIdsAndQuantities = collection.GetIdsAndQuantities("inventory-id-field", "inventory-quantity-field");
-            var job = await _repository.GetJob(jobId);
+
+            var job = await _repository.GetJob(transaction.JobId);
             var plants = new List<Plant>();
             var inventoriesAndQuantities = new List<KeyValuePair<Inventory, int?>>();
 
-            if (string.IsNullOrWhiteSpace(docket)) ModelState.AddModelError("Docket", "A docket number is required.");
             if (plantIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkout.");
 
             foreach (var id in plantIds) plants.Add(_repository.Plants.Single(f => f.Id == id));
             foreach (var pair in inventoryIdsAndQuantities) inventoriesAndQuantities.Add(new KeyValuePair<Inventory, int?>(_repository.Inventories.Single(f => f.Id == pair.Key), pair.Value));
 
-            var transaction = new CheckoutTransaction()
-            {
-                Docket = docket,
-                Job = job,
-                Plants = plants,
-                Inventories = inventoriesAndQuantities
-            };
-
             if (ModelState.IsValid)
             {
-                await _repository.Checkout(job, docket, plantIds, inventoryIdsAndQuantities);
-                return RedirectToAction("Details", "Job", new { id = jobId });
+                await _repository.Checkout(job, transaction.Docket, transaction.WhenStarted, plantIds, inventoryIdsAndQuantities);
+                return RedirectToAction("Details", "Job", new { id = job.Id });
             }
+
+            // ModelState is invalid, so repopulate
+            transaction.Job = job;
+            transaction.Plants = plants;
+            transaction.Inventories = inventoriesAndQuantities;
 
             return View(transaction);
         }
@@ -138,7 +135,8 @@ namespace RussellGroup.Pims.Website.Controllers
             var transaction = new CheckinTransaction
             {
                 Job = job,
-                Docket = string.Empty,
+                ReturnDocket = string.Empty,
+                WhenEnded = DateTime.Now.Date,
                 PlantHires = job.PlantHires.Where(f => !f.WhenEnded.HasValue).ToArray(),
                 InventoryHires = job.InventoryHires.Where(f => !f.WhenEnded.HasValue).ToArray()
             };
@@ -148,26 +146,25 @@ namespace RussellGroup.Pims.Website.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Checkin(FormCollection collection)
+        public async Task<ActionResult> Checkin(CheckinTransaction transaction)
         {
-            var returnDocket = collection["Docket"];
-            var jobId = Convert.ToInt32(collection["JobId"]);
+            var collection = Request.Form;
             var plantHireIds = collection.GetIds("plant-hire-id-field");
             var inventoryHireIdsAndQuantities = collection.GetIdsAndQuantities("inventory-hire-id-field", "inventory-hire-quantity-field");
 
-            if (string.IsNullOrWhiteSpace(returnDocket)) ModelState.AddModelError("Docket", "A docket number is required.");
+            if (string.IsNullOrWhiteSpace(transaction.ReturnDocket)) ModelState.AddModelError("ReturnDocket", "A docket number is required.");
             if (plantHireIds.Count() == 0 && inventoryHireIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
 
             if (ModelState.IsValid)
             {
-                await _repository.Checkin(returnDocket, plantHireIds, inventoryHireIdsAndQuantities);
-                return RedirectToAction("Details", "Job", new { id = jobId });
+                await _repository.Checkin(transaction.ReturnDocket, transaction.WhenEnded, plantHireIds, inventoryHireIdsAndQuantities);
+                return RedirectToAction("Details", "Job", new { id = transaction.JobId });
             }
 
             // ModelState is invalid, so repopulate
-            var job = await _repository.GetJob(jobId);
-            var plantHires = _repository.GetCheckedOutPlantHiresInJob(jobId).ToList();
-            var inventoryHires = _repository.GetCheckedOutInventoryHiresInJob(jobId).ToList();
+            var job = await _repository.GetJob(transaction.JobId);
+            var plantHires = _repository.GetCheckedOutPlantHiresInJob(transaction.JobId).ToList();
+            var inventoryHires = _repository.GetCheckedOutInventoryHiresInJob(transaction.JobId).ToList();
 
             foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.Id)) hire.IsSelected = true;
 
@@ -184,13 +181,9 @@ namespace RussellGroup.Pims.Website.Controllers
                 }
             }
 
-            var transaction = new CheckinTransaction
-            {
-                Job = job,
-                Docket = returnDocket,
-                PlantHires = plantHires,
-                InventoryHires = inventoryHires
-            };
+            transaction.Job = job;
+            transaction.PlantHires = plantHires;
+            transaction.InventoryHires = inventoryHires;
 
             return View(transaction);
         }

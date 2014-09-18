@@ -3,6 +3,7 @@ using RussellGroup.Pims.DataAccess.Repositories;
 using RussellGroup.Pims.Website.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Linq.Expressions;
@@ -119,7 +120,7 @@ namespace RussellGroup.Pims.Website
             return ids.Distinct();
         }
 
-        public static IEnumerable<int> GetIds(this FormCollection collection, string prefix)
+        public static IEnumerable<int> GetIds(this NameValueCollection collection, string prefix)
         {
             var ids = new List<int>();
 
@@ -135,7 +136,7 @@ namespace RussellGroup.Pims.Website
             return ids.Distinct();
         }
 
-        public static IEnumerable<KeyValuePair<int, int?>> GetIdsAndQuantities(this FormCollection collection, string idPrefix, string quantityPrefix)
+        public static IEnumerable<KeyValuePair<int, int?>> GetIdsAndQuantities(this NameValueCollection collection, string idPrefix, string quantityPrefix)
         {
             var pairs = new List<KeyValuePair<int, int?>>();
 

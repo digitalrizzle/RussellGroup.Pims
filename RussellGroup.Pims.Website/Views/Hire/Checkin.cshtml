@@ -21,15 +21,29 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.JobId)
+    @Html.HiddenFor(model => model.Job.Id)
+    @Html.HiddenFor(model => model.Job.Description)
 
     <div class="form-horizontal">
-        <div class="form-group@(ViewData.ModelState.IsValidField("Docket") ? string.Empty : " has-error")">
+        <div class="form-group@(ViewData.ModelState.IsValidField("ReturnDocket") ? string.Empty : " has-error")">
             @Html.Label("return docket", new { @class = "control-label col-md-2" })
             <div class="col-md-2">
-                @Html.TextBoxFor(model => model.Docket, new { @class = "form-control" })
+                @Html.TextBoxFor(model => model.ReturnDocket, new { @class = "form-control" })
             </div>
-            @Html.ValidationMessageFor(model => model.Docket, null, new { @class = "help-block form-control-feedback" })
+            @Html.ValidationMessageFor(model => model.ReturnDocket, null, new { @class = "help-block form-control-feedback" })
+        </div>
+
+        <div class="form-group @(ViewData.ModelState.IsValidField("WhenEnded") ? string.Empty : " has-error")">
+            @Html.LabelFor(model => model.WhenEnded, new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.WhenEnded, "{0:d/MM/yyyy}", new { @class = "form-control" })
+                    <span id="WhenEnded-icon" class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            @Html.ValidationMessageFor(model => model.WhenEnded, null, new { @class = "form-control-feedback" })
         </div>
 
         <div class="form-group">
