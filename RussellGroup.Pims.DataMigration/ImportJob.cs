@@ -49,7 +49,7 @@ namespace RussellGroup.Pims.DataMigration
 
                 if (job != null)
                 {
-                    Task.Run(() => { return repository.RemoveAsync(job); });
+                    Task.Run(async () => { return await repository.RemoveAsync(job); });
                     Trace.WriteLine(string.Format("Deleted job: \"{0}\"", xJobId));
                 }
             }
