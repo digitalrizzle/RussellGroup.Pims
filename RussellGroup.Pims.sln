@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Web
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RussellGroup.Pims.Website", "RussellGroup.Pims.Website\RussellGroup.Pims.Website.csproj", "{31535951-D049-455B-8635-90DF41634999}"
 EndProject
@@ -12,6 +12,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RussellGroup.Pims.DataMigration", "RussellGroup.Pims.DataMigration\RussellGroup.Pims.DataMigration.csproj", "{6ED466D8-FBD1-490C-ADE2-41B10B4BC748}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTables.Mvc", "DataTables.Mvc\DataTables.Mvc.csproj", "{431ADB89-3DA0-4E18-9AF0-984B917E6EB8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B2850664-ADCC-4039-82BE-A76302D4F838}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -22,10 +22,17 @@
             <li><a href="#deleting-a-transaction">Deleting a transaction</a></li>
         </ol>
     </li>
-    <li>Plant status</li>
-    <li>Categories</li>
-    <li>Creating new plant</li>
-    <li>Creating new inventory</li>
+    <li><a href="#plant-status-and-condition">Plant status and condition</a></li>
+    <li>
+        <a href="#categories">Categories</a>
+        <ol>
+            <li><a href="#making-a-new-category">Making a new category</a></li>
+            <li><a href="#making-changes-to-a-category">Making changes to a category</a></li>
+            <li><a href="#deleting-a-category">Deleting a category</a></li>
+        </ol>
+    </li>
+    <li>Creating new plant and editing</li>
+    <li>Creating new inventory and editing</li>
     <li>Reports</li>
     <li>User management</li>
 </ol>
@@ -65,7 +72,7 @@
         <tr>
             <td class="help-guide-term">Hire</td>
             <td>
-                The temporary assignment of a plant or inventory item.
+                The temporary assignment of a plant or inventory item to a job.
             </td>
         </tr>
         <tr>
@@ -77,21 +84,20 @@
         <tr>
             <td class="help-guide-term">Transaction</td>
             <td>
-                A transaction is the process of hiring a plant or inventory item in or
-                out of the yard.
+                The process of hiring a plant or inventory item in or out of the yard.
             </td>
         </tr>
         <tr>
             <td class="help-guide-term">Checkout</td>
             <td>
-                A transaction for hiring a plant or inventory item out of the yard.
+                A transaction for hiring a plant or inventory item out of the yard to a job.
             </td>
         </tr>
         <tr>
             <td class="help-guide-term">Checkin</td>
             <td>
-                A transaction for returning a plant or inventory item from hire back to
-                the yard.
+                A transaction for returning a plant or inventory item from hire back from a
+                job to the yard.
             </td>
         </tr>
     </tbody>
@@ -101,8 +107,8 @@
 <p>Here's how the system works:</p>
 <ul>
     <li>
-        The first thing to do is to make a job. It is against this job that all hire
-        relating to a particular job can be hired out against. A job will have a description,
+        The first thing to do is to make a job. It is this that all hire relating
+        to a particular job can be hired out against. A job will have a description,
         when the job starts, its project manager and quantity surveyor.
     </li>
     <li>
@@ -120,7 +126,7 @@
         was hired out.
     </li>
     <li>
-        As plant and inventory is returned to the yard, these returns are also recorded as
+        As plant and inventory are returned to the yard, these returns are also recorded as
         transactions. This process is referred to as "checking in". Again, a new docket number
         is issued along with when the plant and inventory was returned. The return date is important
         because it not only tells the system that the items have been returned, it also makes them
@@ -133,7 +139,7 @@
     <li>
         When the job has finished, and all plant and inventory has been returned (or "checked in")
         a date of completion is recorded against the job. Plant or inventory can no longer be
-        checked in or check out against this job since the job has finished.
+        checked in or check out against this job because it has finished.
     </li>
 </ul>
 <p>So to summarise:</p>
@@ -151,8 +157,8 @@
 
 <h3 id="a-working-example">4. A working example</h3>
 <p>
-    In this section we're going to go through an example, step by step, to show just how to make a
-    job and check out, and in, plant and inventory.
+    In this section we're going to work through an example, step by step, to show just how to make a
+    job and how to checkout, and in, plant and inventory.
 </p>
 <h4 id="make-a-new-job">4.1. Make a new job</h4>
 <p>The first step is to make our job.</p>
@@ -190,8 +196,8 @@
                     <td class="help-guide-term">when started</td>
                     <td>30/9/2014</td>
                     <td>
-                        In regards to the billing, when the job started. You can either type in a
-                        date, or you can click the small calendar icon which will show a calendar
+                        In regards to the billing, this is when the job started. You can either type
+                        in a date, or you can click the small calendar icon which will show a calendar
                         from which you can choose a date.
                     </td>
                 </tr>
@@ -199,9 +205,9 @@
                     <td class="help-guide-term">when ended</td>
                     <td><i>leave this blank</i></td>
                     <td>
-                        In regards to the billing, when the job completed. Leave this blank until
-                        the job has actually finished otherwise you will not be able to check in
-                        or out any plant or inventory.
+                        In regards to the billing, this is when the job completed. Leave this blank until
+                        the job has actually finished otherwise you will not be able to check in or out
+                        any plant or inventory.
                     </td>
                 </tr>
                 <tr>
@@ -238,20 +244,20 @@
 </ol>
 <div class="bs-callout bs-callout-danger">
     If you entered something wrong, like accidentally entering a name for the <strong>when started</strong>
-    date then a red description with what is wrong will appear next to the problem. Go back and have a
+    date, then a red description with what is incorrect will appear next to the problem. Go back and have a
     look at the problem, correct it, then click <strong>Create</strong> again. The job will only be created
     if everything has been entered as expected by the system.
 </div>
 <h4 id="make-changes-to-the-job">4.2. Make changes to the job</h4>
 <p>
     We made a mistake in creating our job. We entered the wrong date! All we need to do is to find our job
-    and edit it. Here's what we do:
+    and edit it. Here's how:
 </p>
 <ol>
     <li>On the main menu, click <strong>Jobs</strong>.</li>
     <li>
         A list of all jobs will show. On the right hand side of the page is a search box. Click in this box
-        and begin typing either the name of the job, the ID, or even the date. Anything that matches what
+        and begin typing either the name of the job, the ID, or the date. Anything that matches what
         you started to type will narrow the list of jobs (this is called filtering) and will make it easier
         to find our job. In this example, click in the search box and start typing "1001".
     </li>
@@ -261,24 +267,26 @@
         1/10/2014.
     </li>
     <li>Click the <strong>Save</strong> button to save our changes.</li>
-    <li>That's it! We just made made changes to our job.</li>
+    <li>That's it! We just made changes to our job.</li>
 </ol>
 <h4 id="hiring-out-plant-and-inventory">4.3. Checkout plant and inventory</h4>
 <p>
     Now that we've set up our job, we can start hiring out plant and inventory against it. The process of
     hiring out plant and inventory from the yard is called a "checkout".
 </p>
-<p>
-    Here's an analogy. Say that our yard is actually a library and the plant and inventory are books. We
-    go to the library and find what we need, sometimes several books at once, then go to the librarian to
-    check out the books. Because the books have been checked out they are no longer available to use by
-    anyone else. When we're done with the books we return them to the library and the librarian will check
-    the books back into the library and they will become available to use again by someone else.
-</p>
-<p>
-    So PIMS is our computer system of the library which records what has been checked in and out, and the
-    users of PIMS (that's you) are the librarians.
-</p>
+<div class="bs-callout bs-callout-info">
+    <p>
+        Here's an analogy. Say that our yard is actually a library and the plant and inventory are books. We
+        go to the library and find what we need, sometimes several books at once, then go to the librarian to
+        check out the books. Because the books have been checked out they are no longer available to use by
+        anyone else. When we're done with the books we return them to the library and the librarian will check
+        the books back into the library and they will become available to use again by someone else.
+    </p>
+    <p>
+        So PIMS is our computer system of the library which records what has been checked in and out, and the
+        users of PIMS (that's you) are the librarians.
+    </p>
+</div>
 <p>
     Let's check out some of our plant and inventory.
 </p>
@@ -294,15 +302,19 @@
         label type "90001".
     </li>
     <li>
+        Set the <strong>when checked out</strong> date to when the plant was hired out. It defaults to the current
+        date, so we can leave it at whatever it happens to be.
+    </li>
+    <li>
         Leave the <strong>job</strong> set to "My first PIMS job". When we searched for our job in the job list
         page and clicked <strong>Checkout</strong> it automatically set it to the job we wanted. If we
         searched for the wrong job we could change it here.
     </li>
     <li>
-        Click in the <strong>plant hire</strong> box and start typing the number "55724" which is the ID
-        for the "Tandem Axle Trailer". As you begin to  type a list of plant will appear. Click on the correct
-        item in the list. Once you click on the item the box will become greyed-out and you will no longer
-        be able to type in it.
+        Click in the <strong>plant hire</strong> box that says "begin typing a plant item..." and start typing
+        the number "55724" which is the ID for the "Tandem Axle Trailer". As you begin to  type a list of plant
+        will appear. Click on the correct item in the list. Once you click on the item the box will become greyed-out
+        and you will no longer be able to type in it.
     </li>
     <li>
         We want to add one more plant item for hire. This time will use the name "Tex 19PE Jack Hammer"
@@ -397,7 +409,7 @@
         Change the date to the day before and the quantity to 20.
     </li>
     <li>
-        Click the <strong>Save</strong> button. We've just corrected our transaction!
+        Click the <strong>Save</strong> button. We've just corrected another transaction!
     </li>
 </ol>
 <h4 id="checking-in">4.7. Checking in</h4>
@@ -417,6 +429,10 @@
     <li>
         We need another docket number, so for our example let's use 90002. In the box next to the
         <strong>return docket</strong> label type "90002".
+    </li>
+    <li>
+        Set the <strong>when checked in</strong> date to when the plant was returned. It defaults to the current
+        date, so we can leave it at whatever it happens to be.
     </li>
     <li>
         You'll see there are two sections: one for plant hire and the other for inventory hire.
@@ -441,10 +457,9 @@
     </li>
 </ol>
 <div class="bs-callout bs-callout-info">
-    PIMS knows when an item has been checked in by having an <strong>ended</strong> date in its transaction
+    PIMS knows when an item has been checked in by having a <strong>when ended</strong> date in its transaction
     which can also be set on the plant or inventory hire transaction edit pages. But it's a lot faster and
-    easier to use the <strong>Checkin</strong> page to do this. It assumes that the current date is the date
-    that it was returned to the yard.
+    easier to use the <strong>Checkin</strong> page to do this.
 </div>
 <h4 id="deleting-a-transaction">4.8. Deleting a transaction</h4>
 <p>
@@ -457,7 +472,7 @@
         Go to the plant hire transactions page as in the previous section. (Hint: go to the job details page.)
     </li>
     <li>
-        In the plant transactions listing locate the "Tandem Axle Trailer" line and click on the
+        In the plant transactions listing locate the "Tex 19PE Jack Hammer" line and click on the
         <strong>Delete</strong> link.
     </li>
     <li>
@@ -467,3 +482,157 @@
         That's it! Our transaction has now been deleted.
     </li>
 </ol>
+
+<h3 id="plant-status-and-condition">5. Plant status and condition</h3>
+<p>
+    Every plant in PIMS has a status to essentially indicate whether that plant is available to be hired.
+    There are several status that the state of a plant may be in, most of which render that plant unable
+    to be hired.
+</p>
+<p>
+    The status of a plant can be changed by clicking <strong>Plant</strong> in the main menu, searching
+    for your plant, and then clicking <strong>Edit</strong>. The ability to change the status may be
+    disabled if the plant is already checked out. In this case, the plant must first be checked in and
+    then the status can be changed.
+</p>
+<p>
+    Here are the plant status types and what they indicate:
+</p>
+<table class="table display table-striped order-column table-responsive table-help-guide">
+    <thead>
+        <tr>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Can hire?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="help-guide-term">Unknown</td>
+            <td>The status of the plant is unknown.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Available</td>
+            <td>The plant is available to be checked out.</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Checked out</td>
+            <td>The plant is already checked out.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Missing</td>
+            <td>The plant was not returned to the yard when it ought to have been.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Under repair</td>
+            <td>The plant is current being repaired.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Written off</td>
+            <td>The plant is not fit for use and is beyond repair.</td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+<p>
+    Along with the plant status is its condition which indicates how well a plant is in
+    working order. The condition is only an indicator and does not affect whether a plant can
+    be checked out or not. Here are the conditions:
+</p>
+<table class="table display table-striped order-column table-responsive table-help-guide">
+    <thead>
+        <tr>
+            <th>Condition</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="help-guide-term">Unknown</td>
+            <td>The plant condition is unknown.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Poor</td>
+            <td>The plant is in a poor condition and ought to be repaired.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Fair</td>
+            <td>The plant is in a fair condition and may need repair soon.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Good</td>
+            <td>The plant is in good working order.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Excellent</td>
+            <td>The plant is in excellent working order.</td>
+        </tr>
+    </tbody>
+</table>
+<div class="bs-callout bs-callout-info">
+    A summary of the status and condition and condition of plant can be viewed as a pie chart
+    by clicking on <strong>PIMS</strong> in the main menu.
+</div>
+
+<h3 id="categories">6. Categories</h3>
+<p>
+    A category is a name of a grouping of like plant or inventory. It is used in reporting to group
+    together similar items for yard plant and inventory stocktake and plant and inventory locations.
+    Categories can also be used to help when searching for plant or inventory in pages that list the
+    category.
+</p>
+<h4 id="making-a-new-category">6.1. Making a new category</h4>
+<p>Here's how to add a new category:</p>
+<ol>
+    <li>On the main menu, click <strong>Categories</strong>.</li>
+    <li>Just below the main menu, click <strong>Create new</strong>.</li>
+    <li>
+        Click in the <strong>type</strong> box that says "begin typing a type..." and start typing
+        the type of category. A list of category types will appear that match what you have started
+        typing. You can use an existing type, such as plant or peri, or you can make an entirely
+        new type. Choose something that best describes the grouping of a plant or inventory item.
+    </li>
+    <li>
+        Click in the <strong>name</strong> name box and enter a name of the category. This can be
+        thought of as a sub-category and further refines the category grouping.
+    </li>
+    <li>Click the <strong>Create</strong> button to create the new category.</li>
+</ol>
+<div class="bs-callout bs-callout-info">
+    A new category must be associated with plant or inventory before it will show in the reports.
+</div>
+<h4 id="making-changes-to-a-category">6.2. Making changes to a category</h4>
+<p>Here's how to change a category:</p>
+<ol>
+    <li>On the main menu, click <strong>Categories</strong>.</li>
+    <li>
+        In the categories listing locate the line of your category to edit and click on the
+        <strong>Edit</strong> link. You may want to use the search filter to help find your
+        category. You can also get to the edit page via <strong>Details</strong>.
+    </li>
+    <li>
+        Make changes to the <strong>type</strong> and <strong>name</strong> as appropriate.
+    </li>
+    <li>Click the <strong>Save</strong> button to save the editions.</li>
+</ol>
+<h4 id="deleting-a-category">6.3. Deleting a category</h4>
+<p>Here's how to delete a category:</p>
+<ol>
+    <li>On the main menu, click <strong>Categories</strong>.</li>
+    <li>
+        In the categories listing locate the line of your category to delete and click on the
+        <strong>Delete</strong> link. You may want to use the search filter to help find your
+        category. You can also get to the delete page via <strong>Details</strong>.
+    </li>
+    <li>If permitted, click the <strong>Delete</strong> button to delete the category.</li>
+</ol>
+<div class="bs-callout bs-callout-warning">
+    You may not be able to delete the category if it is in use by any plant or inventory items.
+    To remedy this, select a different category for those items, or delete them, and then you
+    will be able to delete the category.
+</div>

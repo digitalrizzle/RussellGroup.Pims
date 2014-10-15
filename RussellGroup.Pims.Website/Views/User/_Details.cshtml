@@ -38,7 +38,7 @@
             @Html.DisplayNameFor(model => model.User.LockoutEnabled)
         </dt>
         <dd>
-            @Html.Encode(Model.User.LockoutEnabled.ToYesNo())
+            @Html.DisplayFor(model => model.User.LockoutEnabled)
         </dd>
 
         @if (Model.User.LockoutEndDateUtc.HasValue)

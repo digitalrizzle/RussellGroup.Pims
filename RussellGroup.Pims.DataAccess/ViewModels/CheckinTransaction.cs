@@ -16,7 +16,7 @@ namespace RussellGroup.Pims.DataAccess.ViewModels
         [Display(Name = "docket")]
         public string ReturnDocket { get; set; }
 
-        [Display(Name = "when ended")]
+        [Display(Name = "when checked in")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime WhenEnded { get; set; }

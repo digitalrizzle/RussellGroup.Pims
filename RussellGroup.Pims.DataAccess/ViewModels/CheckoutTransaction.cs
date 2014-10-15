@@ -16,7 +16,7 @@ namespace RussellGroup.Pims.DataAccess.ViewModels
         [Display(Name = "docket")]
         public string Docket { get; set; }
 
-        [Display(Name = "when started")]
+        [Display(Name = "when checked out")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime WhenStarted { get; set; }
