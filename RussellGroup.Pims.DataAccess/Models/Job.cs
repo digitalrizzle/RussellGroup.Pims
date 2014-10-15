@@ -46,5 +46,18 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [Display(Name = "inventory hire")]
         public virtual ICollection<InventoryHire> InventoryHires { get; set; }
+
+        public string JobAndDescription
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(XJobId))
+                {
+                    return string.Format("[{0}] {1}", XJobId, Description);
+                }
+
+                return Description;
+            }
+        }
     }
 }
