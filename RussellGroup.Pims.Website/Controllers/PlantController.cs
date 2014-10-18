@@ -69,12 +69,12 @@ namespace RussellGroup.Pims.Website.Controllers
                 .ToList()
                 .Select(c => new
                 {
-                    c.Id,
                     c.XPlantId,
                     c.XPlantNewId,
                     c.Description,
                     Category = c.Category != null ? c.Category.Name : string.Empty,
                     Hire = _repository.GetPlantHire(c.Id).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetPlantHire(c.Id).Count().ToString(), "PlantHire", new { id = c.Id }),
+                    InUse = c.WhenDisused.HasValue ? "No" : "Yes",
                     Status = c.Status.Name,
                     CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });

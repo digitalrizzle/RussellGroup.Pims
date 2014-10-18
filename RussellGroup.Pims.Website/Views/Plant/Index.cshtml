@@ -15,7 +15,6 @@
 <table class="table display table-striped table-hover order-column table-responsive" width="100%">
     <thead>
         <tr>
-            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.XPlantId)
             </th>
@@ -28,8 +27,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
-            <th class="text-right">
+            <th>
                 hire
+            </th>
+            <th>
+                in use?
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -50,12 +52,12 @@
             "serverSide": true,
             "ajax": "@Url.Content("~/Plant/GetDataTableResult")",
             "columns": [
-                { "data": "Id", "visible": false },
                 { "data": "XPlantId" },
                 { "data": "XPlantNewId" },
                 { "data": "Description" },
                 { "data": "Category", "name": "Category.Name" },
                 { "data": "Hire", "sortable": false, "className": "text-right" },
+                { "data": "InUse", "sortable": false, "className": "text-center" },
                 { "data": "Status", "name": "Status.Name" },
                 { "data": "CrudLinks", "sortable": false, "className": "text-center" }
             ]
