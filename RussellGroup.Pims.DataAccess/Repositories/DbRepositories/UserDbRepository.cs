@@ -99,7 +99,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
             if (roles != null)
             {
-                var storedRoleIds = user.Roles.Select(f => f.RoleId);
+                var storedRoleIds = storedUser.Roles.Select(f => f.RoleId);
                 var storedRoles = GetAllRoles().Where(f => storedRoleIds.Contains(f.Id)).Select(f => f.Name);
 
                 // remove roles
