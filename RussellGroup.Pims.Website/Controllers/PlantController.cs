@@ -130,7 +130,6 @@ namespace RussellGroup.Pims.Website.Controllers
             var filtered = string.IsNullOrEmpty(hint)
                 ? all
                 : all.Where(f =>
-                    f.Plant.XPlantId.Contains(hint) ||
                     f.Job.XJobId.Contains(hint) ||
                     f.Docket.Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
@@ -153,7 +152,6 @@ namespace RussellGroup.Pims.Website.Controllers
                 .ToList()
                 .Select(c => new
                 {
-                    c.Plant.XPlantId,
                     c.Job.XJobId,
                     c.Docket,
                     WhenStarted = c.WhenStarted.ToShortDateString(),

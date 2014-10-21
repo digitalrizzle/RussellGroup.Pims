@@ -44,15 +44,17 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var result = _repository
                 .Plants
+                .Include("PlantHires")
                 // f.IsCheckedIn can't be used because it isn't queryable
                 .Where(f =>
                     !f.WhenDisused.HasValue &&
-                    (f.Description.Contains(hint) || f.XPlantId.StartsWith(hint)) &&
+                    (f.XPlantNewId.StartsWith(hint) | f.XPlantId.StartsWith(hint) | f.Description.Contains(hint)) &&
                     f.PlantHires.All(h => h.WhenEnded.HasValue) &&
                     (f.StatusId == Status.Unknown || f.StatusId == Status.Available))
                 .Take(5)
                 .OrderBy(f => f.XPlantId)
-                .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantId })
+                // can't use f.XPlantIds here because LINQ to Entities won't accept it
+                .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantId + "/" + f.XPlantNewId })
                 .ToArray();
 
             var json = Json(result, JsonRequestBehavior.AllowGet);

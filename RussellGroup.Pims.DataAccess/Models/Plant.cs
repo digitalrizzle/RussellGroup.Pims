@@ -100,5 +100,13 @@ namespace RussellGroup.Pims.DataAccess.Models
                 return PlantHires != null ? PlantHires.Any(f => !f.WhenEnded.HasValue) : false;
             }
         }
+
+        public string XPlantIds
+        {
+            get
+            {
+                return string.Format("{0}/{1}", XPlantId, XPlantNewId);
+            }
+        }
     }
 }

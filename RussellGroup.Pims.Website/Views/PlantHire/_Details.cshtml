@@ -1,7 +1,7 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.PlantHire
 
 <h3>@ViewBag.Title</h3>
-<h4>@Model.Plant.XPlantId</h4>
+<h4>@Model.Plant.XPlantIds</h4>
 <h4>@Model.Plant.Description</h4>
 
 <div>
@@ -26,6 +26,13 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Plant.XPlantId)
+        </dd>
+
+        <dt>
+            new plant id
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Plant.XPlantNewId)
         </dd>
 
         <dt>
