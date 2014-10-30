@@ -101,7 +101,7 @@ namespace RussellGroup.Pims.DataAccess.Models
             }
         }
 
-        public string XPlantIds
+        public string XPlantIdAndXPlantNewId
         {
             get
             {
