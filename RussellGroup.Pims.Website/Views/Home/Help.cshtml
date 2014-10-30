@@ -24,6 +24,12 @@
     </li>
     <li><a href="#plant-status-and-condition">Plant status and condition</a></li>
     <li>
+        <a href="#adding-and-editing-plant">Adding and editing plant</a>
+        <ol>
+            <li><a href="#add-new-plant">Add new plant</a></li>
+        </ol>
+    </li>
+    <li>
         <a href="#categories">Categories</a>
         <ol>
             <li><a href="#making-a-new-category">Making a new category</a></li>
@@ -31,7 +37,6 @@
             <li><a href="#deleting-a-category">Deleting a category</a></li>
         </ol>
     </li>
-    <li>Creating new plant and editing</li>
     <li>Creating new inventory and editing</li>
     <li>Reports</li>
     <li>User management</li>
@@ -579,18 +584,138 @@
     by clicking on <strong>PIMS</strong> in the main menu.
 </div>
 
-<h3 id="categories">6. Categories</h3>
+<h3 id="adding-and-editing-plant">6. Adding and editing plant</h3>
+<p>
+    In order for plant to be available for hire in the system, a record of it all must be stored
+    somewhere. For each plant the original purchase price of it, the rate it which it is hired out
+    and the status and condition is all recorded in PIMS.
+</p>
+<h4 id="add-new-plant">6.1. Add new plant</h4>
+<p>Here's how to add a new plant:</p>
+<ol>
+    <li>On the main menu, click <strong>Plant</strong>.</li>
+    <li>Just below the main menu, click <strong>Create New</strong>.</li>
+    <li>
+        Fill in each of the blank boxes next to each label. Here's what each of them mean:
+        <table class="table display table-striped order-column table-responsive table-help-guide">
+            <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Example</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="help-guide-term">id</td>
+                    <td>Tprism18</td>
+                    <td>
+                        This is an identifier for a plant; a short code. This isn't automatically
+                        assigned, so you'll need to come up with the ID yourself. It should be unique.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">new id</td>
+                    <td>55025</td>
+                    <td>
+                        This is another identifier for the plant. Some plant have old identifier codes
+                        and a process is in place for them to be assigned new identifiers. Use this
+                        for the new plant id if an old plant id already exists, otherwise make this
+                        the same as the id above.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">description</td>
+                    <td>Prism</td>
+                    <td>
+                        Use a relatively short name of the plant that best describes what it is.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">when purchased</td>
+                    <td>1/03/2006</td>
+                    <td>
+                        The date when the plant was purchased.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">when disused</td>
+                    <td></td>
+                    <td>
+                        The date when the plant was retired from use. Leave this empty if the plant
+                        is still in use otherwise it will not show in the list of available items
+                        when checking out plant to a job.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">rate</td>
+                    <td>0.50</td>
+                    <td>
+                        The default charge out rate for hire. It is a default because individual
+                        transactions can have their rate altered which will not affect this rate.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">cost</td>
+                    <td>150.00</td>
+                    <td>
+                        The purchase price of the plant.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">serial</td>
+                    <td></td>
+                    <td>
+                        The serial number on the plant.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">fixed asset code</td>
+                    <td></td>
+                    <td>
+                        The asset number of the plant. Not all plant items will have an asset
+                        code, so this can be left empty.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">electrical?</td>
+                    <td>No</td>
+                    <td>
+                        Tick the box to indicate the plant is powered electrically.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">tool?</td>
+                    <td>No</td>
+                    <td>
+                        Tick the box to indicate the plant is a tool as opposed to ?
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">category</td>
+                    <td>No</td>
+                    <td>
+                        The category that the plant 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+    <li>Click the <strong>Create</strong> button to create the new plant.</li>
+</ol>
+
+<h3 id="categories">7. Categories</h3>
 <p>
     A category is a name of a grouping of like plant or inventory. It is used in reporting to group
     together similar items for yard plant and inventory stocktake and plant and inventory locations.
     Categories can also be used to help when searching for plant or inventory in pages that list the
     category.
 </p>
-<h4 id="making-a-new-category">6.1. Making a new category</h4>
+<h4 id="making-a-new-category">7.1. Making a new category</h4>
 <p>Here's how to add a new category:</p>
 <ol>
     <li>On the main menu, click <strong>Categories</strong>.</li>
-    <li>Just below the main menu, click <strong>Create new</strong>.</li>
+    <li>Just below the main menu, click <strong>Create New</strong>.</li>
     <li>
         Click in the <strong>type</strong> box that says "begin typing a type..." and start typing
         the type of category. A list of category types will appear that match what you have started
@@ -606,7 +731,7 @@
 <div class="bs-callout bs-callout-info">
     A new category must be associated with plant or inventory before it will show in the reports.
 </div>
-<h4 id="making-changes-to-a-category">6.2. Making changes to a category</h4>
+<h4 id="making-changes-to-a-category">7.2. Making changes to a category</h4>
 <p>Here's how to change a category:</p>
 <ol>
     <li>On the main menu, click <strong>Categories</strong>.</li>
@@ -620,7 +745,7 @@
     </li>
     <li>Click the <strong>Save</strong> button to save the editions.</li>
 </ol>
-<h4 id="deleting-a-category">6.3. Deleting a category</h4>
+<h4 id="deleting-a-category">7.3. Deleting a category</h4>
 <p>Here's how to delete a category:</p>
 <ol>
     <li>On the main menu, click <strong>Categories</strong>.</li>
