@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@{
+    //ViewBag.HideBreadcrumb = false;   // indicates if the breadcrumb is to be shown
+    //ViewBag.ShowAnchors = false;      // indicates if the top and bottom hyperlink anchors are to be shown
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -9,7 +13,7 @@
     @Styles.Render("~/Content/overrides")
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
-<body>
+<body id="top">
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -32,23 +36,41 @@
         </div>
     </div>
     <div class="container body-content">
-        @if (ViewBag.HasBreadcrumb == null || ViewBag.HasBreadcrumb)
-        {
-        <div class="breadcrumb">
-            @Html.MvcSiteMap().SiteMapPath()
-        </div>
         <div id="environment" class="pull-right">
             @System.Configuration.ConfigurationManager.AppSettings["Environment"]
         </div>
+        @if (ViewBag.HideBreadcrumb == null || !ViewBag.HideBreadcrumb)
+        {
+            <div class="breadcrumb">
+                @Html.MvcSiteMap().SiteMapPath()
+            </div>
+        }
+        @if (ViewBag.ShowAnchors != null && ViewBag.ShowAnchors)
+        {
+            <div class="pull-right">
+                <a href="#bottom" title="go to the bottom of the page"><span class="glyphicon glyphicon-hand-down"></span></a>
+            </div>
         }
         @RenderBody()
         <hr />
+        @if (ViewBag.ShowAnchors != null && ViewBag.ShowAnchors)
+        {
+            <div id="bottom" class="pull-right">
+                <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+            </div>
+        }
         <footer>
-            <small>@Html.GetCopyright()</small>
-            <small class="pull-right">Version @Html.GetVersion()</small>
+            <small>@Html.GetCopyright(), Version @Html.GetVersion()</small>
         </footer>
     </div>
     @Scripts.Render("~/bundles/js")
+    <script>
+        $('a[href*=#]').on('click', function (event) {
+            event.preventDefault();
+            var offset = $(this.hash).offset();
+            if (offset) $('html, body').animate({ scrollTop: offset.top }, 500);
+        });
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
