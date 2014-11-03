@@ -19,6 +19,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public DbSet<Condition> Conditions { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<InventoryHire> InventoryHires { get; set; }
+        public DbSet<InventoryHireCheckin> InventoryHireCheckins { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Plant> Plants { get; set; }
         public DbSet<PlantHire> PlantHires { get; set; }

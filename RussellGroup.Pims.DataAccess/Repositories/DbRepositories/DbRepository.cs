@@ -24,7 +24,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             get { return HttpContext.Current.User.Identity.Name; }
         }
 
-        public async Task<T> FindAsync(params object[] keyValues)
+        public virtual async Task<T> FindAsync(params object[] keyValues)
         {
             return await Db.Set<T>().FindAsync(keyValues);
         }

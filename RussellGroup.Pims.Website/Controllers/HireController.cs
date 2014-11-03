@@ -128,11 +128,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            // set the return quantity to the original quantity
-            foreach (var hire in job.InventoryHires)
-            {
-                hire.ReturnQuantity = hire.Quantity;
-            }
+            var hires = _repository.GetCheckedOutInventoryHiresInJob(id).ToList();
 
             var transaction = new CheckinTransaction
             {
@@ -140,7 +136,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 ReturnDocket = string.Empty,
                 WhenEnded = DateTime.Now.Date,
                 PlantHires = job.PlantHires.Where(f => !f.WhenEnded.HasValue).ToArray(),
-                InventoryHires = job.InventoryHires.Where(f => !f.WhenEnded.HasValue).ToArray()
+                InventoryHires = hires
             };
 
             return View(transaction);
@@ -175,11 +171,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 if (inventoryHireIdsAndQuantities.Any(f => f.Key == hire.Id))
                 {
                     hire.IsSelected = true;
-                    hire.ReturnQuantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.Id).Value;
-                }
-                else
-                {
-                    hire.ReturnQuantity = hire.Quantity;
+                    hire.Quantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.Id).Value;
                 }
             }
 

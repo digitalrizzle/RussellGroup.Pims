@@ -53,14 +53,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     await Db.Entry(hire).Reference(f => f.Inventory).LoadAsync();
                 }
 
-                if (hire.ReturnQuantity.HasValue)
-                {
-                    hire.Inventory.Quantity -= hire.ReturnQuantity.GetValueOrDefault() - hire.Quantity.GetValueOrDefault();
-                }
-                else
-                {
-                    hire.Inventory.Quantity -= hire.Quantity.GetValueOrDefault();
-                }
+                hire.Inventory.Quantity -= hire.Quantity.GetValueOrDefault();
 
                 await Db.SaveChangesAsync();
             }
@@ -102,7 +95,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 //}
 
                 hire.Inventory.Quantity += originalHire.Quantity.GetValueOrDefault() - hire.Quantity.GetValueOrDefault();
-                hire.Inventory.Quantity += hire.ReturnQuantity.GetValueOrDefault() - originalHire.ReturnQuantity.GetValueOrDefault();
             }
 
             return await base.UpdateAsync(item);
@@ -127,14 +119,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             {
                 var hire = item as InventoryHire;
 
-                if (hire.ReturnQuantity.HasValue)
-                {
-                    hire.Inventory.Quantity += hire.ReturnQuantity.GetValueOrDefault() - hire.Quantity.GetValueOrDefault();
-                }
-                else
-                {
-                    hire.Inventory.Quantity += hire.Quantity.GetValueOrDefault();
-                }
+                hire.Inventory.Quantity += hire.Quantity.GetValueOrDefault();
             }
 
             return await base.RemoveAsync(item);

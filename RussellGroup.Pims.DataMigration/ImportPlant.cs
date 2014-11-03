@@ -24,7 +24,7 @@ namespace RussellGroup.Pims.DataMigration
                 ConditionId = Condition.Unknown,
                 Description = reader.GetValue("Description"),
                 WhenPurchased = reader.GetDateTime("Start date"),
-                WhenDisused = reader.GetDateTime("End date"), 
+                //WhenDisused = reader.GetDateTime("End date"), // this data is incorrect in the source
                 Rate = reader.GetValueOrNull<decimal>("Rate").Value,
                 Cost = reader.GetValueOrNull<decimal>("Cost") ?? 0,
                 Serial = reader.GetValue("Serial number"),

@@ -166,6 +166,7 @@
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HireController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
+    <Compile Include="Controllers\InventoryHireCheckinController.cs" />
     <Compile Include="Controllers\InventoryHireController.cs" />
     <Compile Include="Controllers\JobController.cs" />
     <Compile Include="Controllers\PlantController.cs" />
@@ -475,6 +476,13 @@
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
+    <Content Include="Views\InventoryHireCheckin\_Details.cshtml" />
+    <Content Include="Views\InventoryHireCheckin\_Form.cshtml" />
+    <Content Include="Views\InventoryHireCheckin\Create.cshtml" />
+    <Content Include="Views\InventoryHireCheckin\Delete.cshtml" />
+    <Content Include="Views\InventoryHireCheckin\Details.cshtml" />
+    <Content Include="Views\InventoryHireCheckin\Edit.cshtml" />
+    <Content Include="Views\InventoryHireCheckin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

@@ -30,21 +30,23 @@ namespace RussellGroup.Pims.DataAccess.ReportModels
             }
         }
 
+        // TODO: complete
         public bool HasActiveHire(Job job)
         {
-            var hasActivePlantHire = job
-                .PlantHires
-                .Where(f => (f.WhenStarted < WhenEnded.AddDays(1) && f.WhenEnded >= WhenStarted) ||
-                            (f.WhenStarted < WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-                .Any();
+            //var hasActivePlantHire = job
+            //    .PlantHires
+            //    .Where(f => (f.WhenStarted < WhenEnded.AddDays(1) && f.WhenEnded >= WhenStarted) ||
+            //                (f.WhenStarted < WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+            //    .Any();
 
-            var hasActiveInventoryHire = job
-                .InventoryHires
-                .Where(f => (f.WhenStarted < WhenEnded.AddDays(1) && f.WhenEnded >= WhenStarted) ||
-                            (f.WhenStarted < WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-                .Any();
+            //var hasActiveInventoryHire = job
+            //    .InventoryHires
+            //    .Where(f => (f.WhenStarted < WhenEnded.AddDays(1) && f.WhenEnded >= WhenStarted) ||
+            //                (f.WhenStarted < WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+            //    .Any();
 
-            return hasActivePlantHire || hasActiveInventoryHire;
+            //return hasActivePlantHire || hasActiveInventoryHire;
+            return true;
         }
 
         public decimal GetPlantHireCharge(Job job)
@@ -74,30 +76,31 @@ namespace RussellGroup.Pims.DataAccess.ReportModels
             return cost;
         }
 
+        // TODO: complete
         public decimal GetInventoryHireCharge(Job job, string categoryType)
         {
             decimal cost = 0;
 
-            var hires = job
-                .InventoryHires
-                .Where(f =>
-                    (f.Inventory.Category.Type.Equals(categoryType, StringComparison.OrdinalIgnoreCase)) &&
-                    ((f.WhenStarted < WhenEnded.AddDays(1) && f.WhenEnded >= WhenStarted) ||
-                    (f.WhenStarted < WhenEnded.AddDays(1) && !f.WhenEnded.HasValue)))
-                .ToList();
+            //var hires = job
+            //    .InventoryHires
+            //    .Where(f =>
+            //        (f.Inventory.Category.Type.Equals(categoryType, StringComparison.OrdinalIgnoreCase)) &&
+            //        ((f.WhenStarted < WhenEnded.AddDays(1) && f.WhenEnded >= WhenStarted) ||
+            //        (f.WhenStarted < WhenEnded.AddDays(1) && !f.WhenEnded.HasValue)))
+            //    .ToList();
 
-            foreach (var hire in hires)
-            {
-                var whenStarted = WhenStarted > hire.WhenStarted
-                    ? WhenStarted
-                    : hire.WhenStarted;
+            //foreach (var hire in hires)
+            //{
+            //    var whenStarted = WhenStarted > hire.WhenStarted
+            //        ? WhenStarted
+            //        : hire.WhenStarted;
 
-                var days = hire.WhenEnded.HasValue
-                    ? hire.WhenEnded.Value.AddDays(1).Subtract(whenStarted).Days
-                    : WhenEnded.AddDays(1).Subtract(whenStarted).Days;
+            //    var days = hire.WhenEnded.HasValue
+            //        ? hire.WhenEnded.Value.AddDays(1).Subtract(whenStarted).Days
+            //        : WhenEnded.AddDays(1).Subtract(whenStarted).Days;
 
-                cost += days * hire.Rate.Value * hire.Quantity.Value;
-            }
+            //    cost += days * hire.Rate.Value * hire.Quantity.Value;
+            //}
 
             return cost;
         }

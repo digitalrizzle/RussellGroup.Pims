@@ -23,7 +23,7 @@
     }
 </h4>
 
-@if (Model.InventoryHires.All(f => f.WhenEnded.HasValue))
+@if (Model.InventoryHires.All(f => !f.IsCheckedOut))
 {
     <p>There is no inventory currently checked out (hired) for this job.</p>
 }
@@ -63,13 +63,13 @@ else
                 .OrderBy(f => f.Name)
                 .ToList())
             {
-                if (Model.InventoryHires.Any(f => f.Inventory.Category == category && !f.WhenEnded.HasValue))
+                if (Model.InventoryHires.Any(f => f.Inventory.Category == category && f.IsCheckedOut))
                 {
                     <tr>
                         <td colspan="7"><strong>@category.Name</strong></td>
                     </tr>
                     foreach (var item in Model.InventoryHires
-                        .Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue)
+                        .Where(f => f.Inventory.Category == category && f.IsCheckedOut)
                         .OrderBy(f => f.Inventory.XInventoryId))
                     {
                         <tr>
@@ -89,7 +89,7 @@ else
                                 @Html.DisplayFor(model => item.Rate)
                             </td>
                             <td class="text-right">
-                                @Html.DisplayFor(model => item.Quantity)
+                                @(item.Quantity - item.Checkins.Sum(c => c.Quantity))
                             </td>
                             <td>
                                 @Html.DisplayFor(model => item.Comment)
@@ -102,7 +102,7 @@ else
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td class="text-right"><strong>@Html.Encode(Model.InventoryHires.Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue).Sum(f => f.Quantity))</strong></td>
+                        <td class="text-right"><strong>@Html.Encode(Model.InventoryHires.Where(f => f.Inventory.Category == category && f.IsCheckedOut).Sum(f => f.Quantity - f.Checkins.Sum(c => c.Quantity)))</strong></td>
                         <td></td>
                     </tr>
                 }

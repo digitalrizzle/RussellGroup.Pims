@@ -1,0 +1,55 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHire
+@{
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+    var returns = Model.Checkins.FirstOrDefault();
+}
+@section head {
+    @Styles.Render("~/Content/datatables")
+}
+
+<h3>@ViewBag.Title</h3>
+<h4>@Model.Job.XJobId</h4>
+<h5>@Model.Job.Description</h5>
+<h6>@Model.Docket</h6>
+
+@if (User.IsAuthorized(Role.CanEdit))
+{
+    <p>@Html.ActionLink("Create New", "Create", new { id = Model.JobId, hireId = Model.Id })</p>
+}
+
+<table class="table display table-striped table-hover order-column table-responsive" width="100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => returns.Docket)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => returns.WhenEnded)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => returns.Quantity)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+</table>
+@section scripts {
+    @Scripts.Render("~/bundles/datatables")
+    <script>
+        $('.table').DataTable({
+            "order": [[3, "desc"]],
+            "processing": true,
+            "stateSave": true,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Content("~/InventoryHireCheckin/GetDataTableResult?id=" + Model.Id)",
+            "columns": [
+                { "data": "Docket" },
+                { "data": "WhenEnded" },
+                { "data": "Quantity", "className": "text-right" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-right" }
+            ]
+        });
+    </script>
+}

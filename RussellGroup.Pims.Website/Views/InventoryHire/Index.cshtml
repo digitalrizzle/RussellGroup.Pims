@@ -29,16 +29,16 @@
                 @Html.DisplayNameFor(model => hires.WhenStarted)
             </th>
             <th>
-                @Html.DisplayNameFor(model => hires.WhenEnded)
+                @Html.DisplayNameFor(model => hires.Checkins.SingleOrDefault().WhenEnded)
             </th>
-            <th class="text-right">
+            <th>
                 @Html.DisplayNameFor(model => hires.Rate)
             </th>
-            <th class="text-right">
+            <th>
                 @Html.DisplayNameFor(model => hires.Quantity)
             </th>
-            <th class="text-right">
-                @Html.DisplayNameFor(model => hires.ReturnQuantity)
+            <th>
+                checked in
             </th>
             <th></th>
         </tr>
@@ -59,7 +59,7 @@
                 { "data": "XInventoryId", "name": "Inventory.XInventoryId" },
                 { "data": "Docket" },
                 { "data": "WhenStarted" },
-                { "data": "WhenEnded" },
+                { "data": "WhenEnded", "sortable": false },
                 { "data": "Rate", "className": "text-right" },
                 { "data": "Quantity", "className": "text-right" },
                 { "data": "ReturnQuantity", "className": "text-right" },

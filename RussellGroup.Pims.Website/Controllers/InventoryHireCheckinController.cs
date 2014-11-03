@@ -16,29 +16,29 @@ using System.Data.Entity.SqlServer;
 namespace RussellGroup.Pims.Website.Controllers
 {
     [PimsAuthorize(Role.CanView, Role.CanEdit)]
-    public class InventoryHireController : Controller
+    public class InventoryHireCheckinController : Controller
     {
-        private readonly IHireRepository<InventoryHire> _repository;
+        private readonly IInventoryHireCheckinRepository _repository;
 
-        public InventoryHireController(IHireRepository<InventoryHire> repository)
+        public InventoryHireCheckinController(IInventoryHireCheckinRepository repository)
         {
             _repository = repository;
         }
 
-        // GET: /InventoryHire/5
-        public async Task<ActionResult> Index(int? id)
+        // GET: /InventoryHireReturn/5
+        public async Task<ActionResult> Index(int? id, int? hireId)
         {
-            if (id == null)
+            if (hireId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var job = await _repository.GetJob(id);
-            if (job == null)
+            InventoryHire hire = await _repository.GetInventoryHire(hireId);
+            if (hire == null)
             {
                 return HttpNotFound();
             }
 
-            return View(job);
+            return View(hire);
         }
         // https://github.com/ALMMa/datatables.mvc
         public JsonResult GetDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
@@ -52,21 +52,19 @@ namespace RussellGroup.Pims.Website.Controllers
             var hint = model.Search != null ? model.Search.Value : string.Empty;
             var sortColumn = model.Columns.GetSortedColumns().First();
 
-            var all = _repository.GetAll().AsExpandable().Where(f => f.JobId == id);
+            var all = _repository.GetAll().AsExpandable().Where(f => f.InventoryHireId == id);
 
             // filter
             var filtered = string.IsNullOrEmpty(hint)
                 ? all
                 : all.Where(f =>
-                    f.Inventory.XInventoryId.Contains(hint) ||
                     f.Docket.Contains(hint) ||
-                    Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
-                    SqlFunctions.StringConvert(f.Rate).Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
                     SqlFunctions.StringConvert((double)f.Quantity).Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
-            Func<InventoryHire, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
+            Func<InventoryHireCheckin, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
 
             // sorting
             var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
@@ -79,168 +77,180 @@ namespace RussellGroup.Pims.Website.Controllers
                 .ToList()
                 .Select(c => new
                 {
-                    c.Inventory.XInventoryId,
                     c.Docket,
-                    WhenStarted = c.WhenStarted.ToShortDateString(),
-                    WhenEnded = c.Checkins.Any() ? c.Checkins.OrderBy(f => f.WhenEnded).Last().WhenEnded.ToShortDateString() : string.Empty,
-                    c.Rate,
+                    WhenEnded = c.WhenEnded.ToShortDateString(),
                     c.Quantity,
-                    ReturnQuantity = c.Checkins.Any() ? c.Checkins.Sum(f => f.Quantity).ToString() : string.Empty,
-                    CrudLinks = this.CrudLinks(new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
+                    CrudLinks = this.CrudLinks(new { id = c.InventoryHire.JobId, hireId = c.InventoryHireId, checkinId = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
             return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
         }
 
-        // GET: /InventoryHire/Details/5
-        public async Task<ActionResult> Details(int? id, int? hireId)
+        // GET: /InventoryHireReturn/Details/5
+        public async Task<ActionResult> Details(int? id, int? hireId, int? checkinId)
+        {
+            if (checkinId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            InventoryHireCheckin checkin = await _repository.FindAsync(checkinId);
+            if (checkin == null)
+            {
+                return HttpNotFound();
+            }
+            return View(checkin);
+        }
+
+        // GET: /InventoryHireReturn/Create/5
+        [PimsAuthorize(Role.CanEdit)]
+        public async Task<ActionResult> Create(int? id, int? hireId)
         {
             if (hireId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            InventoryHire hire = await _repository.FindAsync(hireId);
+            var hire = await _repository.GetInventoryHire(hireId);
             if (hire == null)
             {
                 return HttpNotFound();
             }
-            return View(hire);
-        }
 
-        // GET: /InventoryHire/Create/5
-        [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create(int? id)
-        {
-            if (id == null)
+            var checkin = new InventoryHireCheckin()
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var job = await _repository.GetJob(id);
-            if (job == null)
-            {
-                return HttpNotFound();
-            }
-
-            var hire = new InventoryHire()
-            {
-                Job = job,
-                JobId = job.Id,
-                WhenStarted = DateTime.Now
+                InventoryHire = hire,
+                InventoryHireId = hire.Id,
+                WhenEnded = DateTime.Now
             };
 
-            return View(hire);
+            return View(checkin);
         }
 
-        // POST: /InventoryHire/Create
+        // POST: /InventoryHireReturn/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "InventoryId,JobId,Docket,WhenStarted,Rate,Quantity,Comment")] InventoryHire hire)
+        public async Task<ActionResult> Create([Bind(Include = "InventoryHireId,Docket,WhenEnded,Quantity,Comment")] InventoryHireCheckin checkin)
         {
             if (ModelState.IsValid)
             {
-                await _repository.AddAsync(hire);
-                return RedirectToAction("Index", new { id = hire.JobId });
+                await _repository.AddAsync(checkin);
+
+                var hire = await _repository.GetInventoryHire(checkin.InventoryHireId);
+
+                if (hire == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return RedirectToAction("Index", new { id = hire.JobId, hireId = hire.Id });
             }
-            return View(hire);
+
+            return View(checkin);
         }
 
-        // GET: /InventoryHire/Edit/5
+        // GET: /InventoryHireReturn/Edit/5
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit(int? id, int? hireId)
+        public async Task<ActionResult> Edit(int? id, int? hireId, int? checkinId)
         {
-            if (hireId == null)
+            if (checkinId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            InventoryHire hire = await _repository.FindAsync(hireId);
-            if (hire == null)
+            InventoryHireCheckin checkin = await _repository.FindAsync(checkinId);
+            if (checkin == null)
             {
                 return HttpNotFound();
             }
-            return View(hire);
+            return View(checkin);
         }
 
-        // POST: /InventoryHire/Edit/5
+        // POST: /InventoryHireReturn/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit(int? id, int? hireId, FormCollection collection)
+        public async Task<ActionResult> Edit(int? id, int? hireId, int? checkinId, FormCollection collection)
         {
-            if (hireId == null)
+            if (checkinId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var hire = await _repository.FindAsync(hireId);
-            if (hire == null)
+            InventoryHireCheckin checkin = await _repository.FindAsync(checkinId);
+            if (checkin == null)
             {
                 return HttpNotFound();
             }
 
             // InventoryId isn't included as we do not want to update this
-            if (TryUpdateModel<InventoryHire>(hire, "JobId,Docket,WhenStarted,Rate,Quantity,Comment".Split(',')))
+            if (TryUpdateModel<InventoryHireCheckin>(checkin, "Docket,WhenEnded,Quantity,Comment".Split(',')))
             {
                 if (ModelState.IsValid)
                 {
-                    await _repository.UpdateAsync(hire);
-                    return RedirectToAction("Index", new { id = hire.JobId });
+                    await _repository.UpdateAsync(checkin);
+
+                    var hire = await _repository.GetInventoryHire(checkin.InventoryHireId);
+
+                    if (hire == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    return RedirectToAction("Index", new { id = hire.JobId, hireId = hire.Id });
                 }
             }
 
-            return View("Edit", hire);
+            return View("Edit", checkin);
         }
 
-        // GET: /InventoryHire/Delete/5
+        // GET: /InventoryHireReturn/Delete/5
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Delete(int? id, int? hireId)
+        public async Task<ActionResult> Delete(int? id, int? hireId, int? checkinId)
         {
-            if (hireId == null)
+            if (checkinId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            InventoryHire hire = await _repository.FindAsync(hireId);
-            if (hire == null)
+            InventoryHireCheckin checkin = await _repository.FindAsync(checkinId);
+            if (checkin == null)
             {
                 return HttpNotFound();
             }
-            return View(hire);
+            return View(checkin);
         }
 
-        // POST: /InventoryHire/Delete/5
+        // POST: /InventoryHireReturn/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> DeleteConfirmed(int? hireId)
+        public async Task<ActionResult> DeleteConfirmed(int? checkinId)
         {
-            if (hireId == null)
+            if (checkinId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var hire = await _repository.FindAsync(hireId);
+            InventoryHireCheckin checkin = await _repository.FindAsync(checkinId);
+            if (checkin == null)
+            {
+                return HttpNotFound();
+            }
+            await _repository.RemoveAsync(checkin);
+
+            var hire = await _repository.GetInventoryHire(checkin.InventoryHireId);
+
             if (hire == null)
             {
                 return HttpNotFound();
             }
-            await _repository.RemoveAsync(hire);
-            return RedirectToAction("Index", new { id = hire.JobId });
+
+            return RedirectToAction("Index", new { id = hire.JobId, hireId = hire.Id });
         }
 
         private new ActionResult View()
         {
             throw new NotSupportedException();
-        }
-
-        private ActionResult View(InventoryHire hire)
-        {
-            var inventories = _repository.Inventories.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XInventoryId);
-
-            ViewBag.Inventories = new SelectList(inventories, "Id", "XInventoryId", hire.InventoryId);
-
-            return base.View(hire);
         }
     }
 }

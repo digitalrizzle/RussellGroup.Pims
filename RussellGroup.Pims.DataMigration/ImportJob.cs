@@ -60,7 +60,7 @@ namespace RussellGroup.Pims.DataMigration
             return this;
         }
 
-        // removes any jobs that have current hire
+        // removes any jobs that have no current hire
         public ImportJob Clean()
         {
             if (TargetContext != null) TargetContext.Dispose();
@@ -68,9 +68,10 @@ namespace RussellGroup.Pims.DataMigration
             TargetContext = new PimsDbContext();
             TargetContext.SetContextUserName(PimsDbContext.DefaultContextUserName);
 
+            // TODO: check that "f.InventoryHires.All(h => !h.IsCheckedOut)" is correct
             var jobs = TargetContext.Jobs.Where(f =>
                 (!f.PlantHires.Any() || !f.InventoryHires.Any()) ||
-                (f.PlantHires.All(h => h.WhenEnded.HasValue) && f.InventoryHires.All(h => h.WhenEnded.HasValue)));
+                (f.PlantHires.All(h => h.WhenEnded.HasValue) && f.InventoryHires.All(h => !h.IsCheckedOut)));
 
             foreach (var job in jobs.ToList())
             {

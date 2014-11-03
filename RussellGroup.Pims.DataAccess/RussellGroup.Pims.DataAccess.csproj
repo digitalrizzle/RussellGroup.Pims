@@ -73,6 +73,7 @@
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Inventory.cs" />
+    <Compile Include="Models\InventoryHireCheckin.cs" />
     <Compile Include="Models\PimsDbContext.cs" />
     <Compile Include="Models\InventoryHire.cs" />
     <Compile Include="Models\Job.cs" />
@@ -85,7 +86,9 @@
     <Compile Include="ReportModels\SummaryOfHireChargesReportViewModel.cs" />
     <Compile Include="Repositories\DbRepositories\DbRepository.cs" />
     <Compile Include="Repositories\DbRepositories\HireDbRepository.cs" />
+    <Compile Include="Repositories\DbRepositories\InventoryHireCheckinDbRepository.cs" />
     <Compile Include="Repositories\DbRepositories\JobDbRepository.cs" />
+    <Compile Include="Repositories\IInventoryHireCheckinRepository.cs" />
     <Compile Include="Repositories\IJobRepository.cs" />
     <Compile Include="Repositories\IReportRepository.cs" />
     <Compile Include="Repositories\DbRepositories\ReportDbRepository.cs" />

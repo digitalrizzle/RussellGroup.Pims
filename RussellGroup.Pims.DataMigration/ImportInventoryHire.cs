@@ -79,9 +79,9 @@ namespace RussellGroup.Pims.DataMigration
                     InventoryId = inventory.Id,
                     JobId = job.Id,
                     Docket = docket,
-                    ReturnDocket = returnDocket,
+                    //ReturnDocket = returnDocket,
                     WhenStarted = whenStarted.Value,
-                    WhenEnded = whenEnded,
+                    //WhenEnded = whenEnded,
                     Rate = rate,
                     Quantity = quantity,
                     Comment = comment

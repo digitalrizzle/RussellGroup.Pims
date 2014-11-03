@@ -25,19 +25,11 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "docket")]
         public string Docket { get; set; }
 
-        [Display(Name = "return docket")]
-        public string ReturnDocket { get; set; }
-
         [Required]
         [Display(Name = "started")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime WhenStarted { get; set; }
-
-        [Display(Name = "ended")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime? WhenEnded { get; set; }
 
         [Display(Name = "rate")]
         public decimal? Rate { get; set; }
@@ -45,12 +37,12 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "quantity")]
         public int? Quantity { get; set; }
 
-        [Display(Name = "return quantity")]
-        public int? ReturnQuantity { get; set; }
-
         [Display(Name = "comments")]
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
+
+        [Display(Name = "returns")]
+        public virtual ICollection<InventoryHireCheckin> Checkins { get; set; }
 
         [Display(Name = "inventory")]
         public virtual Inventory Inventory { get; set; }
@@ -65,7 +57,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         {
             get
             {
-                return !WhenEnded.HasValue;
+                return Checkins.Sum(f => f.Quantity) < Quantity;
             }
         }
     }

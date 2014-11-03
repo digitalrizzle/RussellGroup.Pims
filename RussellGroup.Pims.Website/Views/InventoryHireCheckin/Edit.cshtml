@@ -1,0 +1,11 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHireCheckin
+@{
+    ViewBag.ShowAnchors = true;
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+<h4>@Model.InventoryHire.Inventory.XInventoryId</h4>
+<h5>@Model.InventoryHire.Inventory.Description</h5>
+
+@Html.Partial("_Form")

@@ -1,8 +1,8 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHire
+﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHireCheckin
 
 <h3>@ViewBag.Title</h3>
-<h4>@Model.Inventory.XInventoryId</h4>
-<h5>@Model.Inventory.Description</h5>
+<h4>@Model.InventoryHire.Inventory.XInventoryId</h4>
+<h5>@Model.InventoryHire.Inventory.Description</h5>
 
 <div>
     @if (@Html.IsAction("Delete"))
@@ -18,14 +18,21 @@
             job
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Job.Description)
+            @Html.DisplayFor(model => model.InventoryHire.Job.Description)
         </dd>
 
         <dt>
             inventory id
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Inventory.XInventoryId)
+            @Html.DisplayFor(model => model.InventoryHire.Inventory.XInventoryId)
+        </dd>
+
+        <dt>
+            checkout docket
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.InventoryHire.Docket)
         </dd>
 
         <dt>
@@ -36,17 +43,10 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.WhenStarted)
+            @Html.DisplayNameFor(model => model.WhenEnded)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WhenStarted)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Rate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Rate)
+            @Html.DisplayFor(model => model.WhenEnded)
         </dd>
 
         <dt>
@@ -61,23 +61,6 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Comment)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Checkins)
-        </dt>
-        <dd>
-            @if (Model.Checkins.Any())
-            {
-                var all = Model.Quantity;
-                var checkedIn = Model.Checkins.Sum(f => f.Quantity);
-
-                <text>@Html.ActionLink(string.Format("{0} total items, {1} items checked in", all, checkedIn), "Index", "InventoryHireCheckin", new { id = Model.JobId, hireId = Model.Id }, null)</text>
-            }
-            else
-            {
-                <text>0</text>
-            }
         </dd>
 
     </dl>
@@ -101,12 +84,12 @@
                     else
                     {
                         <text>
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.JobId, hireId = Model.Id }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = Model.JobId, hireId = Model.Id }) |
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.InventoryHire.JobId, hireId = Model.InventoryHireId, checkinId = Model.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = Model.InventoryHire.JobId, hireId = Model.InventoryHireId, checkinId = Model.Id }) |
                         </text>
                     }
                 }
-                @Html.ActionLink("Cancel", "Index", new { id = Model.JobId })
+                @Html.ActionLink("Cancel", "Index", new { id = Model.InventoryHire.JobId, hireId = Model.InventoryHireId })
             }
         </dd>
     </dl>

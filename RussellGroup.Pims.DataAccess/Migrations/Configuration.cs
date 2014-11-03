@@ -31,6 +31,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             factory.GenerateAuditTrigger("Categories");
             factory.GenerateAuditTrigger("Inventories");
             factory.GenerateAuditTrigger("InventoryHires");
+            factory.GenerateAuditTrigger("InventoryHireCheckins");
             factory.GenerateAuditTrigger("Jobs");
             factory.GenerateAuditTrigger("Plants");
             factory.GenerateAuditTrigger("PlantHires");
@@ -45,6 +46,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 
             // seed
             //CreateUser(context, new ApplicationUser { UserName = @"DOMAIN\user name" }, new string[] { Role.CanView, Role.CanEdit, Role.CanEditCategories, Role.CanEditUsers });
+            CreateUser(context, new ApplicationUser { UserName = Environment.UserDomainName }, new string[] { Role.CanView, Role.CanEdit, Role.CanEditCategories, Role.CanEditUsers });
 
             var statuses = new List<Status>
             {

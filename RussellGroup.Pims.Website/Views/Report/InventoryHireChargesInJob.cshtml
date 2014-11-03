@@ -26,8 +26,8 @@
 
 @if (!Model.InventoryHires
     .Where(f =>
-        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
-        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.Checkins != null && f.Checkins.Max(c => c.WhenEnded) >= ViewBag.WhenStarted) ||
+        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.IsCheckedOut))
     .Any())
 {
     <p>There is no inventory hire for this job in the given period.</p>
@@ -48,7 +48,7 @@ else
                     @Html.DisplayNameFor(model => hires.Docket)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => hires.ReturnDocket)
+                    return docket
                 </th>
                 <th>
                     start
@@ -74,8 +74,8 @@ else
         <tbody>
             @foreach (var categoryType in Model.InventoryHires
                 .Where(f =>
-                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
-                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.Checkins.Max(c => c.WhenEnded) >= ViewBag.WhenStarted) ||
+                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.IsCheckedOut))
                 .Select(f => f.Inventory.Category.Type)
                 .Distinct()
                 .OrderBy(f => f)
@@ -88,7 +88,7 @@ else
                 </tr>
                 foreach (var item in Model.InventoryHires
                     .Where(f => f.Inventory.Category.Type == categoryType)
-                    .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+                    .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.Checkins.Max(c => c.WhenEnded) >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.IsCheckedOut))
                     .OrderBy(f => f.WhenStarted))
                 {
                     <tr>
@@ -104,16 +104,16 @@ else
                             @Html.DisplayFor(model => item.Docket)
                         </td>
                         <td>
-                            @Html.DisplayFor(model => item.ReturnDocket)
+                            @*@Html.DisplayFor(model => item.ReturnDocket)*@
                         </td>
                         <td>
                             @Html.DisplayFor(model => item.WhenStarted)
                         </td>
                         <td>
-                            @Html.DisplayFor(model => item.WhenEnded)
+                            @*@Html.DisplayFor(model => item.WhenEnded)*@
                         </td>
                         <td class="text-right">
-                            @{
+                            @*@{
                                 var whenStarted = ViewBag.WhenStarted > item.WhenStarted
                                     ? ViewBag.WhenStarted
                                     : item.WhenStarted;
@@ -122,7 +122,7 @@ else
                                     ? item.WhenEnded.Value.AddDays(1).Subtract(whenStarted).Days
                                     : ViewBag.WhenEnded.AddDays(1).Subtract(whenStarted).Days;
                             }
-                            @days
+                            @days*@
                         </td>
                         <td class="text-right">
                             @Html.DisplayFor(model => item.Rate)
