@@ -44,12 +44,9 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         public override int SaveChanges()
         {
-            DbConnection connection = base.Database.Connection;
-            ExecuteSetContextUserNameCommand(connection);
+            ExecuteSetContextUserNameCommand();
 
             var result = base.SaveChanges();
-
-            connection.Close();
 
             return result;
         }
@@ -66,28 +63,16 @@ namespace RussellGroup.Pims.DataAccess.Models
                 UserName = HttpContext.Current.User.Identity.Name;
             }
 
-            DbConnection connection = base.Database.Connection;
-            ExecuteSetContextUserNameCommand(connection);
+            ExecuteSetContextUserNameCommand();
 
             var result = await base.SaveChangesAsync(cancellationToken);
-
-            connection.Close();
 
             return result;
         }
 
-        private void ExecuteSetContextUserNameCommand(DbConnection connection)
+        private void ExecuteSetContextUserNameCommand()
         {
-            if (connection.State == ConnectionState.Closed)
-            {
-                connection.Open();
-            }
-
-            DbCommand command = connection.CreateCommand();
-            command.CommandType = CommandType.StoredProcedure;
-            command.CommandText = "SetContextUserName";
-            command.Parameters.Add(new SqlParameter("userName", UserName));
-            command.ExecuteNonQuery();
+            this.Database.ExecuteSqlCommand("SetContextUserName @userName", new SqlParameter("userName", UserName));
         }
     }
 }
