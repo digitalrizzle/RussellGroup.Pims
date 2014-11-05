@@ -51,7 +51,7 @@
         $('.table').DataTable({
             "order": [[3, "desc"]],
             "processing": true,
-            "stateSave": true,
+            "stateSave": false,
             "pagingType": 'full',
             "serverSide": true,
             "ajax": "@Url.Content("~/InventoryHire/GetDataTableResult?id=" + Model.Id)",

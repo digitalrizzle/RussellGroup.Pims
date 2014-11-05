@@ -77,7 +77,7 @@
         $('.table').DataTable({
             "order": [[3, "desc"]],
             "processing": true,
-            "stateSave": true,
+            "stateSave": false,
             "pagingType": 'full',
             "serverSide": true,
             "ajax": "@Url.Content("~/Report/GetDataTableResult?filtered=true")",
