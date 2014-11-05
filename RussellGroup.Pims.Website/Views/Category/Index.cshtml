@@ -35,7 +35,7 @@
         $('.table').DataTable({
             "order": [[1, "asc"]],
             "processing": true,
-            "stateSave": true,
+            "stateSave": false,
             "pagingType": 'full',
             "serverSide": true,
             "ajax": "@Url.Content("~/Category/GetDataTableResult")",

@@ -1,5 +1,6 @@
 ﻿@model RussellGroup.Pims.DataAccess.ViewModels.CheckinTransaction
 @{
+    ViewBag.ShowAnchors = true;
     ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
     var plantHires = Model.PlantHires.FirstOrDefault();
     var inventoryHires = Model.InventoryHires.FirstOrDefault();
@@ -148,7 +149,7 @@
         $('#plant-hire-table').dataTable({
             "order": [[1, "asc"]],
             "processing": true,
-            "stateSave": true,
+            "stateSave": false,
             "paging": false,
             "columnDefs": [
                 { "visible": false, "targets": [0] },
@@ -159,7 +160,7 @@
         $('#inventory-hire-table').dataTable({
             "order": [[1, "asc"]],
             "processing": true,
-            "stateSave": true,
+            "stateSave": false,
             "paging": false,
             "columnDefs": [
                 { "visible": false, "targets": [0] },
