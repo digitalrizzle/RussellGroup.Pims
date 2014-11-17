@@ -34,7 +34,7 @@
             <th>
                 @Html.DisplayNameFor(model => hires.WhenEnded)
             </th>
-            <th class="text-right">
+            <th>
                 @Html.DisplayNameFor(model => hires.Rate)
             </th>
             <th>
@@ -55,7 +55,7 @@
             "stateSave": false,
             "pagingType": 'full',
             "serverSide": true,
-            "ajax": "@Url.Content("~/PlantHire/GetDataTableResult?id=" + Model.Id)",
+            "ajax": "@Url.Action("GetDataTableResult", new { id = Model.Id })",
             "columns": [
                 { "data": "Id", "visible": false },
                 { "data": "XPlantId", "name": "Plant.XPlantId" },

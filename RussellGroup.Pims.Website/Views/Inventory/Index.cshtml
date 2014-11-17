@@ -28,7 +28,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.WhenDisused)
             </th>
-            <th class="text-right">
+            <th>
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
@@ -48,7 +48,7 @@
             "stateSave": false,
             "pagingType": 'full',
             "serverSide": true,
-            "ajax": "@Url.Content("~/Inventory/GetDataTableResult")",
+            "ajax": "@Url.Action("GetDataTableResult")",
             "columns": [
                 { "data": "Id", "visible": false },
                 { "data": "XInventoryId" },
