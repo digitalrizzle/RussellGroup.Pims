@@ -60,10 +60,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.WhenEnded)
             </th>
-            <th class="text-right">
+            <th>
                 plant
             </th>
-            <th class="text-right">
+            <th>
                 inventory
             </th>
             <th></th>
@@ -80,7 +80,7 @@
             "stateSave": false,
             "pagingType": 'full',
             "serverSide": true,
-            "ajax": "@Url.Content("~/Report/GetDataTableResult?filtered=true")",
+            "ajax": "@Url.Action("GetDataTableResult", new { filtered = true })",
             "columns": [
                 { "data": "Id", "visible": false },
                 { "data": "XJobId" },
