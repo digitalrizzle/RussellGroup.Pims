@@ -42,14 +42,13 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // https://github.com/ALMMa/datatables.mvc
-        public JsonResult GetDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
+        public JsonResult GetDataTableResult(int? id, [ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
             }
 
-            var id = Convert.ToInt32(Request["id"]);
             var hint = model.Search != null ? model.Search.Value : string.Empty;
             var sortColumn = model.Columns.GetSortedColumns().First();
 

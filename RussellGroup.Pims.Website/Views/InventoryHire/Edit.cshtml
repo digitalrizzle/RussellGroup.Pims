@@ -4,8 +4,25 @@
     ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
 }
 
-<h3>@ViewBag.Title</h3>
+<h3>
+    @ViewBag.Title
+    @if (Model is InventoryHireCheckout)
+    {
+        <text>Checkout</text>
+    }
+    else
+    {
+        <text>Checkin</text>
+    }
+</h3>
 <h4>@Model.Inventory.XInventoryId</h4>
 <h5>@Model.Inventory.Description</h5>
 
-@Html.Partial("_Form")
+@if (Model is InventoryHireCheckout)
+{
+    <text>@Html.Partial("_CheckoutForm")</text>
+}
+else
+{
+    <text>@Html.Partial("_CheckinForm")</text>
+}

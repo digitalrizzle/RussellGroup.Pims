@@ -24,7 +24,7 @@ namespace RussellGroup.Pims.DataMigration
             DateTime? whenStarted = null;
             DateTime? whenEnded = null;
             try { whenStarted = reader.GetDateTime("Start date"); }
-            catch { Trace.WriteLine(string.Format("Bad date: \"{0}\", skipping import", key)); }
+            catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
             try { whenEnded = reader.GetDateTime("End date"); }
             catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
 

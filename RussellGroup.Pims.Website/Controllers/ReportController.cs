@@ -1,7 +1,6 @@
 ﻿using DataTables.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
-using RussellGroup.Pims.DataAccess.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;

@@ -5,27 +5,27 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
-namespace RussellGroup.Pims.DataAccess.ViewModels
+namespace RussellGroup.Pims.Website.Models
 {
-    public class CheckoutTransaction
+    public class CheckinTransaction
     {
         [Display(Name = "job")]
         public Job Job { get; set; }
 
         [Required]
         [Display(Name = "docket")]
-        public string Docket { get; set; }
+        public string ReturnDocket { get; set; }
 
-        [Display(Name = "when checked out")]
+        [Display(Name = "when checked in")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime WhenStarted { get; set; }
+        public DateTime WhenEnded { get; set; }
 
-        [Display(Name = "plant")]
-        public virtual ICollection<Plant> Plants { get; set; }
+        [Display(Name = "plant hire")]
+        public virtual ICollection<PlantHire> PlantHires { get; set; }
 
-        [Display(Name = "inventory")]
-        public virtual List<KeyValuePair<Inventory, int?>> Inventories { get; set; }
+        [Display(Name = "inventory hire")]
+        public virtual ICollection<InventoryHire> InventoryHires { get; set; }
 
         public int? JobId
         {

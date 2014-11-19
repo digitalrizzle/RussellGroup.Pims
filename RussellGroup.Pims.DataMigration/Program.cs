@@ -37,22 +37,22 @@ namespace RussellGroup.Pims.DataMigration
 
                     job.SetAuditing(false);
 
-                    plantHire.Delete();
+                    //plantHire.Delete();
                     inventoryHire.Delete();
-                    job.Delete();
-                    plant.Delete();
+                    //job.Delete();
+                    //plant.Delete();
                     inventory.Delete();
 
-                    categories.Delete().Import();
-                    plant.Import();
+                    //categories.Delete().Import();
+                    //plant.Import();
                     inventory.Import();
-                    job.Import();
+                    //job.Import();
 
-                    plantHire.Import(0, importCap);
+                    //plantHire.Import(0, importCap);
                     inventoryHire.Import(0, importCap);
 
-                    job.Delete(new[] { "940", "941", "950", "960", "961", "962", "963", "970", "980", "981", "982", "984" });
-                    job.Clean();
+                    //job.Delete(new[] { "940", "941", "950", "960", "961", "962", "963", "970", "980", "981", "982", "984" });
+                    //job.Clean();
 
                     job.SetAuditing(true);
                 }

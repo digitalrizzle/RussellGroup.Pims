@@ -99,11 +99,8 @@
     <Compile Include="Repositories\DbRepositories\InventoryDbRepository.cs" />
     <Compile Include="Repositories\DbRepositories\PlantDbRepository.cs" />
     <Compile Include="Repositories\DbRepositories\UserDbRepository.cs" />
-    <Compile Include="ViewModels\CheckinTransaction.cs" />
-    <Compile Include="ViewModels\CheckoutTransaction.cs" />
     <Compile Include="ReportModels\InventoryLocationsReportModel.cs" />
     <Compile Include="ReportModels\PlantLocationsReportModel.cs" />
-    <Compile Include="ViewModels\UserRoles.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
