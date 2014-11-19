@@ -25,28 +25,8 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "docket")]
         public string Docket { get; set; }
 
-        [Display(Name = "return docket")]
-        public string ReturnDocket { get; set; }
-
-        [Required]
-        [Display(Name = "started")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime WhenStarted { get; set; }
-
-        [Display(Name = "ended")]
-        [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
-        public DateTime? WhenEnded { get; set; }
-
-        [Display(Name = "rate")]
-        public decimal? Rate { get; set; }
-
         [Display(Name = "quantity")]
         public int? Quantity { get; set; }
-
-        [Display(Name = "return quantity")]
-        public int? ReturnQuantity { get; set; }
 
         [Display(Name = "comments")]
         [DataType(DataType.MultilineText)]
@@ -60,13 +40,26 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [NotMapped]
         public bool IsSelected { get; set; }
+    }
 
-        public bool IsCheckedOut
-        {
-            get
-            {
-                return !WhenEnded.HasValue;
-            }
-        }
+    public class InventoryHireCheckout : InventoryHire
+    {
+        [Required]
+        [Display(Name = "started")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime WhenStarted { get; set; }
+    }
+
+    public class InventoryHireCheckin : InventoryHire
+    {
+        [Display(Name = "ended")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public DateTime WhenEnded { get; set; }
+
+        [NotMapped]
+        [Display(Name = "checked out")]
+        public int CheckedOutQuantity { get; set; }
     }
 }

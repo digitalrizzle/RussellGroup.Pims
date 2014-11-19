@@ -113,18 +113,21 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // https://github.com/ALMMa/datatables.mvc
-        public JsonResult GetPlantHireDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
+        public JsonResult GetPlantHireDataTableResult(int? id, [ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
+            if (id == null)
+            {
+                throw new ArgumentNullException("id");
+            }
             if (model == null)
             {
                 throw new ArgumentNullException("model");
             }
 
-            var id = Convert.ToInt32(Request["id"]);
             var hint = model.Search != null ? model.Search.Value : string.Empty;
             var sortColumn = model.Columns.GetSortedColumns().First();
 
-            var all = _repository.GetPlantHire(id).AsExpandable();
+            var all = _repository.GetPlantHire(id.Value).AsExpandable();
 
             // filter
             var filtered = string.IsNullOrEmpty(hint)

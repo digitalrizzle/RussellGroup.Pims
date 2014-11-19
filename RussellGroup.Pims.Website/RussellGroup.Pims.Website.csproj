@@ -176,6 +176,8 @@
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\IIdentityHelper.cs" />
     <Compile Include="Helpers\VersionHelper.cs" />
+    <Compile Include="Models\CheckinTransaction.cs" />
+    <Compile Include="Models\CheckoutTransaction.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="PimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -436,10 +438,9 @@
     <Content Include="Views\InventoryHire\Create.cshtml" />
     <Content Include="Views\InventoryHire\Delete.cshtml" />
     <Content Include="Views\InventoryHire\Details.cshtml" />
-    <Content Include="Views\InventoryHire\Edit.cshtml" />
     <Content Include="Views\InventoryHire\Index.cshtml" />
     <Content Include="Views\InventoryHire\_Details.cshtml" />
-    <Content Include="Views\InventoryHire\_Form.cshtml" />
+    <Content Include="Views\InventoryHire\_CheckoutForm.cshtml" />
     <Content Include="Views\Hire\Checkin.cshtml" />
     <Content Include="Views\Plant\PlantHireIndex.cshtml" />
     <Content Include="Views\Category\Create.cshtml" />
@@ -475,6 +476,8 @@
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
+    <Content Include="Views\InventoryHire\_CheckinForm.cshtml" />
+    <Content Include="Views\InventoryHire\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

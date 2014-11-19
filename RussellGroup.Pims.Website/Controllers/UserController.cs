@@ -9,7 +9,6 @@ using System.Web;
 using System.Web.Mvc;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
-using RussellGroup.Pims.DataAccess.ViewModels;
 using RussellGroup.Pims.Website.Models;
 using DataTables.Mvc;
 

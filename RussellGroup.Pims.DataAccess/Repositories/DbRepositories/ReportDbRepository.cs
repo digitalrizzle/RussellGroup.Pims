@@ -42,7 +42,9 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public IQueryable<InventoryHire> GetActiveInventoryHiresInJob(int jobId)
         {
-            return Db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
+            // TODO: fix
+            //return Db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
+            return null;
         }
 
         public PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId)
@@ -65,25 +67,27 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public InventoryLocationsReportModel GetInventoryLocationsByCategory(int? categoryId)
         {
-            var category = Db.Categories.Find(categoryId);
+            // TODO: fix
+            //var category = Db.Categories.Find(categoryId);
 
-            var hire = from j in Db.Jobs
-                       join h in Db.InventoryHires on j.Id equals h.JobId
-                       where h.Inventory.CategoryId == categoryId.Value && !h.WhenEnded.HasValue
-                       group h by j into g
-                       select new InventoryHireInJobReportModel
-                       {
-                           Job = g.Key,
-                           InventoryHires = g.OrderBy(f => f.WhenStarted).ToList()
-                       };
+            //var hire = from j in Db.Jobs
+            //           join h in Db.InventoryHires on j.Id equals h.JobId
+            //           where h.Inventory.CategoryId == categoryId.Value && !h.WhenEnded.HasValue
+            //           group h by j into g
+            //           select new InventoryHireInJobReportModel
+            //           {
+            //               Job = g.Key,
+            //               InventoryHires = g.OrderBy(f => f.WhenStarted).ToList()
+            //           };
 
-            var model = new InventoryLocationsReportModel
-            {
-                Category = category,
-                InventoryHireInJobs = hire.OrderBy(f => f.Job.XJobId).ToList()
-            };
+            //var model = new InventoryLocationsReportModel
+            //{
+            //    Category = category,
+            //    InventoryHireInJobs = hire.OrderBy(f => f.Job.XJobId).ToList()
+            //};
 
-            return model;
+            //return model;
+            return null;
         }
 
         public IQueryable<Plant> GetPlantCheckedIn()
@@ -93,7 +97,9 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public IQueryable<Inventory> GetInventoryCheckedIn()
         {
-            return Db.Inventories.Where(f => f.InventoryHires.All(h => h.WhenEnded.HasValue));
+            // TODO: fix
+            //return Db.Inventories.Where(f => f.InventoryHires.All(h => h.WhenEnded.HasValue));
+            return null;
         }
 
         public byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportViewModel model)

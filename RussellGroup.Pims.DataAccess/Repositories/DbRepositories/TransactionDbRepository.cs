@@ -1,5 +1,4 @@
 ﻿using RussellGroup.Pims.DataAccess.Models;
-using RussellGroup.Pims.DataAccess.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -46,14 +45,28 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             }
         }
 
-        public IQueryable<PlantHire> GetCheckedOutPlantHiresInJob(int? jobId)
+        public IEnumerable<InventoryHireCheckin> GetCheckinInventoryHires(Job job)
         {
-            return Db.PlantHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
+            var groups = job.InventoryHires.GroupBy(f => f.Inventory);
+
+            var hires = groups.Select(group => new InventoryHireCheckin
+            {
+                Job = job,
+                JobId = job.Id,
+                Inventory = group.Key,
+                InventoryId = group.Key.Id,
+                Quantity = GetQuantity(group),
+                CheckedOutQuantity = GetQuantity(group).GetValueOrDefault()
+            });
+
+            return hires;
         }
 
-        public IQueryable<InventoryHire> GetCheckedOutInventoryHiresInJob(int? jobId)
+        private int? GetQuantity(IGrouping<Inventory, InventoryHire> group)
         {
-            return Db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
+            return
+                  group.Where(f => f is InventoryHireCheckout).Sum(f => f.Quantity)
+                - group.Where(f => f is InventoryHireCheckin).Sum(f => f.Quantity);
         }
 
         public async Task Checkout(Job job, string docket, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
@@ -86,14 +99,12 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
                 var inventory = await Db.Inventories.SingleOrDefaultAsync(f => f.Id == pair.Key);
 
-                var hire = new InventoryHire
+                var hire = new InventoryHireCheckout
                 {
                     Inventory = inventory,
                     Job = job,
                     Docket = docket,
                     WhenStarted = whenStarted,
-                    WhenEnded = null,
-                    Rate = inventory.Rate,
                     Quantity = quantity
                 };
 
@@ -106,7 +117,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             await Db.SaveChangesAsync();
         }
 
-        public async Task Checkin(string returnDocket, DateTime whenEnded, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryHireIdsAndQuantities)
+        public async Task Checkin(Job job, string docket, DateTime whenEnded, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
             // save plant
             foreach (var id in plantHireIds)
@@ -115,7 +126,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
                 if (hire != null)
                 {
-                    hire.ReturnDocket = returnDocket;
+                    hire.ReturnDocket = docket;
                     hire.WhenEnded = whenEnded;
                     Db.Entry(hire).State = EntityState.Modified;
                 }
@@ -129,23 +140,25 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             }
 
             // save inventory
-            foreach (var pair in inventoryHireIdsAndQuantities)
+            foreach (var pair in inventoryIdsAndQuantities)
             {
                 var id = pair.Key;
-                var returnQuantity = pair.Value;
+                var quantity = pair.Value;
 
-                var hire = Db.InventoryHires.SingleOrDefault(f => f.Id == id && !f.WhenEnded.HasValue);
-
-                if (hire != null)
+                var hire = new InventoryHireCheckin
                 {
-                    hire.ReturnDocket = returnDocket;
-                    hire.WhenEnded = whenEnded;
-                    hire.ReturnQuantity = returnQuantity;
-                    Db.Entry(hire).State = EntityState.Modified;
-                }
+                    JobId = job.Id,
+                    InventoryId = id,
+                    Docket = docket,
+                    WhenEnded = whenEnded,
+                    Quantity = quantity
+                };
+
+                Db.Entry(hire).State = EntityState.Added;
 
                 // update the inventory quantity
-                hire.Inventory.Quantity += returnQuantity.GetValueOrDefault();
+                var inventory = Db.Inventories.Single(f => f.Id == id);
+                inventory.Quantity += quantity.GetValueOrDefault();
             }
 
             await Db.SaveChangesAsync();

@@ -1,9 +1,9 @@
-﻿@model RussellGroup.Pims.DataAccess.ViewModels.CheckinTransaction
+﻿@model RussellGroup.Pims.Website.Models.CheckinTransaction
 @{
     ViewBag.ShowAnchors = true;
     ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
-    var plantHires = Model.PlantHires.FirstOrDefault();
-    var inventoryHires = Model.InventoryHires.FirstOrDefault();
+    var plantHire = Model.PlantHires.FirstOrDefault();
+    var inventoryHire = Model.InventoryHires.FirstOrDefault();
 }
 @section head {
     @Styles.Render("~/Content/datatables")
@@ -56,16 +56,16 @@
                             <th></th>
                             <th><input type="checkbox" class="check-all" /></th>
                             <th>
-                                @Html.DisplayNameFor(model => plantHires.Plant.XPlantId)
+                                @Html.DisplayNameFor(model => plantHire.Plant.XPlantId)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => plantHires.Plant.XPlantNewId)
+                                @Html.DisplayNameFor(model => plantHire.Plant.XPlantNewId)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => plantHires.Docket)
+                                @Html.DisplayNameFor(model => plantHire.Docket)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => plantHires.Plant.Description)
+                                @Html.DisplayNameFor(model => plantHire.Plant.Description)
                             </th>
                         </tr>
                     </thead>
@@ -73,7 +73,7 @@
                         @foreach (var item in Model.PlantHires)
                         {
                             <tr>
-                                <td>@Html.Encode(item.PlantId)</td>
+                                <td>@item.PlantId</td>
                                 <td><input name="@("plant-hire-id-field" + item.Id)" value="@item.Id" type="checkbox" /></td>
                                 <td>@Html.DisplayFor(modelItem => item.Plant.XPlantId)</td>
                                 <td>@Html.DisplayFor(modelItem => item.Plant.XPlantNewId)</td>
@@ -89,22 +89,22 @@
         <div class="form-group">
             @Html.LabelFor(model => model.InventoryHires, new { @class = "control-label col-md-2" })
             <div class="col-md-10" style="margin-top:-3px">
-                <table id="inventory-hire-table" class="table display table-striped table-hover order-column table-responsive" width="100%">
+                <table id="inventory-table" class="table display table-striped table-hover order-column table-responsive" width="100%">
                     <thead>
                         <tr>
                             <th></th>
                             <th><input type="checkbox" class="check-all" /></th>
                             <th>
-                                @Html.DisplayNameFor(model => inventoryHires.Inventory.XInventoryId)
+                                @Html.DisplayNameFor(model => inventoryHire.Quantity)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => inventoryHires.ReturnQuantity)
+                                @Html.DisplayNameFor(model => (inventoryHire as InventoryHireCheckin).CheckedOutQuantity)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => inventoryHires.Docket)
+                                @Html.DisplayNameFor(model => inventoryHire.Inventory.XInventoryId)
                             </th>
                             <th>
-                                @Html.DisplayNameFor(model => inventoryHires.Inventory.Description)
+                                @Html.DisplayNameFor(model => inventoryHire.Inventory.Description)
                             </th>
                         </tr>
                     </thead>
@@ -112,11 +112,11 @@
                         @foreach (var item in Model.InventoryHires)
                         {
                             <tr>
-                                <td>@Html.Encode(item.InventoryId)</td>
-                                <td><input name="@("inventory-hire-id-field" + item.Id)" value="@item.Id" type="checkbox" /></td>
+                                <td>item.InventoryId</td>
+                                <td><input name="@("inventory-id-field" + item.InventoryId)" value="@item.InventoryId" type="checkbox" /></td>
+                                <td><input name="@("inventory-hire-quantity-field" + item.InventoryId)" value="@item.Quantity" type="number" class="form-control input-sm" /></td>
+                                <td>@((item as InventoryHireCheckin).CheckedOutQuantity)</td>
                                 <td>@Html.DisplayFor(model => item.Inventory.XInventoryId)</td>
-                                <td><input name="@("inventory-hire-quantity-field" + item.Id)" value="@item.ReturnQuantity" type="number" class="form-control input-sm" /></td>
-                                <td>@Html.DisplayFor(model => item.Docket)</td>
                                 <td>@Html.DisplayFor(model => item.Inventory.Description)</td>
                             </tr>
                         }
@@ -143,11 +143,11 @@
         $(document).ready(function () {
             // set checkboxes if there is a postback
             @foreach (var hire in Model.PlantHires.Where(f => f.IsSelected)) { <text>$('input[name="plant-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
-            @foreach (var hire in Model.InventoryHires.Where(f => f.IsSelected)) { <text>$('input[name="inventory-hire-id-field@(hire.Id)"]').prop('checked', true);</text> }
+            @foreach (var hire in Model.InventoryHires.Where(f => f.IsSelected)) { <text>$('input[name="inventory-id-field@(hire.InventoryId)"]').prop('checked', true);</text> }
         });
 
         $('#plant-hire-table').dataTable({
-            "order": [[1, "asc"]],
+            "order": [[3, "asc"]],
             "processing": true,
             "stateSave": false,
             "paging": false,
@@ -157,14 +157,15 @@
             ]
         });
 
-        $('#inventory-hire-table').dataTable({
-            "order": [[1, "asc"]],
+        $('#inventory-table').dataTable({
+            "order": [[4, "asc"]],
             "processing": true,
             "stateSave": false,
             "paging": false,
             "columnDefs": [
                 { "visible": false, "targets": [0] },
-                { "sortable": false, "targets": [1] }
+                { "sortable": false, "targets": [1] },
+                { "className": "text-right", "targets": [2, 3] }
             ]
         });
 

@@ -1,6 +1,6 @@
 ﻿using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
-using RussellGroup.Pims.DataAccess.ViewModels;
+using RussellGroup.Pims.Website.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -128,19 +128,13 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            // set the return quantity to the original quantity
-            foreach (var hire in job.InventoryHires)
-            {
-                hire.ReturnQuantity = hire.Quantity;
-            }
-
             var transaction = new CheckinTransaction
             {
                 Job = job,
                 ReturnDocket = string.Empty,
                 WhenEnded = DateTime.Now.Date,
                 PlantHires = job.PlantHires.Where(f => !f.WhenEnded.HasValue).ToArray(),
-                InventoryHires = job.InventoryHires.Where(f => !f.WhenEnded.HasValue).ToArray()
+                InventoryHires = _repository.GetCheckinInventoryHires(job).ToArray()
             };
 
             return View(transaction);
@@ -150,36 +144,43 @@ namespace RussellGroup.Pims.Website.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Checkin(CheckinTransaction transaction)
         {
+            Job job = await _repository.GetJob(transaction.JobId);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
+
             var collection = Request.Form;
             var plantHireIds = collection.GetIds("plant-hire-id-field");
-            var inventoryHireIdsAndQuantities = collection.GetIdsAndQuantities("inventory-hire-id-field", "inventory-hire-quantity-field");
+            var inventoryIdsAndQuantities = collection.GetIdsAndQuantities("inventory-id-field", "inventory-hire-quantity-field");
 
             if (string.IsNullOrWhiteSpace(transaction.ReturnDocket)) ModelState.AddModelError("ReturnDocket", "A docket number is required.");
-            if (plantHireIds.Count() == 0 && inventoryHireIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
+            if (plantHireIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
 
             if (ModelState.IsValid)
             {
-                await _repository.Checkin(transaction.ReturnDocket, transaction.WhenEnded, plantHireIds, inventoryHireIdsAndQuantities);
+                await _repository.Checkin(job, transaction.ReturnDocket, transaction.WhenEnded, plantHireIds, inventoryIdsAndQuantities);
                 return RedirectToAction("Details", "Job", new { id = transaction.JobId });
             }
 
             // ModelState is invalid, so repopulate
-            var job = await _repository.GetJob(transaction.JobId);
-            var plantHires = _repository.GetCheckedOutPlantHiresInJob(transaction.JobId).ToList();
-            var inventoryHires = _repository.GetCheckedOutInventoryHiresInJob(transaction.JobId).ToList();
+            var plantHires = job.PlantHires.Where(f => !f.WhenEnded.HasValue).ToArray();
+            var inventoryHires = _repository.GetCheckinInventoryHires(job).ToArray();
 
-            foreach (var hire in plantHires) if (plantHireIds.Any(f => f == hire.Id)) hire.IsSelected = true;
+            foreach (var hire in plantHires)
+            {
+                if (plantHireIds.Any(f => f == hire.Id))
+                {
+                    hire.IsSelected = true;
+                }
+            }
 
             foreach (var hire in inventoryHires)
             {
-                if (inventoryHireIdsAndQuantities.Any(f => f.Key == hire.Id))
+                if (inventoryIdsAndQuantities.Any(f => f.Key == hire.InventoryId))
                 {
                     hire.IsSelected = true;
-                    hire.ReturnQuantity = inventoryHireIdsAndQuantities.Single(f => f.Key == hire.Id).Value;
-                }
-                else
-                {
-                    hire.ReturnQuantity = hire.Quantity;
+                    hire.Quantity = inventoryIdsAndQuantities.Single(f => f.Key == hire.InventoryId).Value;
                 }
             }
 

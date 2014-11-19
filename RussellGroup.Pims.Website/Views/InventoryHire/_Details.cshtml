@@ -15,6 +15,20 @@
 
     <dl class="dl-horizontal">
         <dt>
+            type
+        </dt>
+        <dd>
+            @if (Model is InventoryHireCheckout)
+            {
+                <text>Checkout</text>
+            }
+            else
+            {
+                <text>Checkin</text>
+            }
+        </dd>
+
+        <dt>
             job
         </dt>
         <dd>
@@ -35,47 +49,31 @@
             @Html.DisplayFor(model => model.Docket)
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ReturnDocket)
-        </dt>
+        @if (Model is InventoryHireCheckout)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => (model as InventoryHireCheckout).WhenStarted)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => (model as InventoryHireCheckout).WhenStarted)
+            </dd>
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.ReturnDocket)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.WhenStarted)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.WhenStarted)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.WhenEnded)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.WhenEnded)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Rate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Rate)
-        </dd>
+        @if (Model is InventoryHireCheckin)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => (model as InventoryHireCheckin).WhenEnded)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => (model as InventoryHireCheckin).WhenEnded)
+            </dd>
+        }
 
         <dt>
             @Html.DisplayNameFor(model => model.Quantity)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Quantity)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ReturnQuantity)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.ReturnQuantity)
         </dd>
 
         <dt>

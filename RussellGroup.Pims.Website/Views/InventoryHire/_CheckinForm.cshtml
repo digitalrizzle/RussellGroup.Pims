@@ -1,4 +1,4 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHire
+﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHireCheckin
 
 @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
 {
@@ -7,7 +7,7 @@
 
 <hr />
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(Html.IsAction("Edit") ? "Edit" : "CreateCheckin", "InventoryHire", new { id = Model.JobId, hireId = Model.Id }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.Id)
@@ -45,27 +45,6 @@
             @Html.ValidationMessageFor(model => model.Docket, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group@(ViewData.ModelState.IsValidField("ReturnDocket") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.ReturnDocket, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.EditorFor(model => model.ReturnDocket, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-            @Html.ValidationMessageFor(model => model.ReturnDocket, null, new { @class = "help-block form-control-feedback" })
-        </div>
-
-        <div class="form-group @(ViewData.ModelState.IsValidField("WhenStarted") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.WhenStarted, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                <div class="input-group">
-                    @Html.TextBoxFor(model => model.WhenStarted, "{0:d/MM/yyyy}", new { @class = "form-control" })
-                    <span id="WhenStarted-icon" class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
-                </div>
-            </div>
-            @Html.ValidationMessageFor(model => model.WhenStarted, null, new { @class = "form-control-feedback" })
-        </div>
-
         <div class="form-group @(ViewData.ModelState.IsValidField("WhenEnded") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.WhenEnded, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
@@ -79,28 +58,12 @@
             @Html.ValidationMessageFor(model => model.WhenEnded, null, new { @class = "form-control-feedback" })
         </div>
 
-        <div class="form-group@(ViewData.ModelState.IsValidField("Rate") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.Rate, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.EditorFor(model => model.Rate, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-            @Html.ValidationMessageFor(model => model.Rate, null, new { @class = "help-block form-control-feedback" })
-        </div>
-
         <div class="form-group@(ViewData.ModelState.IsValidField("Quantity") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Quantity, new { @class = "control-label col-md-2" })
             <div class="col-md-2">
                 @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
             </div>
             @Html.ValidationMessageFor(model => model.Quantity, null, new { @class = "help-block form-control-feedback" })
-        </div>
-
-        <div class="form-group@(ViewData.ModelState.IsValidField("ReturnQuantity") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.ReturnQuantity, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.EditorFor(model => model.ReturnQuantity, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-            @Html.ValidationMessageFor(model => model.ReturnQuantity, null, new { @class = "help-block form-control-feedback" })
         </div>
 
         <div class="form-group@(ViewData.ModelState.IsValidField("Comment") ? string.Empty : " has-error")">

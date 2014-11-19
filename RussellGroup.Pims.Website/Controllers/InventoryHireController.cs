@@ -41,14 +41,13 @@ namespace RussellGroup.Pims.Website.Controllers
             return View(job);
         }
         // https://github.com/ALMMa/datatables.mvc
-        public JsonResult GetDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
+        public JsonResult GetDataTableResult(int? id, [ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
             if (model == null)
             {
                 throw new ArgumentNullException("model");
             }
 
-            var id = Convert.ToInt32(Request["id"]);
             var hint = model.Search != null ? model.Search.Value : string.Empty;
             var sortColumn = model.Columns.GetSortedColumns().First();
 
@@ -60,9 +59,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 : all.Where(f =>
                     f.Inventory.XInventoryId.Contains(hint) ||
                     f.Docket.Contains(hint) ||
-                    Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
-                    Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
-                    SqlFunctions.StringConvert(f.Rate).Contains(hint) ||
+                    f is InventoryHireCheckout ? Extensions.LittleEndianDateString.Invoke((f as InventoryHireCheckout).WhenStarted).Contains(hint) : false ||
+                    f is InventoryHireCheckin ? Extensions.LittleEndianDateString.Invoke((f as InventoryHireCheckin).WhenEnded).Contains(hint) : false ||
                     SqlFunctions.StringConvert((double)f.Quantity).Contains(hint));
 
             // ordering
@@ -82,11 +80,10 @@ namespace RussellGroup.Pims.Website.Controllers
                 {
                     c.Inventory.XInventoryId,
                     c.Docket,
-                    WhenStarted = c.WhenStarted.ToShortDateString(),
-                    WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.Rate,
-                    c.Quantity,
-                    c.ReturnQuantity,
+                    WhenStarted = c is InventoryHireCheckout ? (c as InventoryHireCheckout).WhenStarted.ToShortDateString() : null,
+                    WhenEnded = c is InventoryHireCheckin ? (c as InventoryHireCheckin).WhenEnded.ToShortDateString() : null,
+                    Quantity = c is InventoryHireCheckout ? c.Quantity : null,
+                    ReturnedQuantity = c is InventoryHireCheckin ? c.Quantity : null,
                     CrudLinks = this.CrudLinks(new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
@@ -110,7 +107,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         // GET: /InventoryHire/Create/5
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create(int? id)
+        public async Task<ActionResult> Create(int? id, string type)
         {
             if (id == null)
             {
@@ -122,30 +119,63 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            var hire = new InventoryHire()
-            {
-                Job = job,
-                JobId = job.Id,
-                WhenStarted = DateTime.Now
-            };
+            InventoryHire hire;
 
-            return View(hire);
+            switch (type)
+            {
+                case "checkout":
+                    hire = new InventoryHireCheckout()
+                    {
+                        Job = job,
+                        JobId = job.Id,
+                        WhenStarted = DateTime.Now
+                    };
+                    return View(hire);
+
+                case "checkin":
+                    hire = new InventoryHireCheckin()
+                    {
+                        Job = job,
+                        JobId = job.Id,
+                        WhenEnded = DateTime.Now
+                    };
+                    return View(hire);
+
+                default:
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
         }
 
-        // POST: /InventoryHire/Create
+        // POST: /InventoryHire/CreateCheckout
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "InventoryId,JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,ReturnQuantity,Comment")] InventoryHire hire)
+        public async Task<ActionResult> CreateCheckout([Bind(Include = "InventoryId,JobId,Docket,WhenStarted,Quantity,Comment")] InventoryHireCheckout hire)
         {
             if (ModelState.IsValid)
             {
                 await _repository.AddAsync(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
-            return View(hire);
+            return View("Create", hire);
+        }
+
+        // POST: /InventoryHire/CreateCheckin
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [PimsAuthorize(Role.CanEdit)]
+        public async Task<ActionResult> CreateCheckin([Bind(Include = "InventoryId,JobId,Docket,WheEnded,Quantity,Comment")] InventoryHireCheckin hire)
+        {
+            if (ModelState.IsValid)
+            {
+                await _repository.AddAsync(hire);
+                return RedirectToAction("Index", new { id = hire.JobId });
+            }
+            return View("Create", hire);
         }
 
         // GET: /InventoryHire/Edit/5
@@ -182,8 +212,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            // InventoryId isn't included as we do not want to update this
-            if (TryUpdateModel<InventoryHire>(hire, "JobId,Docket,ReturnDocket,WhenStarted,WhenEnded,Rate,Quantity,ReturnQuantity,Comment".Split(',')))
+            // JobId or InventoryId isn't included as we do not want to update this
+            if (TryUpdateModel<InventoryHire>(hire, "Docket,WhenStarted,WhenEnded,Quantity,Comment".Split(',')))
             {
                 if (ModelState.IsValid)
                 {
@@ -237,11 +267,16 @@ namespace RussellGroup.Pims.Website.Controllers
 
         private ActionResult View(InventoryHire hire)
         {
+            return View(null, hire);
+        }
+
+        private ActionResult View(string viewName, InventoryHire hire)
+        {
             var inventories = _repository.Inventories.Where(f => !f.WhenDisused.HasValue).OrderBy(f => f.XInventoryId);
 
             ViewBag.Inventories = new SelectList(inventories, "Id", "XInventoryId", hire.InventoryId);
 
-            return base.View(hire);
+            return base.View(viewName, hire);
         }
     }
 }

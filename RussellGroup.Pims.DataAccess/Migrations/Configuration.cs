@@ -45,6 +45,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 
             // seed
             //CreateUser(context, new ApplicationUser { UserName = @"DOMAIN\user name" }, new string[] { Role.CanView, Role.CanEdit, Role.CanEditCategories, Role.CanEditUsers });
+            CreateUser(context, new ApplicationUser { UserName = Environment.UserDomainName + "\\" + Environment.UserName }, new string[] { Role.CanView, Role.CanEdit, Role.CanEditCategories, Role.CanEditUsers });
 
             var statuses = new List<Status>
             {

@@ -18,8 +18,6 @@ namespace RussellGroup.Pims.DataMigration
             var sourceInventory = reader.GetValue("Inv no");
             var sourceJob = reader.GetValue("Job ID");
             var docket = reader.GetValue("Doc no") ?? "Unknown";
-            var returnDocket = reader.GetValue("Return doc no");
-            decimal? rate = reader.GetValueOrNull<decimal>("Rate");
             var quantity = reader.GetValueOrNull<int>("Qty");
             var comment = reader.GetValue("Comments");
 
@@ -27,15 +25,16 @@ namespace RussellGroup.Pims.DataMigration
 
             DateTime? whenStarted = null;
             DateTime? whenEnded = null;
-            try { whenStarted = reader.GetDateTime("Start date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\", skipping import", key)); }
-            try { whenEnded = reader.GetDateTime("End date"); } catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }                
+            try { whenStarted = reader.GetDateTime("Start date"); }
+            catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
+            try { whenEnded = reader.GetDateTime("End date"); }
+            catch { Trace.WriteLine(string.Format("Bad date: \"{0}\"", key)); }
 
             if (inventory != null && sourceJob != null)
             {
                 var job = TargetContext.Jobs.SingleOrDefault(f => f.XJobId == sourceJob);
 
                 if (job == null) return;
-                if (whenStarted == null) return;
 
                 // don't add inventory for these jobs;
                 // these job ids are duplicated in ImportPlantHire
@@ -72,20 +71,50 @@ namespace RussellGroup.Pims.DataMigration
                         return;
                 }
 
-                if (rate.HasValue && rate == 0) rate = inventory.Rate;
+                InventoryHire hire;
 
-                var hire = new InventoryHire
+                if (quantity == 0)
                 {
-                    InventoryId = inventory.Id,
-                    JobId = job.Id,
-                    Docket = docket,
-                    ReturnDocket = returnDocket,
-                    WhenStarted = whenStarted.Value,
-                    WhenEnded = whenEnded,
-                    Rate = rate,
-                    Quantity = quantity,
-                    Comment = comment
-                };
+                    Trace.WriteLine(string.Format("Quantity zero: \"{0}\"", key));
+                    return;
+                }
+
+                if (quantity > 0 && !whenStarted.HasValue)
+                {
+                    Trace.WriteLine(string.Format("Missing start date: \"{0}\"", key));
+                    return;
+                }
+
+                if (quantity < 0 && !whenEnded.HasValue)
+                {
+                    Trace.WriteLine(string.Format("Missing end date: \"{0}\"", key));
+                    return;
+                }
+
+                if (quantity > 0)
+                {
+                    hire = new InventoryHireCheckout
+                    {
+                        InventoryId = inventory.Id,
+                        JobId = job.Id,
+                        Docket = docket,
+                        WhenStarted = whenStarted.Value,
+                        Quantity = quantity,
+                        Comment = comment
+                    };
+                }
+                else
+                {
+                    hire = new InventoryHireCheckin
+                    {
+                        InventoryId = inventory.Id,
+                        JobId = job.Id,
+                        Docket = docket,
+                        WhenEnded = whenEnded.Value,
+                        Quantity = (int)Math.Abs((decimal)quantity),
+                        Comment = comment
+                    };
+                }
 
                 TargetContext.InventoryHires.Add(hire);
             }

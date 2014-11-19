@@ -70,7 +70,7 @@ namespace RussellGroup.Pims.DataMigration
 
             var jobs = TargetContext.Jobs.Where(f =>
                 (!f.PlantHires.Any() || !f.InventoryHires.Any()) ||
-                (f.PlantHires.All(h => h.WhenEnded.HasValue) && f.InventoryHires.All(h => h.WhenEnded.HasValue)));
+                (f.PlantHires.All(h => h.WhenEnded.HasValue) /* && f.InventoryHires.All(h => h.WhenEnded.HasValue) */ ));
 
             foreach (var job in jobs.ToList())
             {
