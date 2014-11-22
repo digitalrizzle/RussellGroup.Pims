@@ -29,10 +29,10 @@
 }
 else
 {
-    <table class="table">
+    <table class="table" style="table-layout: fixed">
         <thead>
             <tr>
-                <th>
+                <th width="90px">
                 </th>
                 <th>
                     plant id
@@ -40,7 +40,7 @@ else
                 <th>
                     @Html.DisplayNameFor(model => hires.Plant.Serial)
                 </th>
-                <th>
+                <th width="20%">
                     @Html.DisplayNameFor(model => hires.Plant.Description)
                 </th>
                 <th>
@@ -74,7 +74,7 @@ else
                 foreach (var item in Model.PlantHires.Where(f => f.Plant.Category == category && !f.WhenEnded.HasValue).OrderBy(f => f.Plant.XPlantId))
                 {
                     <tr>
-                        <td style="width: 90px">
+                        <td>
                             <span style="border: 1px solid black; padding: 5px 10px">Y</span>
                             <span style="border: 1px solid black; padding: 5px 10px">N</span>
                         </td>
