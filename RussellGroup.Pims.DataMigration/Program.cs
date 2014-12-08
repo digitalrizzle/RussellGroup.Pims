@@ -38,7 +38,7 @@ namespace RussellGroup.Pims.DataMigration
                     job.SetAuditing(false);
 
                     //plantHire.Delete();
-                    //inventoryHire.Delete();
+                    inventoryHire.Delete();
                     //job.Delete();
                     //plant.Delete();
                     //inventory.Delete();
@@ -46,10 +46,12 @@ namespace RussellGroup.Pims.DataMigration
                     //categories.Delete().Import();
                     //plant.Import();
                     //inventory.Import();
-                    //job.Import();
+
+                    // importing jobs will add any missing ones (this won't work for any other import type)
+                    job.Import();
 
                     //plantHire.Import(0, importCap);
-                    //inventoryHire.Import(0, importCap);
+                    inventoryHire.Import(0, importCap);
 
                     //job.Delete(new[] { "940", "941", "950", "960", "961", "962", "963", "970", "980", "981", "982", "984" });
                     

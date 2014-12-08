@@ -52,22 +52,6 @@ namespace RussellGroup.Pims.DataMigration
                     case "981":
                     case "982":
                     case "984":
-                        //var hired = TargetContext.InventoryHires.Where(f => f.Inventory.Id == inventory.Id).OrderByDescending(f => f.Id).Take(1).SingleOrDefault();
-
-                        //if (hired != null)
-                        //{
-                        //    hired.WhenEnded = whenEnded.HasValue ? whenEnded : whenStarted;
-                        //    hired.ReturnDocket = docket;
-                        //    hired.ReturnQuantity = quantity.HasValue ? Math.Abs(quantity.Value) : 0;
-                        //    hired.Comment += "/" + comment;
-
-                        //    TargetContext.Entry(hired).State = EntityState.Modified;
-                        //}
-                        //else
-                        //{
-                        //    Trace.WriteLine(string.Format("Orphaned: \"{0}\"", key));
-                        //}
-
                         return;
                 }
 
