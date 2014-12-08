@@ -14,15 +14,19 @@ namespace RussellGroup.Pims.DataMigration
     {
         protected override void Map(OleDbDataReader reader)
         {
+            var xJobId = reader.GetValue("Job ID");
             var description = reader.GetValue("Description") ?? "Unnamed";
             var whenEnded = reader.GetDateTime("End date");
 
             // only include incomplete jobs
             if (whenEnded.HasValue) return;
 
+            // only add jobs that don't already exist
+            if (TargetContext.Jobs.Any(f => f.XJobId == xJobId)) return;
+
             var job = new Job
             {
-                XJobId = reader.GetValue("Job ID"),
+                XJobId = xJobId,
                 Description = description,
                 WhenStarted = reader.GetDateTime("Start date"),
                 WhenEnded = whenEnded,
