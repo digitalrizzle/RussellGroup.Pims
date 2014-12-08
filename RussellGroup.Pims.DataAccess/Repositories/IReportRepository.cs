@@ -12,14 +12,16 @@ namespace RussellGroup.Pims.DataAccess.Repositories
     {
         IQueryable<Job> Jobs { get; }
         IQueryable<Plant> Plants { get; }
+        IQueryable<Inventory> Inventories { get; }
         IQueryable<Category> Categories { get; }
 
         PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId);
         InventoryLocationsReportModel GetInventoryLocationsByCategory(int? categoryId);
 
         IQueryable<Plant> GetPlantCheckedIn();
-        IQueryable<Inventory> GetInventoryCheckedIn();
+        InventoryHireChargesInJobReportModel GetInventoryHireCharges(Job job, DateTime whenStarted, DateTime whenEnded);
 
-        byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportViewModel model);
+        Task<SummaryOfHireChargesReportModel> GetSummaryOfHireChargesAsync(DateTime whenStarted, DateTime whenEnded);
+        byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportModel model);
     }
 }

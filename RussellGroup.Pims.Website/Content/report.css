@@ -1,0 +1,11 @@
+﻿#environment {
+    color: red;
+    font-weight: 900;
+    font-size: xx-large;
+    margin-top: 10px;
+    padding-right: 10px;
+}
+
+footer {
+    font-size: smaller;
+}

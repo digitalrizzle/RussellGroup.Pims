@@ -6,11 +6,14 @@
     <title>PIMS - @ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @RenderSection("head", required: false)
-    @Styles.Render("~/Content/overrides.css")
+    @Styles.Render("~/Content/report")
     @*@Scripts.Render("~/bundles/modernizr")*@
 </head>
 <body>
     <div class="container body-content">
+        <div id="environment" class="pull-right">
+            @System.Configuration.ConfigurationManager.AppSettings["Environment"]
+        </div>
         @RenderBody()
         <hr />
         <footer>

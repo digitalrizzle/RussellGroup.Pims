@@ -25,10 +25,9 @@
 <h5>Period: @ViewBag.WhenStarted.ToShortDateString() to @ViewBag.WhenEnded.ToShortDateString()</h5>
 
 @if (!Model.PlantHires
-    .Where(f =>
+    .Any(f =>
         (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
-        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-    .Any())
+        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue)))
 {
     <p>There is no plant hire for this job in the given period.</p>
 }
@@ -138,13 +137,13 @@ else
                     </tr>
                 }
                 <tr>
-                    <td colspan="10" class="text-right"><strong>@Html.Encode(string.Format("${0:0.00}", total))</strong></td>
+                    <td colspan="10" class="text-right"><strong>@string.Format("${0:0.00}", total)</strong></td>
                     @{grand += total;}
                 </tr>
             }
             <tr>
                 <td><strong>TOTAL</strong></td>
-                <td colspan="9" class="text-right"><strong>@Html.Encode(string.Format("${0:0.00}", grand))</strong></td>
+                <td colspan="9" class="text-right"><strong>@string.Format("${0:0.00}", grand)</strong></td>
             </tr>
         </tbody>
     </table>

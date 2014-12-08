@@ -9,7 +9,7 @@
 
 @if (!Model.Any())
 {
-    <p>All inventory is checked out (hired).</p>
+    <p>All inventory is checked out.</p>
 }
 else
 {
@@ -22,14 +22,14 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.Description)
                 </th>
-                <th class="text-right">
-                    @Html.DisplayNameFor(model => model.Rate)
-                </th>
-                <th class="text-right">
+                <th class="text-right" width="15%">
                     @Html.DisplayNameFor(model => model.Quantity)
                 </th>
-                <th class="text-right">
-                    hires
+                <th class="text-right" width="15%">
+                    hired quantity
+                </th>
+                <th class="text-right" width="15%">
+                    total
                 </th>
             </tr>
         </thead>
@@ -45,9 +45,14 @@ else
                     <td colspan="5"><h4>@category.Name</h4></td>
                 </tr>
                 foreach (var inventory in Model
-                    .Where(f => f.Category == category && f.InventoryHires.All(h => h.WhenEnded.HasValue))
+                    .Where(f => f.Category.Equals(category))
                     .OrderBy(f => f.XInventoryId))
                 {
+                    var checkoutQuantity = inventory.InventoryHires.Where(f => f is InventoryHireCheckout).Sum(f => f.Quantity);
+                    var checkinQuantity = inventory.InventoryHires.Where(f => f is InventoryHireCheckin).Sum(f => f.Quantity);
+                    var hiredQuantity = checkoutQuantity - checkinQuantity;
+                    var total = inventory.Quantity + hiredQuantity;
+                    
                     <tr>
                         <td>
                             @inventory.XInventoryId
@@ -55,14 +60,14 @@ else
                         <td>
                             @inventory.Description
                         </td>
-                        <td>
-                            @inventory.Rate
-                        </td>
-                        <td>
+                        <td class="text-right">
                             @inventory.Quantity
                         </td>
                         <td class="text-right">
-                            @inventory.InventoryHires.Count()
+                            @hiredQuantity
+                        </td>
+                        <td class="text-right">
+                            @total
                         </td>
                     </tr>
                 }

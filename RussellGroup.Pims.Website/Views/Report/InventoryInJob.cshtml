@@ -23,9 +23,9 @@
     }
 </h4>
 
-@if (Model.InventoryHires.All(f => f.WhenEnded.HasValue))
+@if (!Model.InventoryHires.Any())
 {
-    <p>There is no inventory currently checked out (hired) for this job.</p>
+    <p>There is no inventory hire for this job.</p>
 }
 else
 {
@@ -42,67 +42,76 @@ else
                     @Html.DisplayNameFor(model => hires.Docket)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => hires.WhenStarted)
+                    @Html.DisplayNameFor(model => (hires as InventoryHireCheckout).WhenStarted)
                 </th>
-                <th class="text-right">
-                    @Html.DisplayNameFor(model => hires.Rate)
+                <th>
+                    @Html.DisplayNameFor(model => (hires as InventoryHireCheckin).WhenEnded)
                 </th>
                 <th class="text-right">
                     @Html.DisplayNameFor(model => hires.Quantity)
                 </th>
-                <th>
+                <th class="text-right">
                     @Html.DisplayNameFor(model => hires.Comment)
                 </th>
             </tr>
         </thead>
 
         <tbody>
-            @foreach (var category in Model.InventoryHires
-                .Select(f => f.Inventory.Category)
+            @foreach (var categoryType in Model.InventoryHires
+                .Where(f =>
+                    ((f is InventoryHireCheckout) && (f as InventoryHireCheckout).WhenStarted < ViewBag.WhenEnded.AddDays(1) ||
+                    ((f is InventoryHireCheckin) && (f as InventoryHireCheckin).WhenEnded >= ViewBag.WhenStarted)))
+                .Select(f => f.Inventory.Category.Type)
                 .Distinct()
-                .OrderBy(f => f.Name)
+                .OrderBy(f => f)
                 .ToList())
             {
-                if (Model.InventoryHires.Any(f => f.Inventory.Category == category && !f.WhenEnded.HasValue))
+                <tr>
+                    <td colspan="7"><strong>@categoryType</strong></td>
+                </tr>
+                foreach (var pair in Model.InventoryHires
+                    .Where(f => f.JobId == Model.Id && f.Inventory.Category.Type == categoryType)
+                    .GroupBy(f => f.InventoryId))
                 {
+                    int? quantityBalance = 0;
+
                     <tr>
-                        <td colspan="7"><strong>@category.Name</strong></td>
+                        <td>
+                            @Html.DisplayFor(model => pair.FirstOrDefault().Inventory.XInventoryId)
+                        </td>
+                        <td colspan="6">
+                            @Html.DisplayFor(model => pair.FirstOrDefault().Inventory.Description)
+                        </td>
                     </tr>
-                    foreach (var item in Model.InventoryHires
-                        .Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue)
-                        .OrderBy(f => f.Inventory.XInventoryId))
+                    foreach (var item in pair)
                     {
                         <tr>
-                            <td>
-                                @Html.DisplayFor(model => item.Inventory.XInventoryId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(model => item.Inventory.Description)
-                            </td>
+                            <td></td>
+                            <td></td>
                             <td>
                                 @Html.DisplayFor(model => item.Docket)
                             </td>
                             <td>
-                                @Html.DisplayFor(model => item.WhenStarted)
-                            </td>
-                            <td class="text-right">
-                                @Html.DisplayFor(model => item.Rate)
-                            </td>
-                            <td class="text-right">
-                                @Html.DisplayFor(model => item.Quantity)
+                                @(item is InventoryHireCheckout ? Html.DisplayFor(model => (item as InventoryHireCheckout).WhenStarted) : null)
                             </td>
                             <td>
+                                @(item is InventoryHireCheckin ? Html.DisplayFor(model => (item as InventoryHireCheckin).WhenEnded) : null)
+                            </td>
+                            <td class="text-right">
+                                @{
+                                    var quantity = item.Quantity * (item is InventoryHireCheckout ? 1 : -1);
+                                    quantityBalance += quantity;
+                                }
+                                @quantity
+                            </td>
+                            <td class="text-right">
                                 @Html.DisplayFor(model => item.Comment)
                             </td>
                         </tr>
                     }
-                    <tr>
-                        <td><strong>TOTAL</strong></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="text-right"><strong>@Html.Encode(Model.InventoryHires.Where(f => f.Inventory.Category == category && !f.WhenEnded.HasValue).Sum(f => f.Quantity))</strong></td>
+                    <tr style="background-color: #efefef">
+                        <td colspan="5"><i>item closing balance</i></td>
+                        <td colspan="1" class="text-right"><i>@quantityBalance</i></td>
                         <td></td>
                     </tr>
                 }

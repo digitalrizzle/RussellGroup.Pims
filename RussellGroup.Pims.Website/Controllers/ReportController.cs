@@ -139,15 +139,15 @@ namespace RussellGroup.Pims.Website.Controllers
                     WhenStarted = c.WhenStarted.HasValue ? c.WhenStarted.Value.ToShortDateString() : string.Empty,
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     PlantHires = c.PlantHires.Count(),
-                    InventoryHires = c.InventoryHires.Sum(f => f.Quantity),
+                    InventoryHires = c.CollatedInventoryHires.Sum(f => f.Quantity),
                     CrudLinks = isFiltered ?
                         string.Format("{0}&nbsp;| {1}",
-                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50"),
-                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("InventoryHireChargesInJob", new { id = c.Id }), "Inventory&nbsp;Charges")
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantHireChargesInJob", new { id = c.Id }), "Plant&nbsp;Charges&nbsp;#50"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryHireChargesInJob", new { id = c.Id }), "Inventory&nbsp;Charges")
                         ) :
                         string.Format("{0}&nbsp;| {1}",
-                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant&nbsp;#51"),
-                            string.Format("<a href=\"{0}\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory&nbsp;#56")
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("PlantInJob", new { id = c.Id }), "Plant&nbsp;#51"),
+                            string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory&nbsp;#56")
 
                             // this report seems redundant
                             //string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake&nbsp;#70")
@@ -212,8 +212,22 @@ namespace RussellGroup.Pims.Website.Controllers
 
         public async Task<ActionResult> InventoryHireChargesInJob(int? id)
         {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var job = await _repository.Jobs.SingleOrDefaultAsync(f => f.Id == id);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
 
-            return await JobView("InventoryHireChargesInJob", id);
+            var whenStarted = ParseDate(Request["WhenStarted"]);
+            var whenEnded = ParseDate(Request["WhenEnded"]);
+
+            var model = _repository.GetInventoryHireCharges(job, whenStarted, whenEnded);
+
+            return base.View("InventoryHireChargesInJob", model);
         }
 
         public async Task<ActionResult> SummaryOfHireCharges()
@@ -221,25 +235,19 @@ namespace RussellGroup.Pims.Website.Controllers
             var whenStarted = ParseDate(Request["WhenStarted"]);
             var whenEnded = ParseDate(Request["WhenEnded"]);
 
-            var model = new SummaryOfHireChargesReportViewModel(
-                await _repository.Jobs.ToListAsync(),
-                whenStarted,
-                whenEnded);
+            var model = await _repository.GetSummaryOfHireChargesAsync(whenStarted, whenEnded);
 
             return base.View("SummaryOfHireCharges", model);
         }
 
-        public FileContentResult DownloadSummaryOfHireChargesCsv()
+        public async Task<FileContentResult> DownloadSummaryOfHireChargesCsv()
         {
             var fileName = string.Format("SummaryOfHireCharges-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
 
             var whenStarted = ParseDate(Request["WhenStarted"]);
             var whenEnded = ParseDate(Request["WhenEnded"]);
 
-            var model = new SummaryOfHireChargesReportViewModel(
-                _repository.Jobs.ToList(),
-                whenStarted,
-                whenEnded);
+            var model = await _repository.GetSummaryOfHireChargesAsync(whenStarted, whenEnded);
 
             return File(_repository.SummaryOfHireChargesCsv(model), "text/csv", fileName);
         }
@@ -261,7 +269,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         public async Task<ActionResult> YardInventoryStocktake()
         {
-            return View("YardInventoryStocktake", await _repository.GetInventoryCheckedIn().ToListAsync());
+            return View("YardInventoryStocktake", await _repository.Inventories.ToListAsync());
         }
 
         private async Task<ActionResult> JobView(string viewName, int? id)

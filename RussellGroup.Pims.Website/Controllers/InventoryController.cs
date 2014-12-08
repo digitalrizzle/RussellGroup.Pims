@@ -76,6 +76,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     WhenPurchased = c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToShortDateString() : string.Empty,
                     WhenDisused = c.WhenDisused.HasValue ? c.WhenDisused.Value.ToShortDateString() : string.Empty,
                     c.Quantity,
+                    CollatedQuantity = c.CollatedInventoryHires.Sum(f => f.Quantity),
                     Category = c.Category.Name,
                     CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
