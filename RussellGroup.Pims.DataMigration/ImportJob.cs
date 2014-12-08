@@ -49,7 +49,7 @@ namespace RussellGroup.Pims.DataMigration
 
                 if (job != null)
                 {
-                    Task.Run(async () => { return await repository.RemoveAsync(job); });
+                    Task.Run(async () => { return await repository.RemoveAsync(job); }).Wait();
                     Trace.WriteLine(string.Format("Deleted job: \"{0}\"", xJobId));
                 }
             }
@@ -60,7 +60,7 @@ namespace RussellGroup.Pims.DataMigration
             return this;
         }
 
-        // removes any jobs that have current hire
+        // removes any jobs that do not have current hire
         public ImportJob Clean()
         {
             if (TargetContext != null) TargetContext.Dispose();

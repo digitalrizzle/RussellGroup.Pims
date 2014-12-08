@@ -82,7 +82,9 @@
     <Compile Include="Models\Condition.cs" />
     <Compile Include="Models\Status.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReportModels\SummaryOfHireChargesReportViewModel.cs" />
+    <Compile Include="ReportModels\InventoryHireInJobReportModel.cs" />
+    <Compile Include="ReportModels\InventoryHireChargesInJobReportModel.cs" />
+    <Compile Include="ReportModels\SummaryOfHireChargesReportModel.cs" />
     <Compile Include="Repositories\DbRepositories\DbRepository.cs" />
     <Compile Include="Repositories\DbRepositories\HireDbRepository.cs" />
     <Compile Include="Repositories\DbRepositories\JobDbRepository.cs" />

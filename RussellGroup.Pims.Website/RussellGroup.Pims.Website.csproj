@@ -251,6 +251,7 @@
     <Content Include="Content\DataTables-1.10.2\swf\copy_csv_xls_pdf.swf" />
     <Content Include="Content\dataTables.bootstrap.css" />
     <Content Include="Content\dominion_constructors.png" />
+    <Content Include="Content\report.css" />
     <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -450,7 +451,6 @@
     <Content Include="Views\Category\Index.cshtml" />
     <Content Include="Views\Category\_Details.cshtml" />
     <Content Include="Views\Category\_Form.cshtml" />
-    <Content Include="Views\Report\InventoryInJob.cshtml" />
     <Content Include="Views\Report\JobIndex.cshtml" />
     <Content Include="Views\Shared\_ReportLayout.cshtml" />
     <Content Include="Views\Report\CategoryIndex.cshtml" />
@@ -478,6 +478,7 @@
     <Content Include="Views\Shared\DisplayTemplates\Boolean.cshtml" />
     <Content Include="Views\InventoryHire\_CheckinForm.cshtml" />
     <Content Include="Views\InventoryHire\Edit.cshtml" />
+    <Content Include="Views\Report\InventoryInJob.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

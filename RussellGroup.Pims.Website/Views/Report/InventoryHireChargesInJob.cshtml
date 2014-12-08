@@ -1,40 +1,35 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.Job
+﻿@model RussellGroup.Pims.DataAccess.ReportModels.InventoryHireChargesInJobReportModel
 
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
     ViewBag.Title = "Inventory Hire Charges";
-    var hires = Model.InventoryHires.FirstOrDefault();
+    var hire = Model.Job.InventoryHires.FirstOrDefault();
 }
 
 <h4>@ViewBag.Title</h4>
-<h2>@Model.XJobId</h2>
-<h3>@Model.Description</h3>
+<h2>@Model.Job.XJobId</h2>
+<h3>@Model.Job.Description</h3>
 <h4>
     Project Manager:
     @{
-        if (string.IsNullOrWhiteSpace(Model.ProjectManager))
+        if (string.IsNullOrWhiteSpace(Model.Job.ProjectManager))
         {
             <text><i>Not assigned</i></text>
         }
         else
         {
-            <text>@Model.ProjectManager</text>
+            <text>@Model.Job.ProjectManager</text>
         }
     }
 </h4>
-<h5>Period: @ViewBag.WhenStarted.ToShortDateString() to @ViewBag.WhenEnded.ToShortDateString()</h5>
+<h5>Period: @Model.WhenStarted.ToShortDateString() to @Model.WhenEnded.ToShortDateString()</h5>
 
-@if (!Model.InventoryHires
-    .Where(f =>
-        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
-        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-    .Any())
+@if (!Model.Charges.Any())
 {
-    <p>There is no inventory hire for this job in the given period.</p>
+    <p>There are no inventory hire charges for this job in the given period.</p>
 }
 else
 {
-    decimal grand = 0;
     <table class="table">
         <thead>
             <tr>
@@ -42,28 +37,25 @@ else
                     inventory id
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => hires.Inventory.Description)
+                    @Html.DisplayNameFor(model => hire.Inventory.Description)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => hires.Docket)
+                    @Html.DisplayNameFor(model => hire.Docket)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => hires.ReturnDocket)
+                    @Html.DisplayNameFor(model => (hire as InventoryHireCheckout).WhenStarted)
                 </th>
                 <th>
-                    start
-                </th>
-                <th>
-                    end
+                    @Html.DisplayNameFor(model => (hire as InventoryHireCheckin).WhenEnded)
                 </th>
                 <th class="text-right">
                     days
                 </th>
                 <th class="text-right">
-                    @Html.DisplayNameFor(model => hires.Rate)
+                    @Html.DisplayNameFor(model => hire.Quantity)
                 </th>
                 <th class="text-right">
-                    @Html.DisplayNameFor(model => hires.Quantity)
+                    @Html.DisplayNameFor(model => hire.Inventory.Rate)
                 </th>
                 <th class="text-right">
                     cost
@@ -72,79 +64,132 @@ else
         </thead>
 
         <tbody>
-            @foreach (var categoryType in Model.InventoryHires
-                .Where(f =>
-                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
-                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+            @{decimal grandTotal = 0;}
+
+            @foreach (var categoryType in Model
+                .Charges
                 .Select(f => f.Inventory.Category.Type)
                 .Distinct()
                 .OrderBy(f => f)
                 .ToList())
             {
-                int days = 0;
-                decimal total = 0, cost = 0;
                 <tr>
-                    <td colspan="10"><strong>@categoryType</strong></td>
+                    <td colspan="9"><h4>@categoryType</h4></td>
                 </tr>
-                foreach (var item in Model.InventoryHires
-                    .Where(f => f.Inventory.Category.Type == categoryType)
-                    .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
-                    .OrderBy(f => f.WhenStarted))
+
+                decimal categoryTypeTotal = 0;
+                
+                foreach (var category in Model
+                    .Charges
+                    .Select(f => f.Inventory.Category)
+                    .Where(f => f.Type == categoryType)
+                    .Distinct()
+                    .OrderBy(f => f.Name)
+                    .ToList())
                 {
                     <tr>
-                        <td>
-                            @Html.DisplayFor(model => item.Inventory.XInventoryId)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Inventory.Description)
-                            <br />
-                            @Html.DisplayFor(model => item.Comment)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Docket)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.ReturnDocket)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.WhenStarted)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.WhenEnded)
-                        </td>
-                        <td class="text-right">
-                            @{
-                                var whenStarted = ViewBag.WhenStarted > item.WhenStarted
-                                    ? ViewBag.WhenStarted
-                                    : item.WhenStarted;
+                        <td colspan="9"><strong>@category.Name</strong></td>
+                    </tr>
+                
+                    decimal categoryTotal = 0;    
+                
+                    foreach (var charge in Model
+                        .Charges
+                        .Where(f => f.Inventory.Category == category)
+                        .OrderBy(f => f.Inventory.XInventoryId))
+                    {                        
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => charge.Inventory.XInventoryId)
+                            </td>
+                            <td colspan="8">
+                                @Html.DisplayFor(model => charge.Inventory.Description)
+                            </td>
+                        </tr>
+                
+                        if (charge.OpeningBalance != 0)
+                        {
+                            <tr>
+                                <td colspan="3">
+                                    <i>opening balance</i>
+                                </td>
+                                <td>
+                                    @Model.WhenStarted.ToShortDateString()
+                                </td>
+                                <td></td>
+                                <td class="text-right">
+                                    @charge.Days
+                                </td>
+                                <td class="text-right">
+                                    @charge.OpeningBalance
+                                </td>
+                                <td class="text-right">
+                                    @charge.Rate
+                                </td>
+                                <td class="text-right">
+                                    @charge.OpeningBalanceCost
+                                </td>
+                            </tr>
+                        }
+                        
+                        foreach (var item in charge
+                            .ItemCharges
+                            .OrderBy(f => f.Docket))
+                        {
+                            <tr>
+                                <td colspan="2"></td>
+                                <td>
+                                    @item.Docket
+                                </td>
+                                <td>
+                                    @(item.WhenStarted.HasValue ? item.WhenStarted.Value.ToShortDateString() : string.Empty)
+                                </td>
+                                <td>
+                                    @(item.WhenEnded.HasValue ? item.WhenEnded.Value.ToShortDateString() : string.Empty)
+                                </td>
+                                <td class="text-right">
+                                    @item.Days
+                                </td>
+                                <td class="text-right">
+                                    @item.Quantity
+                                </td>
+                                <td class="text-right">
+                                    @item.Rate
+                                </td>
+                                <td class="text-right">
+                                    @item.Cost
+                                </td>
+                            </tr>
+                        }
 
-                                days = item.WhenEnded.HasValue
-                                    ? item.WhenEnded.Value.AddDays(1).Subtract(whenStarted).Days
-                                    : ViewBag.WhenEnded.AddDays(1).Subtract(whenStarted).Days;
-                            }
-                            @days
-                        </td>
-                        <td class="text-right">
-                            @Html.DisplayFor(model => item.Rate)
-                        </td>
-                        <td class="text-right">
-                            @Html.DisplayFor(model => item.Quantity)
-                        </td>
-                        <td class="text-right">
-                            @{cost = days * item.Rate.Value * item.Quantity.Value;}
-                            @cost
-                            @{total += cost;}
-                        </td>
+                        categoryTotal += charge.Cost;
+
+                        <tr style="background-color: #efefef">
+                            <td colspan="6"><i>closing balance</i></td>
+                            <td colspan="1" class="text-right"><i>@charge.ClosingBalance</i></td>
+                            <td></td>
+                            <td colspan="1" class="text-right"><i>@(string.Format("${0:0.00}", charge.Cost))</i></td>
+                        </tr>
+                    }
+
+                    categoryTypeTotal += categoryTotal;
+                    
+                    <tr>
+                        <td colspan="8"></td>
+                        <td colspan="1" class="text-right"><strong>@(string.Format("${0:0.00}", categoryTotal))</strong></td>
                     </tr>
                 }
+                
+                grandTotal += categoryTypeTotal;
+                
                 <tr>
-                    <td colspan="10" class="text-right"><strong>@Html.Encode(string.Format("${0:0.00}", total))</strong></td>
-                    @{grand += total;}
+                    <td colspan="8"><h4>@categoryType total</h4></td>
+                    <td colspan="1" class="text-right"><h4>@(string.Format("${0:0.00}", categoryTypeTotal))</h4></td>
                 </tr>
             }
             <tr>
-                <td><strong>TOTAL</strong></td>
-                <td colspan="9" class="text-right"><strong>@Html.Encode(string.Format("${0:0.00}", grand))</strong></td>
+                <td colspan="8"><h4>TOTAL</h4></td>
+                <td colspan="1" class="text-right"><h4>@(string.Format("${0:0.00}", grandTotal))</h4></td>
             </tr>
         </tbody>
     </table>

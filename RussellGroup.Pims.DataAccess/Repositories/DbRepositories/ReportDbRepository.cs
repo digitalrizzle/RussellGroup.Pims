@@ -30,21 +30,14 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             get { return Db.Plants; }
         }
 
+        public IQueryable<Inventory> Inventories
+        {
+            get { return Db.Inventories; }
+        }
+
         public IQueryable<Category> Categories
         {
             get { return Db.Categories; }
-        }
-
-        public IQueryable<PlantHire> GetActivePlantHiresInJob(int jobId)
-        {
-            return Db.PlantHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
-        }
-
-        public IQueryable<InventoryHire> GetActiveInventoryHiresInJob(int jobId)
-        {
-            // TODO: fix
-            //return Db.InventoryHires.Where(f => f.JobId == jobId && !f.WhenEnded.HasValue);
-            return null;
         }
 
         public PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId)
@@ -67,42 +60,177 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public InventoryLocationsReportModel GetInventoryLocationsByCategory(int? categoryId)
         {
-            // TODO: fix
-            //var category = Db.Categories.Find(categoryId);
+            var category = Db.Categories.Find(categoryId);
 
-            //var hire = from j in Db.Jobs
-            //           join h in Db.InventoryHires on j.Id equals h.JobId
-            //           where h.Inventory.CategoryId == categoryId.Value && !h.WhenEnded.HasValue
-            //           group h by j into g
-            //           select new InventoryHireInJobReportModel
-            //           {
-            //               Job = g.Key,
-            //               InventoryHires = g.OrderBy(f => f.WhenStarted).ToList()
-            //           };
+            var hire = from j in Db.Jobs
+                       join h in Db.InventoryHires on j.Id equals h.JobId
+                       where h.Inventory.CategoryId == categoryId.Value
+                       group h by j into g
+                       select new InventoryHireInJobReportModel
+                       {
+                           Job = g.Key,
+                           InventoryHires = g.OrderBy(f => f.InventoryId).ToList()
+                       };
 
-            //var model = new InventoryLocationsReportModel
-            //{
-            //    Category = category,
-            //    InventoryHireInJobs = hire.OrderBy(f => f.Job.XJobId).ToList()
-            //};
+            var model = new InventoryLocationsReportModel
+            {
+                Category = category,
+                InventoryHireInJobs = hire.OrderBy(f => f.Job.XJobId).ToList()
+            };
 
-            //return model;
-            return null;
+            return model;
         }
+
+        public InventoryHireChargesInJobReportModel GetInventoryHireCharges(Job job, DateTime whenStarted, DateTime whenEnded)
+        {
+            var charges = new List<InventoryHireChargeReportModel>();
+
+            foreach (var inventory in job
+                .InventoryHires
+                .Where(f =>
+                    ((f is InventoryHireCheckout) && (f as InventoryHireCheckout).WhenStarted < whenEnded.AddDays(1) ||
+                    ((f is InventoryHireCheckin) && (f as InventoryHireCheckin).WhenEnded >= whenStarted)))
+                .Select(f => f.Inventory)
+                .Distinct()
+                .OrderBy(f => f.XInventoryId)
+                .ToList())
+            {
+                var quantityTotal = 0;
+
+                var charge = new InventoryHireChargeReportModel
+                {
+                    Inventory = inventory,
+                    ItemCharges = new List<InventoryHireItemChargeReportModel>()
+                };
+
+                var hires = inventory
+                    .InventoryHires
+                    .Where(f => f.Job == job)
+                    .ToList();
+
+                foreach (var hire in hires)
+                {
+                    int days = 0;
+                    int quantity = 0;
+                    DateTime openingDate;
+
+                    // determine the number of days
+                    if (hire is InventoryHireCheckout)
+                    {
+                        var checkout = hire as InventoryHireCheckout;
+
+                        var hireWhenStarted = whenStarted > checkout.WhenStarted
+                            ? whenStarted
+                            : checkout.WhenStarted;
+
+                        openingDate = checkout.WhenStarted;
+                        days = whenEnded.AddDays(1).Subtract(hireWhenStarted).Days;
+                    }
+                    else
+                    {
+                        var checkin = hire as InventoryHireCheckin;
+
+                        openingDate = checkin.WhenEnded;
+                        days = whenEnded.AddDays(1).Subtract(checkin.WhenEnded).Days;
+                    }
+
+                    quantity = hire.Quantity.GetValueOrDefault() * (hire is InventoryHireCheckout ? 1 : -1);
+                    quantityTotal += quantity;
+
+                    // have we calculated the opening balance to the report date yet?
+                    if (openingDate < whenStarted)
+                    {
+                        charge.OpeningBalance = quantityTotal;
+                        continue;
+                    }
+
+                    // add the charges
+                    charge.ItemCharges.Add(new InventoryHireItemChargeReportModel
+                    {
+                        Inventory = inventory,
+                        Docket = hire.Docket,
+                        WhenStarted = hire is InventoryHireCheckout ? (hire as InventoryHireCheckout).WhenStarted : (DateTime?)null,
+                        WhenEnded = hire is InventoryHireCheckin ? (hire as InventoryHireCheckin).WhenEnded : (DateTime?)null,
+                        Days = days,
+                        Quantity = quantity
+                    });
+                }
+
+                charge.Days = whenEnded.AddDays(1).Subtract(whenStarted).Days;
+
+                if (charge.OpeningBalance != 0 || charge.ItemCharges.Any())
+                {
+                    charges.Add(charge);
+                }
+            }
+
+            var model = new InventoryHireChargesInJobReportModel
+            {
+                Job = job,
+                WhenStarted = whenStarted,
+                WhenEnded = whenEnded,
+                Charges = charges
+            };
+
+            return model;
+        }
+
+        #region Summary
 
         public IQueryable<Plant> GetPlantCheckedIn()
         {
             return Db.Plants.Where(f => f.PlantHires.All(h => h.WhenEnded.HasValue));
         }
 
-        public IQueryable<Inventory> GetInventoryCheckedIn()
+        public decimal GetPlantHireCharge(Job job, DateTime whenStarted, DateTime whenEnded)
         {
-            // TODO: fix
-            //return Db.Inventories.Where(f => f.InventoryHires.All(h => h.WhenEnded.HasValue));
-            return null;
+            decimal cost = 0;
+
+            var hires = job
+                .PlantHires
+                .Where(f =>
+                    (f.WhenStarted < whenEnded.AddDays(1) && f.WhenEnded >= whenStarted) ||
+                    (f.WhenStarted < whenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+                .ToList();
+
+            foreach (var hire in hires)
+            {
+                var hireWhenStarted = whenStarted > hire.WhenStarted
+                    ? whenStarted
+                    : hire.WhenStarted;
+
+                var days = hire.WhenEnded.HasValue
+                    ? hire.WhenEnded.Value.AddDays(1).Subtract(hireWhenStarted).Days
+                    : whenEnded.AddDays(1).Subtract(hireWhenStarted).Days;
+
+                cost += days * hire.Rate.GetValueOrDefault();
+            }
+
+            return cost;
         }
 
-        public byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportViewModel model)
+        public async Task<SummaryOfHireChargesReportModel> GetSummaryOfHireChargesAsync(DateTime whenStarted, DateTime whenEnded)
+        {
+            var model = new SummaryOfHireChargesReportModel
+            {
+                Jobs = await Db.Jobs.OrderBy(f => f.XJobId).ToListAsync(),
+                WhenStarted = whenStarted,
+                WhenEnded = whenEnded,
+                PlantHireCharges = new Dictionary<Job, decimal>(),
+                InventoryHireCharges = new List<InventoryHireChargesInJobReportModel>()
+            };
+
+            // populate the plant hire and inventory hire charges
+            foreach (var job in model.Jobs)
+            {
+                model.PlantHireCharges.Add(job, GetPlantHireCharge(job, whenStarted, whenEnded));
+                model.InventoryHireCharges.Add(GetInventoryHireCharges(job, whenStarted, whenEnded));
+            }
+
+            return model;
+        }
+
+        public byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportModel model)
         {
             using (var memory = new MemoryStream())
             {
@@ -126,9 +254,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                         csv.WriteField("Shoreloading");
                         csv.WriteField("Total");
                         csv.NextRecord();
-                        csv.NextRecord();   // not sure why another line is needed, but ASB does it! (sampled off their CSV export)
 
-                        foreach (var job in model.ActiveJobs.ToList())
+                        foreach (var job in model.Jobs)
                         {
                             var plantHireCharge = model.GetPlantHireCharge(job);
                             var alumScaffoldingHireCharge = model.GetInventoryHireCharge(job, "Alum Scaffolding");
@@ -138,23 +265,26 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                             var shoreloadingHireCharge = model.GetInventoryHireCharge(job, "Shoreloading");
 
                             var total =
-                                  plantHireCharge
+                                plantHireCharge
                                 + alumScaffoldingHireCharge
                                 + otherHireCharge
                                 + periHireCharge
                                 + scaffoldingHireCharge
                                 + shoreloadingHireCharge;
 
-                            csv.WriteField(job.XJobId);
-                            csv.WriteField(job.Description);
-                            csv.WriteField(plantHireCharge);
-                            csv.WriteField(alumScaffoldingHireCharge);
-                            csv.WriteField(otherHireCharge);
-                            csv.WriteField(periHireCharge);
-                            csv.WriteField(scaffoldingHireCharge);
-                            csv.WriteField(shoreloadingHireCharge);
-                            csv.WriteField(total);
-                            csv.NextRecord();
+                            if (total != 0)
+                            {
+                                csv.WriteField(job.XJobId);
+                                csv.WriteField(job.Description);
+                                csv.WriteField(plantHireCharge);
+                                csv.WriteField(alumScaffoldingHireCharge);
+                                csv.WriteField(otherHireCharge);
+                                csv.WriteField(periHireCharge);
+                                csv.WriteField(scaffoldingHireCharge);
+                                csv.WriteField(shoreloadingHireCharge);
+                                csv.WriteField(total);
+                                csv.NextRecord();
+                            }
                         }
                     }
                 }
@@ -162,5 +292,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 return memory.ToArray();
             }
         }
+
+        #endregion
     }
 }

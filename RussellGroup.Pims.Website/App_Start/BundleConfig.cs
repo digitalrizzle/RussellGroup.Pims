@@ -42,8 +42,11 @@ namespace RussellGroup.Pims.Website
             bundles.Add(new StyleBundle("~/Content/typeahead")
                 .Include("~/Content/typeahead.css", new CssRewriteUrlTransformWrapper()));
 
-            bundles.Add(new StyleBundle("~/Content/overrides")
+            bundles.Add(new StyleBundle("~/Content/override")
                 .Include("~/Content/Site.css", new CssRewriteUrlTransformWrapper()));
+
+            bundles.Add(new StyleBundle("~/Content/report")
+                .Include("~/Content/report.css", new CssRewriteUrlTransformWrapper()));
 
             BundleTable.EnableOptimizations = true;
         }

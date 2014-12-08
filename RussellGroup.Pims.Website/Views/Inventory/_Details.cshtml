@@ -74,6 +74,13 @@
         </dd>
 
         <dt>
+            checked out quantity
+        </dt>
+        <dd>
+            @Model.CollatedInventoryHires.Sum(f => f.Quantity)
+        </dd>
+
+        <dt>
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd>

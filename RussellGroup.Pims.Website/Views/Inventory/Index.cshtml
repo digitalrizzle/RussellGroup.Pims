@@ -32,6 +32,9 @@
                 @Html.DisplayNameFor(model => model.Quantity)
             </th>
             <th>
+                checked out quantity
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
             <th></th>
@@ -48,7 +51,10 @@
             "stateSave": false,
             "pagingType": 'full',
             "serverSide": true,
-            "ajax": "@Url.Action("GetDataTableResult")",
+            "ajax": {
+                url: "@Url.Action("GetDataTableResult")",
+                type: "POST"
+            },
             "columns": [
                 { "data": "Id", "visible": false },
                 { "data": "XInventoryId" },
@@ -56,6 +62,7 @@
                 { "data": "WhenPurchased" },
                 { "data": "WhenDisused" },
                 { "data": "Quantity", "className": "text-right" },
+                { "data": "CollatedQuantity", "sortable": false, "className": "text-right" },
                 { "data": "Category", "name": "Category.Name" },
                 { "data": "CrudLinks", "sortable": false, "className": "text-center" }
             ]

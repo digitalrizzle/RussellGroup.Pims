@@ -64,5 +64,26 @@ namespace RussellGroup.Pims.DataAccess.Models
                 return InventoryHires != null && !InventoryHires.Any();
             }
         }
+
+        public IEnumerable<InventoryHire> CollatedInventoryHires
+        {
+            get
+            {
+                var collated =
+                    InventoryHires
+                    .GroupBy(f => f.Job)
+                    .Select(f => new InventoryHire
+                    {
+                        Job = f.Key,
+                        Inventory = this,
+                        Quantity = f.Sum(hire => hire is InventoryHireCheckout
+                            ? hire.Quantity
+                            : -hire.Quantity
+                        )
+                    });
+
+                return collated;
+            }
+        }
     }
 }

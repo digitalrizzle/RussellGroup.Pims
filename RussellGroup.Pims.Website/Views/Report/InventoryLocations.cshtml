@@ -24,55 +24,70 @@ else
                     job
                 </th>
                 <th>
-                    when hired
-                </th>
-                <th>
                     inventory id
                 </th>
                 <th>
-                    inventory description
+                    description
+                </th>
+                <th class="text-right">
+                    quantity
                 </th>
             </tr>
         </thead>
 
         <tbody>
+            @{int? total = 0;}
+
             @foreach (var job in Model.InventoryHireInJobs)
             {
-                <tr>
-                    <td>
-                        <strong>@job.Job.XJobId</strong>
-                    </td>
-                    <td colspan="4">
-                        <strong>@job.Job.Description</strong>
-                    </td>
-                </tr>
-                foreach (var item in job.InventoryHires)
+                bool hasRenderedHeader = false;
+
+                foreach (var inventory in job.InventoryHires.Select(f => f.Inventory).Distinct())
                 {
-                    <tr>
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.WhenStarted)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Inventory.XInventoryId)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(model => item.Inventory.Description)
-                        </td>
-                    </tr>
+                    int? quantity = 0;
+
+                    foreach (var hire in job.InventoryHires.Where(f => f.InventoryId == inventory.Id))
+                    {
+                        quantity += hire is InventoryHireCheckout
+                            ? (hire as InventoryHireCheckout).Quantity
+                            : -(hire as InventoryHireCheckin).Quantity;
+                    }
+
+                    total += quantity;
+
+                    if (quantity > 0)
+                    {
+                        if (!hasRenderedHeader)
+                        {
+                            hasRenderedHeader = true;
+                            
+                            <tr>
+                                <td>
+                                    <strong>@job.Job.XJobId</strong>
+                                </td>
+                                <td colspan="4">
+                                    <strong>@job.Job.Description</strong>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td colspan="2"></td>
+                            <td>
+                                @Html.DisplayFor(model => inventory.XInventoryId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => inventory.Description)
+                            </td>
+                            <td class="text-right">
+                                @quantity
+                            </td>
+                        </tr>
+                    }
                 }
             }
             <tr>
-                <td><strong>TOTAL</strong></td>
-                <td>
-                    <strong>@Model.InventoryHireInJobs.Count() items</strong>
-                </td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td colspan="4"><strong>TOTAL</strong></td>
+                <td class="text-right"><strong>@total</strong></td>
             </tr>
         </tbody>
     </table>

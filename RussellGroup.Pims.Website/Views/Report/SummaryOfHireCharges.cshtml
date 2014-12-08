@@ -1,4 +1,4 @@
-﻿@model RussellGroup.Pims.DataAccess.ReportModels.SummaryOfHireChargesReportViewModel
+﻿@model RussellGroup.Pims.DataAccess.ReportModels.SummaryOfHireChargesReportModel
 
 @{
     Layout = "~/Views/Shared/_ReportLayout.cshtml";
@@ -42,52 +42,56 @@
     </thead>
 
     <tbody>
-        @foreach (var job in Model.ActiveJobs)
+        @foreach (var job in Model.Jobs)
         {
-            <tr>
-                <td>
-                    @job.XJobId
-                </td>
-                <td>
-                    @job.Description
-                </td>
-                <td class="text-right">
-                    @{var plantHireCharge = Model.GetPlantHireCharge(job);}
-                    @string.Format("{0:0.00}", plantHireCharge)
-                </td>
-                <td class="text-right">
-                    @{var alumScaffoldingHireCharge = Model.GetInventoryHireCharge(job, "Alum Scaffolding");}
-                    @string.Format("{0:0.00}", alumScaffoldingHireCharge)
-                </td>
-                <td class="text-right">
-                    @{var otherHireCharge = Model.GetInventoryHireCharge(job, "Other");}
-                    @string.Format("{0:0.00}", otherHireCharge)
-                </td>
-                <td class="text-right">
-                    @{var periHireCharge = Model.GetInventoryHireCharge(job, "Peri");}
-                    @string.Format("{0:0.00}", periHireCharge)
-                </td>
-                <td class="text-right">
-                    @{var scaffoldingHireCharge = Model.GetInventoryHireCharge(job, "Scaffolding");}
-                    @string.Format("{0:0.00}", scaffoldingHireCharge)
-                </td>
-                <td class="text-right">
-                    @{var shoreloadingHireCharge = Model.GetInventoryHireCharge(job, "Shoreloading");}
-                    @string.Format("{0:0.00}", shoreloadingHireCharge)
-                </td>
-                <td class="text-right">
-                    <strong>
-                    @(
-                          plantHireCharge
+            var plantHireCharge = Model.GetPlantHireCharge(job);
+            var alumScaffoldingHireCharge = Model.GetInventoryHireCharge(job, "Alum Scaffolding");
+            var otherHireCharge = Model.GetInventoryHireCharge(job, "Other");
+            var periHireCharge = Model.GetInventoryHireCharge(job, "Peri");
+            var scaffoldingHireCharge = Model.GetInventoryHireCharge(job, "Scaffolding");
+            var shoreloadingHireCharge = Model.GetInventoryHireCharge(job, "Shoreloading");
+
+            var total = plantHireCharge
                         + alumScaffoldingHireCharge
                         + otherHireCharge
                         + periHireCharge
                         + scaffoldingHireCharge
-                        + shoreloadingHireCharge
-                    )
-                    </strong>
-                </td>
-            </tr>
+                        + shoreloadingHireCharge;
+
+            if (total != 0)
+            {
+                <tr>
+                    <td>
+                        @job.XJobId
+                    </td>
+                    <td>
+                        @job.Description
+                    </td>
+                    <td class="text-right">
+                        @string.Format("{0:0.00}", plantHireCharge)
+                    </td>
+                    <td class="text-right">
+                        @string.Format("{0:0.00}", alumScaffoldingHireCharge)
+                    </td>
+                    <td class="text-right">
+                        @string.Format("{0:0.00}", otherHireCharge)
+                    </td>
+                    <td class="text-right">
+                        @string.Format("{0:0.00}", periHireCharge)
+                    </td>
+                    <td class="text-right">
+                        @string.Format("{0:0.00}", scaffoldingHireCharge)
+                    </td>
+                    <td class="text-right">
+                        @string.Format("{0:0.00}", shoreloadingHireCharge)
+                    </td>
+                    <td class="text-right">
+                        <strong>
+                            @total
+                        </strong>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>

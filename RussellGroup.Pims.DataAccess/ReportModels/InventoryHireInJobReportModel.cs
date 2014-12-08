@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.ReportModels
 {
-    public class InventoryLocationsReportModel
+    public class InventoryHireInJobReportModel
     {
-        public Category Category { get; set; }
-        public IEnumerable<InventoryHireInJobReportModel> InventoryHireInJobs { get; set; }
+        public Job Job { get; set; }
+        public IEnumerable<InventoryHire> InventoryHires { get; set; }
     }
 }

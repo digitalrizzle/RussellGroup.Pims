@@ -38,20 +38,25 @@ namespace RussellGroup.Pims.DataMigration
                     job.SetAuditing(false);
 
                     //plantHire.Delete();
-                    inventoryHire.Delete();
+                    //inventoryHire.Delete();
                     //job.Delete();
                     //plant.Delete();
-                    inventory.Delete();
+                    //inventory.Delete();
 
                     //categories.Delete().Import();
                     //plant.Import();
-                    inventory.Import();
+                    //inventory.Import();
                     //job.Import();
 
                     //plantHire.Import(0, importCap);
-                    inventoryHire.Import(0, importCap);
+                    //inventoryHire.Import(0, importCap);
 
                     //job.Delete(new[] { "940", "941", "950", "960", "961", "962", "963", "970", "980", "981", "982", "984" });
+                    
+                    // DO NOT RUN THIS!
+                    // It is supposed to remove any jobs that have no
+                    // current plant or inventory hire, but it doesn't
+                    // work properly
                     //job.Clean();
 
                     job.SetAuditing(true);
