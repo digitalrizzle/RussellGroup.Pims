@@ -53,49 +53,12 @@ namespace RussellGroup.Pims.DataMigration
 
                 if (job != null)
                 {
-                    Task.Run(async () => { return await repository.RemoveAsync(job); }).Wait();
+                    repository.RemoveAsync(job).RunSynchronously();
                     Trace.WriteLine(string.Format("Deleted job: \"{0}\"", xJobId));
                 }
             }
 
             TargetContext.SaveChanges();
-            TargetContext.Dispose();
-
-            return this;
-        }
-
-        // removes any jobs that do not have current hire
-        public ImportJob Clean()
-        {
-            if (TargetContext != null) TargetContext.Dispose();
-
-            TargetContext = new PimsDbContext();
-            TargetContext.SetContextUserName(PimsDbContext.DefaultContextUserName);
-
-            var jobs = TargetContext.Jobs.Where(f =>
-                (!f.PlantHires.Any() || !f.InventoryHires.Any()) ||
-                (f.PlantHires.All(h => h.WhenEnded.HasValue) /* && f.InventoryHires.All(h => h.WhenEnded.HasValue) */ ));
-
-            foreach (var job in jobs.ToList())
-            {
-                if (job != null)
-                {
-                    Trace.WriteLine(string.Format("Deleting job: \"{0}\"", job.XJobId));
-
-                    if (job.PlantHires.Any())
-                    {
-                        foreach (var hire in job.PlantHires.ToList()) TargetContext.PlantHires.Remove(hire);
-                    }
-                    if (job.InventoryHires.Any())
-                    {
-                        foreach (var hire in job.InventoryHires.ToList()) TargetContext.InventoryHires.Remove(hire);
-                    }
-
-                    TargetContext.Jobs.Remove(job);
-                    TargetContext.SaveChanges();
-                }
-            }
-
             TargetContext.Dispose();
 
             return this;
