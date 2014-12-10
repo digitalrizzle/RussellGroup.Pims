@@ -43,16 +43,22 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         public override int SaveChanges()
         {
-            ExecuteSetContextUserNameCommand();
+            if (HttpContext.Current != null)
+            {
+                UserName = HttpContext.Current.User.Identity.Name;
+            }
+
+            DbConnection connection = base.Database.Connection;
+            ExecuteSetContextUserNameCommand(connection);
 
             var result = base.SaveChanges();
 
             return result;
         }
 
-        public override Task<int> SaveChangesAsync()
+        public override async Task<int> SaveChangesAsync()
         {
-            return SaveChangesAsync(CancellationToken.None);
+            return await SaveChangesAsync(CancellationToken.None);
         }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
@@ -62,16 +68,26 @@ namespace RussellGroup.Pims.DataAccess.Models
                 UserName = HttpContext.Current.User.Identity.Name;
             }
 
-            ExecuteSetContextUserNameCommand();
+            DbConnection connection = base.Database.Connection;
+            ExecuteSetContextUserNameCommand(connection);
 
             var result = await base.SaveChangesAsync(cancellationToken);
 
             return result;
         }
 
-        private void ExecuteSetContextUserNameCommand()
+        private void ExecuteSetContextUserNameCommand(DbConnection connection)
         {
-            this.Database.ExecuteSqlCommand("SetContextUserName @userName", new SqlParameter("userName", UserName));
+            if (connection.State == ConnectionState.Closed)
+            {
+                connection.Open();
+            }
+
+            DbCommand command = connection.CreateCommand();
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "SetContextUserName";
+            command.Parameters.Add(new SqlParameter("userName", UserName));
+            command.ExecuteNonQuery();
         }
     }
 }
