@@ -27,6 +27,8 @@
         <a href="#adding-and-editing-plant">Adding and editing plant</a>
         <ol>
             <li><a href="#add-new-plant">Add new plant</a></li>
+            <li><a href="#making-changes-to-plant">Making changes to plant</a></li>
+            <li><a href="#deleting-a-plant">Deleting plant</a></li>
         </ol>
     </li>
     <li>
@@ -244,7 +246,7 @@
             </tbody>
         </table>
     </li>
-    <li>When you done entering the data for the job, click the <strong>Create</strong> button.</li>
+    <li>When you're done entering the data for the job, click the <strong>Create</strong> button.</li>
     <li>That's it! We just made a new job.</li>
 </ol>
 <div class="bs-callout bs-callout-danger">
@@ -266,7 +268,7 @@
         you started to type will narrow the list of jobs (this is called filtering) and will make it easier
         to find our job. In this example, click in the search box and start typing "1001".
     </li>
-    <li>Find our job in the filtered list, then on the right hand click <strong>Edit</strong>.</li>
+    <li>Find our job in the filtered list, then on the right hand side of the page click <strong>Edit</strong>.</li>
     <li>
         We're now back to job and we can make our changes. Change the <strong>when started</strong> date to
         1/10/2014.
@@ -277,7 +279,7 @@
 <h4 id="hiring-out-plant-and-inventory">4.3. Checkout plant and inventory</h4>
 <p>
     Now that we've set up our job, we can start hiring out plant and inventory against it. The process of
-    hiring out plant and inventory from the yard is called a "checkout".
+    hiring out plant and inventory from the yard to a job is called a "checkout".
 </p>
 <div class="bs-callout bs-callout-info">
     <p>
@@ -299,7 +301,7 @@
     <li>On the main menu, click <strong>Jobs</strong>.</li>
     <li>Find our job "1001" by using the search.</li>
     <li>
-        On the right hand side of our searched job, click on <strong>Checkout</strong>. We're now at the
+        On the right hand side of the page for our searched job, click on <strong>Checkout</strong>. We're now at the
         page where we can enter our checkout details.
     </li>
     <li>
@@ -317,15 +319,15 @@
     </li>
     <li>
         Click in the <strong>plant hire</strong> box that says "begin typing a plant item..." and start typing
-        the number "55724" which is the ID for the "Tandem Axle Trailer". As you begin to  type a list of plant
-        will appear. Click on the correct item in the list. Once you click on the item the box will become greyed-out
+        the number "55724" which is the ID for the "Tandem Axle Trailer". As you begin to type a list of plant
+        will appear. Click on the respective item in the list. Once you click on the item the box will become greyed-out
         and you will no longer be able to type in it.
     </li>
     <li>
         We want to add one more plant item for hire. This time will use the name "Tex 19PE Jack Hammer"
         which has an ID "55522". Click in the new <strong>plant hire</strong> box that appeared below the
-        plant we just entered and begin typing the name "Tex 19PE Jack Hammer". Once you have entered enough
-        it should appear in the list. Select the item so that the box becomes greyed-out.
+        plant we just entered and begin typing the name "Tex 19PE Jack Hammer". Once you have typed enough
+        letters it should appear in the list. Select the item so that the box becomes greyed-out.
     </li>
     <li>
         Now we'll checkout some inventory. Click in the box beside the <strong>inventory hire</strong>
@@ -353,7 +355,7 @@
 <ol>
     <li>On the main menu, click <strong>Jobs</strong> and find our job "1001" by using the search.</li>
     <li>
-        On the right hand side of our searched job, click on <strong>Details</strong>. We're now at the
+        On the right hand side of the page for our searched job, click on <strong>Details</strong>. We're now at the
         page where we can see the details of our job including how many transactions for the job have
         occurred.
     </li>
@@ -447,7 +449,7 @@
         Hammer" unchecked for now.
     </li>
     <li>
-        For the inventory hire, check the checbox beside "Divvy Daggs".
+        For the inventory hire, check the checkbox beside "Divvy Daggs".
     </li>
     <li>
         Click the <strong>Checkin</strong> button. We've just checked in some plant and inventory!
@@ -534,7 +536,7 @@
         </tr>
         <tr>
             <td class="help-guide-term">Under repair</td>
-            <td>The plant is current being repaired.</td>
+            <td>The plant is being repaired.</td>
             <td>No</td>
         </tr>
         <tr>
@@ -580,18 +582,18 @@
     </tbody>
 </table>
 <div class="bs-callout bs-callout-info">
-    A summary of the status and condition and condition of plant can be viewed as a pie chart
+    A summary of the status and condition of plant can be viewed as a pie chart
     by clicking on <strong>PIMS</strong> in the main menu.
 </div>
 
-<h3 id="adding-and-editing-plant">6. Adding and editing plant</h3>
+<h3 id="adding-and-editing-plant">6. Adding, editing and deleting plant</h3>
 <p>
     In order for plant to be available for hire in the system, a record of it all must be stored
     somewhere. For each plant the original purchase price of it, the rate it which it is hired out
     and the status and condition is all recorded in PIMS.
 </p>
 <h4 id="add-new-plant">6.1. Add new plant</h4>
-<p>Here's how to add a new plant:</p>
+<p>Here's a working example of how to add a new plant:</p>
 <ol>
     <li>On the main menu, click <strong>Plant</strong>.</li>
     <li>Just below the main menu, click <strong>Create New</strong>.</li>
@@ -681,29 +683,70 @@
                     <td class="help-guide-term">electrical?</td>
                     <td>No</td>
                     <td>
-                        Tick the box to indicate the plant is powered electrically.
+                        Check the checkbox to indicate the plant is powered electrically.
                     </td>
                 </tr>
                 <tr>
                     <td class="help-guide-term">tool?</td>
                     <td>No</td>
                     <td>
-                        Tick the box to indicate the plant is a tool as opposed to ?
+                        Check the checkbox to indicate the plant is a tool as opposed to ?
                     </td>
                 </tr>
                 <tr>
                     <td class="help-guide-term">category</td>
                     <td>No</td>
                     <td>
-                        The category that the plant 
+                        The category that the plant falls under.
                     </td>
                 </tr>
             </tbody>
         </table>
     </li>
     <li>Click the <strong>Create</strong> button to create the new plant.</li>
+    <li>That's it! We just added a new plant and made it available to be hired.</li>
 </ol>
-
+<h4 id="making-changes-to-plant">6.2. Making changes to plant</h4>
+<p>Here's how to edit plant:</p>
+<ol>
+    <li>On the main menu, click <strong>Plant</strong>.</li>
+    <li>
+        In the plant listing locate the line of your plant to edit and click on the
+        <strong>Edit</strong> link. You may want to use the search filter to help find your
+        plant. You can also get to the edit page via <strong>Details</strong>.
+    </li>
+    <li>
+        Make changes to the plant as appropriate.
+    </li>
+    <li>
+        Consider setting the status and condition of the plant. This will help other users
+        when the use the system.
+    </li>
+    <li>Click the <strong>Save</strong> button to save the editions.</li>
+</ol>
+<div class="bs-callout bs-callout-info">
+    For some plant you may find you cannot change the status. This will be because the plant is
+    checked out. Once the plant has been checked in you will able to change the status.
+</div>
+<h4 id="deleting-a-plant">6.3. Deleting a plant</h4>
+<p>Here's how to delete plant:</p>
+<ol>
+    <li>On the main menu, click <strong>Plant</strong>.</li>
+    <li>
+        In the plant listing locate the line of your plant to delete and click on the
+        <strong>Delete</strong> link. You may want to use the search filter to help find your
+        category. You can also get to the delete page via <strong>Details</strong>.
+    </li>
+    <li>If permitted, click the <strong>Delete</strong> button to delete the plant.</li>
+</ol>
+<div class="bs-callout bs-callout-warning">
+    You may not be able to delete the plant if it is in use by any jobs. It may be that it is
+    checked in and yet it still cannot be deleted. This is because the plant is required for
+    billing. All transactions of this plant of every job will need to be deleted before the
+    actual plant can be removed from the system permanently.<br />
+    <br />
+    Instead of deleting the plant, <strong>it is recommended to set its status and condition</strong>.
+</div>
 <h3 id="categories">7. Categories</h3>
 <p>
     A category is a name of a grouping of like plant or inventory. It is used in reporting to group
