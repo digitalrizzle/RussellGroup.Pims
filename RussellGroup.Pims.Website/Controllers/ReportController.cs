@@ -53,7 +53,9 @@ namespace RussellGroup.Pims.Website.Controllers
         // plant condition chart data
         public JsonResult GetConditionData()
         {
-            var plants = _repository.Plants;
+            var plants = _repository.Plants.Where(f =>
+                f.StatusId == Status.Available ||
+                f.StatusId == Status.CheckedOut);
 
             var unknown = plants.Count(f => f.ConditionId == Condition.Unknown);
             var poor = plants.Count(f => f.ConditionId == Condition.Poor);
