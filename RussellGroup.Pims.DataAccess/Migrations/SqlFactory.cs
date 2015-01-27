@@ -97,6 +97,8 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             builder.AppendLine("            @userName");
             builder.AppendLine("        FROM");
             builder.AppendLine("            inserted");
+            builder.AppendLine();
+            builder.AppendLine("        RETURN");
             builder.AppendLine("    END");
             builder.AppendLine("    ELSE");
             builder.AppendLine("        SET @action = 'D'");
