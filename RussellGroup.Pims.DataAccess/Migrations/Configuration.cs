@@ -75,7 +75,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             // add users and roles
             CreateRole(context, new ApplicationRole[]
             {
-                new ApplicationRole { Name = Role.CanView, Precedence = 1, Description = "View jobs, plant, inventory and hire; cannot edit" },
+                new ApplicationRole { Name = Role.CanView, Precedence = 1, Description = "View jobs, plant, inventory, hire and reports; cannot edit" },
                 new ApplicationRole { Name = Role.CanEdit, Precedence = 2, Description = "Manage jobs, plant, inventory and hire" },
                 new ApplicationRole { Name = Role.CanEditCategories, Precedence = 3, Description = "Manage categories" },
                 new ApplicationRole { Name = Role.CanEditUsers, Precedence = 4, Description = "Manage users" }
