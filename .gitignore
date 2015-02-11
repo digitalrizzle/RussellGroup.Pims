@@ -228,3 +228,4 @@ RussellGroup.Pims.Website/connectionStrings.config
 RussellGroup.Pims.Website/Scripts/_references.js
 RussellGroup.Pims.Website/Web.Debug.config
 RussellGroup.Pims.Website/Web.Release.config
+RussellGroup.Pims.DataAccess/Migrations/seed.txt
