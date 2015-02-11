@@ -24,7 +24,7 @@
     </li>
     <li><a href="#plant-status-and-condition">Plant status and condition</a></li>
     <li>
-        <a href="#adding-and-editing-plant">Adding and editing plant</a>
+        <a href="#adding-editing-and-deleting-plant">Adding, editing and deleting plant</a>
         <ol>
             <li><a href="#add-new-plant">Add new plant</a></li>
             <li><a href="#making-changes-to-plant">Making changes to plant</a></li>
@@ -39,9 +39,33 @@
             <li><a href="#deleting-a-category">Deleting a category</a></li>
         </ol>
     </li>
-    <li>Creating new inventory and editing</li>
-    <li>Reports</li>
-    <li>User management</li>
+    <li>
+        <a href="#adding-editing-and-deleting-inventory">Adding, editing and deleting inventory</a>
+        <ol>
+            <li><a href="#add-new-inventory">Add new inventory</a></li>
+            <li><a href="#making-changes-to-inventory">Making changes to inventory</a></li>
+            <li><a href="#deleting-a-inventory">Deleting inventory</a></li>
+        </ol>
+    </li>
+    <li>
+        <a href="#reports">Reports</a>
+        <ol>
+            <li><a href="#job-reports">Job reports</a></li>
+            <li><a href="#charge-reports">Charge reports</a></li>
+            <li><a href="#location-reports">Location reports</a></li>
+            <li><a href="#yard-reports">Yard reports</a></li>
+        </ol>
+    </li>
+    <li>
+        <a href="#user-management">User management</a>
+        <ol>
+            <li><a href="#roles">Roles</a></li>
+            <li><a href="#making-a-new-user">Making a new user</a></li>
+            <li><a href="#making-changes-to-a-user">Making changes to a user</a></li>
+            <li><a href="#deleting-a-user">Deleting a user</a></li>
+            <li><a href="#locking-out-a-user">Locking out a user</a></li>
+        </ol>
+    </li>
 </ol>
 
 <h3 id="what-is-pims">1. What is PIMS?</h3>
@@ -51,6 +75,9 @@
     so that we can monitor the hire of plant and inventory in and out of the yard and ultimately bill the
     hire to the customer.
 </p>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
 
 <h3 id="terms">2. Terms</h3>
 <p>Here are some terms and what they mean that we'll use throughout this guide.</p>
@@ -109,6 +136,9 @@
         </tr>
     </tbody>
 </table>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
 
 <h3 id="how-it-works">3. How it works</h3>
 <p>Here's how the system works:</p>
@@ -161,17 +191,24 @@
     That's it! All the data is captured during these steps and so reports can be generated to bill
     the customer.
 </p>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
 
 <h3 id="a-working-example">4. A working example</h3>
 <p>
     In this section we're going to work through an example, step by step, to show just how to make a
     job and how to checkout, and in, plant and inventory.
 </p>
+<div class="bs-callout bs-callout-warning">
+    In order to follow the steps in the following sections you will need the ability to edit. Be sure that
+    your user name in PIMS has been assigned the <strong>CanEdit</strong> role.
+</div>
 <h4 id="make-a-new-job">4.1. Make a new job</h4>
 <p>The first step is to make our job.</p>
 <ol>
     <li>On the main menu, click <strong>Jobs</strong>.</li>
-    <li>Just below the main menu, click <strong>Create new</strong>.</li>
+    <li>Just below the main menu, click <strong>Create New</strong>.</li>
     <li>
         Fill in each of the blank boxes next to each label. Here's what each of them mean:
         <table class="table display table-striped order-column table-responsive table-help-guide">
@@ -489,6 +526,9 @@
         That's it! Our transaction has now been deleted.
     </li>
 </ol>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
 
 <h3 id="plant-status-and-condition">5. Plant status and condition</h3>
 <p>
@@ -585,8 +625,11 @@
     A summary of the status and condition of plant can be viewed as a pie chart
     by clicking on <strong>PIMS</strong> in the main menu.
 </div>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
 
-<h3 id="adding-and-editing-plant">6. Adding, editing and deleting plant</h3>
+<h3 id="adding-editing-and-deleting-plant">6. Adding, editing and deleting plant</h3>
 <p>
     In order for plant to be available for hire in the system, a record of it all must be stored
     somewhere. For each plant the original purchase price of it, the rate it which it is hired out
@@ -646,11 +689,11 @@
                     <td>
                         The date when the plant was retired from use. Leave this empty if the plant
                         is still in use otherwise it will not show in the list of available items
-                        when checking out plant to a job.
+                        when checking out that plant to a job.
                     </td>
                 </tr>
                 <tr>
-                    <td class="help-guide-term">rate</td>
+                    <td class="help-guide-term">default rate</td>
                     <td>0.50</td>
                     <td>
                         The default charge out rate for hire. It is a default because individual
@@ -690,7 +733,7 @@
                     <td class="help-guide-term">tool?</td>
                     <td>No</td>
                     <td>
-                        Check the checkbox to indicate the plant is a tool as opposed to ?
+                        Check the checkbox to indicate the plant is a tool.
                     </td>
                 </tr>
                 <tr>
@@ -706,6 +749,16 @@
     <li>Click the <strong>Create</strong> button to create the new plant.</li>
     <li>That's it! We just added a new plant and made it available to be hired.</li>
 </ol>
+<div class="bs-callout bs-callout-info">
+    The rate here for a plant is the default rate. This means that whenever a plant is
+    checked out then the rate is <i>copied</i> to the transaction. If you then change the
+    default rate for the plant it will not affect the specific transaction. This allows
+    for you to change the rate of a specific transaction for a job in which you may want
+    to, for example, give a one-off discounted rate.<br />
+    <br />
+    This <strong>default rate</strong> applies to plant only. Inventory does not have a
+    default rate as it works differently.
+</div>
 <h4 id="making-changes-to-plant">6.2. Making changes to plant</h4>
 <p>Here's how to edit plant:</p>
 <ol>
@@ -745,8 +798,13 @@
     billing. All transactions of this plant of every job will need to be deleted before the
     actual plant can be removed from the system permanently.<br />
     <br />
-    Instead of deleting the plant, <strong>it is recommended to set its status and condition</strong>.
+    Instead of deleting the plant, <strong>it is recommended to set its</strong> status<strong>,</strong>
+    condition<strong> and </strong>when disused <strong>date</strong>.
 </div>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
+
 <h3 id="categories">7. Categories</h3>
 <p>
     A category is a name of a grouping of like plant or inventory. It is used in reporting to group
@@ -754,6 +812,10 @@
     Categories can also be used to help when searching for plant or inventory in pages that list the
     category.
 </p>
+<div class="bs-callout bs-callout-warning">
+    In order to follow the steps in this section you will need access to the categories. Be sure that
+    your user name in PIMS has been assigned the <strong>CanEditCategories</strong> role.
+</div>
 <h4 id="making-a-new-category">7.1. Making a new category</h4>
 <p>Here's how to add a new category:</p>
 <ol>
@@ -803,4 +865,439 @@
     You may not be able to delete the category if it is in use by any plant or inventory items.
     To remedy this, select a different category for those items, or delete them, and then you
     will be able to delete the category.
+</div>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
+
+<h3 id="adding-editing-and-deleting-inventory">8. Adding, editing and deleting inventory</h3>
+<p>
+    In order for inventory to be available for hire in the system, a record of it all must be stored
+    somewhere. For each invenotry item the original purchase price of it, the rate it which it is hired
+    out and the category it falls under is all recorded in PIMS.
+</p>
+<h4 id="add-new-inventory">8.1. Add new inventory</h4>
+<p>Here's a working example of how to add new inventory:</p>
+<ol>
+    <li>On the main menu, click <strong>Inventory</strong>.</li>
+    <li>Just below the main menu, click <strong>Create New</strong>.</li>
+    <li>
+        Fill in each of the blank boxes next to each label. Here's what each of them mean:
+        <table class="table display table-striped order-column table-responsive table-help-guide">
+            <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Example</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="help-guide-term">id</td>
+                    <td>322570</td>
+                    <td>
+                        This is an identifier for the inventory; a short code. This isn't automatically
+                        assigned, so you'll need to come up with the ID yourself. It should be unique for
+                        the inventory.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">description</td>
+                    <td>Trio Panel Shutters TR 270 x 240 </td>
+                    <td>
+                        Use a relatively short name of the inventory that best describes what it is.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">when purchased</td>
+                    <td>1/06/2010</td>
+                    <td>
+                        The date when the inventory was initally purchased.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">when disused</td>
+                    <td></td>
+                    <td>
+                        The date when the inventory was retired from use. Leave this empty if the inventory
+                        is still in use otherwise it will not show in the list of available items when
+                        checking out that inventory to a job.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">rate</td>
+                    <td>6.20</td>
+                    <td>
+                        The  charge out rate for hire. This will affect all inventory, including those that
+                        have already been checked out and billed.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">cost</td>
+                    <td>4080.72</td>
+                    <td>
+                        The purchase price of the inventory.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">yard quantity</td>
+                    <td>200</td>
+                    <td>
+                        The number of items for this inventory currently in the yard. This value will
+                        automatically change as inventory of this type are checked in and out.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">category</td>
+                    <td>Trio Steel Panels</td>
+                    <td>
+                        The category that the inventory falls under.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+    <li>Click the <strong>Create</strong> button to create the new inventory.</li>
+    <li>That's it! We just added new inventory and made it available to be hired.</li>
+</ol>
+<div class="bs-callout bs-callout-warning">
+    Choose carefully the category that the inventory falls under because it will affect
+    how it is shown of the reports for charging the customer.
+</div>
+<h4 id="making-changes-to-inventory">8.2. Making changes to inventory</h4>
+<p>Here's how to edit inventory:</p>
+<ol>
+    <li>On the main menu, click <strong>Inventory</strong>.</li>
+    <li>
+        In the inventory listing locate the line of your inventory to edit and click on the
+        <strong>Edit</strong> link. You may want to use the search filter to help find your
+        inventory. You can also get to the edit page via <strong>Details</strong>.
+    </li>
+    <li>
+        Make changes to the inventory as appropriate.
+    </li>
+    <li>Click the <strong>Save</strong> button to save the editions.</li>
+</ol>
+<h4 id="deleting-a-inventory">8.3. Deleting inventory</h4>
+<p>Here's how to delete inventory:</p>
+<ol>
+    <li>On the main menu, click <strong>Inventory</strong>.</li>
+    <li>
+        In the plant listing locate the line of your inventory to delete and click on the
+        <strong>Delete</strong> link. You may want to use the search filter to help find your
+        category. You can also get to the delete page via <strong>Details</strong>.
+    </li>
+    <li>If permitted, click the <strong>Delete</strong> button to delete the inventory.</li>
+</ol>
+<div class="bs-callout bs-callout-warning">
+    You may not be able to delete the inventory if it is in use by any jobs. It may be that it is
+    checked in and yet it still cannot be deleted. This is because the inventory is required for
+    billing. All transactions of this inventory of every job will need to be deleted before the
+    actual inventory can be removed from the system permanently.<br />
+    <br />
+    Instead of deleting the inventory item, <strong>it is recommended to set its</strong> when disused <strong>date</strong>.
+</div>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
+
+<h3 id="reports">9. Reports</h3>
+<p>
+    The reports are used to aid in data entry verification, stocktake and for billing purposes. Some of the
+    reports will have numbers next their menu item. These numbers correspond to the reports in the old plant
+    database.
+</p>
+<h4 id="job-reports">9.1. Job reports</h4>
+<p>
+    The job reports give a listing of all plant and inventory that has been checked out for a specific
+    job. The two are slightly different in that the plant report will show all plant that is currently
+    checked out to a job at the time the report is run. This plant report is useful when doing a stocktake
+    for plant on a job. The inventory report differs in that it will show all inventory that has been
+    checked out and checked in since the beginning of the job. The items on both reports are grouped
+    together by their category for ease of reading and finding specific items.
+</p>
+<h5>9.1.1. Plant</h5>
+<p>
+    To get a listing of all plant currently checked out to a job, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Reports</strong> and then <strong>Jobs #51, #56</strong>.</li>
+    <li>Find your job by using the search.</li>
+    <li>
+        On the right hand side of the page for our searched job, click on <strong>Plant #51</strong>. A
+        new tab in your web browser will open and the report will be displayed.
+    </li>
+    <li>You can print the report or save it as a file.</li>
+    <li>When you're done you can close the report by closing the tab of your web browser.</li>
+</ol>
+<h5>9.1.2. Inventory</h5>
+<p>
+    To get a listing of all inventory that has been checked out and checked in to a job, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Reports</strong> and then <strong>Jobs #51, #56</strong>.</li>
+    <li>Find your job by using the search.</li>
+    <li>
+        On the right hand side of the page for our searched job, click on <strong>Inventory #56</strong>. A
+        new tab in your web browser will open and the report will be displayed.
+    </li>
+    <li>You can print the report or save it as a file.</li>
+    <li>When you're done you can close the report by closing the tab of your web browser.</li>
+</ol>
+<h4 id="charge-reports">9.2. Charge reports</h4>
+<p>
+    The charge reports are used for billing from the system. All the checkout and checkin transactions
+    the have been recorded are used in these reports. These reports require a start and end date for which
+    to calculate the costs in that period. By default, the start date will be set to the first of the
+    current month and the end date will be set to the current date. As with the job reports, items are
+    grouped by category for ease of reading and finding specific items.
+</p>
+<p>
+    There are three types of charge reports: plant charges for a specific job, inventory charges for a
+    specific job, and a financial summary of all current jobs. All of these reports depend upon a specified
+    date range.
+</p>
+<h5>9.2.1. Plant</h5>
+<p>
+    To get a detailed charge listing of all plant for a job in a given period, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Reports</strong> and then <strong>Charges #50</strong>.</li>
+    <li>
+        Set the <strong>Date from</strong> date to the start of your billing period. This is usually the
+        first of the month.
+    </li>
+    <li>
+        Set the <strong>to</strong> date to the end of your billing period. This is usually the 20th of
+        the month.
+    </li>
+    <li>Find your job by using the search.</li>
+    <li>
+        On the right hand side of the page for our searched job, click on <strong>Plant Charges #50</strong>.
+        A new tab in your web browser will open and the report will be displayed.
+    </li>
+    <li>You can print the report or save it as a file.</li>
+    <li>When you're done you can close the report by closing the tab of your web browser.</li>
+</ol>
+<h5>9.2.2. Inventory</h5>
+<p>
+    To get a detailed charge listing of all inventory for a job in a given period, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Reports</strong> and then <strong>Charges #50</strong>.</li>
+    <li>
+        Set the <strong>Date from</strong> date to the start of your billing period. This is usually the
+        first of the month.
+    </li>
+    <li>
+        Set the <strong>to</strong> date to the end of your billing period. This is usually the 20th of
+        the month.
+    </li>
+    <li>Find your job by using the search.</li>
+    <li>
+        On the right hand side of the page for our searched job, click on <strong>Inventory Charges</strong>.
+        A new tab in your web browser will open and the report will be displayed.
+    </li>
+    <li>You can print the report or save it as a file.</li>
+    <li>When you're done you can close the report by closing the tab of your web browser.</li>
+</ol>
+<h5>9.2.3. Financial Summary</h5>
+<p>
+    To get a summary charge listing of all plant and inventory for a job in a given period, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Reports</strong> and then <strong>Charges #50</strong>.</li>
+    <li>
+        Set the <strong>Date from</strong> date to the start of your billing period. This is usually the
+        first of the month.
+    </li>
+    <li>
+        Set the <strong>to</strong> date to the end of your billing period. This is usually the 20th of
+        the month.
+    </li>
+    <li>
+        Click on the <strong>Financial Summary</strong> link. A new tab in your web browser will open and the
+        report will be displayed.
+    </li>
+    <li>You can print the report or save it as a file.</li>
+    <li>When you're done you can close the report by closing the tab of your web browser.</li>
+</ol>
+<div class="bs-callout bs-callout-info">
+    Alternatively, you can click on the <strong>csv</strong> link to download a CSV file equivalent of the
+    financial summary which can then be opened using a spreadsheet application such as Microsoft Excel.
+</div>
+<h4 id="location-reports">9.3. Location reports</h4>
+<p>
+    The location reports list by category the location of plant or inventory. To get a listing of the locations
+    for either, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Reports</strong> and then <strong>Locations #69, #71</strong>.</li>
+    <li>Find your category by using the search.</li>
+    <li>
+        On the right hand side of the page for our searched category, either click on <strong>Plant Locations #69</strong>
+        or <strong>Inventory Locations #70</strong> depending on the category you searched. A new tab in your
+        web browser will open and the report will be displayed.
+    </li>
+    <li>You can print the report or save it as a file.</li>
+    <li>When you're done you can close the report by closing the tab of your web browser.</li>
+</ol>
+<h4 id="yard-reports">9.4. Yard reports</h4>
+<p>
+    The yard reports list plant and inventory that is currently checked in, and in some reports, checked
+    out to the system. To determine where plant and inventory is, the entire system must be searched. As
+    such, it may take some time for the reports to run.
+</p>
+<p>
+    Here are the yard reports and what they show:
+</p>
+<table class="table display table-striped order-column table-responsive table-help-guide">
+    <thead>
+        <tr>
+            <th>Report</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="help-guide-term">Plant</td>
+            <td>Lists all plant currently in the yard. These are grouped and ordered by category.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Plant Status</td>
+            <td>
+                Lists all plant in the system, both checked out and checked in. They are grouped and
+                ordered by status.
+            </td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Inventory</td>
+            <td>
+                Lists all inventory and the quantity currently in the yard and the quantity checked out
+                to jobs. These are grouped and ordered by category.
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
+
+<h3 id="user-management">10. User management</h3>
+<p>
+    User management deals with permitting individual users to perform tasks in the system. For example,
+    you may want one user to create, edit and delete jobs but another user to only view the jobs without
+    the ability of changing them.
+</p>
+<p>
+    PIMS is an Intranet application and it piggy-backs off Windows authentication to identify a user.
+    This means that the Windows login that is used to log into the organisation's network will be used
+    as the user for PIMS. You can verify this by looking at the top righthand corner of PIMS. There it
+    will display the currently logged on user.
+</p>
+<div class="bs-callout bs-callout-info">
+    All creates, edits and deletes are recorded in PIMS through an auditing process. These records
+    cannot be accessed through the PIMS website but may be examined in the database backend of the
+    system.
+</div>
+<div class="bs-callout bs-callout-warning">
+    In order to follow the steps in this section you will need access to user management. Be sure that
+    your user name in PIMS has been assigned the <strong>CanEditUsers</strong> role.
+</div>
+<h4 id="roles">10.1 Roles</h4>
+<p>
+    The types of tasks that can be performed are called <i>roles</i> and in the system there are four types,
+    as described below. The word <i>manage</i> in this list refers to the ability of creating, editing
+    and deleting. Users can belong to more than one role.
+</p>
+<table class="table display table-striped order-column table-responsive table-help-guide">
+    <thead>
+        <tr>
+            <th>Role</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="help-guide-term">CanView</td>
+            <td>View jobs, plant, inventory, hire and reports; cannot edit.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">CanEdit</td>
+            <td>Manage jobs, plant, inventory and hire.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">CanEditCategories</td>
+            <td>Manage categories.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">CanEditUsers</td>
+            <td>Manage users.</td>
+        </tr>
+    </tbody>
+</table>
+<h4 id="making-a-new-user">10.2. Making a new user</h4>
+<p>
+    Let's create a new user and assign it some roles.
+</p>
+<ol>
+    <li>On the main menu, click <strong>Users</strong>.</li>
+    <li>Just below the main menu, click <strong>Create New</strong>.</li>
+    <li>
+        In the box next to user name enter the user name of a person on your network. It will need to be
+        preceded by <code>CONSTRUCTORS\</code>. For example, say there is the user <code>workshop</code> on your
+        network, then the user name in PIMS will be <code>CONSTRUCTORS\workshop</code>.
+    </li>
+    <li>Leave the <strong>locked out?</strong> check box unchecked.</li>
+    <li>Check the roles <strong>CanView</strong> and <strong>CanEdit</strong>.</li>
+    <li>Click <strong>Create</strong> to create the new user.</li>
+</ol>
+<p>The new user is immediately ready to use the system.</p>
+<h4 id="making-changes-to-a-user">10.3. Making changes to a user</h4>
+<p>
+    Here's how to edit a user:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Users</strong>.</li>
+    <li>
+        In the user listing locate the line of your user to edit and click on the
+        <strong>Edit</strong> link. You may want to use the search filter to help find your
+        user. You can also get to the edit page via <strong>Details</strong>.
+    </li>
+    <li>
+        Make changes to the user as appropriate.
+    </li>
+    <li>Click the <strong>Save</strong> button to save the editions.</li>
+</ol>
+<h4 id="deleting-a-user">10.4. Deleting a user</h4>
+<p>Here's how to delete a user:</p>
+<ol>
+    <li>On the main menu, click <strong>Users</strong>.</li>
+    <li>
+        In the user listing locate the line of your user to edit and click on the
+        <strong>Edit</strong> link. You may want to use the search filter to help find your
+        user. You can also get to the edit page via <strong>Details</strong>.
+    </li>
+    <li>Click the <strong>Delete</strong> button to delete the user.</li>
+</ol>
+<h4 id="locking-out-a-user">10.5. Locking out a user</h4>
+<p>
+    You may need to temporarily suspend a user from using PIMS but not want to delete that user.
+    You can achieve this by <i>locking out</i> the user. When you want to reinstate the user's
+    access you can then simply unlock them.
+</p>
+<ol>
+    <li>On the main menu, click <strong>Users</strong>.</li>
+    <li>
+        In the user listing locate the line of your user to edit and click on the
+        <strong>Edit</strong> link. You may want to use the search filter to help find your
+        user. You can also get to the edit page via <strong>Details</strong>.
+    </li>
+    <li>Check to lock, or uncheck to unlock, the <strong>locked out?</strong> checkbox.</li>
+    <li>Click the <strong>Save</strong> button to save the edition.</li>
+</ol>
+<div id="bottom" class="pull-right">
+    <a href="#top" title="go to the top of the page"><span class="glyphicon glyphicon-hand-up"></span></a>
+</div>
+<div class="clearfix">
 </div>
