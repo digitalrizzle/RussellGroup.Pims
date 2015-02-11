@@ -467,7 +467,7 @@
     <Content Include="Views\Category\_Form.cshtml" />
     <Content Include="Views\Report\JobIndex.cshtml" />
     <Content Include="Views\Shared\_ReportLayout.cshtml" />
-    <Content Include="Views\Report\CategoryIndex.cshtml" />
+    <Content Include="Views\Report\LocationIndex.cshtml" />
     <Content Include="Views\Report\PlantLocations.cshtml" />
     <Content Include="Views\Report\InventoryLocations.cshtml" />
     <Content Include="Views\Report\PlantInJob.cshtml" />

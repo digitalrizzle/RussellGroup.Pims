@@ -43,7 +43,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? WhenDisused { get; set; }
 
-        [Display(Name = "rate")]
+        [Display(Name = "default rate")]
         public decimal Rate { get; set; }
 
         [Display(Name = "cost")]

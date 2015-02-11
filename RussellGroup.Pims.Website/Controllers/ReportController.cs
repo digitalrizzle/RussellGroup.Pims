@@ -92,9 +92,9 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         // GET: /Report/Categories
-        public async Task<ActionResult> Categories()
+        public async Task<ActionResult> Locations()
         {
-            return View("CategoryIndex", await _repository.Categories.ToListAsync());
+            return View("LocationIndex", await _repository.Categories.ToListAsync());
         }
 
         // https://github.com/ALMMa/datatables.mvc
