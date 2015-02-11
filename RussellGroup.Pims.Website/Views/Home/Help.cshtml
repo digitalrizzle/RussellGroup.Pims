@@ -828,7 +828,7 @@
         new type. Choose something that best describes the grouping of a plant or inventory item.
     </li>
     <li>
-        Click in the <strong>name</strong> name box and enter a name of the category. This can be
+        Click in the <strong>name</strong> box and enter a name of the category. This can be
         thought of as a sub-category and further refines the category grouping.
     </li>
     <li>Click the <strong>Create</strong> button to create the new category.</li>
@@ -874,7 +874,7 @@
 <p>
     In order for inventory to be available for hire in the system, a record of it all must be stored
     somewhere. For each invenotry item the original purchase price of it, the rate it which it is hired
-    out and the category it falls under is all recorded in PIMS.
+    out and the category it falls under is all recorded in the system.
 </p>
 <h4 id="add-new-inventory">8.1. Add new inventory</h4>
 <p>Here's a working example of how to add new inventory:</p>
@@ -1047,7 +1047,7 @@
 <h4 id="charge-reports">9.2. Charge reports</h4>
 <p>
     The charge reports are used for billing from the system. All the checkout and checkin transactions
-    the have been recorded are used in these reports. These reports require a start and end date for which
+    the have been recorded are used in these reports. The reports require a start and end date for which
     to calculate the costs in that period. By default, the start date will be set to the first of the
     current month and the end date will be set to the current date. As with the job reports, items are
     grouped by category for ease of reading and finding specific items.
@@ -1236,6 +1236,10 @@
         </tr>
     </tbody>
 </table>
+<div class="bs-callout bs-callout-info">
+    If a certain user has either not been created in PIMS or does not have the necessary roles and tries
+    to access a part of the system then they will receive an <i>unauthorised</i> message.
+</div>
 <h4 id="making-a-new-user">10.2. Making a new user</h4>
 <p>
     Let's create a new user and assign it some roles.
@@ -1283,7 +1287,8 @@
 <h4 id="locking-out-a-user">10.5. Locking out a user</h4>
 <p>
     You may need to temporarily suspend a user from using PIMS but not want to delete that user.
-    You can achieve this by <i>locking out</i> the user. When you want to reinstate the user's
+    You can achieve this by <i>locking out</i> the user. If the user tries to access the system
+    they will receive an <i>unauthorised</i> message. When you want to reinstate the user's
     access you can then simply unlock them.
 </p>
 <ol>
