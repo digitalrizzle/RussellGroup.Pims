@@ -4,6 +4,8 @@
 <h4>@Model.XJobId</h4>
 <h5>@Model.Description</h5>
 
+<hr />
+
 <div>
     @if (@Html.IsAction("Delete"))
     {
@@ -11,7 +13,6 @@
             <p>Are you sure you want to delete this job and all of its hire transactions?</p>
         </div>
     }
-    <hr />
 
     <dl class="dl-horizontal">
         <dt>

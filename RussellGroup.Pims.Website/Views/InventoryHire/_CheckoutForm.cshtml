@@ -1,11 +1,11 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.InventoryHireCheckout
 
+<hr />
+
 @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
 {
     @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
 }
-
-<hr />
 
 @using (Html.BeginForm(Html.IsAction("Edit") ? "Edit" : "CreateCheckout", "InventoryHire", new { id = Model.JobId, hireId = Model.Id }))
 {
