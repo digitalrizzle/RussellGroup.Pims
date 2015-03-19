@@ -1,5 +1,7 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
+<hr />
+
 @if (Model.IsCheckedOut)
 {
     <div class="alert alert-warning">
@@ -11,8 +13,6 @@
 {
     @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
 }
-
-<hr />
 
 @using (Html.BeginForm())
 {

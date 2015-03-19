@@ -13,11 +13,12 @@
 <h4>@Model.Job.XJobId</h4>
 <h5>@Model.Job.Description</h5>
 
+<hr />
+
 @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
 {
     @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
 }
-<hr />
 
 @using (Html.BeginForm())
 {
