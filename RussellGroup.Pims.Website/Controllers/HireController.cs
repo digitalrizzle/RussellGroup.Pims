@@ -150,9 +150,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            var collection = Request.Form;
-            var plantHireIds = collection.GetIds("plant-hire-id-field");
-            var inventoryIdsAndQuantities = collection.GetIdsAndQuantities("inventory-id-field", "inventory-hire-quantity-field");
+            var plantHireIds = HttpUtility.ParseQueryString(Request.Form["selectedPlantHire"]).GetIds("plant-hire-id-field");
+            var inventoryIdsAndQuantities = HttpUtility.ParseQueryString(Request.Form["selectedInventoryHire"]).GetIdsAndQuantities("inventory-id-field", "inventory-hire-quantity-field");
 
             if (string.IsNullOrWhiteSpace(transaction.ReturnDocket)) ModelState.AddModelError("ReturnDocket", "A docket number is required.");
             if (plantHireIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");

@@ -74,7 +74,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Description,
                     Category = c.Category != null ? c.Category.Name : string.Empty,
                     Hire = _repository.GetPlantHire(c.Id).Count() == 0 ? string.Empty : this.ActionLink(_repository.GetPlantHire(c.Id).Count().ToString(), "PlantHire", new { id = c.Id }),
-                    InUse = c.WhenDisused.HasValue ? "No" : "Yes",
+                    IsDisused = c.WhenDisused.HasValue ? "Yes" : "No",
                     Status = c.Status.Name,
                     CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
