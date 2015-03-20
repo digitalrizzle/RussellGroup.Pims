@@ -103,7 +103,7 @@
                     makeVisible: false
                 },
                 toggle: function () {
-                    this.state.makeVisible = $(window).scrollTop() + $(window).height() != $(document).height();
+                    this.state.makeVisible = $(window).scrollTop() + $(window).height() < $(document).height();
 
                     if (this.state.makeVisible && !this.state.isVisible) {
                         this.$control.stop().animate({ opacity: 1 }, 500);
@@ -124,7 +124,7 @@
                         })
                         .appendTo('#top');
 
-                    $(window).bind('scroll resize', function (e) {
+                    $(window).bind('load scroll resize', function (e) {
                         thisControl.toggle();
                     });
                 }
