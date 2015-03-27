@@ -22,14 +22,6 @@
             @Html.ValidationMessageFor(model => model.User.UserName, null, new { @class = "help-block form-control-feedback" })
         </div>
 
-        <div class="form-group@(ViewData.ModelState.IsValidField("User.LockoutEnabled") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.User.LockoutEnabled, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
-                @Html.EditorFor(model => model.User.LockoutEnabled)
-            </div>
-            @Html.ValidationMessageFor(model => model.User.LockoutEnabled, null, new { @class = "help-block form-control-feedback" })
-        </div>
-
         <div class="form-group">
             @Html.LabelFor(model => model.Roles, new { @class = "control-label col-md-2" })
             <div class="col-md-10" style="margin-top:-3px">
