@@ -25,12 +25,6 @@ namespace RussellGroup.Pims.DataAccess.Models
             [DisplayName("email")]
             [EmailAddress(ErrorMessage = "The email address is not valid.")]
             public string Email { get; set; }
-
-            [DisplayName("locked out?")]
-            public string LockoutEnabled { get; set; }
-
-            [DisplayName("when locked out")]
-            public DateTime LockoutEndDateUtc { get; set; }
         }
     }
 }

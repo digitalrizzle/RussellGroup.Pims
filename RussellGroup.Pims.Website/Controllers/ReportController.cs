@@ -15,7 +15,7 @@ using RussellGroup.Pims.DataAccess.ReportModels;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
-    [PimsAuthorize(Role.CanView, Role.CanEdit)]
+    [PimsAuthorize(Role.CanView, Role.CanEdit, Role.CanEditCategories, Role.CanEditUsers)]
     public class ReportController : Controller
     {
         private readonly IReportRepository _repository;

@@ -22,9 +22,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Roles)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.User.LockoutEnabled)
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -45,7 +42,6 @@
                     { "data": "Id", "visible": false },
                     { "data": "UserName" },
                     { "data": "Role", "sortable": false },
-                    { "data": "LockoutEnabled", "className": "text-center" },
                     { "data": "CrudLinks", "sortable": false, "className": "text-center" }
                 ]
             });
