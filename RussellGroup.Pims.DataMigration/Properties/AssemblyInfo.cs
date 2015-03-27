@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("RussellGroup.Pims.DataMigration")]
-[assembly: AssemblyCopyright("Copyright ©  2013")]
+[assembly: AssemblyCopyright("Copyright © digitalrizzle")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
