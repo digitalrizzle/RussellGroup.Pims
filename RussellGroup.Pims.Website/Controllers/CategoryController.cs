@@ -68,7 +68,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     c.Name,
                     c.Type,
-                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
+                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEditCategories))
                 });
 
             return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);

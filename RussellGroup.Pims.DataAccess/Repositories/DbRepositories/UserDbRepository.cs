@@ -73,28 +73,10 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
             IdentityResult result = null;
             var storedUser = await _userManager.FindByIdAsync(user.Id);
-            var wasLockoutEnabled = storedUser.LockoutEnabled;
-
-            //var result = await _userManager.UpdateAsync(user);
-
-            //if (!result.Succeeded)
-            //{
-            //    return result;
-            //}
 
             if (!user.UserName.Equals(storedUser.UserName, StringComparison.OrdinalIgnoreCase))
             {
                 return new IdentityResult("The user name cannot be changed. Delete this user and create a new user.");
-            }
-
-            if (!wasLockoutEnabled && user.LockoutEnabled)
-            {
-                result = await _userManager.SetLockoutEndDateAsync(user.Id, DateTime.Now);
-
-                if (!result.Succeeded)
-                {
-                    return result;
-                }
             }
 
             if (roles != null)
