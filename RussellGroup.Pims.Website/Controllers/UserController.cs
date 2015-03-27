@@ -48,8 +48,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 ? all
                 : all.Where(f =>
                     f.UserName.Contains(hint) ||
-                    f.Email.Contains(hint) ||
-                    (f.LockoutEnabled ? "Yes" : "No").Contains(hint)
+                    f.Email.Contains(hint)
                 );
 
             // ordering
@@ -73,8 +72,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     c.UserName,
                     Role = c.Roles != null ? string.Join(", ", roles.Where(r => c.Roles.Select(i => i.RoleId).Contains(r.Id)).OrderBy(r => r.Precedence).Select(r => r.Name)) : string.Empty,
-                    LockoutEnabled = c.LockoutEnabled.ToYesNo(),
-                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
+                    CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEditUsers))
                 });
 
             return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
@@ -162,10 +160,10 @@ namespace RussellGroup.Pims.Website.Controllers
             var user = model.User;
             var roleNames = model.Roles.Where(f => f.IsChecked).Select(f => f.Name).ToArray();
 
-            if (!roleNames.Any())
-            {
-                ModelState.AddModelError(string.Empty, "At least one role must be selected.");
-            }
+            //if (!roleNames.Any())
+            //{
+            //    ModelState.AddModelError(string.Empty, "At least one role must be selected.");
+            //}
 
             if (ModelState.IsValid)
             {

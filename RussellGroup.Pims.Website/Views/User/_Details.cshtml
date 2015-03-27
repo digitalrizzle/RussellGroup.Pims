@@ -34,23 +34,6 @@
                 @Html.Encode(Model.RoleNames)
             }
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.User.LockoutEnabled)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.User.LockoutEnabled)
-        </dd>
-
-        @if (Model.User.LockoutEndDateUtc.HasValue)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model.User.LockoutEndDateUtc)
-            </dt>
-            <dd>
-                @Html.Encode(Model.User.LockoutEndDateUtc.Value.ToLocalTime())
-            </dd>
-        }
     </dl>
 
     <hr />
