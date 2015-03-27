@@ -12,7 +12,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<PimsDbContext>
+    internal sealed partial class Configuration : DbMigrationsConfiguration<PimsDbContext>
     {
         public Configuration()
         {
@@ -43,7 +43,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             factory.GenerateAuditTrigger("AspNetUserClaims", "Id", "UserId");
             factory.GenerateAuditTrigger("AspNetUserLogins", "ProviderKey", "UserId");
 
-            // add users and roles
+            // add roles
             CreateRole(context, new ApplicationRole[]
             {
                 new ApplicationRole { Name = Role.CanView, Precedence = 1, Description = "View jobs, plant, inventory, hire and reports; cannot edit" },
@@ -54,8 +54,8 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 
             context.SaveChanges();
 
-            //CreateUser(context, new ApplicationUser { UserName = @"DOMAIN\user name" }, new string[] { Role.CanView, Role.CanEdit, Role.CanEditCategories, Role.CanEditUsers });
-            CreateUser(context, new ApplicationUser { UserName = Environment.UserDomainName + "\\" + Environment.UserName }, new string[] { Role.CanView, Role.CanEdit, Role.CanEditCategories, Role.CanEditUsers });
+            // add users
+            SeedUsers(context);
 
             var statuses = new List<Status>
             {

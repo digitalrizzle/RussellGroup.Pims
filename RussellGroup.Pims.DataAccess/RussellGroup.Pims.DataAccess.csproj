@@ -67,6 +67,7 @@
     <Compile Include="EntityHelper.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Extensions.cs" />
+    <Compile Include="Migrations\Seed.cs" />
     <Compile Include="Migrations\SqlFactory.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
