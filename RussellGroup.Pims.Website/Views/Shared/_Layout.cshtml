@@ -22,14 +22,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <img id="logo" src="@Url.Content("~/Content/dominion_constructors.png")" alt="Dominion Constructors" class="pull-left" />
+                <img id="logo" class="pull-left hidden-xs hidden-sm" src="@Url.Content("~/Content/dominion_constructors.png")" alt="Dominion Constructors" />
                 <strong class="pull-left">@Html.ActionLink("PIMS", "Index", "Home", null, new { @class = "navbar-brand", title = "Plant and Inventory Management System" })</strong>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @Html.MvcSiteMap().Menu(false)
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right hidden-sm">
                     <li class="navbar-text">Hello, @User.Identity.Name!</li>
                 </ul>
             </div>
