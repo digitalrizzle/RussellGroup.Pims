@@ -177,9 +177,9 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         #region Summary
 
-        public IQueryable<Plant> GetPlantCheckedIn()
+        public IQueryable<Plant> GetAvailablePlant()
         {
-            return Db.Plants.Where(f => f.PlantHires.All(h => h.WhenEnded.HasValue));
+            return Db.Plants.Where(f => f.StatusId == Status.Available && f.PlantHires.All(h => h.WhenEnded.HasValue));
         }
 
         public decimal GetPlantHireCharge(Job job, DateTime whenStarted, DateTime whenEnded)

@@ -266,7 +266,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
         public async Task<ActionResult> YardPlantStocktake()
         {
-            return View("YardPlantStocktake", await _repository.GetPlantCheckedIn().ToListAsync());
+            return View("YardPlantStocktake", await _repository.GetAvailablePlant().ToListAsync());
         }
 
         public async Task<ActionResult> YardInventoryStocktake()
