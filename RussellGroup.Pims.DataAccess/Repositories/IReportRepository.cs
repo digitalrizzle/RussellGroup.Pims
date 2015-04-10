@@ -18,7 +18,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         PlantLocationsReportModel GetPlantLocationsByCategory(int? categoryId);
         InventoryLocationsReportModel GetInventoryLocationsByCategory(int? categoryId);
 
-        IQueryable<Plant> GetPlantCheckedIn();
+        IQueryable<Plant> GetAvailablePlant();
         InventoryHireChargesInJobReportModel GetInventoryHireCharges(Job job, DateTime whenStarted, DateTime whenEnded);
 
         Task<SummaryOfHireChargesReportModel> GetSummaryOfHireChargesAsync(DateTime whenStarted, DateTime whenEnded);
