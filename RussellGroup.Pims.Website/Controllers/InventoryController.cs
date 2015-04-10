@@ -50,8 +50,6 @@ namespace RussellGroup.Pims.Website.Controllers
                 : all.Where(f =>
                     f.XInventoryId.Contains(hint) ||
                     f.Description.Contains(hint) ||
-                    Extensions.LittleEndianDateString.Invoke(f.WhenPurchased).Contains(hint) ||
-                    Extensions.LittleEndianDateString.Invoke(f.WhenDisused).Contains(hint) ||
                     SqlFunctions.StringConvert((double)f.Quantity).Contains(hint) ||
                     f.Category.Name.Contains(hint));
 
@@ -73,11 +71,10 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     c.XInventoryId,
                     c.Description,
-                    WhenPurchased = c.WhenPurchased.HasValue ? c.WhenPurchased.Value.ToShortDateString() : string.Empty,
-                    WhenDisused = c.WhenDisused.HasValue ? c.WhenDisused.Value.ToShortDateString() : string.Empty,
+                    Category = c.Category.Name,
                     c.Quantity,
                     CollatedQuantity = c.CollatedInventoryHires.Sum(f => f.Quantity),
-                    Category = c.Category.Name,
+                    IsDisused = c.WhenDisused.HasValue ? "Yes" : "No",
                     CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 

@@ -23,10 +23,7 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.WhenPurchased)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.WhenDisused)
+                @Html.DisplayNameFor(model => model.Category)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
@@ -35,7 +32,7 @@
                 checked out quantity
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                disused?
             </th>
             <th></th>
         </tr>
@@ -59,11 +56,10 @@
                 { "data": "Id", "visible": false },
                 { "data": "XInventoryId" },
                 { "data": "Description" },
-                { "data": "WhenPurchased" },
-                { "data": "WhenDisused" },
+                { "data": "Category", "name": "Category.Name" },
                 { "data": "Quantity", "className": "text-right" },
                 { "data": "CollatedQuantity", "sortable": false, "className": "text-right" },
-                { "data": "Category", "name": "Category.Name" },
+                { "data": "IsDisused", "sortable": false, "className": "text-center" },
                 { "data": "CrudLinks", "sortable": false, "className": "text-center" }
             ]
         });
