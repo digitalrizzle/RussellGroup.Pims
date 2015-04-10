@@ -80,7 +80,7 @@
                 initialise: function () {
                     var thisControl = scrollToTop;
 
-                    scrollToTop.$control = $('<div id="top"><img src="@Url.Content("~/images/go-to-top.png")" title="go to top" /></div>')
+                    scrollToTop.$control = $('<div id="top"><img src="@Url.Content("~/Content/go-to-top.png")" title="go to top" /></div>')
                         .css({ position: "fixed", right: "10px", bottom: "5px", opacity: 0, cursor: "pointer" })
                         .click(function () {
                             $('html, body').animate({ scrollTop: 0 }, 500);
@@ -117,7 +117,7 @@
                 initialise: function () {
                     var thisControl = scrollToBottom;
 
-                    scrollToBottom.$control = $('<div id="bottom"><img src="@Url.Content("~/images/go-to-bottom.png")" title="go to bottom" /></div>')
+                    scrollToBottom.$control = $('<div id="bottom"><img src="@Url.Content("~/Content/go-to-bottom.png")" title="go to bottom" /></div>')
                         .css({ position: "fixed", top: "55px", right: "10px", opacity: 1, cursor: "pointer" })
                         .click(function () {
                             $('html, body').animate({ scrollTop: $(document).height() }, 500);
