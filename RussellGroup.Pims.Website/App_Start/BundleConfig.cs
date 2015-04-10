@@ -21,7 +21,7 @@ namespace RussellGroup.Pims.Website
             //    "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
-                "~/Scripts/DataTables-1.10.4/jquery.dataTables.js",
+                "~/Scripts/DataTables/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/typeahead").Include(
@@ -34,7 +34,7 @@ namespace RussellGroup.Pims.Website
                 .Include("~/Content/bootstrap.css", new CssRewriteUrlTransformWrapper())
                 .Include("~/Content/bootstrap-theme.css", new CssRewriteUrlTransformWrapper())
                 .Include("~/Content/bootstrap-callout.css", new CssRewriteUrlTransformWrapper())
-                .Include("~/Content/datepicker.css", new CssRewriteUrlTransformWrapper()));
+                .Include("~/Content/bootstrap-datepicker.css", new CssRewriteUrlTransformWrapper()));
 
             bundles.Add(new StyleBundle("~/Content/datatables")
                 .Include("~/Content/dataTables.bootstrap.css", new CssRewriteUrlTransformWrapper()));
@@ -48,7 +48,7 @@ namespace RussellGroup.Pims.Website
             bundles.Add(new StyleBundle("~/Content/report")
                 .Include("~/Content/report.css", new CssRewriteUrlTransformWrapper()));
 
-            BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = false;
         }
 
         public class CssRewriteUrlTransformWrapper : IItemTransform

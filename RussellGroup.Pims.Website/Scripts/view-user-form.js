@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     $('#roles-table').dataTable({
-        "order": [[1, "asc"]],
+        "order": [[2, "asc"]],
         "processing": false,
         "stateSave": false,
         "lengthChange": false,
