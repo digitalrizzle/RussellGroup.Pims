@@ -25,26 +25,47 @@ namespace RussellGroup.Pims.Website.Controllers
             _repository = repository;
         }
 
-        // plant status chart data
-        public JsonResult GetPlantData()
+        // filtered plant status chart data
+        public JsonResult GetFilteredPlantData()
         {
             var plants = _repository.Plants;
 
             var unknown = plants.Count(f => f.StatusId == Status.Unknown);
             var available = plants.Count(f => f.StatusId == Status.Available);
             var checkedout = plants.Count(f => f.StatusId == Status.CheckedOut);
-            var stolen = plants.Count(f => f.StatusId == Status.Stolen);
             var underRepair = plants.Count(f => f.StatusId == Status.UnderRepair);
+
+            var data = new[]
+            {
+                new { key = available + " available", value = available },
+                new { key = checkedout + " checked out", value = checkedout },
+                new { key = unknown + " unknown", value = unknown },
+                new { key = underRepair + " under repair", value = underRepair },
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        // plant status chart data
+        public JsonResult GetAllPlantData()
+        {
+            var plants = _repository.Plants;
+
+            var unknown = plants.Count(f => f.StatusId == Status.Unknown);
+            var available = plants.Count(f => f.StatusId == Status.Available);
+            var checkedout = plants.Count(f => f.StatusId == Status.CheckedOut);
+            var underRepair = plants.Count(f => f.StatusId == Status.UnderRepair);
+            var stolen = plants.Count(f => f.StatusId == Status.Stolen);
             var writtenOff = plants.Count(f => f.StatusId == Status.WrittenOff);
 
             var data = new[]
             {
-                new { key = "available", value = available },
-                new { key = "checked out", value = checkedout },
-                new { key = "unknown", value = unknown },
-                new { key = "stolen", value = stolen },
-                new { key = "under repair", value = underRepair },
-                new { key = "written off", value = writtenOff },
+                new { key = available + " available", value = available },
+                new { key = checkedout + " checked out", value = checkedout },
+                new { key = unknown + " unknown", value = unknown },
+                new { key = underRepair + " under repair", value = underRepair },
+                new { key = stolen + " stolen", value = stolen },
+                new { key = writtenOff + " written off", value = writtenOff }
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
@@ -65,11 +86,11 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var data = new[]
             {
-                new { key = "excellent", value = excellent },
-                new { key = "good", value = good },
-                new { key = "fair", value = fair },
-                new { key = "poor", value = poor },
-                new { key = "unknown", value = unknown },
+                new { key = excellent + " excellent", value = excellent },
+                new { key = good + " good", value = good },
+                new { key = fair + " fair", value = fair },
+                new { key = poor + " poor", value = poor },
+                new { key = unknown + " unknown", value = unknown }
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);

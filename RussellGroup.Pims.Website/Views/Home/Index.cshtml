@@ -4,20 +4,30 @@
 }
 
 <div style="margin-top: 50px">
-    <h2>Plant Status</h2>
-    <div class="processing-plant">
+    <h3>Active Plant Status</h3>
+    <p class="processing-filtered-plant">
         Gathering data for the chart...
-    </div>
-    <div class="processed-plant">
-        <div id="pieChart-plant"></div>
+    </p>
+    <div class="processed-filtered-plant">
+        <div id="pieChart-filtered-plant"></div>
     </div>
 </div>
 <hr />
 <div>
-    <h2>Plant Condition</h2>
-    <div class="processing-condition">
+    <h3>Full Plant Status</h3>
+    <p class="processing-all-plant">
         Gathering data for the chart...
+    </p>
+    <div class="processed-all-plant">
+        <div id="pieChart-all-plant"></div>
     </div>
+</div>
+<hr />
+<div>
+    <h3>Plant Condition</h3>
+    <p class="processing-condition">
+        Gathering data for the chart...
+    </p>
     <div class="processed-condition">
         <div id="pieChart-condition"></div>
     </div>
@@ -33,7 +43,8 @@
         // Here is some more information about charts
         // https://google-developers.appspot.com/chart/interactive/docs/gallery/piechart
 
-        $('.processed-plant').hide();
+        $('.processed-all-plant').hide();
+        $('.processed-filtered-plant').hide();
         $('.processed-condition').hide();
 
         // Load the Visualization API and the chart package
@@ -43,15 +54,14 @@
         google.setOnLoadCallback(drawCharts);
 
         function drawCharts() {
-            drawPlantChart();
+            drawFilteredPlantChart();
+            drawAllPlantChart();
             drawConditionChart();
         }
 
-        // Callback that creates and populates a data table,
-        // instantiates the pie chart, passes in the data and draws it
-        function drawPlantChart() {
+        function drawFilteredPlantChart() {
             var jsonText = $.ajax({
-                url: '@Url.Content("~/Report/GetPlantData")',
+                url: '@Url.Content("~/Report/GetFilteredPlantData")',
                 dataType: "json",
                 nocache: true,
                 async: false
@@ -75,17 +85,58 @@
                 'width': 900,
                 'height': 300,
                 'chartArea': { left: 20, top: 0, width: '100%', height: '100%' },
-                'colors': ['#0ea31b', '#1e90ff', '#dc0000', '#ffd700', '#808080', '#000000'],
+                'colors': ['#0ea31b', '#1e90ff', '#dc0000', '#808080'],
                 'sliceVisibilityThreshold': 0,
                 'tooltip': { text: 'percentage' }
             };
 
             // Instantiate and draw the chart, passing in some options
-            var chart = new google.visualization.PieChart(document.getElementById('pieChart-plant'));
+            var chart = new google.visualization.PieChart(document.getElementById('pieChart-filtered-plant'));
             chart.draw(data, options);
 
-            $('.processing-plant').hide();
-            $('.processed-plant').show();
+            $('.processing-filtered-plant').hide();
+            $('.processed-filtered-plant').show();
+        }
+
+        // Callback that creates and populates a data table,
+        // instantiates the pie chart, passes in the data and draws it
+        function drawAllPlantChart() {
+            var jsonText = $.ajax({
+                url: '@Url.Content("~/Report/GetAllPlantData")',
+                dataType: "json",
+                nocache: true,
+                async: false
+            }).responseText;
+
+            jsonData = $.parseJSON(jsonText);
+
+            // Create the data table
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Status');
+            data.addColumn('number', 'Value');
+
+            //for (item in jsonData) {
+            jsonData.map(function (item) {
+                data.addRows([[item.key, item.value]]);
+            });
+
+            // Set chart options
+            var options = {
+                'is3D': true,
+                'width': 900,
+                'height': 300,
+                'chartArea': { left: 20, top: 0, width: '100%', height: '100%' },
+                'colors': ['#0ea31b', '#1e90ff', '#dc0000', '#808080', '#ffd700', '#000000'],
+                'sliceVisibilityThreshold': 0,
+                'tooltip': { text: 'percentage' }
+            };
+
+            // Instantiate and draw the chart, passing in some options
+            var chart = new google.visualization.PieChart(document.getElementById('pieChart-all-plant'));
+            chart.draw(data, options);
+
+            $('.processing-all-plant').hide();
+            $('.processed-all-plant').show();
         }
 
         function drawConditionChart() {
