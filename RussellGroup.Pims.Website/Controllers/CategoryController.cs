@@ -11,6 +11,7 @@ using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
 using DataTables.Mvc;
 using LinqKit;
+using System.Data.Entity.SqlServer;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -48,7 +49,9 @@ namespace RussellGroup.Pims.Website.Controllers
                 ? all
                 : all.Where(f =>
                     f.Name.Contains(hint) ||
-                    f.Type.Contains(hint));
+                    f.Type.Contains(hint) ||
+                    SqlFunctions.StringConvert((double)f.Plants.Count).Contains(hint) ||
+                    SqlFunctions.StringConvert((double)f.Inventories.Count).Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
@@ -68,6 +71,8 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     c.Name,
                     c.Type,
+                    PlantQuantity = c.Plants.Count,
+                    InventoryQuantity = c.Inventories.Count,
                     CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEditCategories))
                 });
 

@@ -24,6 +24,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.Type)
             </th>
+            <th>plant quantity</th>
+            <th>inventory quantity</th>
             <th></th>
         </tr>
     </thead>
@@ -43,6 +45,8 @@
                 { "data": "Id", "visible": false },
                 { "data": "Name" },
                 { "data": "Type" },
+                { "data": "PlantQuantity", "name": "Plants.Count", "className": "text-center" },
+                { "data": "InventoryQuantity", "name": "Inventories.Count", "className": "text-center" },
                 { "data": "CrudLinks", "sortable": false, "className": "text-center" }
             ]
         });

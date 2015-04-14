@@ -96,6 +96,23 @@ namespace RussellGroup.Pims.Website.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        // plant category chart data
+        public JsonResult GetPlantCategoryData()
+        {
+            var data = _repository
+                .Categories
+                .Where(f => f.Type.Equals("plant", StringComparison.OrdinalIgnoreCase))
+                .OrderByDescending(f => f.Plants.Count)
+                .ToList()
+                .Select(f => new
+                {
+                    key = string.Format("{0} {1}", f.Plants.Count, f.Name),
+                    value = f.Plants.Count
+                });
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         // GET: /Report/Jobs
         public ActionResult Jobs()
         {
