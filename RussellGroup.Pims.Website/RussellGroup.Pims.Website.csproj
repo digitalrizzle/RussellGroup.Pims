@@ -262,6 +262,11 @@
     <Content Include="Content\DataTables\swf\copy_csv_xls_pdf.swf" />
     <Content Include="Content\dominion_constructors.png" />
     <Content Include="Content\report.css" />
+    <Content Include="Content\sort_asc.png" />
+    <Content Include="Content\sort_asc_disabled.png" />
+    <Content Include="Content\sort_both.png" />
+    <Content Include="Content\sort_desc.png" />
+    <Content Include="Content\sort_desc_disabled.png" />
     <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

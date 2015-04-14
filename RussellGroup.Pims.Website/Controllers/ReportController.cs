@@ -40,7 +40,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 new { key = available + " available", value = available },
                 new { key = checkedout + " checked out", value = checkedout },
                 new { key = unknown + " unknown", value = unknown },
-                new { key = underRepair + " under repair", value = underRepair },
+                new { key = underRepair + " under repair", value = underRepair }
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
