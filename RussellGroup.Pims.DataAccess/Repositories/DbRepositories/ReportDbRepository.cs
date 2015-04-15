@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RussellGroup.Pims.DataAccess.Repositories
@@ -230,7 +229,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return model;
         }
 
-        public byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportModel model)
+        public byte[] GetSummaryOfHireChargesCsv(SummaryOfHireChargesReportModel model)
         {
             using (var memory = new MemoryStream())
             {

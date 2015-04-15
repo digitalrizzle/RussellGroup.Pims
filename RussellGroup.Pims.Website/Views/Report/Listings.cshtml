@@ -1,0 +1,14 @@
+﻿@{
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+<hr />
+<div class="alert alert-info">
+    <p>These reports will download as CSV files which can be opened using an application such as Microsoft Excel.</p>
+</div>
+
+<p><a href="@Url.Action("DownloadJobCsv")">Jobs</a></p>
+<p><a href="@Url.Action("DownloadPlantCsv")">Plant</a></p>
+<p><a href="@Url.Action("DownloadInventoryCsv")">Inventory</a></p>
+<p><a href="@Url.Action("DownloadCategoryCsv")">Categories</a></p>

@@ -506,6 +506,7 @@
     <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\Report\Listings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">
