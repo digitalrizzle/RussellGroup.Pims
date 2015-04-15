@@ -22,6 +22,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         InventoryHireChargesInJobReportModel GetInventoryHireCharges(Job job, DateTime whenStarted, DateTime whenEnded);
 
         Task<SummaryOfHireChargesReportModel> GetSummaryOfHireChargesAsync(DateTime whenStarted, DateTime whenEnded);
-        byte[] SummaryOfHireChargesCsv(SummaryOfHireChargesReportModel model);
+
+        byte[] GetSummaryOfHireChargesCsv(SummaryOfHireChargesReportModel model);
     }
 }

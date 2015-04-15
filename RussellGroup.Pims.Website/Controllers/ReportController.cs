@@ -1,17 +1,14 @@
 ﻿using DataTables.Mvc;
+using LinqKit;
+using RussellGroup.Pims.DataAccess;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
-using LinqKit;
-using RussellGroup.Pims.Website.Models;
-using RussellGroup.Pims.DataAccess.ReportModels;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -289,7 +286,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var model = await _repository.GetSummaryOfHireChargesAsync(whenStarted, whenEnded);
 
-            return File(_repository.SummaryOfHireChargesCsv(model), "text/csv", fileName);
+            return File(_repository.GetSummaryOfHireChargesCsv(model), "text/csv", fileName);
         }
 
         public ActionResult YardStocktake()
@@ -311,6 +308,109 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             return View("YardInventoryStocktake", await _repository.Inventories.ToListAsync());
         }
+
+        #region Listings
+
+        public ActionResult Listings()
+        {
+            return View("Listings");
+        }
+
+        public FileContentResult DownloadJobCsv()
+        {
+            var fileName = string.Format("Jobs-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+            var data = _repository
+                .Jobs
+                .OrderBy(f => f.XJobId)
+                .Select(f => new
+                {
+                    ID = f.XJobId,
+                    f.Description,
+                    f.WhenStarted,
+                    f.WhenEnded,
+                    f.ProjectManager,
+                    f.QuantitySurveyor,
+                    f.Comment
+                })
+                .ToCsv();
+
+            return File(data, "text/csv", fileName);
+        }
+
+        public FileContentResult DownloadPlantCsv()
+        {
+            var fileName = string.Format("Plant-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+            var data = _repository
+                .Plants
+                .OrderBy(f => f.XPlantNewId)
+                .Select(f => new
+                {
+                    ID = f.XPlantId,
+                    NewID = f.XPlantNewId,
+                    f.Description,
+                    f.WhenPurchased,
+                    f.WhenDisused,
+                    DefaultRate = f.Rate,
+                    f.Cost,
+                    f.Serial,
+                    f.FixedAssetCode,
+                    IsElectrical = f.IsElectrical ? "Yes" : "No",
+                    IsTool = f.IsTool ? "Yes" : "No",
+                    Category = f.Category.Name,
+                    CategoryType = f.Category.Type,
+                    Status = f.Status.Name,
+                    Condition = f.Condition.Name,
+                    f.Comment
+                })
+                .ToCsv();
+
+            return File(data, "text/csv", fileName);
+        }
+
+        public FileContentResult DownloadInventoryCsv()
+        {
+            var fileName = string.Format("Inventory-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+            var data = _repository
+                .Inventories
+                .OrderBy(f => f.XInventoryId)
+                .Select(f => new
+                {
+                    ID = f.XInventoryId,
+                    f.Description,
+                    f.WhenPurchased,
+                    f.WhenDisused,
+                    IsDisused = f.WhenDisused.HasValue ? "Yes" : "No",
+                    f.Rate,
+                    f.Cost,
+                    YardQuantity = f.Quantity,
+                    Category = f.Category.Name
+                })
+                .ToCsv();
+
+            return File(data, "text/csv", fileName);
+        }
+
+        public FileContentResult DownloadCategoryCsv()
+        {
+            var fileName = string.Format("Category-{0}.csv", DateTime.Now.ToString("yyyyMMddHHmmss"));
+
+            var data = _repository
+                .Categories
+                .OrderBy(f => f.Name)
+                .Select(f => new
+                {
+                    f.Name,
+                    f.Type
+                })
+                .ToCsv();
+
+            return File(data, "text/csv", fileName);
+        }
+
+        #endregion
 
         private async Task<ActionResult> JobView(string viewName, int? id)
         {
