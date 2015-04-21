@@ -1,0 +1,51 @@
+﻿<h3 id="how-it-works">3. How it works</h3>
+<p>Here's how the system works:</p>
+<ul>
+    <li>
+        The first thing to do is to make a job. It is this that all hire relating
+        to a particular job can be hired out against. A job will have a description,
+        when the job starts, its project manager and quantity surveyor.
+    </li>
+    <li>
+        As plant is hired out, a record of this is captured against its job. This record of
+        hire is called a transaction and it has a docket number, the plant ID, and when it was
+        hired out. This process of hiring out a plant item is called "checking out". The plant
+        item is no longer available to be checked out by other jobs because it is considered to
+        be in use.
+    </li>
+    <li>
+        Similarly to plant, inventory can also be hired out and this is recorded as well.
+        However, unlike a plant item which has a unique ID there may be several of the same
+        inventory item checked-out at one time. This quantity is recorded as part of the transaction
+        along with a docket number (which could be the same as the plant hired out) and when it
+        was hired out.
+    </li>
+    <li>
+        As plant and inventory are returned to the yard, these returns are also recorded as
+        transactions. This process is referred to as "checking in". Again, a new docket number
+        is issued along with when the plant and inventory was returned. The return date is important
+        because it not only tells the system that the items have been returned, it also makes them
+        available again for other jobs and determines the period of hire for billing.
+    </li>
+    <li>
+        At any point in time a report can be made of plant and inventory that is currently hired
+        or has been hired. This report can be used for billing.
+    </li>
+    <li>
+        When the job has finished, and all plant and inventory has been returned (or "checked in")
+        a date of completion is recorded against the job. Plant or inventory can no longer be
+        checked in or check out against this job because it has finished.
+    </li>
+</ul>
+<p>So to summarise:</p>
+<ol>
+    <li>Make a job.</li>
+    <li>Checkout plant or inventory against the job.</li>
+    <li>Checkin plant or inventory as they come back to the yard.</li>
+    <li>Repeat checking in and out plant and inventory for the duration of the job as needed.</li>
+    <li>Complete the job by setting the completion date.</li>
+</ol>
+<p>
+    That's it! All the data is captured during these steps and so reports can be generated to bill
+    the customer.
+</p>

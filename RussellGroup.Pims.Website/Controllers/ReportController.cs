@@ -99,12 +99,19 @@ namespace RussellGroup.Pims.Website.Controllers
             var data = _repository
                 .Categories
                 .Where(f => f.Type.Equals("plant", StringComparison.OrdinalIgnoreCase))
-                .OrderByDescending(f => f.Plants.Count)
+                .OrderByDescending(f => f.Plants.Count(p =>
+                    p.StatusId == Status.Available ||
+                    p.StatusId == Status.CheckedOut))
                 .ToList()
                 .Select(f => new
                 {
-                    key = string.Format("{0} {1}", f.Plants.Count, f.Name),
-                    value = f.Plants.Count
+                    key = string.Format("{0} {1}", f.Plants.Count(p =>
+                        p.StatusId == Status.Available ||
+                        p.StatusId == Status.CheckedOut),
+                    f.Name),
+                    value = f.Plants.Count(p =>
+                        p.StatusId == Status.Available ||
+                        p.StatusId == Status.CheckedOut)
                 });
 
             return Json(data, JsonRequestBehavior.AllowGet);
@@ -187,7 +194,7 @@ namespace RussellGroup.Pims.Website.Controllers
                             string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryInJob", new { id = c.Id }), "Inventory&nbsp;#56")
 
                             // this report seems redundant
-                            //string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake&nbsp;#70")
+                        //string.Format("<a href=\"{0}\" target=\"_blank\">{1}</a>", Url.Action("InventoryStocktakeInJob", new { id = c.Id }), "Stocktake&nbsp;#70")
                         )
                 });
 

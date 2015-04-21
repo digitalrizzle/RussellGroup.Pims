@@ -1,0 +1,95 @@
+﻿<h3 id="plant-status-and-condition">5. Plant status and condition</h3>
+<p>
+    Every plant in PIMS has a status to essentially indicate whether that plant is available to be hired.
+    There are several status that the state of a plant may be in, most of which render that plant unable
+    to be hired.
+</p>
+<p>
+    The status of a plant can be changed by clicking <strong>Plant</strong> in the main menu, searching
+    for your plant, and then clicking <strong>Edit</strong>. The ability to change the status may be
+    disabled if the plant is already checked out. In this case, the plant must first be checked in and
+    then the status can be changed.
+</p>
+<p>
+    Here are the plant status types and what they indicate:
+</p>
+<table class="table display table-striped order-column table-responsive table-help-guide">
+    <thead>
+        <tr>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Can hire?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="help-guide-term">Unknown</td>
+            <td>The status of the plant is unknown.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Available</td>
+            <td>The plant is available to be checked out.</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Checked out</td>
+            <td>The plant is already checked out.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Missing</td>
+            <td>The plant was not returned to the yard when it ought to have been.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Under repair</td>
+            <td>The plant is being repaired.</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Written off</td>
+            <td>The plant is not fit for use and is beyond repair.</td>
+            <td>No</td>
+        </tr>
+    </tbody>
+</table>
+<p>
+    Along with the plant status is its condition which indicates how well a plant is in
+    working order. The condition is only an indicator and does not affect whether a plant can
+    be checked out or not. Here are the conditions:
+</p>
+<table class="table display table-striped order-column table-responsive table-help-guide">
+    <thead>
+        <tr>
+            <th>Condition</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="help-guide-term">Unknown</td>
+            <td>The plant condition is unknown.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Poor</td>
+            <td>The plant is in a poor condition and ought to be repaired.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Fair</td>
+            <td>The plant is in a fair condition and may need repair soon.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Good</td>
+            <td>The plant is in good working order.</td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Excellent</td>
+            <td>The plant is in excellent working order.</td>
+        </tr>
+    </tbody>
+</table>
+<div class="bs-callout bs-callout-info">
+    A summary of the status and condition of plant can be viewed as a pie chart
+    by clicking on <strong>PIMS</strong> in the main menu.
+</div>
