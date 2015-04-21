@@ -1,0 +1,127 @@
+﻿<h3 id="adding-editing-and-deleting-inventory">8. Adding, editing and deleting inventory</h3>
+<p>
+    In order for inventory to be available for hire in the system, a record of it all must be stored
+    somewhere. For each invenotry item the original purchase price of it, the rate it which it is hired
+    out and the category it falls under is all recorded in the system.
+</p>
+<h4 id="add-new-inventory">8.1. Add new inventory</h4>
+<p>Here's a working example of how to add new inventory:</p>
+<ol>
+    <li>On the main menu, click <strong>Inventory</strong>.</li>
+    <li>Just below the main menu, click <strong>Create New</strong>.</li>
+    <li>
+        Fill in each of the blank boxes next to each label. Here's what each of them mean:
+        <table class="table display table-striped order-column table-responsive table-help-guide">
+            <thead>
+                <tr>
+                    <th>Label</th>
+                    <th>Example</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="help-guide-term">id</td>
+                    <td>322570</td>
+                    <td>
+                        This is an identifier for the inventory; a short code. This isn't automatically
+                        assigned, so you'll need to come up with the ID yourself. It should be unique for
+                        the inventory.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">description</td>
+                    <td>Trio Panel Shutters TR 270 x 240 </td>
+                    <td>
+                        Use a relatively short name of the inventory that best describes what it is.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">when purchased</td>
+                    <td>1/06/2010</td>
+                    <td>
+                        The date when the inventory was initally purchased.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">when disused</td>
+                    <td></td>
+                    <td>
+                        The date when the inventory was retired from use. Leave this empty if the inventory
+                        is still in use otherwise it will not show in the list of available items when
+                        checking out that inventory to a job.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">rate</td>
+                    <td>6.20</td>
+                    <td>
+                        The  charge out rate for hire. This will affect all inventory, including those that
+                        have already been checked out and billed.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">cost</td>
+                    <td>4080.72</td>
+                    <td>
+                        The purchase price of the inventory.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">yard quantity</td>
+                    <td>200</td>
+                    <td>
+                        The number of items for this inventory currently in the yard. This value will
+                        automatically change as inventory of this type are checked in and out.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">category</td>
+                    <td>Trio Steel Panels</td>
+                    <td>
+                        The category that the inventory falls under.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </li>
+    <li>Click the <strong>Create</strong> button to create the new inventory.</li>
+    <li>That's it! We just added new inventory and made it available to be hired.</li>
+</ol>
+<div class="bs-callout bs-callout-warning">
+    Choose carefully the category that the inventory falls under because it will affect
+    how it is shown of the reports for charging the customer.
+</div>
+<h4 id="making-changes-to-inventory">8.2. Making changes to inventory</h4>
+<p>Here's how to edit inventory:</p>
+<ol>
+    <li>On the main menu, click <strong>Inventory</strong>.</li>
+    <li>
+        In the inventory listing locate the line of your inventory to edit and click on the
+        <strong>Edit</strong> link. You may want to use the search filter to help find your
+        inventory. You can also get to the edit page via <strong>Details</strong>.
+    </li>
+    <li>
+        Make changes to the inventory as appropriate.
+    </li>
+    <li>Click the <strong>Save</strong> button to save the editions.</li>
+</ol>
+<h4 id="deleting-a-inventory">8.3. Deleting inventory</h4>
+<p>Here's how to delete inventory:</p>
+<ol>
+    <li>On the main menu, click <strong>Inventory</strong>.</li>
+    <li>
+        In the plant listing locate the line of your inventory to delete and click on the
+        <strong>Delete</strong> link. You may want to use the search filter to help find your
+        category. You can also get to the delete page via <strong>Details</strong>.
+    </li>
+    <li>If permitted, click the <strong>Delete</strong> button to delete the inventory.</li>
+</ol>
+<div class="bs-callout bs-callout-warning">
+    You may not be able to delete the inventory if it is in use by any jobs. It may be that it is
+    checked in and yet it still cannot be deleted. This is because the inventory is required for
+    billing. All transactions of this inventory of every job will need to be deleted before the
+    actual inventory can be removed from the system permanently.<br />
+    <br />
+    Instead of deleting the inventory item, <strong>it is recommended to set its</strong> when disused <strong>date</strong>.
+</div>

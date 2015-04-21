@@ -507,6 +507,16 @@
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Report\Listings.cshtml" />
+    <Content Include="Views\Home\_01_what_is_pims.cshtml" />
+    <Content Include="Views\Home\_02_terms.cshtml" />
+    <Content Include="Views\Home\_03_how_it_works.cshtml" />
+    <Content Include="Views\Home\_04_a_working_example.cshtml" />
+    <Content Include="Views\Home\_05_plant_status_and_condition.cshtml" />
+    <Content Include="Views\Home\_06_adding_editing_and_deleting_plant.cshtml" />
+    <Content Include="Views\Home\_07_categories.cshtml" />
+    <Content Include="Views\Home\_08_adding_editing_and_deleting_inventory.cshtml" />
+    <Content Include="Views\Home\_09_reports.cshtml" />
+    <Content Include="Views\Home\_10_user_management.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">
