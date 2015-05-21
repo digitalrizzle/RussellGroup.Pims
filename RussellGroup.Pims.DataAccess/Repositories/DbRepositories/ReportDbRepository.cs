@@ -105,6 +105,9 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 var hires = inventory
                     .InventoryHires
                     .Where(f => f.Job == job)
+                    .Where(f =>
+                        ((f is InventoryHireCheckout) && (f as InventoryHireCheckout).WhenStarted < whenEnded.AddDays(1) ||
+                        ((f is InventoryHireCheckin) && (f as InventoryHireCheckin).WhenEnded >= whenStarted)))
                     .ToList();
 
                 foreach (var hire in hires)
@@ -188,7 +191,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             var hires = job
                 .PlantHires
                 .Where(f =>
-                    (f.WhenStarted < whenEnded.AddDays(1) && f.WhenEnded >= whenStarted) ||
+                    (f.WhenStarted < whenEnded.AddDays(1) && f.WhenEnded >= whenStarted && f.WhenEnded < whenEnded.AddDays(1)) ||
                     (f.WhenStarted < whenEnded.AddDays(1) && !f.WhenEnded.HasValue))
                 .ToList();
 

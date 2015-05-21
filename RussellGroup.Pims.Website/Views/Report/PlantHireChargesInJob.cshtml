@@ -26,7 +26,7 @@
 
 @if (!Model.PlantHires
     .Any(f =>
-        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
+        (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted && f.WhenEnded < ViewBag.WhenEnded.AddDays(1)) ||
         (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue)))
 {
     <p>There is no plant hire for this job in the given period.</p>
@@ -73,7 +73,7 @@ else
         <tbody>
             @foreach (var category in Model.PlantHires
                 .Where(f =>
-                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) ||
+                    (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted && f.WhenEnded < ViewBag.WhenEnded.AddDays(1)) ||
                     (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
                 .Select(f => f.Plant.Category)
                 .Distinct()
@@ -87,7 +87,8 @@ else
                 </tr>
                 foreach (var item in Model.PlantHires
                     .Where(f => f.Plant.Category == category)
-                    .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted) || (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
+                    .Where(f => (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && f.WhenEnded >= ViewBag.WhenStarted && f.WhenEnded < ViewBag.WhenEnded.AddDays(1)) ||
+                                (f.WhenStarted < ViewBag.WhenEnded.AddDays(1) && !f.WhenEnded.HasValue))
                     .OrderBy(f => f.WhenStarted))
                 {
                     <tr>
@@ -109,17 +110,18 @@ else
                             @Html.DisplayFor(model => item.ReturnDocket)
                         </td>
                         <td>
-                            @Html.DisplayFor(model => item.WhenStarted)
+                            @{
+                                var whenStarted = ViewBag.WhenStarted > item.WhenStarted
+                                    ? ViewBag.WhenStarted
+                                    : item.WhenStarted;
+                            }
+                            @Html.Encode(whenStarted.ToShortDateString())
                         </td>
                         <td>
                             @Html.DisplayFor(model => item.WhenEnded)
                         </td>
                         <td class="text-right">
-                            @{
-                                var whenStarted = ViewBag.WhenStarted > item.WhenStarted
-                                    ? ViewBag.WhenStarted
-                                    : item.WhenStarted;
-                                    
+                            @{                                    
                                 days = item.WhenEnded.HasValue
                                     ? item.WhenEnded.Value.AddDays(1).Subtract(whenStarted).Days
                                     : ViewBag.WhenEnded.AddDays(1).Subtract(whenStarted).Days;
