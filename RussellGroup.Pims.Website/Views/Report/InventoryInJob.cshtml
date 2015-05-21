@@ -58,9 +58,6 @@ else
 
         <tbody>
             @foreach (var categoryType in Model.InventoryHires
-                .Where(f =>
-                    ((f is InventoryHireCheckout) && (f as InventoryHireCheckout).WhenStarted < ViewBag.WhenEnded.AddDays(1) ||
-                    ((f is InventoryHireCheckin) && (f as InventoryHireCheckin).WhenEnded >= ViewBag.WhenStarted)))
                 .Select(f => f.Inventory.Category.Type)
                 .Distinct()
                 .OrderBy(f => f)
