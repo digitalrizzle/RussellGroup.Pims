@@ -87,8 +87,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             foreach (var inventory in job
                 .InventoryHires
                 .Where(f =>
-                    ((f is InventoryHireCheckout) && (f as InventoryHireCheckout).WhenStarted < whenEnded.AddDays(1) ||
-                    ((f is InventoryHireCheckin) && (f as InventoryHireCheckin).WhenEnded >= whenStarted)))
+                    ((f is InventoryHireCheckout) && (f as InventoryHireCheckout).WhenStarted <= whenEnded) ||
+                    ((f is InventoryHireCheckin) && (f as InventoryHireCheckin).WhenEnded < whenEnded.AddDays(1)))
                 .Select(f => f.Inventory)
                 .Distinct()
                 .OrderBy(f => f.XInventoryId)
@@ -106,8 +106,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     .InventoryHires
                     .Where(f => f.Job == job)
                     .Where(f =>
-                        ((f is InventoryHireCheckout) && (f as InventoryHireCheckout).WhenStarted < whenEnded.AddDays(1) ||
-                        ((f is InventoryHireCheckin) && (f as InventoryHireCheckin).WhenEnded >= whenStarted)))
+                        ((f is InventoryHireCheckout) && (f as InventoryHireCheckout).WhenStarted <= whenEnded) ||
+                        ((f is InventoryHireCheckin) && (f as InventoryHireCheckin).WhenEnded < whenEnded.AddDays(1)))
                     .ToList();
 
                 foreach (var hire in hires)
@@ -133,7 +133,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                         var checkin = hire as InventoryHireCheckin;
 
                         openingDate = checkin.WhenEnded;
-                        days = whenEnded.AddDays(1).Subtract(checkin.WhenEnded).Days;
+                        days = whenEnded.Subtract(checkin.WhenEnded).Days;
                     }
 
                     quantity = hire.Quantity.GetValueOrDefault() * (hire is InventoryHireCheckout ? 1 : -1);
