@@ -29,7 +29,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return await Db.Set<T>().FindAsync(keyValues);
         }
 
-        public IQueryable<T> GetAll()
+        public virtual IQueryable<T> GetAll()
         {
             return Db.Set<T>();
         }

@@ -213,13 +213,20 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             // JobId or InventoryId isn't included as we do not want to update this
-            if (TryUpdateModel<InventoryHire>(hire, "Docket,WhenStarted,WhenEnded,Quantity,Comment".Split(',')))
+            if (hire is InventoryHireCheckout)
             {
-                if (ModelState.IsValid)
-                {
-                    await _repository.UpdateAsync(hire);
-                    return RedirectToAction("Index", new { id = hire.JobId });
-                }
+                UpdateModel<InventoryHireCheckout>(hire as InventoryHireCheckout, "Docket,WhenStarted,Quantity,Comment".Split(','));
+            }
+
+            if (hire is InventoryHireCheckin)
+            {
+                UpdateModel<InventoryHireCheckin>(hire as InventoryHireCheckin, "Docket,WhenEnded,Quantity,Comment".Split(','));
+            }
+
+            if (ModelState.IsValid)
+            {
+                await _repository.UpdateAsync(hire);
+                return RedirectToAction("Index", new { id = hire.JobId });
             }
 
             return View("Edit", hire);

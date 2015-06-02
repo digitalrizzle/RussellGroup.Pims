@@ -18,7 +18,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p class="left" style="float: left"><small>Russell Group &copy; @DateTime.Now.Year</small></p>
+            <p class="left" style="float: left"><small>@Html.GetCopyright()</small></p>
             <p class="text-right">@DateTime.Now</p>
         </footer>
     </div>
