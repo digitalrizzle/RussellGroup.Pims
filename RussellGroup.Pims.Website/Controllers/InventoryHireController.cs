@@ -59,8 +59,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 : all.Where(f =>
                     f.Inventory.XInventoryId.Contains(hint) ||
                     f.Docket.Contains(hint) ||
-                    f is InventoryHireCheckout ? Extensions.LittleEndianDateString.Invoke((f as InventoryHireCheckout).WhenStarted).Contains(hint) : false ||
-                    f is InventoryHireCheckin ? Extensions.LittleEndianDateString.Invoke((f as InventoryHireCheckin).WhenEnded).Contains(hint) : false ||
+                    (f is InventoryHireCheckout ? Extensions.LittleEndianDateString.Invoke((f as InventoryHireCheckout).WhenStarted).Contains(hint) : false ||
+                    f is InventoryHireCheckin ? Extensions.LittleEndianDateString.Invoke((f as InventoryHireCheckin).WhenEnded).Contains(hint) : false) ||
                     SqlFunctions.StringConvert((double)f.Quantity).Contains(hint));
 
             // ordering
