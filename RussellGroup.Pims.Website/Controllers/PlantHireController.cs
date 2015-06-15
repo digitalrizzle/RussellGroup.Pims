@@ -153,6 +153,15 @@ namespace RussellGroup.Pims.Website.Controllers
                 await _repository.AddAsync(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
+
+            var job = await _repository.GetJob(hire.JobId);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
+
+            hire.Job = job;
+
             return View("Create", hire);
         }
 

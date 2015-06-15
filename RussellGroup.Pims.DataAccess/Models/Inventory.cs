@@ -17,9 +17,11 @@ namespace RussellGroup.Pims.DataAccess.Models
         public int CategoryId { get; set; }
 
         [Obsolete]
+        [Required]
         [Display(Name = "id")]
         public string XInventoryId { get; set; }
 
+        [Required]
         [Display(Name = "description")]
         public string Description { get; set; }
 

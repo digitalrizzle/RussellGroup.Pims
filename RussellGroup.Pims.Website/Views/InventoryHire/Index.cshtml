@@ -13,8 +13,8 @@
 
 @if (User.IsAuthorized(Role.CanEdit))
 {
-    <p>@Html.ActionLink("Create New Checkout", "Create", new { id = Model.Id, type = "checkout" })</p>
-    <p>@Html.ActionLink("Create New Checkin", "Create", new { id = Model.Id, type = "checkin" })</p>
+    <p>@Html.ActionLink("Create New Checkout", "CreateCheckout", new { id = Model.Id })</p>
+    <p>@Html.ActionLink("Create New Checkin", "CreateCheckin", new { id = Model.Id })</p>
 }
 
 <table class="table display table-striped table-hover order-column table-responsive" width="100%">

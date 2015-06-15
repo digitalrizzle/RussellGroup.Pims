@@ -45,7 +45,7 @@ namespace RussellGroup.Pims.DataAccess.Models
     public class InventoryHireCheckout : InventoryHire
     {
         [Required]
-        [Display(Name = "started")]
+        [Display(Name = "when started")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime WhenStarted { get; set; }
@@ -53,7 +53,7 @@ namespace RussellGroup.Pims.DataAccess.Models
 
     public class InventoryHireCheckin : InventoryHire
     {
-        [Display(Name = "ended")]
+        [Display(Name = "when ended")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime WhenEnded { get; set; }

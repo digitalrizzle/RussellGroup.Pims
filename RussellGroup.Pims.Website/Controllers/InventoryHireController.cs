@@ -38,8 +38,9 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            return View(job);
+            return View("Index", job);
         }
+
         // https://github.com/ALMMa/datatables.mvc
         public JsonResult GetDataTableResult(int? id, [ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
         {
@@ -102,12 +103,12 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
-            return View(hire);
+            return View("Details", hire);
         }
 
-        // GET: /InventoryHire/Create/5
+        // GET: /InventoryHire/CreateCheckout/5
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create(int? id, string type)
+        public async Task<ActionResult> CreateCheckout(int? id)
         {
             if (id == null)
             {
@@ -119,31 +120,14 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            InventoryHire hire;
-
-            switch (type)
+            var hire = new InventoryHireCheckout()
             {
-                case "checkout":
-                    hire = new InventoryHireCheckout()
-                    {
-                        Job = job,
-                        JobId = job.Id,
-                        WhenStarted = DateTime.Now
-                    };
-                    return View(hire);
+                Job = job,
+                JobId = job.Id,
+                WhenStarted = DateTime.Now
+            };
 
-                case "checkin":
-                    hire = new InventoryHireCheckin()
-                    {
-                        Job = job,
-                        JobId = job.Id,
-                        WhenEnded = DateTime.Now
-                    };
-                    return View(hire);
-
-                default:
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            return View("Create", hire);
         }
 
         // POST: /InventoryHire/CreateCheckout
@@ -159,6 +143,39 @@ namespace RussellGroup.Pims.Website.Controllers
                 await _repository.AddAsync(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
+
+            var job = await _repository.GetJob(hire.JobId);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
+
+            hire.Job = job;
+
+            return View("Create", hire);
+        }
+
+        // GET: /InventoryHire/CreateCheckin/5
+        [PimsAuthorize(Role.CanEdit)]
+        public async Task<ActionResult> CreateCheckin(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var job = await _repository.GetJob(id);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
+
+            var hire = new InventoryHireCheckin()
+            {
+                Job = job,
+                JobId = job.Id,
+                WhenEnded = DateTime.Now
+            };
+
             return View("Create", hire);
         }
 
@@ -168,13 +185,22 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> CreateCheckin([Bind(Include = "InventoryId,JobId,Docket,WheEnded,Quantity,Comment")] InventoryHireCheckin hire)
+        public async Task<ActionResult> CreateCheckin([Bind(Include = "InventoryId,JobId,Docket,WhenEnded,Quantity,Comment")] InventoryHireCheckin hire)
         {
             if (ModelState.IsValid)
             {
                 await _repository.AddAsync(hire);
                 return RedirectToAction("Index", new { id = hire.JobId });
             }
+
+            var job = await _repository.GetJob(hire.JobId);
+            if (job == null)
+            {
+                return HttpNotFound();
+            }
+
+            hire.Job = job;
+
             return View("Create", hire);
         }
 
@@ -191,7 +217,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
-            return View(hire);
+            return View("Edit", hire);
         }
 
         // POST: /InventoryHire/Edit/5
@@ -215,12 +241,12 @@ namespace RussellGroup.Pims.Website.Controllers
             // JobId or InventoryId isn't included as we do not want to update this
             if (hire is InventoryHireCheckout)
             {
-                UpdateModel<InventoryHireCheckout>(hire as InventoryHireCheckout, "Docket,WhenStarted,Quantity,Comment".Split(','));
+                TryUpdateModel<InventoryHireCheckout>(hire as InventoryHireCheckout, "Docket,WhenStarted,Quantity,Comment".Split(','));
             }
 
             if (hire is InventoryHireCheckin)
             {
-                UpdateModel<InventoryHireCheckin>(hire as InventoryHireCheckin, "Docket,WhenEnded,Quantity,Comment".Split(','));
+                TryUpdateModel<InventoryHireCheckin>(hire as InventoryHireCheckin, "Docket,WhenEnded,Quantity,Comment".Split(','));
             }
 
             if (ModelState.IsValid)
@@ -245,7 +271,7 @@ namespace RussellGroup.Pims.Website.Controllers
             {
                 return HttpNotFound();
             }
-            return View(hire);
+            return View("Delete", hire);
         }
 
         // POST: /InventoryHire/Delete/5
@@ -270,11 +296,6 @@ namespace RussellGroup.Pims.Website.Controllers
         private new ActionResult View()
         {
             throw new NotSupportedException();
-        }
-
-        private ActionResult View(InventoryHire hire)
-        {
-            return View(null, hire);
         }
 
         private ActionResult View(string viewName, InventoryHire hire)

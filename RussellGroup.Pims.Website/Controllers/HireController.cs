@@ -93,7 +93,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var plants = new List<Plant>();
             var inventoriesAndQuantities = new List<KeyValuePair<Inventory, int?>>();
 
-            if (plantIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkout.");
+            if (plantIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be, at least, either one plant item or one inventory item to checkout.");
 
             foreach (var id in plantIds) plants.Add(_repository.Plants.Single(f => f.Id == id));
             foreach (var pair in inventoryIdsAndQuantities) inventoriesAndQuantities.Add(new KeyValuePair<Inventory, int?>(_repository.Inventories.Single(f => f.Id == pair.Key), pair.Value));
@@ -154,7 +154,7 @@ namespace RussellGroup.Pims.Website.Controllers
             var inventoryIdsAndQuantities = HttpUtility.ParseQueryString(Request.Form["selectedInventoryHire"]).GetIdsAndQuantities("inventory-id-field", "inventory-hire-quantity-field");
 
             if (string.IsNullOrWhiteSpace(transaction.ReturnDocket)) ModelState.AddModelError("ReturnDocket", "A docket number is required.");
-            if (plantHireIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be either one plant item or one inventory item to checkin.");
+            if (plantHireIds.Count() == 0 && inventoryIdsAndQuantities.Count() == 0) ModelState.AddModelError(string.Empty, "There must be, at least, either one plant item or one inventory item to checkin.");
 
             if (ModelState.IsValid)
             {
