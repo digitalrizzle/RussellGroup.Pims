@@ -23,6 +23,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         public int ConditionId { get; set; }
 
         [Obsolete]
+        [Required]
         [Display(Name = "id")]
         public string XPlantId { get; set; }
 
@@ -30,6 +31,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "new id")]
         public string XPlantNewId { get; set; }
 
+        [Required]
         [Display(Name = "description")]
         public string Description { get; set; }
 

@@ -14,7 +14,8 @@
           <mvcSiteMapNode title="Delete Plant Hire" action="Delete" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
         </mvcSiteMapNode>
         <mvcSiteMapNode title="Inventory Hire" controller="InventoryHire" action="Index" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id">
-          <mvcSiteMapNode title="New Inventory Hire" action="Create" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
+          <mvcSiteMapNode title="New Inventory Hire Checkout" action="CreateCheckout" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
+          <mvcSiteMapNode title="New Inventory Hire Checkin" action="CreateCheckin" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
           <mvcSiteMapNode title="Edit Inventory Hire" action="Edit" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
           <mvcSiteMapNode title="Inventory Hire Details" action="Details" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
           <mvcSiteMapNode title="Delete Inventory Hire" action="Delete" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />

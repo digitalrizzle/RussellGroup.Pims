@@ -29,16 +29,18 @@
 
     <div class="form-horizontal">
         <div class="form-group@(ViewData.ModelState.IsValidField("Docket") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.Docket, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
+            @Html.LabelFor(model => model.Docket, new { @class = "control-label col-sm-2" })
+            <div class="col-sm-2">
                 @Html.TextBoxFor(model => model.Docket, new { @class = "form-control" })
             </div>
-            @Html.ValidationMessageFor(model => model.Docket, null, new { @class = "help-block form-control-feedback" })
+            <div class="col-sm-offset-2 col-sm-10">
+                @Html.ValidationMessageFor(model => model.Docket, null, new { @class = "help-block" })
+            </div>
         </div>
 
         <div class="form-group @(ViewData.ModelState.IsValidField("WhenStarted") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.WhenStarted, new { @class = "control-label col-md-2" })
-            <div class="col-md-2">
+            @Html.LabelFor(model => model.WhenStarted, new { @class = "control-label col-sm-2" })
+            <div class="col-sm-3 col-lg-2">
                 <div class="input-group">
                     @Html.TextBoxFor(model => model.WhenStarted, "{0:d/MM/yyyy}", new { @class = "form-control" })
                     <span id="WhenStarted-icon" class="input-group-addon">
@@ -46,31 +48,35 @@
                     </span>
                 </div>
             </div>
-            @Html.ValidationMessageFor(model => model.WhenStarted, null, new { @class = "form-control-feedback" })
+            <div class="col-sm-offset-2 col-sm-10">
+                @Html.ValidationMessageFor(model => model.WhenStarted, null, new { @class = "help-block" })
+            </div>
         </div>
 
         <div class="form-group@(ViewData.ModelState.IsValidField("JobId") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.Job, new { @class = "control-label col-md-2" })
-            <div class="col-md-5">
+            @Html.LabelFor(model => model.Job, new { @class = "control-label col-sm-2" })
+            <div class="col-sm-5">
                 @Html.DropDownListFor(model => model.JobId, ViewBag.Jobs as SelectList, new { @class = "form-control" })
             </div>
-            @Html.ValidationMessageFor(model => model.JobId, null, new { @class = "help-block form-control-feedback" })
+            <div class="col-sm-offset-2 col-sm-10">
+                @Html.ValidationMessageFor(model => model.JobId, null, new { @class = "help-block" })
+            </div>
         </div>
 
         <div class="form-group">
-            @Html.Label("plant hire", new { @class = "control-label col-md-2" })
-            <div id="plant" class="col-md-10"></div>
+            @Html.Label("plant hire", new { @class = "control-label col-sm-2" })
+            <div id="plant" class="col-sm-10"></div>
         </div>
 
         <div class="form-group">
-            @Html.Label("inventory hire", new { @class = "control-label col-md-2" })
-            <div id="inventory" class="col-md-10"></div>
+            @Html.Label("inventory hire", new { @class = "control-label col-sm-2" })
+            <div id="inventory" class="col-sm-10"></div>
         </div>
 
         <hr />
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-sm-offset-2 col-sm-10">
                 <input type="submit" value="Checkout" class="btn btn-primary" />
                 &nbsp;
                 @Html.ActionLink("Cancel", "Index", "Job")
@@ -102,7 +108,7 @@
 
             var div = [
                 '<div class="checkout-item">',
-                    '<div class="input-group col-md-5">',
+                    '<div class="input-group col-sm-5">',
                         '<input type="text" id="plant-field' + ++next + '" name="plant-field' + next + '" class="form-control" autocomplete="off" placeholder="begin typing a plant item..." value="' + description + '" />',
                     '</div>',
                     '<input id="plant-id-field' + next + '" name="plant-id-field' + next + '" type="hidden" value="' + id + '" />',
@@ -134,7 +140,7 @@
             var div = [
                 '<div class="checkout-item">',
                     '<input type="text" id="inventory-quantity-field' + ++next + '" name="inventory-quantity-field' + next + '" value="' + quantity + '" class="form-control" placeholder="quantity" style="width: 80px; margin-right: 5px; float: left" />',
-                    '<div class="input-group col-md-5">',
+                    '<div class="input-group col-sm-5">',
                         '<input type="text" id="inventory-field' + next + '" name="inventory-field' + next + '" class="form-control" autocomplete="off" placeholder="begin typing an inventory item..." value="' + description + '" />',
                     '</div>',
                     '<input id="inventory-id-field' + next + '" name="inventory-id-field' + next + '" type="hidden" value="' + id + '" />',
