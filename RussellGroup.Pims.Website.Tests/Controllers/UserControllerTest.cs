@@ -46,9 +46,9 @@ namespace NZPost.Votext3.Website.Tests.Controllers
 
             var users = new[]
             {
-                GetUser("43b59d67-2096-4fd7-a711-01fb525ae03b", "BRETT-PC\\Brett", "brett.fisher@zoho.com", roles: allRoles),
-                GetUser("ab547f90-7edd-4752-ad1c-48d3c26a400c", "constructors\\alister.kuypers", "", roles: allRoles),
-                GetUser("9a50e2d1-3e6b-49f8-9763-52705a4abebe", "RUSPDB\\PDBDev", "", true, new DateTime(1999, 12, 31), roles: allRoles.Where(f => f.Name == Role.CanView))
+                GetUser("43b59d67-2096-4fd7-a711-01fb525ae03b", "thispc\\elbert", "elbert.ortega@builders.com", roles: allRoles),
+                GetUser("ab547f90-7edd-4752-ad1c-48d3c26a400c", "builders\\aaron.banks", "aaron.banks@builders.com", roles: allRoles),
+                GetUser("9a50e2d1-3e6b-49f8-9763-52705a4abebe", "builders\\dev", "", true, new DateTime(1999, 12, 31), roles: allRoles.Where(f => f.Name == Role.CanView))
             };
 
             return users.AsQueryable();
@@ -184,17 +184,17 @@ namespace NZPost.Votext3.Website.Tests.Controllers
             Assert.AreEqual(3, data.Count());
 
             Assert.AreEqual("43b59d67-2096-4fd7-a711-01fb525ae03b", data[0][0]);
-            Assert.AreEqual("BRETT-PC\\Brett", data[0][1]);
+            Assert.AreEqual("thispc\\elbert", data[0][1]);
             Assert.AreEqual("CanView, CanEdit, CanEditCategories, CanEditUsers", data[0][2]);
             Assert.AreEqual("No", data[0][3]);
 
             Assert.AreEqual("ab547f90-7edd-4752-ad1c-48d3c26a400c", data[1][0]);
-            Assert.AreEqual("constructors\\alister.kuypers", data[1][1]);
+            Assert.AreEqual("builders\\aaron.banks", data[1][1]);
             Assert.AreEqual("CanView, CanEdit, CanEditCategories, CanEditUsers", data[1][2]);
             Assert.AreEqual("No", data[1][3]);
 
             Assert.AreEqual("9a50e2d1-3e6b-49f8-9763-52705a4abebe", data[2][0]);
-            Assert.AreEqual("RUSPDB\\PDBDev", data[2][1]);
+            Assert.AreEqual("builders\\dev", data[2][1]);
             Assert.AreEqual("CanView", data[2][2]);
             Assert.AreEqual("Yes", data[2][3]);
         }

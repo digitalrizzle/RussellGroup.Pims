@@ -1,5 +1,5 @@
-﻿using Moq;
-using Subtext.TestLibrary;
+﻿using Http.TestLibrary;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
