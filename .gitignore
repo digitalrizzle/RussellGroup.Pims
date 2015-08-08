@@ -229,3 +229,6 @@ RussellGroup.Pims.Website/Scripts/_references.js
 RussellGroup.Pims.Website/Web.Debug.config
 RussellGroup.Pims.Website/Web.Release.config
 RussellGroup.Pims.DataAccess/Migrations/seed.txt
+RussellGroup.Pims.Website/App_Data/Pims.mdf
+RussellGroup.Pims.Website/App_Data/Pims_log.ldf
+.vs/config/applicationhost.config
