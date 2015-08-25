@@ -1,15 +1,22 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.Plant
+﻿@model RussellGroup.Pims.Website.Models.PlantViewModel
 
 <h3>@ViewBag.Title</h3>
-<h4>@Model.XPlantId</h4>
-<h5>@Model.Description</h5>
+<h4>@Model.Plant.XPlantId</h4>
+<h5>@Model.Plant.Description</h5>
 
 <hr />
+
+@if (Model.FileViewModel != null)
+{
+    <text>@Html.HiddenFor(model => model.FileViewModel.Id, new { Value = Model.FileViewModel.Id })</text>
+    <text>@Html.HiddenFor(model => model.FileViewModel.Src, new { Value = Model.FileViewModel.Src })</text>
+    <text>@Html.HiddenFor(model => model.FileViewModel.FileName, new { Value = Model.FileViewModel.FileName })</text>
+}
 
 <div>
     @if (@Html.IsAction("Delete"))
     {
-        if (!Model.CanDelete)
+        if (!Model.Plant.CanDelete)
         {
             <div class="alert alert-info">
                 <h4>Cannot delete</h4>
@@ -26,117 +33,125 @@
 
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.XPlantId)
+            @Html.DisplayNameFor(model => model.Plant.XPlantId)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.XPlantId)
+            @Html.DisplayFor(model => model.Plant.XPlantId)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.XPlantNewId)
+            @Html.DisplayNameFor(model => model.Plant.XPlantNewId)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.XPlantNewId)
+            @Html.DisplayFor(model => model.Plant.XPlantNewId)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Description)
+            @Html.DisplayNameFor(model => model.Plant.Description)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Description)
+            @Html.DisplayFor(model => model.Plant.Description)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.WhenPurchased)
+            @Html.DisplayNameFor(model => model.Plant.WhenPurchased)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WhenPurchased)
+            @Html.DisplayFor(model => model.Plant.WhenPurchased)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.WhenDisused)
+            @Html.DisplayNameFor(model => model.Plant.WhenDisused)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.WhenDisused)
+            @Html.DisplayFor(model => model.Plant.WhenDisused)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Rate)
+            @Html.DisplayNameFor(model => model.Plant.Rate)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Rate)
+            @Html.DisplayFor(model => model.Plant.Rate)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Cost)
+            @Html.DisplayNameFor(model => model.Plant.Cost)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Cost)
+            @Html.DisplayFor(model => model.Plant.Cost)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Serial)
+            @Html.DisplayNameFor(model => model.Plant.Serial)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Serial)
+            @Html.DisplayFor(model => model.Plant.Serial)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.FixedAssetCode)
+            @Html.DisplayNameFor(model => model.Plant.FixedAssetCode)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.FixedAssetCode)
+            @Html.DisplayFor(model => model.Plant.FixedAssetCode)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.IsElectrical)
+            @Html.DisplayNameFor(model => model.Plant.IsElectrical)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.IsElectrical)
+            @Html.DisplayFor(model => model.Plant.IsElectrical)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.IsTool)
+            @Html.DisplayNameFor(model => model.Plant.IsTool)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.IsTool)
+            @Html.DisplayFor(model => model.Plant.IsTool)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Category)
+            @Html.DisplayNameFor(model => model.Plant.Category)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Category.Name)
+            @Html.DisplayFor(model => model.Plant.Category.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.DisplayNameFor(model => model.Plant.Status)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Status.Name)
+            @Html.DisplayFor(model => model.Plant.Status.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Condition)
+            @Html.DisplayNameFor(model => model.Plant.Condition)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Condition.Name)
+            @Html.DisplayFor(model => model.Plant.Condition.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Comment)
+            @Html.DisplayNameFor(model => model.Plant.Comment)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Comment)
+            @Html.DisplayFor(model => model.Plant.Comment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Plant.Photograph)
+        </dt>
+
+        <dd>
+            <img id="photo" alt="no photograph" class="photograph" />
         </dd>
 
         <dt>
             plant hire
         </dt>
         <dd>
-            @if (Model.PlantHires.Any())
+            @if (Model.Plant.PlantHires.Any())
             {
-                <text>@Html.ActionLink(string.Format("{0} transactions", Model.PlantHires.Count), "PlantHire", new { id = Model.Id })</text>
+                <text>@Html.ActionLink(string.Format("{0} transactions", Model.Plant.PlantHires.Count), "PlantHire", new { id = Model.Plant.Id })</text>
             }
             else
             {
@@ -157,7 +172,7 @@
                 {
                     if (Html.IsAction("Delete"))
                     {
-                        if (Model.CanDelete)
+                        if (Model.Plant.CanDelete)
                         {
                             @Html.AntiForgeryToken()
                             <input type="submit" value="Delete" class="btn btn-danger" />
@@ -167,8 +182,8 @@
                     else
                     {
                         <text>
-                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = Model.Id }) |
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.Plant.Id }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = Model.Plant.Id }) |
                         </text>
                     }
                 }

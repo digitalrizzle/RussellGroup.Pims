@@ -17,7 +17,7 @@ namespace RussellGroup.Pims.DataMigration
             var importCap = global::RussellGroup.Pims.DataMigration.Properties.Settings.Default.ImportCap;
             var traceLogPath = global::RussellGroup.Pims.DataMigration.Properties.Settings.Default.TraceLog;
 
-            if (File.Exists(traceLogPath)) File.Delete(traceLogPath);
+            if (System.IO.File.Exists(traceLogPath)) System.IO.File.Delete(traceLogPath);
 
             using (var file = new TextWriterTraceListener(traceLogPath))
             {

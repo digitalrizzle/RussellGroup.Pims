@@ -10,6 +10,8 @@ namespace RussellGroup.Pims.DataAccess.Models
 {
     public class Plant
     {
+        public const string IncludeProperties = "CategoryId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment";
+
         [ScaffoldColumn(false)]
         public int Id { get; set; }
 
@@ -21,6 +23,9 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [ForeignKey("Condition")]
         public int ConditionId { get; set; }
+
+        [ForeignKey("Photograph")]
+        public int? PhotographId { get; set; }
 
         [Obsolete]
         [Required]
@@ -71,6 +76,9 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         [Display(Name = "condition")]
         public virtual Condition Condition { get; set; }
+
+        [Display(Name = "photograph")]
+        public virtual File Photograph { get; set; }
 
         [Display(Name = "comments")]
         [DataType(DataType.MultilineText)]

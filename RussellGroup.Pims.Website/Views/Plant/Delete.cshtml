@@ -1,7 +1,15 @@
-﻿@model RussellGroup.Pims.DataAccess.Models.Plant
+﻿@model RussellGroup.Pims.Website.Models.PlantViewModel
 @{
     ViewBag.ShowAnchors = true;
     ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
 }
 
 @Html.Partial("_Details")
+
+@section scripts
+{
+    <script>
+        var hasPlantViewModel = '@(Model.FileViewModel != null && Model.FileViewModel.Src != null)' === '@true';
+    </script>
+    @Scripts.Render("~/Scripts/view-plant.js")
+}

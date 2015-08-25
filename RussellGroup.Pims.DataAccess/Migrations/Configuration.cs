@@ -29,16 +29,15 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             factory.GenerateSetUserNameContextStoredProcedure();
 
             factory.GenerateAuditTrigger("Categories");
+            factory.GenerateAuditTrigger("Files");
             factory.GenerateAuditTrigger("Inventories");
             factory.GenerateAuditTrigger("InventoryHires");
             factory.GenerateAuditTrigger("Jobs");
             factory.GenerateAuditTrigger("Plants");
             factory.GenerateAuditTrigger("PlantHires");
             factory.GenerateAuditTrigger(tableName: "Settings", primaryKeyName1: "Key");
-            factory.GenerateAuditTrigger("Status");
 
             factory.GenerateAuditTrigger(tableName: "AspNetUsers", primaryKeyName1: "Id");
-            factory.GenerateAuditTrigger(tableName: "AspNetRoles", primaryKeyName1: "Id");
             factory.GenerateAuditTrigger("AspNetUserRoles", "UserId", "RoleId");
             factory.GenerateAuditTrigger("AspNetUserClaims", "Id", "UserId");
             factory.GenerateAuditTrigger("AspNetUserLogins", "ProviderKey", "UserId");

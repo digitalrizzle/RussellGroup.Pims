@@ -12,6 +12,7 @@ using RussellGroup.Pims.DataAccess.Repositories;
 using DataTables.Mvc;
 using LinqKit;
 using System.Data.Entity.SqlServer;
+using RussellGroup.Pims.Website.Models;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -102,6 +103,7 @@ namespace RussellGroup.Pims.Website.Controllers
         public ActionResult Create()
         {
             var plant = new Plant { WhenPurchased = DateTime.Now };
+
             return View("Create", plant);
         }
 
@@ -111,12 +113,21 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "CategoryId,StatusId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment")] Plant plant)
+        public async Task<ActionResult> Create(FormCollection collection)
         {
-            if (ModelState.IsValid)
+            var plant = new Plant();
+
+            if (TryUpdateModel(plant, "Plant", (Plant.IncludeProperties + ",StatusId").Split(',')))
             {
-                await _repository.AddAsync(plant);
-                return RedirectToAction("Index");
+                var model = GetPlantViewModel(plant);
+                TryUpdateModel(model.FileViewModel, "FileViewModel", collection);
+                model.UpdatePlantPhotograph();
+
+                if (ModelState.IsValid)
+                {
+                    await _repository.AddAsync(plant);
+                    return RedirectToAction("Index");
+                }
             }
 
             return View("Create", plant);
@@ -157,17 +168,22 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             // ensure the status isn't updated if it is checked out
-            var includeProperties = "CategoryId,ConditionId,XPlantId,XPlantNewId,Description,WhenPurchased,WhenDisused,Rate,Cost,Serial,FixedAssetCode,IsElectrical,IsTool,Comment";
+            var includeProperties = Plant.IncludeProperties;
             if (!plant.IsCheckedOut)
             {
                 includeProperties += ",StatusId";
             }
 
-            if (TryUpdateModel<Plant>(plant, includeProperties.Split(',')))
+            var model = GetPlantViewModel(plant);
+
+            if (TryUpdateModel(model.Plant, "Plant", includeProperties.Split(',')))
             {
+                TryUpdateModel(model.FileViewModel, "FileViewModel", collection);
+                model.UpdatePlantPhotograph();
+
                 if (ModelState.IsValid)
                 {
-                    await _repository.UpdateAsync(plant);
+                    await _repository.UpdateAsync(model.Plant);
                     return RedirectToAction("Index");
                 }
             }
@@ -210,6 +226,17 @@ namespace RussellGroup.Pims.Website.Controllers
             return RedirectToAction("Index");
         }
 
+        private PlantViewModel GetPlantViewModel(Plant plant)
+        {
+            var model = new PlantViewModel
+            {
+                Plant = plant,
+                FileViewModel = FileViewModel.Create(plant.Photograph)
+            };
+
+            return model;
+        }
+
         private ActionResult View(string viewName, Plant plant)
         {
             var categories = _repository.Categories.OrderBy(f => f.Name);
@@ -224,7 +251,9 @@ namespace RussellGroup.Pims.Website.Controllers
             var condition = plant != null ? plant.ConditionId : 0;
             ViewBag.Conditions = new SelectList(conditions, "Id", "Name", condition);
 
-            return base.View(viewName, plant);
+            var model = GetPlantViewModel(plant);
+
+            return base.View(viewName, model);
         }
     }
 }

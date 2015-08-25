@@ -17,6 +17,8 @@ namespace RussellGroup.Pims.DataAccess.Models
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Condition> Conditions { get; set; }
+        public DbSet<Content> Contents { get; set; }
+        public DbSet<File> Files { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<InventoryHire> InventoryHires { get; set; }
         public DbSet<Job> Jobs { get; set; }

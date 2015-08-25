@@ -22,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\File\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -180,6 +182,8 @@
     <Compile Include="Helpers\VersionHelper.cs" />
     <Compile Include="Models\CheckinTransaction.cs" />
     <Compile Include="Models\CheckoutTransaction.cs" />
+    <Compile Include="Models\FileViewModel.cs" />
+    <Compile Include="Models\PlantViewModel.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="PimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -280,7 +284,9 @@
     </Content>
     <Content Include="App_Readme\Handlebarsjs_README.md" />
     <Content Include="App_Readme\Handlebarsjs_LICENSE" />
-    <None Include="connectionStrings.config" />
+    <None Include="connectionStrings.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -406,8 +412,9 @@
     <Content Include="Scripts\typeahead.jquery.js" />
     <Content Include="Scripts\typeahead.jquery.min.js" />
     <Content Include="Scripts\view-datepickers.js" />
+    <Content Include="Scripts\view-plant.js" />
     <Content Include="Scripts\view-typeahead.js" />
-    <Content Include="Scripts\view-user-form.js" />
+    <Content Include="Scripts\view-user.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

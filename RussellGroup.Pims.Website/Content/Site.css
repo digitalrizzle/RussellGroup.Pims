@@ -51,6 +51,10 @@ ol {
             right: 10px; /* space between number and text */
         }
 
+.photograph {
+    max-width: 400px;
+}
+
 /* styles for validation helpers */
 .field-validation-error {
     color: #b94a48;
@@ -76,6 +80,29 @@ input[type="checkbox"].input-validation-error {
     display: none;
 }
 
+/* file upload */
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: white;
+        cursor: inherit;
+        display: block;
+    }
+
+/* miscellaneous */
 .breadcrumb {
     background-color: inherit !important;
     padding-left: 0;
