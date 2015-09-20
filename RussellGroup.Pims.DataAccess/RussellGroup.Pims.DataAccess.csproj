@@ -70,6 +70,7 @@
     <Compile Include="Migrations\Extensions.cs" />
     <Compile Include="Migrations\Seed.cs" />
     <Compile Include="Migrations\SqlFactory.cs" />
+    <Compile Include="MimeHelper.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Audit.cs" />
@@ -92,7 +93,6 @@
     <Compile Include="Repositories\DbRepositories\DbRepository.cs" />
     <Compile Include="Repositories\DbRepositories\HireDbRepository.cs" />
     <Compile Include="Repositories\DbRepositories\JobDbRepository.cs" />
-    <Compile Include="Repositories\IFileRepository.cs" />
     <Compile Include="Repositories\IJobRepository.cs" />
     <Compile Include="Repositories\IReportRepository.cs" />
     <Compile Include="Repositories\DbRepositories\ReportDbRepository.cs" />

@@ -13,6 +13,7 @@ using DataTables.Mvc;
 using LinqKit;
 using System.Data.Entity.SqlServer;
 using RussellGroup.Pims.Website.Models;
+using RussellGroup.Pims.DataAccess;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -122,6 +123,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 var model = GetPlantViewModel(plant);
                 TryUpdateModel(model.FileViewModel, "FileViewModel", collection);
                 model.UpdatePlantPhotograph();
+                Validate(model.Plant.Photograph.Content.Data);
 
                 if (ModelState.IsValid)
                 {
@@ -174,12 +176,12 @@ namespace RussellGroup.Pims.Website.Controllers
                 includeProperties += ",StatusId";
             }
 
-            var model = GetPlantViewModel(plant);
-
-            if (TryUpdateModel(model.Plant, "Plant", includeProperties.Split(',')))
+            if (TryUpdateModel(plant, "Plant", includeProperties.Split(',')))
             {
+                var model = GetPlantViewModel(plant);
                 TryUpdateModel(model.FileViewModel, "FileViewModel", collection);
                 model.UpdatePlantPhotograph();
+                Validate(model.Plant.Photograph.Content.Data);
 
                 if (ModelState.IsValid)
                 {
@@ -224,6 +226,26 @@ namespace RussellGroup.Pims.Website.Controllers
             }
             await _repository.RemoveAsync(plant);
             return RedirectToAction("Index");
+        }
+
+        private void Validate(byte[] buffer)
+        {
+            if (buffer == null) return;
+
+            var mimeType = MimeHelper.GetMimeType(buffer);
+
+            switch (mimeType)
+            {
+                case "image/gif":
+                case "image/jpeg":
+                case "image/png":
+                case "image/svg+xml":
+                case "image/tiff":
+                    return;
+                default:
+                    ModelState.AddModelError("", "The photograph is not valid.");
+                    break;
+            }
         }
 
         private PlantViewModel GetPlantViewModel(Plant plant)
