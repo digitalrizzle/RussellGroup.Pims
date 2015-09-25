@@ -123,7 +123,11 @@ namespace RussellGroup.Pims.Website.Controllers
                 var model = GetPlantViewModel(plant);
                 TryUpdateModel(model.FileViewModel, "FileViewModel", collection);
                 model.UpdatePlantPhotograph();
-                Validate(model.Plant.Photograph.Content.Data);
+
+                if (model.Plant.Photograph != null)
+                {
+                    Validate(model.Plant.Photograph.Content.Data);
+                }
 
                 if (ModelState.IsValid)
                 {
@@ -181,7 +185,10 @@ namespace RussellGroup.Pims.Website.Controllers
                 var model = GetPlantViewModel(plant);
                 TryUpdateModel(model.FileViewModel, "FileViewModel", collection);
                 model.UpdatePlantPhotograph();
-                Validate(model.Plant.Photograph.Content.Data);
+
+                if (model.Plant.Photograph != null) {
+                    Validate(model.Plant.Photograph.Content.Data);
+                }
 
                 if (ModelState.IsValid)
                 {
