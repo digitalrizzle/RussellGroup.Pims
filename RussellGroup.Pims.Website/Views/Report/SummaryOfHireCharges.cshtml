@@ -21,6 +21,9 @@
                 plant
             </th>
             <th class="text-right">
+                heavy plant
+            </th>
+            <th class="text-right">
                 alum scaffolding
             </th>
             <th class="text-right">
@@ -45,6 +48,7 @@
         @foreach (var job in Model.Jobs)
         {
             var plantHireCharge = Model.GetPlantHireCharge(job);
+            var heavyPlantHireCharge = Model.GetHeavyPlantHireCharge(job);
             var alumScaffoldingHireCharge = Model.GetInventoryHireCharge(job, "Alum Scaffolding");
             var otherHireCharge = Model.GetInventoryHireCharge(job, "Other");
             var periHireCharge = Model.GetInventoryHireCharge(job, "Peri");
@@ -52,6 +56,7 @@
             var shoreloadingHireCharge = Model.GetInventoryHireCharge(job, "Shoreloading");
 
             var total = plantHireCharge
+                        + heavyPlantHireCharge
                         + alumScaffoldingHireCharge
                         + otherHireCharge
                         + periHireCharge
@@ -69,6 +74,9 @@
                     </td>
                     <td class="text-right">
                         @string.Format("{0:0.00}", plantHireCharge)
+                    </td>
+                    <td class="text-right">
+                        @string.Format("{0:0.00}", heavyPlantHireCharge)
                     </td>
                     <td class="text-right">
                         @string.Format("{0:0.00}", alumScaffoldingHireCharge)
