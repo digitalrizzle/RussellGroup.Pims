@@ -184,12 +184,13 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return Db.Plants.Where(f => f.StatusId == Status.Available && f.PlantHires.All(h => h.WhenEnded.HasValue));
         }
 
-        public decimal GetPlantHireCharge(Job job, DateTime whenStarted, DateTime whenEnded)
+        public decimal GetPlantHireCharge(Job job, DateTime whenStarted, DateTime whenEnded, string categoryType)
         {
             decimal cost = 0;
 
             var hires = job
                 .PlantHires
+                .Where(f => f.Plant.Category.Type == categoryType)
                 .Where(f =>
                     (f.WhenStarted < whenEnded.AddDays(1) && f.WhenEnded >= whenStarted && f.WhenEnded < whenEnded.AddDays(1)) ||
                     (f.WhenStarted < whenEnded.AddDays(1) && !f.WhenEnded.HasValue))
@@ -219,13 +220,15 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                 WhenStarted = whenStarted,
                 WhenEnded = whenEnded,
                 PlantHireCharges = new Dictionary<Job, decimal>(),
+                HeavyPlantHireCharges = new Dictionary<Job, decimal>(),
                 InventoryHireCharges = new List<InventoryHireChargesInJobReportModel>()
             };
 
             // populate the plant hire and inventory hire charges
             foreach (var job in model.Jobs)
             {
-                model.PlantHireCharges.Add(job, GetPlantHireCharge(job, whenStarted, whenEnded));
+                model.PlantHireCharges.Add(job, GetPlantHireCharge(job, whenStarted, whenEnded, "Plant"));
+                model.HeavyPlantHireCharges.Add(job, GetPlantHireCharge(job, whenStarted, whenEnded, "Heavy Plant"));
                 model.InventoryHireCharges.Add(GetInventoryHireCharges(job, whenStarted, whenEnded));
             }
 
@@ -249,6 +252,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                         csv.WriteField("Job ID");
                         csv.WriteField("Description");
                         csv.WriteField("Plant");
+                        csv.WriteField("Heavy Plant");
                         csv.WriteField("Alum Scaffolding");
                         csv.WriteField("Other");
                         csv.WriteField("Peri");
@@ -260,6 +264,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                         foreach (var job in model.Jobs)
                         {
                             var plantHireCharge = model.GetPlantHireCharge(job);
+                            var heavyPlantHireCharge = model.GetHeavyPlantHireCharge(job);
                             var alumScaffoldingHireCharge = model.GetInventoryHireCharge(job, "Alum Scaffolding");
                             var otherHireCharge = model.GetInventoryHireCharge(job, "Other");
                             var periHireCharge = model.GetInventoryHireCharge(job, "Peri");
@@ -268,6 +273,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
                             var total =
                                 plantHireCharge
+                                + heavyPlantHireCharge
                                 + alumScaffoldingHireCharge
                                 + otherHireCharge
                                 + periHireCharge
@@ -279,6 +285,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                                 csv.WriteField(job.XJobId);
                                 csv.WriteField(job.Description);
                                 csv.WriteField(plantHireCharge);
+                                csv.WriteField(heavyPlantHireCharge);
                                 csv.WriteField(alumScaffoldingHireCharge);
                                 csv.WriteField(otherHireCharge);
                                 csv.WriteField(periHireCharge);

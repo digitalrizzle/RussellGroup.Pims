@@ -44,7 +44,7 @@ namespace RussellGroup.Pims.DataMigration.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=E:\\Drop Box\\20141205_DCL P" +
+        [global::System.Configuration.DefaultSettingValueAttribute("Provider=Microsoft.Jet.OLEDB.4.0;Mode=Read;Data Source=F:\\Drop Box\\20150116_DCL P" +
             "LANT.mdb")]
         public string OleDbConnectionString {
             get {

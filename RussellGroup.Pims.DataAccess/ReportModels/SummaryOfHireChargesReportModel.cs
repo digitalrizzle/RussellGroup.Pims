@@ -13,6 +13,7 @@ namespace RussellGroup.Pims.DataAccess.ReportModels
         public DateTime WhenStarted { get; set; }
         public DateTime WhenEnded { get; set; }
         public Dictionary<Job, decimal> PlantHireCharges { get; set; }
+        public Dictionary<Job, decimal> HeavyPlantHireCharges { get; set; }
         public List<InventoryHireChargesInJobReportModel> InventoryHireCharges { get; set; }
 
         public decimal GetPlantHireCharge(Job job)
@@ -20,14 +21,20 @@ namespace RussellGroup.Pims.DataAccess.ReportModels
             return PlantHireCharges.SingleOrDefault(f => f.Key == job).Value;
         }
 
+        public decimal GetHeavyPlantHireCharge(Job job)
+        {
+            return HeavyPlantHireCharges.SingleOrDefault(f => f.Key == job).Value;
+        }
+
         public decimal GetInventoryHireCharge(Job job, string categoryType)
         {
             var charges = InventoryHireCharges
                 .SingleOrDefault(f => f.Job == job)
                 .Charges
-                .Where(f => f.Inventory.Category.Type == categoryType);
+                .Where(f => f.Inventory.Category.Type == categoryType)
+                .Sum(f => f.Cost);
 
-            return charges.Sum(f => f.Cost);
+            return charges;
         }
     }
 }
