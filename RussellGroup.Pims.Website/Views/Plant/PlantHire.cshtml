@@ -1,0 +1,66 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Plant
+
+@{
+    ViewBag.Title = "Plant hire for " + Model.Description + " (" + Model.XPlantId + ")";
+    var hire = Model.PlantHires.FirstOrDefault();
+}
+@section head {
+    @Styles.Render("~/Content/datatables")
+}
+
+<h2>@ViewBag.Title</h2>
+
+<table class="table display table-striped table-hover order-column table-responsive">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => hire.Id)
+            </th>
+            <th>
+                job id
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => hire.Docket)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => hire.WhenStarted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => hire.WhenEnded)
+            </th>
+            <th class="text-right">
+                @Html.DisplayNameFor(model => hire.Rate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => hire.Comment)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatables")
+    <script>
+        $(document).ready(function () {
+            $('.table').dataTable({
+                "order": [[1, "asc"]],
+                "processing": true,
+                "stateSave": true,
+                "pagingType": 'full',
+                "serverSide": true,
+                "ajax": "@Url.Content("~/Plant/GetPlantHireDataTableResult?id=" + Model.Id)",
+                "columns": [
+                    { "data": "Id", "visible": false },
+                    { "data": "XJobId", "name": "Job.XJobId" },
+                    { "data": "Docket" },
+                    { "data": "WhenStarted" },
+                    { "data": "WhenEnded" },
+                    { "data": "Rate", "className": "text-right" },
+                    { "data": "Comment" },
+                    { "data": "CrudLinks", "sortable": false, "className": "text-right" }
+                ]
+            });
+        });
+    </script>
+}

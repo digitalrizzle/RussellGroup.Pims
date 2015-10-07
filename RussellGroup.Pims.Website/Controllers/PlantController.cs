@@ -97,6 +97,72 @@ namespace RussellGroup.Pims.Website.Controllers
             return View("Details", plant);
         }
 
+        public JsonResult GetPlantHireDataTableResult([ModelBinder(typeof(DataTablesBinder))] IDataTablesRequest model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException("model");
+            }
+
+            var id = Convert.ToInt32(Request["id"]);
+            var hint = model.Search != null ? model.Search.Value : string.Empty;
+            var sortColumn = model.Columns.GetSortedColumns().First();
+
+            var all = _repository.GetPlantHire(id).AsExpandable();
+
+            // filter
+            var filtered = string.IsNullOrEmpty(hint)
+                ? all
+                : all.Where(f =>
+                    f.Job.XJobId.Contains(hint) ||
+                    f.Docket.Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
+                    Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
+                    SqlFunctions.StringConvert(f.Rate).Contains(hint) ||
+                    f.Comment.Contains(hint));
+
+            // ordering
+            var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
+            Func<PlantHire, IComparable> ordering = (c => c.GetValue(sortColumnName.Split('.')));
+
+            // sorting
+            var sorted = sortColumn.SortDirection == Column.OrderDirection.Ascendant
+                ? filtered.OrderBy(ordering)
+                : filtered.OrderByDescending(ordering);
+
+            var paged = sorted
+                .Skip(model.Start)
+                .Take(model.Length)
+                .ToList()
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Job.XJobId,
+                    c.Docket,
+                    WhenStarted = c.WhenStarted.ToShortDateString(),
+                    WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
+                    c.Rate,
+                    c.Comment,
+                    CrudLinks = this.CrudLinks("PlantHire", new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
+                });
+
+            return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> PlantHire(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var plant = await _repository.FindAsync(id);
+            if (plant == null)
+            {
+                return HttpNotFound();
+            }
+            return View("PlantHire", plant);
+        }
+
         // GET: /Plant/Create
         [PimsAuthorize(Role.CanEdit)]
         public ActionResult Create()
