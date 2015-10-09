@@ -523,6 +523,7 @@
     <Content Include="Views\Home\_09_reports.cshtml" />
     <Content Include="Views\Home\_10_user_management.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Views\Plant\PlantHire.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">
