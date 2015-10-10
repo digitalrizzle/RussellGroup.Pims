@@ -3,14 +3,12 @@ namespace RussellGroup.Pims.DataAccess.Migrations
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using RussellGroup.Pims.DataAccess.Models;
-    using RussellGroup.Pims.DataAccess.Repositories;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Data.Entity.Validation;
     using System.Linq;
-    using System.Threading.Tasks;
 
     internal sealed partial class Configuration : DbMigrationsConfiguration<PimsDbContext>
     {
@@ -23,11 +21,16 @@ namespace RussellGroup.Pims.DataAccess.Migrations
         {
             context.SetContextUserName(PimsDbContext.DefaultContextUserName);
 
-            // generate the audit triggers
             var factory = new SqlFactory(context, "Audit", "Setting");
 
             factory.GenerateSetUserNameContextStoredProcedure();
 
+            // disable auditing
+            var setting = new Setting { Key = "IsAuditingEnabled", Value = "FALSE" };
+            context.Settings.AddOrUpdate(setting);
+            context.SaveChanges();
+
+            // generate the audit triggers
             factory.GenerateAuditTrigger("Categories");
             factory.GenerateAuditTrigger("Inventories");
             factory.GenerateAuditTrigger("InventoryHires");
@@ -82,13 +85,8 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             conditions.ForEach(condition => context.Conditions.AddOrUpdate(condition));
             context.SaveChanges();
 
-            // auditing
-            var settings = new List<Setting>
-            {
-                new Setting { Key = "IsAuditingEnabled", Value = "TRUE" }
-            };
-
-            settings.ForEach(setting => context.Settings.AddOrUpdate(setting));
+            // enable auditing
+            context.Settings.Remove(setting);
             context.SaveChanges();
 
             base.Seed(context);
