@@ -19,8 +19,6 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 
         protected override void Seed(PimsDbContext context)
         {
-            context.SetContextUserName(PimsDbContext.DefaultContextUserName);
-
             var factory = new SqlFactory(context, "Audit", "Setting");
 
             factory.GenerateSetUserNameContextStoredProcedure();

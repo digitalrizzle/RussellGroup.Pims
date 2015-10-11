@@ -1,4 +1,4 @@
-﻿using RussellGroup.Pims.DataAccess.Models;
+﻿using RussellGroup.Pims.DataAccess;
 using RussellGroup.Pims.DataAccess.Repositories;
 using RussellGroup.Pims.Website.Helpers;
 using System;
@@ -23,7 +23,7 @@ namespace RussellGroup.Pims.Website
 
         public static bool IsAuthorized(this IPrincipal user, params string[] roles)
         {
-            using (var context = new PimsDbContext())
+            using (var context = new PimsDbContext(HttpContext.Current))
             {
                 var repository = new UserDbRepository(context);
                 var helper = new IdentityHelper(repository);

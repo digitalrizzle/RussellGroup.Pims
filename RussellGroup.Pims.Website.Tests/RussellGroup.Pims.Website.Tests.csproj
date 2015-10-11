@@ -111,11 +111,15 @@
   <ItemGroup>
     <Compile Include="Controllers\JobControllerTest.cs" />
     <Compile Include="Controllers\UserControllerTest.cs" />
+    <Compile Include="DbRepositories\SettingDbRepositoryTests.cs" />
+    <Compile Include="Global.cs" />
     <Compile Include="JsonResultHelper.cs" />
     <Compile Include="MockControllerContext.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestDataFactory.cs" />
+    <Compile Include="UnitTestInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

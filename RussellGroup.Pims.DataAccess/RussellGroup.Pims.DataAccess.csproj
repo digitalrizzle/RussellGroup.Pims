@@ -72,6 +72,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Extensions.cs" />
+    <Compile Include="Migrations\MigrationContextFactory.cs" />
     <Compile Include="Migrations\Seed.cs" />
     <Compile Include="Migrations\SqlFactory.cs" />
     <Content Include="Migrations\Sql\AuditTrigger.handlebars.sql" />
@@ -81,7 +82,7 @@
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Inventory.cs" />
-    <Compile Include="Models\PimsDbContext.cs" />
+    <Compile Include="PimsDbContext.cs" />
     <Compile Include="Models\InventoryHire.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Models\Plant.cs" />

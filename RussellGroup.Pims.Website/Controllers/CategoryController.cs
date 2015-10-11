@@ -203,7 +203,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEditCategories)]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int? id)
         {
             if (id == null)
             {

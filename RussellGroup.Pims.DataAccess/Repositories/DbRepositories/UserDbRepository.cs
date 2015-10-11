@@ -32,8 +32,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public async Task<IdentityResult> AddAsync(ApplicationUser user, IEnumerable<string> roles)
         {
-            Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
-
             var result = await _userManager.CreateAsync(user);
 
             if (!result.Succeeded)
@@ -69,8 +67,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public async Task<IdentityResult> UpdateAsync(ApplicationUser user, IEnumerable<string> roles)
         {
-            Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
-
             IdentityResult result = null;
             var storedUser = await _userManager.FindByIdAsync(user.Id);
 
@@ -121,8 +117,6 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public async Task<IdentityResult> RemoveAsync(params object[] keyValues)
         {
-            Db.SetContextUserName(HttpContext.Current.User.Identity.Name);
-
             var user = await _userManager.FindByIdAsync(keyValues[0] as string);
 
             var result = await _userManager.DeleteAsync(user);

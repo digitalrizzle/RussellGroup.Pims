@@ -1,4 +1,4 @@
-﻿using RussellGroup.Pims.DataAccess.Models;
+﻿using RussellGroup.Pims.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RussellGroup.Pims.DataMigration
 {
@@ -33,8 +34,7 @@ namespace RussellGroup.Pims.DataMigration
             {
                 if (TargetContext != null) TargetContext.Dispose();
 
-                TargetContext = new PimsDbContext();
-                TargetContext.SetContextUserName(PimsDbContext.DefaultContextUserName);
+                TargetContext = new PimsDbContext(HttpContext.Current);
 
                 Console.Write("{0}\r", ++row);
 
@@ -57,7 +57,7 @@ namespace RussellGroup.Pims.DataMigration
             var message = string.Format("Deleting from [{0}]...", TargetTableName);
             Trace.WriteLine(message);
 
-            using (var context = new PimsDbContext())
+            using (var context = new PimsDbContext(HttpContext.Current))
             {
                 context.Database.ExecuteSqlCommand(string.Format("DELETE FROM [{0}]", TargetTableName));
                 context.Database.ExecuteSqlCommand(string.Format("DBCC CHECKIDENT('{0}', RESEED, 0)", TargetTableName));
@@ -71,7 +71,7 @@ namespace RussellGroup.Pims.DataMigration
             var message = string.Format("{0} auditing...", enable ? "Enabling" : "Disabling");
             Trace.WriteLine(message);
 
-            using (var context = new PimsDbContext())
+            using (var context = new PimsDbContext(HttpContext.Current))
             {
                 context.Database.ExecuteSqlCommand(string.Format("UPDATE [Settings] SET [Value] = '{0}' WHERE [Key] = 'IsAuditingEnabled'", enable.ToString()));
             }
