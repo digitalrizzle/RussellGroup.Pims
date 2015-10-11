@@ -1,4 +1,5 @@
-﻿using RussellGroup.Pims.DataAccess.Models;
+﻿using RussellGroup.Pims.DataAccess;
+using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RussellGroup.Pims.DataMigration
 {
@@ -42,8 +44,7 @@ namespace RussellGroup.Pims.DataMigration
         {
             if (TargetContext != null) TargetContext.Dispose();
 
-            TargetContext = new PimsDbContext();
-            TargetContext.SetContextUserName(PimsDbContext.DefaultContextUserName);
+            TargetContext = new PimsDbContext(HttpContext.Current);
 
             var repository = new JobDbRepository(TargetContext);
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
+using RussellGroup.Pims.DataAccess.Models;
 using System.Data;
 using System.Data.Common;
 using System.Data.Entity;
@@ -8,11 +9,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace RussellGroup.Pims.DataAccess.Models
+namespace RussellGroup.Pims.DataAccess
 {
     public class PimsDbContext : IdentityDbContext<ApplicationUser>
     {
-        public const string DefaultContextUserName = "System";
+        internal const string SystemUserName = "system";
 
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -27,9 +28,38 @@ namespace RussellGroup.Pims.DataAccess.Models
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Status> Statuses { get; set; }
 
-        public PimsDbContext() : base("PimsContext") { }
+        public PimsDbContext(HttpContext context) : base("PimsContext")
+        {
+            HttpContext = context;
+        }
 
-        public string UserName { get; private set; }
+        public HttpContext HttpContext { get; private set; }
+
+        public string UserName
+        {
+            get
+            {
+                string userName = null;
+
+                try
+                {
+                    userName = HttpContext.User.Identity.Name;
+                }
+                catch
+                {
+                    // do nothing
+                }
+
+                if (string.IsNullOrEmpty(userName))
+                {
+                    //throw new InvalidOperationException("The UserName could not be obtained.");
+                    System.Diagnostics.Debug.WriteLine("The UserName could not be obtained.");
+                    userName = "system";
+                }
+
+                return userName;
+            }
+        }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -38,18 +68,8 @@ namespace RussellGroup.Pims.DataAccess.Models
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
         }
 
-        public void SetContextUserName(string userName)
-        {
-            UserName = userName;
-        }
-
         public override int SaveChanges()
         {
-            if (HttpContext.Current != null)
-            {
-                UserName = HttpContext.Current.User.Identity.Name;
-            }
-
             DbConnection connection = base.Database.Connection;
             ExecuteSetContextUserNameCommand(connection);
 
@@ -65,11 +85,6 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            if (HttpContext.Current != null)
-            {
-                UserName = HttpContext.Current.User.Identity.Name;
-            }
-
             DbConnection connection = base.Database.Connection;
             ExecuteSetContextUserNameCommand(connection);
 
