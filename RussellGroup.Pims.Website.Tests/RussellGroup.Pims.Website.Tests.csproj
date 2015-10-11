@@ -110,7 +110,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\JobControllerTest.cs" />
-    <Compile Include="Controllers\UserControllerTest.cs" />
     <Compile Include="DbRepositories\SettingDbRepositoryTests.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="JsonResultHelper.cs" />
