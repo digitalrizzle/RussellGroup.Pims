@@ -68,7 +68,7 @@ namespace RussellGroup.Pims.DataAccess
 
                                 if (value is DateTime) value = ((DateTime)value).ToShortDateString();
 
-                                csv.WriteField(value);
+                                csv.WriteField(value ?? string.Empty);
                             }
 
                             csv.NextRecord();

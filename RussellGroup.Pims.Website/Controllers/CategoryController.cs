@@ -49,9 +49,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 ? all
                 : all.Where(f =>
                     f.Name.Contains(hint) ||
-                    f.Type.Contains(hint) ||
-                    SqlFunctions.StringConvert((double)f.Plants.Count).Contains(hint) ||
-                    SqlFunctions.StringConvert((double)f.Inventories.Count).Contains(hint));
+                    f.Type.Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
@@ -72,7 +70,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Name,
                     c.Type,
                     PlantQuantity = c.Plants.Count,
-                    InventoryQuantity = c.Inventories.Count,
+                    InventoryQuantity = c.Inventories.Sum(f => f.Quantity) + c.Inventories.Sum(f => f.CollatedInventoryHires.Sum(x => x.Quantity)),
                     CrudLinks = this.CrudLinks(new { id = c.Id }, User.IsAuthorized(Role.CanEditCategories))
                 });
 
