@@ -94,7 +94,7 @@ namespace RussellGroup.Pims.DataAccess.Models
             }
         }
 
-        // for the batch checkout confirmation
+        // for the batch confirmation
         [NotMapped]
         [Display(Name = "error")]
         public bool IsError { get; set; }
