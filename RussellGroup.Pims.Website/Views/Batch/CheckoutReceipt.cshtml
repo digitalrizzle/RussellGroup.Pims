@@ -1,0 +1,53 @@
+﻿@model RussellGroup.Pims.Website.Models.BatchCheckout
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = "Checkout Receipt";
+}
+
+<h1>@ViewBag.Title</h1>
+<h3>Checked out by: @User.Identity.Name</h3>
+
+<hr />
+
+<table class="table" style="table-layout: fixed">
+    <thead>
+        <tr>
+            <th width="15%">
+                job
+            </th>
+            <th width="15%">
+                docket
+            </th>
+            <th width="15%">
+                plant id/new id
+            </th>
+            <th>
+                description
+            </th>
+            <th width="15%">
+                condition
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in Model.CheckoutTransactions)
+        {
+            <tr>
+                <td>@transaction.Job.BarcodeText</td>
+                <td colspan="2">@transaction.Docket</td>
+                <td colspan="2">@transaction.Job.Description</td>
+            </tr>
+            foreach (var plant in transaction.Plants)
+            {
+                <tr>
+                    <td colspan="2"></td>
+                    <td>@plant.XPlantIdAndXPlantNewId</td>
+                    <td>@plant.Description</td>
+                    <td>@plant.Condition.Name</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+

@@ -24,6 +24,24 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "name")]
         public string Name { get; set; }
 
+        [NotMapped]
+        public string BarcodeText
+        {
+            get
+            {
+                return Name.ToUpper();
+            }
+        }
+
+        [NotMapped]
+        public string Code39
+        {
+            get
+            {
+                return $"*{BarcodeText}*";
+            }
+        }
+
         [Display(Name = "plant items")]
         public virtual ICollection<Plant> Plants { get; set; }
     }

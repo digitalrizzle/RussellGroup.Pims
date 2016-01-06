@@ -34,6 +34,13 @@ input[type=number] {
     height: 24px;
 }
 
+.form-data {
+    height: 34px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #555;
+}
+
 ol {
     counter-reset: item;
 }
@@ -50,6 +57,10 @@ ol {
             margin-right: 100%;
             right: 10px; /* space between number and text */
         }
+
+.scans {
+    height: 15em !important;
+}
 
 /* styles for validation helpers */
 .field-validation-error {

@@ -1,0 +1,46 @@
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Status>
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+
+<hr />
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th class="text-center">
+                barcode
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var job in Model)
+        {
+            <tr style="height: 100px">
+                <td>
+                    @Html.DisplayFor(model => job.Name)
+                </td>
+                <td class="text-center">
+                    <div class="barcode">@job.Code39</div>
+                    <div class="barcode-text">@job.BarcodeText</div>
+                </td>
+            </tr>
+        }
+        <tr style="height: 100px">
+            <td>
+                Docket
+            </td>
+            <td class="text-center">
+                <div class="barcode">*DOCKET*</div>
+                <div class="barcode-text">DOCKET</div>
+            </td>
+        </tr>
+    </tbody>
+</table>

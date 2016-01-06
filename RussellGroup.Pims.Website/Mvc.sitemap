@@ -24,6 +24,14 @@
       <mvcSiteMapNode title="Delete Job" action="Delete" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
       <mvcSiteMapNode title="Checkout" controller="Hire" action="Checkout" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
       <mvcSiteMapNode title="Checkin" controller="Hire" action="Checkin" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
+      <mvcSiteMapNode title="Job List" controller="Job" action="Index"></mvcSiteMapNode>
+      <mvcSiteMapNode title="FOR DEMO ONLY *** Job Barcodes" controller="Batch" action="JobBarcodes"></mvcSiteMapNode>
+      <mvcSiteMapNode title="FOR DEMO ONLY *** Plant Barcodes" controller="Batch" action="PlantBarcodes"></mvcSiteMapNode>
+      <mvcSiteMapNode title="FOR DEMO ONLY *** Status Barcodes" controller="Batch" action="StatusBarcodes"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Batch Checkout" controller="Batch" action="Checkout"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Confirm Batch Checkout" controller="Batch" action="ConfirmCheckout" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Batch Checkin" controller="Batch" action="Checkin"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Confirm Batch Checkin" controller="Batch" action="ConfirmCheckin" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Plant" controller="Plant" action="Index">
       <mvcSiteMapNode title="New Plant" action="Create" visibility="SiteMapPathHelper,!*" />

@@ -41,6 +41,29 @@ namespace RussellGroup.Pims.DataAccess.Models
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
+        [NotMapped]
+        public string BarcodeText
+        {
+            get
+            {
+                return (string.IsNullOrWhiteSpace(XJobId) ? "UNKNOWN" : XJobId).ToUpper();
+            }
+        }
+
+        [NotMapped]
+        public string Code39
+        {
+            get
+            {
+                return $"*{BarcodeText}*";
+            }
+        }
+
+        // for the batch confirmation
+        [NotMapped]
+        [Display(Name = "error")]
+        public bool IsError { get; set; }
+
         [Display(Name = "plant hire")]
         public virtual ICollection<PlantHire> PlantHires { get; set; }
 

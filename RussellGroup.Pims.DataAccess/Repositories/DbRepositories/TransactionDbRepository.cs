@@ -37,12 +37,59 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             }
         }
 
+        public IQueryable<PlantHire> PlantHires
+        {
+            get
+            {
+                return Db.PlantHires.Include("Job");
+            }
+        }
+
         public IQueryable<Inventory> Inventories
         {
             get
             {
                 return Db.Inventories;
             }
+        }
+
+        public IQueryable<InventoryHire> InventoryHires
+        {
+            get
+            {
+                return Db.InventoryHires.Include("Job");
+            }
+        }
+
+        public IQueryable<Status> Statuses
+        {
+            get { return Db.Statuses; }
+        }
+
+        public IQueryable<Condition> Conditions
+        {
+            get { return Db.Conditions; }
+        }
+
+        public async Task<long> GetLastIssuedDocketAsync()
+        {
+            var setting = await GetLastIssuedDocketSettingAsync();
+            var docket = long.Parse(setting.Value);
+
+            return docket;
+        }
+
+        private async Task<Setting> GetLastIssuedDocketSettingAsync()
+        {
+            long docket;
+            var setting = await Db.Settings.SingleOrDefaultAsync(f => f.Key.Equals("LastIssuedDocket"));
+
+            if (long.TryParse(setting.Value, out docket))
+            {
+                return setting;
+            }
+
+            throw new InvalidOperationException("The next docket could not be obtained.");
         }
 
         public IEnumerable<InventoryHireCheckin> GetCheckinInventoryHires(Job job)
@@ -67,6 +114,23 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return
                   group.Where(f => f is InventoryHireCheckout).Sum(f => f.Quantity)
                 - group.Where(f => f is InventoryHireCheckin).Sum(f => f.Quantity);
+        }
+
+        // the docket number will be automatically assigned
+        public async Task<long> Checkout(Job job, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        {
+            // get and update the docket number (SaveChanges() in Checkout ought to commit the change)
+            var setting = await GetLastIssuedDocketSettingAsync();
+            var docket = long.Parse(setting.Value);
+
+            docket++;
+            setting.Value = docket.ToString();
+            Db.Entry(setting).State = EntityState.Modified;
+
+            // checkout as usual
+            await Checkout(job, docket.ToString(), whenStarted, plantIds, inventoryIdsAndQuantities);
+
+            return docket;
         }
 
         public async Task Checkout(Job job, string docket, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
@@ -119,6 +183,11 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
         public async Task Checkin(Job job, string docket, DateTime whenEnded, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
+            await Checkin(job, docket, whenEnded, Status.Available, plantHireIds, inventoryIdsAndQuantities);
+        }
+
+        public async Task Checkin(Job job, string docket, DateTime whenEnded, int statusId, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        {
             // save plant
             foreach (var id in plantHireIds)
             {
@@ -129,13 +198,14 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     hire.ReturnDocket = docket;
                     hire.WhenEnded = whenEnded;
                     Db.Entry(hire).State = EntityState.Modified;
-                }
 
-                // only set the status if it is truly available
-                if (hire.Plant.IsCheckedIn)
-                {
-                    hire.Plant.StatusId = Status.Available;
-                    Db.Entry(hire.Plant).State = EntityState.Modified;
+                    // TODO: this could be the intermittent bug they're talking about
+                    // only set the status if it is truly available
+                    if (hire.Plant.IsCheckedIn)
+                    {
+                        hire.Plant.StatusId = statusId;
+                        Db.Entry(hire.Plant).State = EntityState.Modified;
+                    }
                 }
             }
 

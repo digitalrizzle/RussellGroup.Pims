@@ -84,7 +84,16 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             context.SaveChanges();
 
             // enable auditing
+            setting = context.Settings.Single(f => f.Key.Equals("IsAuditingEnabled"));
             context.Settings.Remove(setting);
+
+            // set the docket number, ensure that the current value isn't overwritten
+            setting = context.Settings.SingleOrDefault(f => f.Key.Equals("Docket"));
+            if (setting == null)
+            {
+                context.Settings.Add(new Setting { Key = "LastIssuedDocket", Value = "90000" });
+            }
+
             context.SaveChanges();
 
             base.Seed(context);

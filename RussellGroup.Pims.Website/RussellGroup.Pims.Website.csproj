@@ -166,6 +166,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BatchController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\HireController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
@@ -179,6 +180,8 @@
     <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\IIdentityHelper.cs" />
     <Compile Include="Helpers\VersionHelper.cs" />
+    <Compile Include="Models\BatchCheckin.cs" />
+    <Compile Include="Models\BatchCheckout.cs" />
     <Compile Include="Models\CheckinTransaction.cs" />
     <Compile Include="Models\CheckoutTransaction.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
@@ -270,6 +273,7 @@
     <Content Include="Content\sort_desc_disabled.png" />
     <Content Include="Content\typeahead.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\free3of9.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -290,6 +294,9 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\DataTables\css\dataTables.responsive.scss" />
     <Content Include="Content\DataTables\css\dataTables.jqueryui.scss" />
+    <Content Include="fonts\free3of9.eot" />
+    <Content Include="fonts\free3of9.otf" />
+    <Content Include="fonts\free3of9.woff" />
     <None Include="MvcSiteMapSchema.xsd" />
     <None Include="Properties\PublishProfiles\pdbdev.pubxml" />
     <Content Include="Scripts\bloodhound.js" />
@@ -518,6 +525,15 @@
     <Content Include="Views\Home\_10_user_management.cshtml" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
     <Content Include="Views\Plant\PlantHire.cshtml" />
+    <Content Include="Views\Batch\Checkout.cshtml" />
+    <Content Include="Views\Batch\JobBarcodes.cshtml" />
+    <Content Include="Views\Batch\PlantBarcodes.cshtml" />
+    <Content Include="Views\Batch\ConfirmCheckout.cshtml" />
+    <Content Include="Views\Batch\CheckoutReceipt.cshtml" />
+    <Content Include="Views\Batch\Checkin.cshtml" />
+    <Content Include="Views\Batch\ConfirmCheckin.cshtml" />
+    <Content Include="Views\Batch\StatusBarcodes.cshtml" />
+    <Content Include="Views\Batch\CheckinReceipt.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">
