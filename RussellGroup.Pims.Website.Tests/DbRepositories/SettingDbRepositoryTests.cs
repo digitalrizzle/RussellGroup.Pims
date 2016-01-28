@@ -29,45 +29,45 @@ namespace RussellGroup.Pims.Website.Tests.DbRepositories
             Context.Database.Initialize(true);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Repositories")]
         public async Task Test_that_a_setting_can_be_added()
         {
             // arrange
-            var setting = TestDataFactory.GetSetting();
+            var setting = TestDataFactory.GetSettings().First();
 
             // act
             var result = await Repository.AddAsync(setting);
             Assert.IsTrue(result > 0);
 
-            setting = await Repository.FindAsync("Hello");
+            setting = await Repository.FindAsync("LastIssuedDocket");
 
             // assert
-            Assert.AreEqual("Hello", setting.Key);
-            Assert.AreEqual("Hello, setting!", setting.Value);
+            Assert.AreEqual("LastIssuedDocket", setting.Key);
+            Assert.AreEqual("900001", setting.Value);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Repositories")]
         public async Task Test_that_a_setting_can_be_updated()
         {
-            var setting = TestDataFactory.GetSetting();
+            var setting = TestDataFactory.GetSettings().First();
             var result = await Repository.AddAsync(setting);
             Assert.IsTrue(result > 0);
 
             // update
-            setting.Value = "Hello again.";
+            setting.Value = "900002";
             result = await Repository.UpdateAsync(setting);
             Assert.IsTrue(result > 0);
 
-            setting = await Repository.FindAsync("Hello");
+            setting = await Repository.FindAsync("LastIssuedDocket");
 
-            Assert.AreEqual("Hello", setting.Key);
-            Assert.AreEqual("Hello again.", setting.Value);
+            Assert.AreEqual("LastIssuedDocket", setting.Key);
+            Assert.AreEqual("900002", setting.Value);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Repositories")]
         public async Task Test_that_a_setting_can_be_removed()
         {
-            var setting = TestDataFactory.GetSetting();
+            var setting = TestDataFactory.GetSettings().First();
 
             var result = await Repository.AddAsync(setting);
             Assert.IsTrue(result > 0);

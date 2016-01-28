@@ -109,14 +109,18 @@
     <Reference Include="System.Net.Http.WebRequest" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\BatchCheckinControllerTest.cs" />
+    <Compile Include="Controllers\BatchCheckoutControllerTest.cs" />
     <Compile Include="Controllers\JobControllerTest.cs" />
     <Compile Include="DbRepositories\SettingDbRepositoryTests.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="JsonResultHelper.cs" />
-    <Compile Include="MockControllerContext.cs">
+    <Compile Include="MockFactory.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stub.cs" />
     <Compile Include="TestDataFactory.cs" />
     <Compile Include="UnitTestInitializer.cs" />
   </ItemGroup>

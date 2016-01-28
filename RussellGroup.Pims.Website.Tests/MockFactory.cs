@@ -2,6 +2,9 @@
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -12,7 +15,7 @@ using System.Web.Routing;
 
 namespace RussellGroup.Pims.Website.Tests
 {
-    public static class MockControllerContext
+    public static class MockFactory
     {
         private static HttpContextBase GetFakeAuthenticatedHttpContext(string userName)
         {
@@ -55,11 +58,32 @@ namespace RussellGroup.Pims.Website.Tests
             controller.ControllerContext = controllerContext;
             controller.Url = new UrlHelper(controllerContext.RequestContext);
 
-            var httpSimulator = new HttpSimulator().SimulateRequest();
+            var root = Path.GetFullPath(@"..\..\..\RussellGroup.Pims.Website\");
+
+            var httpSimulator = new HttpSimulator("/", root).SimulateRequest();
 
             var identity = new GenericIdentity("Tester");
             var principal = new GenericPrincipal(identity, null);
             HttpContext.Current.User = principal;
+        }
+
+        public static Mock<DbSet<T>> GetMockDbSet<T>(IQueryable<T> set) where T : class
+        {
+            var mock = new Mock<DbSet<T>>();
+
+            mock.As<IDbAsyncEnumerable<T>>()
+                .Setup(m => m.GetAsyncEnumerator())
+                .Returns(new StubDbAsyncEnumerator<T>(set.GetEnumerator()));
+
+            mock.As<IQueryable<T>>()
+                .Setup(m => m.Provider)
+                .Returns(new StubDbAsyncQueryProvider<T>(set.Provider));
+
+            mock.As<IQueryable<T>>().Setup(m => m.Expression).Returns(set.Expression);
+            mock.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(set.ElementType);
+            mock.As<IQueryable<T>>().Setup(m => m.GetEnumerator()).Returns(set.GetEnumerator());
+
+            return mock;
         }
     }
 }
