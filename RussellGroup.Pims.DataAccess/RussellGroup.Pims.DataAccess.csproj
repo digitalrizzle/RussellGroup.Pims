@@ -79,7 +79,10 @@
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Audit.cs" />
     <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Content.cs" />
     <Compile Include="Models\Inventory.cs" />
+    <Compile Include="Models\Receipt.cs" />
+    <Compile Include="Models\TransactionType.cs" />
     <Compile Include="PimsDbContext.cs" />
     <Compile Include="Models\InventoryHire.cs" />
     <Compile Include="Models\Job.cs" />

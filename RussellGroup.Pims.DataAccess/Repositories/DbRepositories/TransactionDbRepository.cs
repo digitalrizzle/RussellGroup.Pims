@@ -12,6 +12,8 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 {
     public class TransactionDbRepository : ITransactionRepository
     {
+        public const string DocketPrefix = "DCL";
+
         protected PimsDbContext Db { get; private set; }
 
         public TransactionDbRepository(PimsDbContext context)
@@ -71,25 +73,51 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             get { return Db.Conditions; }
         }
 
+        public IQueryable<TransactionType> TransactionTypes
+        {
+            get { return Db.TransactionTypes; }
+        }
+
+        public IQueryable<Receipt> Receipts
+        {
+            get { return Db.Receipts; }
+        }
+
         public async Task<long> GetLastIssuedDocketAsync()
         {
             var setting = await GetLastIssuedDocketSettingAsync();
-            var docket = long.Parse(setting.Value);
+            var value = StripPrefix(setting);
+            var docket = long.Parse(value);
 
             return docket;
+        }
+
+        private string StripPrefix(Setting setting)
+        {
+            return setting.Value.Replace(DocketPrefix, null);
         }
 
         private async Task<Setting> GetLastIssuedDocketSettingAsync()
         {
             long docket;
             var setting = await Db.Settings.SingleOrDefaultAsync(f => f.Key.Equals("LastIssuedDocket"));
+            var value = StripPrefix(setting);
 
-            if (long.TryParse(setting.Value, out docket))
+            if (long.TryParse(value, out docket))
             {
                 return setting;
             }
 
             throw new InvalidOperationException("The next docket could not be obtained.");
+        }
+
+        public async Task<Receipt> StoreAsync(Receipt receipt)
+        {
+            Db.Receipts.Add(receipt);
+
+            await Db.SaveChangesAsync();
+
+            return receipt;
         }
 
         public IEnumerable<InventoryHireCheckin> GetCheckinInventoryHires(Job job)
@@ -128,7 +156,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             Db.Entry(setting).State = EntityState.Modified;
 
             // checkout as usual
-            await Checkout(job, docket.ToString(), whenStarted, plantIds, inventoryIdsAndQuantities);
+            await Checkout(job, $"{DocketPrefix}{docket}", whenStarted, plantIds, inventoryIdsAndQuantities);
 
             return docket;
         }
@@ -184,6 +212,23 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         public async Task Checkin(Job job, string docket, DateTime whenEnded, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
             await Checkin(job, docket, whenEnded, Status.Available, plantHireIds, inventoryIdsAndQuantities);
+        }
+
+        // the docket number will be automatically assigned
+        public async Task<long> Checkin(Job job, DateTime whenEnded, int statusId, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        {
+            // get and update the docket number (SaveChanges() in Checkin ought to commit the change)
+            var setting = await GetLastIssuedDocketSettingAsync();
+            var docket = long.Parse(setting.Value);
+
+            docket++;
+            setting.Value = docket.ToString();
+            Db.Entry(setting).State = EntityState.Modified;
+
+            // checkout as usual
+            await Checkin(job, $"{DocketPrefix}{docket}", whenEnded, statusId, plantIds, inventoryIdsAndQuantities);
+
+            return docket;
         }
 
         public async Task Checkin(Job job, string docket, DateTime whenEnded, int statusId, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)

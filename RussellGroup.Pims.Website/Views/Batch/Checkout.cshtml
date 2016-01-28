@@ -13,7 +13,7 @@
     @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ConfirmCheckout", "Batch", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -57,6 +57,11 @@
     <script>
         $(document).ready(function () {
             $('#Scans').focus();
+
+            // download and open the receipt if available
+            if ('@(Model.ReceiptId.HasValue)' === '@true') {
+                window.open('@Url.Action("Receipt")' + '?id=' + '@Model.ReceiptId', '_blank');
+            }
         });
     </script>
 }

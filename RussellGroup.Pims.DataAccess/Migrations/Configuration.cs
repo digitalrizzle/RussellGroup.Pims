@@ -36,7 +36,9 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             factory.GenerateAuditTrigger("Plants");
             factory.GenerateAuditTrigger("PlantHires");
             factory.GenerateAuditTrigger(tableName: "Settings", primaryKeyName1: "Key");
+            factory.GenerateAuditTrigger("Receipts");
             factory.GenerateAuditTrigger("Status");
+            factory.GenerateAuditTrigger("TransactionTypes");
 
             factory.GenerateAuditTrigger(tableName: "AspNetUsers", primaryKeyName1: "Id");
             factory.GenerateAuditTrigger(tableName: "AspNetRoles", primaryKeyName1: "Id");
@@ -57,6 +59,15 @@ namespace RussellGroup.Pims.DataAccess.Migrations
 
             // add users
             SeedUsers(context);
+
+            var transactionTypes = new List<TransactionType>
+            {
+                new TransactionType { Id = TransactionType.Checkout, Name = "Checkout" },
+                new TransactionType { Id = TransactionType.Checkin, Name = "Checkin" }
+            };
+
+            transactionTypes.ForEach(type => context.TransactionTypes.AddOrUpdate(type));
+            context.SaveChanges();
 
             var statuses = new List<Status>
             {
@@ -88,10 +99,10 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             context.Settings.Remove(setting);
 
             // set the docket number, ensure that the current value isn't overwritten
-            setting = context.Settings.SingleOrDefault(f => f.Key.Equals("Docket"));
+            setting = context.Settings.SingleOrDefault(f => f.Key.Equals("LastIssuedDocket"));
             if (setting == null)
             {
-                context.Settings.Add(new Setting { Key = "LastIssuedDocket", Value = "90000" });
+                context.Settings.Add(new Setting { Key = "LastIssuedDocket", Value = "DCL00000" });
             }
 
             context.SaveChanges();

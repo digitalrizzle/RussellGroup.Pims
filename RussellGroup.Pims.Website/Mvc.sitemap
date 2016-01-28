@@ -24,7 +24,9 @@
       <mvcSiteMapNode title="Delete Job" action="Delete" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
       <mvcSiteMapNode title="Checkout" controller="Hire" action="Checkout" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
       <mvcSiteMapNode title="Checkin" controller="Hire" action="Checkin" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
-      <mvcSiteMapNode title="Job List" controller="Job" action="Index"></mvcSiteMapNode>
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Batch" clickable="false" visibilityProvider="RussellGroup.Pims.Website.TrimEmptyGroupingNodesVisibilityProvider, RussellGroup.Pims.Website">
+      <mvcSiteMapNode title="Receipts" controller="Batch" action="Receipts"></mvcSiteMapNode>
       <mvcSiteMapNode title="FOR DEMO ONLY *** Job Barcodes" controller="Batch" action="JobBarcodes"></mvcSiteMapNode>
       <mvcSiteMapNode title="FOR DEMO ONLY *** Plant Barcodes" controller="Batch" action="PlantBarcodes"></mvcSiteMapNode>
       <mvcSiteMapNode title="FOR DEMO ONLY *** Status Barcodes" controller="Batch" action="StatusBarcodes"></mvcSiteMapNode>
@@ -33,24 +35,26 @@
       <mvcSiteMapNode title="Batch Checkin" controller="Batch" action="Checkin"></mvcSiteMapNode>
       <mvcSiteMapNode title="Confirm Batch Checkin" controller="Batch" action="ConfirmCheckin" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
     </mvcSiteMapNode>
-    <mvcSiteMapNode title="Plant" controller="Plant" action="Index">
-      <mvcSiteMapNode title="New Plant" action="Create" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Edit Plant" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Plant Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Delete Plant" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Plant Hire" action="PlantHire" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-    </mvcSiteMapNode>
-    <mvcSiteMapNode title="Inventory" controller="Inventory" action="Index">
-      <mvcSiteMapNode title="New Inventory" action="Create" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Edit Inventory" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Inventory Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Delete Inventory" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-    </mvcSiteMapNode>
-    <mvcSiteMapNode title="Categories" controller="Category" action="Index">
-      <mvcSiteMapNode title="New Category" action="Create" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Edit Category" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Category Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
-      <mvcSiteMapNode title="Delete Category" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+    <mvcSiteMapNode title="Stock" clickable="false" visibilityProvider="RussellGroup.Pims.Website.TrimEmptyGroupingNodesVisibilityProvider, RussellGroup.Pims.Website">
+      <mvcSiteMapNode title="Plant" controller="Plant" action="Index">
+        <mvcSiteMapNode title="New Plant" action="Create" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Edit Plant" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Plant Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Delete Plant" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Plant Hire" action="PlantHire" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Inventory" controller="Inventory" action="Index">
+        <mvcSiteMapNode title="New Inventory" action="Create" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Edit Inventory" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Inventory Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Delete Inventory" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Categories" controller="Category" action="Index">
+        <mvcSiteMapNode title="New Category" action="Create" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Edit Category" action="Edit" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Category Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+        <mvcSiteMapNode title="Delete Category" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
+      </mvcSiteMapNode>
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Reports" controller="Report" clickable="false" visibilityProvider="RussellGroup.Pims.Website.TrimEmptyGroupingNodesVisibilityProvider, RussellGroup.Pims.Website">
       <mvcSiteMapNode title="Jobs #51, #56" action="Jobs" />
@@ -66,5 +70,5 @@
       <mvcSiteMapNode title="Delete User" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Help" controller="Home" action="Help" />
-    </mvcSiteMapNode>
+  </mvcSiteMapNode>
 </mvcSiteMap>

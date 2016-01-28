@@ -13,7 +13,7 @@
     @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("ConfirmCheckin", "Batch", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -31,16 +31,6 @@
             </div>
             <div class="col-sm-offset-2 col-sm-10">
                 @Html.ValidationMessageFor(model => model.WhenEnded, null, new { @class = "help-block" })
-            </div>
-        </div>
-
-        <div class="form-group@(ViewData.ModelState.IsValidField("StatusId") ? string.Empty : " has-error")">
-            @Html.LabelFor(model => model.Status, new { @class = "control-label col-sm-2" })
-            <div class="col-sm-3">
-                <text>@Html.DropDownListFor(model => model.StatusId, ViewBag.Statuses as SelectList, new { @class = "form-control" })</text>
-            </div>
-            <div class="col-sm-offset-2 col-sm-10">
-                @Html.ValidationMessageFor(model => model.StatusId, null, new { @class = "help-block" })
             </div>
         </div>
 
@@ -67,6 +57,11 @@
     <script>
         $(document).ready(function () {
             $('#Scans').focus();
+
+            // download and open the receipt if available
+            if ('@(Model.ReceiptId.HasValue)' === '@true') {
+                window.open('@Url.Action("Receipt")' + '?id=' + '@Model.ReceiptId', '_blank');
+            }
         });
     </script>
 }

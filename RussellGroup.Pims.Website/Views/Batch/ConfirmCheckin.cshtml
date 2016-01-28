@@ -8,11 +8,10 @@
 
 <hr />
 
-@using (Html.BeginForm("ConfirmCheckin", "Batch", FormMethod.Post))
+@using (Html.BeginForm("CommitCheckin", "Batch", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.WhenEnded)
-    @Html.HiddenFor(model => model.StatusId)
     @Html.HiddenFor(model => model.Scans)
 
     <div class="form-horizontal">
@@ -94,7 +93,7 @@
             <div class="col-sm-offset-2 col-sm-10">
                 @if (ViewData.ModelState.IsValid)
                 {
-                    <input type="submit" name="command" value="Checkin" class="btn btn-primary" />
+                    <input type="submit" name="command" value="Checkin" class="btn btn-success" />
                 }
                 else
                 {
