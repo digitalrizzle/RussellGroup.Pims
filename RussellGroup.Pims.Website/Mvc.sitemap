@@ -27,9 +27,11 @@
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Batch" clickable="false" visibilityProvider="RussellGroup.Pims.Website.TrimEmptyGroupingNodesVisibilityProvider, RussellGroup.Pims.Website">
       <mvcSiteMapNode title="Receipts" controller="Batch" action="Receipts"></mvcSiteMapNode>
-      <mvcSiteMapNode title="FOR DEMO ONLY *** Job Barcodes" controller="Batch" action="JobBarcodes"></mvcSiteMapNode>
-      <mvcSiteMapNode title="FOR DEMO ONLY *** Plant Barcodes" controller="Batch" action="PlantBarcodes"></mvcSiteMapNode>
-      <mvcSiteMapNode title="FOR DEMO ONLY *** Status Barcodes" controller="Batch" action="StatusBarcodes"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Barcodes" controller="Batch" action="Barcodes">
+        <mvcSiteMapNode title="Job Barcodes" action="JobBarcodes"></mvcSiteMapNode>
+        <mvcSiteMapNode title="Plant Barcodes" action="PlantBarcodes"></mvcSiteMapNode>
+        <mvcSiteMapNode title="Status and Docket Barcodes" action="StatusBarcodes"></mvcSiteMapNode>
+      </mvcSiteMapNode>
       <mvcSiteMapNode title="Batch Checkout" controller="Batch" action="Checkout"></mvcSiteMapNode>
       <mvcSiteMapNode title="Confirm Batch Checkout" controller="Batch" action="ConfirmCheckout" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
       <mvcSiteMapNode title="Batch Checkin" controller="Batch" action="Checkin"></mvcSiteMapNode>

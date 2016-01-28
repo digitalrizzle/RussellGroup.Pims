@@ -542,6 +542,7 @@
     <Content Include="Views\Batch\ConfirmCheckin.cshtml" />
     <Content Include="Views\Batch\StatusBarcodes.cshtml" />
     <Content Include="Views\Batch\Receipts.cshtml" />
+    <Content Include="Views\Batch\Barcodes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

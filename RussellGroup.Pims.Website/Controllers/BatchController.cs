@@ -93,6 +93,11 @@ namespace RussellGroup.Pims.Website.Controllers
             return File(receipt.Content.Data, receipt.ContentType);
         }
 
+        public ActionResult Barcodes()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> JobBarcodes()
         {
             var jobs = await _repository.Jobs
@@ -120,8 +125,8 @@ namespace RussellGroup.Pims.Website.Controllers
                 .OrderByDescending(f => f.Id)
                 .ToListAsync();
 
-            statuses.Add(new Status { Name = "DOCKET" });
-            statuses.Add(new Status { Name = "AUTO DOCKET" });
+            statuses.Add(new Status { Name = "Docket" });
+            statuses.Add(new Status { Name = "Auto Docket" });
 
             return View(statuses);
         }
