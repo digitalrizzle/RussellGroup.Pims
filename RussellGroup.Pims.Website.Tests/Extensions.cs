@@ -11,10 +11,10 @@ namespace RussellGroup.Pims.Website.Tests
 {
     public static class Extensions
     {
-        public static string GetFirstErrorMessage(this ViewResult result)
+        public static string GetErrorMessage(this ViewResult result, int elementNumber = 0)
         {
             var state = result.ViewData.ModelState;
-            var values = state.Values.FirstOrDefault();
+            var values = state.Values.ToArray()[elementNumber];
 
             if (values != null)
             {
@@ -41,14 +41,14 @@ namespace RussellGroup.Pims.Website.Tests
             throw new ArgumentException("The model of the view result is not a BatchCheckout class.");
         }
 
-        public static CheckoutTransaction GetFirstBatchCheckoutTransaction(this ViewResult result)
+        public static CheckoutTransaction GetBatchCheckoutTransaction(this ViewResult result, int elementNumber = 0)
         {
-            return result.GetBatchCheckoutModel().CheckoutTransactions.FirstOrDefault();
+            return result.GetBatchCheckoutModel().CheckoutTransactions.Skip(elementNumber).FirstOrDefault();
         }
 
-        public static Plant[] GetPlantsOfFirstBatchCheckoutTransaction(this ViewResult result)
+        public static Plant[] GetPlantsOfBatchCheckoutTransaction(this ViewResult result, int elementNumber = 0)
         {
-            return result.GetFirstBatchCheckoutTransaction().Plants.ToArray();
+            return result.GetBatchCheckoutTransaction(elementNumber).Plants.ToArray();
         }
 
         public static BatchCheckin GetBatchCheckinModel(this ViewResult result)
@@ -61,14 +61,14 @@ namespace RussellGroup.Pims.Website.Tests
             throw new ArgumentException("The model of the view result is not a BatchCheckin class.");
         }
 
-        public static CheckinTransaction GetFirstBatchCheckinTransaction(this ViewResult result)
+        public static CheckinTransaction GetBatchCheckinTransaction(this ViewResult result, int elementNumber = 0)
         {
-            return result.GetBatchCheckinModel().CheckinTransactions.FirstOrDefault();
+            return result.GetBatchCheckinModel().CheckinTransactions.Skip(elementNumber).FirstOrDefault();
         }
 
-        public static Plant[] GetPlantHiresOfFirstBatchCheckinTransaction(this ViewResult result)
+        public static Plant[] GetPlantsOfBatchCheckinTransaction(this ViewResult result, int elementNumber = 0)
         {
-            return result.GetFirstBatchCheckinTransaction().PlantHires.Select(f => f.Plant).ToArray();
+            return result.GetBatchCheckinTransaction(elementNumber).PlantHires.Select(f => f.Plant).ToArray();
         }
     }
 }

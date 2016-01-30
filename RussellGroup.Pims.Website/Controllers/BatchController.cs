@@ -224,7 +224,8 @@ namespace RussellGroup.Pims.Website.Controllers
 
             if (!string.IsNullOrWhiteSpace(model.Scans))
             {
-                var scans = model.Scans.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                // split into lines and trim the whitespace
+                var scans = model.Scans.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(f => f.Trim()).Where(f => !string.IsNullOrWhiteSpace(f));
 
                 CheckoutTransaction transaction = null;
                 var docket = await _repository.GetLastIssuedDocketAsync();
@@ -433,12 +434,13 @@ namespace RussellGroup.Pims.Website.Controllers
             var autoDocket = await _repository.GetLastIssuedDocketAsync();
             var isAutoDocket = false;
 
-            var statusScan = "UNDER REPAIR";
+            string statusScan = null;
             var transactions = new List<CheckinTransaction>();
 
             if (!string.IsNullOrWhiteSpace(model.Scans))
             {
-                var scans = model.Scans.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                // split into lines and trim the whitespace
+                var scans = model.Scans.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(f => f.Trim()).Where(f => !string.IsNullOrWhiteSpace(f));
                 var errorJob = new Job { Id = -1, Description = "?", IsError = true };
 
                 foreach (var scan in scans)
@@ -467,7 +469,14 @@ namespace RussellGroup.Pims.Website.Controllers
                     // statuses
                     else if (_statusRegex.IsMatch(scan))
                     {
-                        statusScan = scan;
+                        if (string.IsNullOrEmpty(statusScan))
+                        {
+                            statusScan = scan;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "The status can only be set once.");
+                        }
                     }
                     // plant
                     else
@@ -526,7 +535,8 @@ namespace RussellGroup.Pims.Website.Controllers
                     }
                 }
 
-                // only apply the last scanned status
+                // default the status scan to under repair
+                statusScan = statusScan ?? "UNDER REPAIR";
                 var status = await _repository.Statuses.SingleOrDefaultAsync(f => f.Name.Equals(statusScan, StringComparison.OrdinalIgnoreCase));
 
                 if (status != null)
@@ -542,6 +552,24 @@ namespace RussellGroup.Pims.Website.Controllers
                     transactions.Add(transaction);
 
                     ModelState.AddModelError(string.Empty, $"The was no plant scanned to checkin.");
+                }
+
+                // check that dockets numbers are different between transactions
+                var duplicates = transactions
+                    .Where(f => !string.IsNullOrEmpty(f.ReturnDocket))
+                    .GroupBy(f => f.ReturnDocket)
+                    .Where(f => f.Count() > 1)
+                    .SelectMany(f => transactions.Where(job => job.ReturnDocket == f.Key))
+                    .ToList();
+
+                if (duplicates.Any())
+                {
+                    ModelState.AddModelError(string.Empty, $"The docket numbers cannot be the same between different jobs.");
+
+                    duplicates.ForEach((transaction) =>
+                    {
+                        transaction.Job.IsError = true;
+                    });
                 }
             }
             else

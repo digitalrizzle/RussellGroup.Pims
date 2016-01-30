@@ -113,8 +113,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsNull(transaction, "The transaction is incorrectly not null.");
@@ -129,7 +129,30 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckoutTransaction();
+            var transaction = result.GetBatchCheckoutTransaction();
+            var plants = transaction.Plants.ToArray();
+
+            // assert
+            Assert.IsFalse(transaction.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsFalse(plants[0].IsError, "The plant is incorrectly in error.");
+            Assert.IsFalse(plants[1].IsError, "The plant is incorrectly in error.");
+            Assert.IsFalse(plants[2].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0001", transaction.Job.XJobId);
+            Assert.AreEqual("01001", plants[0].XPlantId);
+            Assert.AreEqual("02002", plants[1].XPlantId);
+            Assert.AreEqual("04003", plants[2].XPlantId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckout_that_whitespace_of_the_scans_is_trimmed()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckout();
+            batch.Scans = $"{Environment.NewLine} DC0001 {Environment.NewLine} 01001 {Environment.NewLine} 02002 {Environment.NewLine} 99904003 {Environment.NewLine} ";
+
+            // act
+            var result = await Controller.ConfirmCheckout(batch) as ViewResult;
+            var transaction = result.GetBatchCheckoutTransaction();
             var plants = transaction.Plants.ToArray();
 
             // assert
@@ -152,8 +175,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
@@ -169,8 +192,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
@@ -186,8 +209,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
@@ -203,8 +226,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
@@ -219,7 +242,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var plants = result.GetPlantsOfFirstBatchCheckoutTransaction();
+            var plants = result.GetPlantsOfBatchCheckoutTransaction();
 
             // assert
             Assert.IsFalse(plants[2].IsError, "The plant is incorrectly in error.");
@@ -235,8 +258,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var plants = result.GetPlantsOfFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var plants = result.GetPlantsOfBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(plants[0].IsError, "The plant is not in error.");
@@ -252,8 +275,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var plants = result.GetPlantsOfFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var plants = result.GetPlantsOfBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(plants[0].IsError, "The plant is not in error.");
@@ -269,8 +292,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var plants = result.GetPlantsOfFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var plants = result.GetPlantsOfBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(plants[0].IsError, "The plant is not in error.");
@@ -287,8 +310,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckoutTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckoutTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
@@ -303,7 +326,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckoutTransaction();
+            var transaction = result.GetBatchCheckoutTransaction();
 
             // assert
             Assert.IsFalse(transaction.Job.IsError, "The job is incorrectly in error.");

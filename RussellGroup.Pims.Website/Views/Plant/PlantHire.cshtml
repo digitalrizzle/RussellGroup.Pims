@@ -1,7 +1,7 @@
 ﻿@model RussellGroup.Pims.DataAccess.Models.Plant
 
 @{
-    ViewBag.Title = "Plant hire for " + Model.Description + " (" + Model.XPlantId + ")";
+    ViewBag.Title = "Plant hire for " + Model.Description + " (" + Model.XPlantIdAndXPlantNewId + ")";
     var hire = Model.PlantHires.FirstOrDefault();
 }
 @section head {
@@ -23,6 +23,9 @@
                 @Html.DisplayNameFor(model => hire.Docket)
             </th>
             <th>
+                @Html.DisplayNameFor(model => hire.ReturnDocket)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => hire.WhenStarted)
             </th>
             <th>
@@ -30,9 +33,6 @@
             </th>
             <th class="text-right">
                 @Html.DisplayNameFor(model => hire.Rate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => hire.Comment)
             </th>
             <th></th>
         </tr>
@@ -54,10 +54,10 @@
                     { "data": "Id", "visible": false },
                     { "data": "XJobId", "name": "Job.XJobId" },
                     { "data": "Docket" },
+                    { "data": "ReturnDocket" },
                     { "data": "WhenStarted" },
                     { "data": "WhenEnded" },
                     { "data": "Rate", "className": "text-right" },
-                    { "data": "Comment" },
                     { "data": "CrudLinks", "sortable": false, "className": "text-right" }
                 ]
             });

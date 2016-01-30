@@ -112,8 +112,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckinTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckinTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsNull(transaction, "The transaction is incorrectly not null.");
@@ -128,16 +128,99 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckinTransaction();
-            var hires = result.GetPlantHiresOfFirstBatchCheckinTransaction();
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var plants1 = result.GetPlantsOfBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+            var plants2 = result.GetPlantsOfBatchCheckinTransaction(1);
 
             // assert
-            Assert.IsFalse(transaction.Job.IsError, "The job is incorrectly in error.");
-            Assert.IsFalse(hires[0].IsError, "The hire is incorrectly in error.");
-            Assert.IsFalse(hires[1].IsError, "The hire is incorrectly in error.");
-            Assert.AreEqual("DC0001", transaction.Job.XJobId);
-            Assert.AreEqual("03002", hires[0].XPlantId);
-            Assert.AreEqual("CMPSSR1", hires[1].XPlantId);
+            Assert.IsFalse(transaction1.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsFalse(transaction1.IsAutoDocket, "The auto docket is incorrectly true.");
+            Assert.IsFalse(plants1[0].IsError, "The plant is incorrectly in error.");
+            Assert.IsFalse(plants1[1].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0001", transaction1.Job.XJobId);
+            Assert.AreEqual("100001", transaction1.ReturnDocket);
+            Assert.AreEqual("03002", plants1[0].XPlantId);
+            Assert.AreEqual("CMPSSR1", plants1[1].XPlantId);
+
+            Assert.IsFalse(transaction2.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsFalse(transaction2.IsAutoDocket, "The auto docket is incorrectly true.");
+            Assert.IsFalse(plants2[0].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0002", transaction2.Job.XJobId);
+            Assert.AreEqual("100002", transaction2.ReturnDocket);
+            Assert.AreEqual("07001", plants2[0].XPlantId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_whitespace_of_the_scans_is_trimmed()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"{Environment.NewLine} DOCKET {Environment.NewLine} 100001 {Environment.NewLine} 99903002 {Environment.NewLine} 06003 {Environment.NewLine} DOCKET {Environment.NewLine} 100002 {Environment.NewLine} 12307001 {Environment.NewLine} ";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var plants1 = result.GetPlantsOfBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+            var plants2 = result.GetPlantsOfBatchCheckinTransaction(1);
+
+            // assert
+            Assert.IsFalse(transaction1.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsFalse(transaction1.IsAutoDocket, "The auto docket is incorrectly true.");
+            Assert.IsFalse(plants1[0].IsError, "The plant is incorrectly in error.");
+            Assert.IsFalse(plants1[1].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0001", transaction1.Job.XJobId);
+            Assert.AreEqual("100001", transaction1.ReturnDocket);
+            Assert.AreEqual("03002", plants1[0].XPlantId);
+            Assert.AreEqual("CMPSSR1", plants1[1].XPlantId);
+
+            Assert.IsFalse(transaction2.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsFalse(transaction2.IsAutoDocket, "The auto docket is incorrectly true.");
+            Assert.IsFalse(plants2[0].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0002", transaction2.Job.XJobId);
+            Assert.AreEqual("100002", transaction2.ReturnDocket);
+            Assert.AreEqual("07001", plants2[0].XPlantId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_two_transactions_cannot_have_the_same_docket_number()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"DOCKET{Environment.NewLine}100001{Environment.NewLine}99903002{Environment.NewLine}06003{Environment.NewLine}12307001";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+            var error = result.GetErrorMessage();
+
+            // assert
+            Assert.AreEqual(transaction2.ReturnDocket, transaction1.ReturnDocket, "The docket numbers were expected to be the same.");
+            Assert.AreEqual("The docket numbers cannot be the same between different jobs.", error);
+            Assert.IsTrue(transaction1.Job.IsError, "The job is not in error.");
+            Assert.IsTrue(transaction2.Job.IsError, "The job is not in error.");
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_two_transactions_cannot_have_the_same_auto_docket_number()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"AUTO DOCKET{Environment.NewLine}99903002{Environment.NewLine}06003{Environment.NewLine}12307001";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+            var error = result.GetErrorMessage();
+
+            // assert
+            Assert.AreEqual(transaction2.ReturnDocket, transaction1.ReturnDocket, "The docket numbers were expected to be the same.");
+            Assert.AreEqual("The docket numbers cannot be the same between different jobs.", error);
+            Assert.IsTrue(transaction1.Job.IsError, "The job is not in error.");
+            Assert.IsTrue(transaction2.Job.IsError, "The job is not in error.");
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -149,47 +232,13 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckinTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckinTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsNull(transaction, "The transaction is incorrectly not null.");
             Assert.AreEqual("Nothing was scanned to checkin.", error);
         }
-
-        //[TestMethod, TestCategory("Controllers")]
-        //public async Task Test_ConfirmCheckin_that_an_error_is_found_when_a_job_scan_does_not_exist()
-        //{
-        //    // arrange
-        //    var batch = TestDataFactory.GetBatchCheckin();
-        //    batch.Scans = $"AA0001{Environment.NewLine}01001{Environment.NewLine}02002";
-
-        //    // act
-        //    var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-        //    var transaction = result.GetFirstBatchCheckinTransaction();
-        //    var error = result.GetFirstErrorMessage();
-
-        //    // assert
-        //    Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
-        //    Assert.AreEqual("The job AA0001 could not be found.", error);
-        //}
-
-        //[TestMethod, TestCategory("Controllers")]
-        //public async Task Test_ConfirmCheckin_that_an_error_is_found_when_a_job_is_not_the_first_scan()
-        //{
-        //    // arrange
-        //    var batch = TestDataFactory.GetBatchCheckin();
-        //    batch.Scans = $"01001{Environment.NewLine}02002";
-
-        //    // act
-        //    var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-        //    var transaction = result.GetFirstBatchCheckinTransaction();
-        //    var error = result.GetFirstErrorMessage();
-
-        //    // assert
-        //    Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
-        //    Assert.AreEqual("A job must be scanned first.", error);
-        //}
 
         [TestMethod, TestCategory("Controllers")]
         public async Task Test_ConfirmCheckin_that_only_the_last_five_digits_of_a_plant_scan_are_used()
@@ -199,7 +248,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var plants = result.GetPlantHiresOfFirstBatchCheckinTransaction();
+            var plants = result.GetPlantsOfBatchCheckinTransaction();
 
             // assert
             Assert.IsFalse(plants[1].IsError, "The plant is incorrectly in error.");
@@ -215,8 +264,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var plants = result.GetPlantHiresOfFirstBatchCheckinTransaction();
-            var error = result.GetFirstErrorMessage();
+            var plants = result.GetPlantsOfBatchCheckinTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(plants[0].IsError, "The plant is not in error.");
@@ -232,8 +281,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var plants = result.GetPlantHiresOfFirstBatchCheckinTransaction();
-            var error = result.GetFirstErrorMessage();
+            var plants = result.GetPlantsOfBatchCheckinTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(plants[0].IsError, "The plant is not in error.");
@@ -249,8 +298,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var plants = result.GetPlantHiresOfFirstBatchCheckinTransaction();
-            var error = result.GetFirstErrorMessage();
+            var plants = result.GetPlantsOfBatchCheckinTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(plants[0].IsError, "The plant is not in error.");
@@ -267,8 +316,8 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckinTransaction();
-            var error = result.GetFirstErrorMessage();
+            var transaction = result.GetBatchCheckinTransaction();
+            var error = result.GetErrorMessage();
 
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
@@ -277,7 +326,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
         }
 
         [TestMethod, TestCategory("Controllers")]
-        public async Task Test_ConfirmCheckin_that_that_an_auto_docket_number_is_prefixed_with_DCL_and_increments_from_the_last_issued()
+        public async Task Test_ConfirmCheckin_that_an_auto_docket_number_is_prefixed_with_DCL_and_increments_from_the_last_issued()
         {
             // arrange
             var batch = TestDataFactory.GetBatchCheckin();
@@ -285,18 +334,102 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var transaction = result.GetFirstBatchCheckinTransaction();
-            var hires = result.GetPlantHiresOfFirstBatchCheckinTransaction();
+            var transaction = result.GetBatchCheckinTransaction();
+            var plants = result.GetPlantsOfBatchCheckinTransaction();
 
             // assert
             Assert.AreEqual("DCL900002", transaction.ReturnDocket);
 
             Assert.IsFalse(transaction.Job.IsError, "The job is incorrectly in error.");
-            Assert.IsFalse(hires[0].IsError, "The hire is incorrectly in error.");
-            Assert.IsFalse(hires[1].IsError, "The hire is incorrectly in error.");
+            Assert.IsTrue(transaction.IsAutoDocket, "The auto docket is incorrectly false.");
+            Assert.IsFalse(plants[0].IsError, "The plant is incorrectly in error.");
+            Assert.IsFalse(plants[1].IsError, "The plant is incorrectly in error.");
             Assert.AreEqual("DC0001", transaction.Job.XJobId);
-            Assert.AreEqual("03002", hires[0].XPlantId);
-            Assert.AreEqual("CMPSSR1", hires[1].XPlantId);
+            Assert.AreEqual("03002", plants[0].XPlantId);
+            Assert.AreEqual("CMPSSR1", plants[1].XPlantId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_an_auto_docket_number_can_be_issued_twice()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"AUTO DOCKET{Environment.NewLine}99903002{Environment.NewLine}06003{Environment.NewLine}AUTO DOCKET{Environment.NewLine}12307001";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+
+            // assert
+            Assert.AreEqual("DCL900002", transaction1.ReturnDocket);
+            Assert.IsTrue(transaction1.IsAutoDocket, "The auto docket is incorrectly false.");
+
+            Assert.AreEqual("DCL900003", transaction2.ReturnDocket);
+            Assert.IsTrue(transaction2.IsAutoDocket, "The auto docket is incorrectly false.");
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_an_error_is_found_when_a_plant_is_scanned_without_without_a_docket()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"03002{Environment.NewLine}DOCKET{Environment.NewLine}";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction = result.GetBatchCheckinTransaction();
+            var plants = result.GetPlantsOfBatchCheckinTransaction();
+            var error = result.GetErrorMessage();
+
+            // assert
+            Assert.IsFalse(transaction.IsAutoDocket, "The auto docket is incorrectly true.");
+            Assert.IsTrue(plants[0].IsError, "The plant is not in error.");
+            Assert.AreEqual("There is no docket for the plant 03002.", error);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_the_default_status_is_under_repair()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var model = result.Model as BatchCheckin;
+
+            // assert
+            Assert.AreEqual((int)Status.UnderRepair, model.StatusId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_a_status_is_changed()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"DOCKET{Environment.NewLine}123456{Environment.NewLine}03002{Environment.NewLine}STOLEN";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var model = result.Model as BatchCheckin;
+
+            // assert
+            Assert.AreEqual((int)Status.Stolen, model.StatusId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_a_status_can_only_be_set_once()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"STOLEN{Environment.NewLine}DOCKET{Environment.NewLine}123456{Environment.NewLine}03002{Environment.NewLine}STOLEN";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var error = result.GetErrorMessage();
+
+            // assert
+            Assert.AreEqual(error, "The status can only be set once.");
         }
 
         #endregion

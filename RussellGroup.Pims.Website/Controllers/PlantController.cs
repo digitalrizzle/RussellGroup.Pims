@@ -116,10 +116,10 @@ namespace RussellGroup.Pims.Website.Controllers
                 : all.Where(f =>
                     f.Job.XJobId.Contains(hint) ||
                     f.Docket.Contains(hint) ||
+                    f.ReturnDocket.Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
-                    SqlFunctions.StringConvert(f.Rate).Contains(hint) ||
-                    f.Comment.Contains(hint));
+                    SqlFunctions.StringConvert(f.Rate).Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
@@ -139,10 +139,10 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     c.Job.XJobId,
                     c.Docket,
+                    c.ReturnDocket,
                     WhenStarted = c.WhenStarted.ToShortDateString(),
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
                     c.Rate,
-                    c.Comment,
                     CrudLinks = this.CrudLinks("PlantHire", new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 

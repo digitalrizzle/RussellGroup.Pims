@@ -179,6 +179,27 @@ namespace RussellGroup.Pims.Website.Tests
                     FixedAssetCode = "DCL06003",
                     IsElectrical = true,
                     IsTool = false
+                },
+                new Plant
+                {
+                    Id = 7,
+                    CategoryId = 1,
+                    Category = GetCategories().Single(f => f.Id == 1),
+                    StatusId = Status.CheckedOut,
+                    Status = GetStatuses().Single(f => f.Id == Status.CheckedOut),
+                    ConditionId = Condition.Fair,
+                    Condition = GetConditions().Single(f => f.Id == Condition.Fair),
+                    XPlantId = "07001",
+                    XPlantNewId = "07001",
+                    Description = "Lifesaver L16",
+                    WhenPurchased = new DateTime(2012, 3, 9),
+                    WhenDisused = null,
+                    Rate = 1.50m,
+                    Cost = 7665.00m,
+                    Serial = null,
+                    FixedAssetCode = null,
+                    IsElectrical = true,
+                    IsTool = false
                 }
             }.AsQueryable();
         }
@@ -195,10 +216,12 @@ namespace RussellGroup.Pims.Website.Tests
         private static PlantHire[] _getPlantHires()
         {
             var job1 = GetJobs(hasPlantHires: false).Single(f => f.XJobId.Equals("DC0001"));
+            var job2 = GetJobs(hasPlantHires: false).Single(f => f.XJobId.Equals("DC0002"));
 
             var plant2 = GetPlants().Single(f => f.XPlantId.Equals("02002"));
             var plant3 = GetPlants().Single(f => f.XPlantId.Equals("03002"));
             var plant6 = GetPlants().Single(f => f.XPlantId.Equals("CMPSSR1"));
+            var plant7 = GetPlants().Single(f => f.XPlantId.Equals("07001"));
 
             var plantHire1 = new PlantHire
             {
@@ -230,7 +253,8 @@ namespace RussellGroup.Pims.Website.Tests
                 Id = 3,
                 PlantId = plant6.Id,
                 Plant = plant6,
-                Docket = "123456",
+                Docket = "333333",
+                ReturnDocket = "333334",
                 WhenStarted = new DateTime(2015, 12, 31),
                 WhenEnded = new DateTime(2015, 12, 31),
                 Rate = plant6.Rate,
@@ -243,24 +267,38 @@ namespace RussellGroup.Pims.Website.Tests
                 Id = 4,
                 PlantId = plant6.Id,
                 Plant = plant6,
-                Docket = "123456",
+                Docket = "444444",
                 WhenStarted = new DateTime(2015, 12, 1),
                 Rate = plant6.Rate,
                 Job = job1,
                 JobId = job1.Id
             };
 
-            var plantHires = new[]
+            var plantHire5 = new PlantHire
             {
-                plantHire1,
-                plantHire2,
-                plantHire3,
-                plantHire4
+                Id = 5,
+                PlantId = plant7.Id,
+                Plant = plant7,
+                Docket = "555555",
+                WhenStarted = new DateTime(2015, 9, 4),
+                Rate = plant7.Rate,
+                Job = job2,
+                JobId = job2.Id
             };
 
             plant2.PlantHires = new[] { plantHire1 };
             plant3.PlantHires = new[] { plantHire2 };
             plant6.PlantHires = new[] { plantHire3, plantHire4 };
+            plant7.PlantHires = new[] { plantHire5 };
+
+            var plantHires = new[]
+            {
+                plantHire1,
+                plantHire2,
+                plantHire3,
+                plantHire4,
+                plantHire5
+            };
 
             return plantHires;
         }
@@ -279,7 +317,7 @@ namespace RussellGroup.Pims.Website.Tests
                     ProjectManager = "Orlando Gee",
                     QuantitySurveyor = "Jarrod Koonce",
                     Comment = "This is a comment.",
-                    PlantHires = hasPlantHires ? _getPlantHires() : new PlantHire[0]
+                    PlantHires = hasPlantHires ? _getPlantHires().Where(f => f.JobId == 1).ToArray() : new PlantHire[0]
                 },
                 new Job
                 {
@@ -290,7 +328,8 @@ namespace RussellGroup.Pims.Website.Tests
                     WhenEnded = new DateTime(2016, 9, 30),
                     ProjectManager = "Peter Parker",
                     QuantitySurveyor = "Johnathan Morefield",
-                    Comment = "This is another comment."
+                    Comment = "This is another comment.",
+                    PlantHires = hasPlantHires ? _getPlantHires().Where(f => f.JobId == 2).ToArray() : new PlantHire[0]
                 },
                 new Job
                 {
@@ -320,7 +359,7 @@ namespace RussellGroup.Pims.Website.Tests
             return new BatchCheckin
             {
                 WhenEnded = new DateTime(2017, 10, 31),
-                Scans = $"DOCKET{Environment.NewLine}123456{Environment.NewLine}03002{Environment.NewLine}99906003"
+                Scans = $"DOCKET{Environment.NewLine}100001{Environment.NewLine}99903002{Environment.NewLine}06003{Environment.NewLine}DOCKET{Environment.NewLine}100002{Environment.NewLine}12307001"
             };
         }
     }
