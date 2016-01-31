@@ -191,6 +191,7 @@
     <Compile Include="Helpers\VersionHelper.cs" />
     <Compile Include="Models\BatchCheckin.cs" />
     <Compile Include="Models\BatchCheckout.cs" />
+    <Compile Include="Models\BatchStatus.cs" />
     <Compile Include="Models\CheckinTransaction.cs" />
     <Compile Include="Models\CheckoutTransaction.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
@@ -543,6 +544,8 @@
     <Content Include="Views\Batch\StatusBarcodes.cshtml" />
     <Content Include="Views\Batch\Receipts.cshtml" />
     <Content Include="Views\Batch\Barcodes.cshtml" />
+    <Content Include="Views\Batch\Status.cshtml" />
+    <Content Include="Views\Batch\ConfirmStatus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

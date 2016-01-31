@@ -32,6 +32,8 @@
         <mvcSiteMapNode title="Plant Barcodes" action="PlantBarcodes"></mvcSiteMapNode>
         <mvcSiteMapNode title="Status and Docket Barcodes" action="StatusBarcodes"></mvcSiteMapNode>
       </mvcSiteMapNode>
+      <mvcSiteMapNode title="Batch Status Update" controller="Batch" action="StatusUpdate"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Confirm Batch Status Update" controller="Batch" action="ConfirmStatusUpdate" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
       <mvcSiteMapNode title="Batch Checkout" controller="Batch" action="Checkout"></mvcSiteMapNode>
       <mvcSiteMapNode title="Confirm Batch Checkout" controller="Batch" action="ConfirmCheckout" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
       <mvcSiteMapNode title="Batch Checkin" controller="Batch" action="Checkin"></mvcSiteMapNode>

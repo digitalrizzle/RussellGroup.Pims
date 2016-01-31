@@ -113,11 +113,11 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckout(batch) as ViewResult;
-            var transaction = result.GetBatchCheckoutTransaction();
+            var model = result.GetBatchCheckoutModel();
             var error = result.GetErrorMessage();
 
             // assert
-            Assert.IsNull(transaction, "The transaction is incorrectly not null.");
+            Assert.IsFalse(model.CheckoutTransactions.Any(), "The transactions are not empty.");
             Assert.AreEqual("Nothing was scanned to checkout.", error);
         }
 

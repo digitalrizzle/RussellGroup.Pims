@@ -112,11 +112,11 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var transaction = result.GetBatchCheckinTransaction();
+            var model = result.GetBatchCheckinModel();
             var error = result.GetErrorMessage();
 
             // assert
-            Assert.IsNull(transaction, "The transaction is incorrectly not null.");
+            Assert.IsFalse(model.CheckinTransactions.Any(), "The transactions are not empty.");
             Assert.AreEqual("Nothing was scanned to checkin.", error);
         }
 
@@ -221,23 +221,6 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Assert.AreEqual("The docket numbers cannot be the same between different jobs.", error);
             Assert.IsTrue(transaction1.Job.IsError, "The job is not in error.");
             Assert.IsTrue(transaction2.Job.IsError, "The job is not in error.");
-        }
-
-        [TestMethod, TestCategory("Controllers")]
-        public async Task Test_ConfirmCheckout_that_an_error_is_found_when_there_are_no_scans()
-        {
-            // arrange
-            var batch = TestDataFactory.GetBatchCheckin();
-            batch.Scans = null;
-
-            // act
-            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var transaction = result.GetBatchCheckinTransaction();
-            var error = result.GetErrorMessage();
-
-            // assert
-            Assert.IsNull(transaction, "The transaction is incorrectly not null.");
-            Assert.AreEqual("Nothing was scanned to checkin.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -399,11 +382,11 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var model = result.Model as BatchCheckin;
 
             // assert
-            Assert.AreEqual((int)Status.UnderRepair, model.StatusId);
+            Assert.AreEqual(Status.UnderRepair, model.StatusId);
         }
 
         [TestMethod, TestCategory("Controllers")]
-        public async Task Test_ConfirmCheckin_that_a_status_is_changed()
+        public async Task Test_ConfirmCheckin_that_the_status_can_be_changed()
         {
             // arrange
             var batch = TestDataFactory.GetBatchCheckin();
@@ -414,7 +397,41 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var model = result.Model as BatchCheckin;
 
             // assert
-            Assert.AreEqual((int)Status.Stolen, model.StatusId);
+            Assert.AreEqual(Status.Stolen, model.StatusId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmStatusUpdate_that_the_status_cannot_be_changed_to_available()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"DOCKET{Environment.NewLine}123456{Environment.NewLine}03002{Environment.NewLine}AVAILABLE";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var model = result.Model as BatchCheckin;
+            var error = result.GetErrorMessage();
+
+            // assert
+            Assert.AreEqual(Status.Available, model.StatusId);
+            Assert.AreEqual("The status cannot be changed to available.", error);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmStatusUpdate_that_the_status_cannot_be_changed_to_checked_out()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"DOCKET{Environment.NewLine}123456{Environment.NewLine}03002{Environment.NewLine}CHECKED OUT";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var model = result.Model as BatchCheckin;
+            var error = result.GetErrorMessage();
+
+            // assert
+            Assert.AreEqual(Status.CheckedOut, model.StatusId);
+            Assert.AreEqual("The status cannot be changed to checked out.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]

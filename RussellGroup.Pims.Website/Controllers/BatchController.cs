@@ -20,7 +20,7 @@ namespace RussellGroup.Pims.Website.Controllers
     {
         private readonly ITransactionRepository _repository;
         private static readonly Regex _jobRegex = new Regex(@"[a-z]{2}\d{4}", RegexOptions.IgnoreCase);
-        private static readonly Regex _statusRegex = new Regex(@"WRITTEN OFF|UNDER REPAIR|STOLEN|AVAILABLE|UNKNOWN", RegexOptions.IgnoreCase);
+        private static readonly Regex _statusRegex = new Regex(@"UNKNOWN|AVAILABLE|CHECKED OUT|STOLEN|UNDER REPAIR|WRITTEN OFF", RegexOptions.IgnoreCase);
 
         public BatchController(ITransactionRepository repository)
         {
@@ -545,6 +545,17 @@ namespace RussellGroup.Pims.Website.Controllers
                     model.StatusId = status.Id;
                 }
 
+                // ensure the status is neither available or checked out
+                if (model.StatusId == Status.Available)
+                {
+                    ModelState.AddModelError(string.Empty, $"The status cannot be changed to available.");
+                }
+
+                if (model.StatusId == Status.CheckedOut)
+                {
+                    ModelState.AddModelError(string.Empty, $"The status cannot be changed to checked out.");
+                }
+
                 // check that plant items were scanned
                 if (!transactions.Any())
                 {
@@ -581,5 +592,150 @@ namespace RussellGroup.Pims.Website.Controllers
         }
 
         #endregion
+
+        [HttpGet]
+        public ActionResult StatusUpdate(string scans)
+        {
+            var model = new BatchStatus
+            {
+                Scans = scans
+            };
+
+            return View("Status", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmStatusUpdate(BatchStatus model)
+        {
+            var plants = await GetStatusUpdatesAsync(model);
+
+            model.Plants = plants;
+
+            return View("ConfirmStatus", model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CommitStatusUpdate(BatchStatus model, string command)
+        {
+            switch (command)
+            {
+                case "Update Status":
+                    var plants = await GetStatusUpdatesAsync(model);
+                    model.Plants = plants;
+
+                    // one more check before the actual commit
+                    if (!ModelState.IsValid)
+                    {
+                        return View("ConfirmStatus", model);
+                    }
+
+                    // commit each plant
+                    foreach (var plant in plants)
+                    {
+                        await _repository.UpdateStatusAsync(plant.Id, model.StatusId);
+                    }
+
+                    return RedirectToAction("StatusUpdate");
+
+                case "Retry":
+                    return RedirectToAction("StatusUpdate", new { scans = model.Scans });
+
+                default:
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+        }
+
+        private async Task<IEnumerable<Plant>> GetStatusUpdatesAsync(BatchStatus model)
+        {
+            string statusScan = null;
+            List<Plant> plants = new List<Plant>();
+
+            if (!string.IsNullOrWhiteSpace(model.Scans))
+            {
+                // split into lines and trim the whitespace
+                var scans = model.Scans.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).Select(f => f.Trim()).Where(f => !string.IsNullOrWhiteSpace(f));
+
+                foreach (var scan in scans)
+                {
+                    // statuses
+                    if (_statusRegex.IsMatch(scan))
+                    {
+                        if (string.IsNullOrEmpty(statusScan))
+                        {
+                            statusScan = scan;
+                        }
+                        else
+                        {
+                            ModelState.AddModelError(string.Empty, "The status can only be set once.");
+                        }
+                    }
+                    // plant
+                    else
+                    {
+                        // only the last five digits are used for plant scans
+                        var plantScan = scan.Length >= 5 ? scan.Substring(scan.Length - 5, 5) : scan;
+
+                        var plant = await _repository.Plants.SingleOrDefaultAsync(f =>
+                            f.XPlantNewId.Equals(plantScan, StringComparison.OrdinalIgnoreCase) ||
+                            f.XPlantId.Equals(plantScan, StringComparison.OrdinalIgnoreCase));
+
+                        if (plant == null)
+                        {
+                            plant = new Plant { XPlantId = plantScan, XPlantNewId = plantScan, IsError = true };
+                            ModelState.AddModelError(string.Empty, $"The plant {plantScan} could not be found.");
+                        }
+
+                        // check a plant item hasn't already been added
+                        if (plants.Any(f =>
+                            f.XPlantNewId.Equals(plantScan, StringComparison.OrdinalIgnoreCase) ||
+                            f.XPlantId.Equals(plantScan, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            plant.IsError = true;
+                            ModelState.AddModelError(string.Empty, $"The plant {plantScan} has been added more than once.");
+                        }
+
+                        plants.Add(plant);
+                    }
+                }
+
+                // default the status scan to under repair
+                var status = await _repository.Statuses.SingleOrDefaultAsync(f => f.Name.Equals(statusScan, StringComparison.OrdinalIgnoreCase));
+
+                if (status != null)
+                {
+                    model.Status = status;
+                    model.StatusId = status.Id;
+
+                    // ensure the status is neither available or checked out
+                    if (model.StatusId == Status.Available)
+                    {
+                        ModelState.AddModelError(string.Empty, $"The status cannot be changed to available.");
+                    }
+
+                    if (model.StatusId == Status.CheckedOut)
+                    {
+                        ModelState.AddModelError(string.Empty, $"The status cannot be changed to checked out.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, $"There was no status scanned.");
+                }
+
+                // check that plant items were scanned
+                if (!plants.Any())
+                {
+                    ModelState.AddModelError(string.Empty, $"There was no plant scanned to update the status.");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Nothing was scanned to update the status.");
+            }
+
+            return plants;
+        }
     }
 }

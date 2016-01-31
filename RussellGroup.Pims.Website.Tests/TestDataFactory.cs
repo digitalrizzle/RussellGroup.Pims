@@ -362,5 +362,13 @@ namespace RussellGroup.Pims.Website.Tests
                 Scans = $"DOCKET{Environment.NewLine}100001{Environment.NewLine}99903002{Environment.NewLine}06003{Environment.NewLine}DOCKET{Environment.NewLine}100002{Environment.NewLine}12307001"
             };
         }
+
+        public static BatchStatus GetBatchStatus()
+        {
+            return new BatchStatus
+            {
+                Scans = $"WRITTEN OFF{Environment.NewLine}02002{Environment.NewLine}99904003"
+            };
+        }
     }
 }

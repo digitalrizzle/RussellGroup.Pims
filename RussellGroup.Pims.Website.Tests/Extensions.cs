@@ -70,5 +70,20 @@ namespace RussellGroup.Pims.Website.Tests
         {
             return result.GetBatchCheckinTransaction(elementNumber).PlantHires.Select(f => f.Plant).ToArray();
         }
+
+        public static BatchStatus GetBatchStatusModel(this ViewResult result)
+        {
+            if (result.Model is BatchStatus)
+            {
+                return result.Model as BatchStatus;
+            }
+
+            throw new ArgumentException("The model of the view result is not a BatchStatus class.");
+        }
+
+        public static Plant[] GetPlantsOfBatchStatus(this ViewResult result)
+        {
+            return result.GetBatchStatusModel().Plants.ToArray();
+        }
     }
 }

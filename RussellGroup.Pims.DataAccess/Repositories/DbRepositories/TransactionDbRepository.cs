@@ -278,5 +278,15 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
             await Db.SaveChangesAsync();
         }
+
+        public async Task<int> UpdateStatusAsync(int plantId, int statusId)
+        {
+            var plant = await Db.Plants.FindAsync(plantId);
+            plant.StatusId = statusId;
+
+            Db.Entry(plant).State = EntityState.Modified;
+
+            return await Db.SaveChangesAsync();
+        }
     }
 }
