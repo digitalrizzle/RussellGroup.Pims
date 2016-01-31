@@ -101,14 +101,18 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         {
             long docket;
             var setting = await Db.Settings.SingleOrDefaultAsync(f => f.Key.Equals("LastIssuedDocket"));
-            var value = StripPrefix(setting);
 
-            if (long.TryParse(value, out docket))
+            if (setting != null)
             {
-                return setting;
+                var value = StripPrefix(setting);
+
+                if (long.TryParse(value, out docket))
+                {
+                    return setting;
+                }
             }
 
-            throw new InvalidOperationException("The next docket could not be obtained.");
+            throw new InvalidOperationException("The last issued docket could not be obtained.");
         }
 
         public async Task<Receipt> StoreAsync(Receipt receipt)
