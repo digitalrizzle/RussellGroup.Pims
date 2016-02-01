@@ -117,7 +117,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // assert
             Assert.IsFalse(model.CheckinTransactions.Any(), "The transactions are not empty.");
-            Assert.AreEqual("Nothing was scanned to checkin.", error);
+            Assert.AreEqual("Nothing was scanned to check in.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -305,7 +305,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
             Assert.AreEqual("123456", transaction.ReturnDocket);
-            Assert.AreEqual("The was no plant scanned to checkin.", error);
+            Assert.AreEqual("The was no plant scanned to check in.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -398,23 +398,6 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // assert
             Assert.AreEqual(Status.Stolen, model.StatusId);
-        }
-
-        [TestMethod, TestCategory("Controllers")]
-        public async Task Test_ConfirmStatusUpdate_that_the_status_cannot_be_changed_to_available()
-        {
-            // arrange
-            var batch = TestDataFactory.GetBatchCheckin();
-            batch.Scans = $"DOCKET{Environment.NewLine}123456{Environment.NewLine}03002{Environment.NewLine}AVAILABLE";
-
-            // act
-            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
-            var model = result.Model as BatchCheckin;
-            var error = result.GetErrorMessage();
-
-            // assert
-            Assert.AreEqual(Status.Available, model.StatusId);
-            Assert.AreEqual("The status cannot be changed to available.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]

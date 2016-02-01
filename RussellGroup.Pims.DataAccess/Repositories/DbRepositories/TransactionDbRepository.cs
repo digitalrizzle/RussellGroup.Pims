@@ -115,6 +115,11 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             throw new InvalidOperationException("The last issued docket could not be obtained.");
         }
 
+        public static string FormatDocket(long docketNumber)
+        {
+            return $"{TransactionDbRepository.DocketPrefix}{docketNumber:00000}";
+        }
+
         public async Task<Receipt> StoreAsync(Receipt receipt)
         {
             Db.Receipts.Add(receipt);
@@ -153,14 +158,15 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         {
             // get and update the docket number (SaveChanges() in Checkout ought to commit the change)
             var setting = await GetLastIssuedDocketSettingAsync();
-            var docket = long.Parse(setting.Value);
+            var value = StripPrefix(setting);
+            var docket = long.Parse(value);
 
             docket++;
             setting.Value = docket.ToString();
             Db.Entry(setting).State = EntityState.Modified;
 
             // checkout as usual
-            await Checkout(job, $"{DocketPrefix}{docket}", whenStarted, plantIds, inventoryIdsAndQuantities);
+            await Checkout(job, FormatDocket(docket), whenStarted, plantIds, inventoryIdsAndQuantities);
 
             return docket;
         }
@@ -230,7 +236,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             Db.Entry(setting).State = EntityState.Modified;
 
             // checkout as usual
-            await Checkin(job, $"{DocketPrefix}{docket}", whenEnded, statusId, plantIds, inventoryIdsAndQuantities);
+            await Checkin(job, FormatDocket(docket), whenEnded, statusId, plantIds, inventoryIdsAndQuantities);
 
             return docket;
         }

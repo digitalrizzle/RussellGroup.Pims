@@ -189,7 +189,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
                         var docket = await _repository.Checkout(transaction.Job, transaction.WhenStarted, plantIds, inventoriesAndQuantities);
 
-                        transaction.Docket = $"{TransactionDbRepository.DocketPrefix}{docket}";
+                        transaction.Docket = TransactionDbRepository.FormatDocket(docket);
                     }
 
                     byte[] render = new ReceiptPdfGenerator().Create(model);
@@ -201,7 +201,7 @@ namespace RussellGroup.Pims.Website.Controllers
                         UserName = HttpContext.User.Identity.Name,
                         WhenCreated = DateTime.Now,
                         Scans = model.Scans,
-                        Dockets = string.Join(",", model.CheckoutTransactions.Select(f => f.Docket)),
+                        Dockets = string.Join(", ", model.CheckoutTransactions.Select(f => f.Docket)),
                         Content = new Content(render),
                         ContentType = "application/pdf"
                     };
@@ -239,12 +239,12 @@ namespace RussellGroup.Pims.Website.Controllers
                         if (transaction != null && transaction.Plants.Count == 0)
                         {
                             transaction.Job.IsError = true;
-                            ModelState.AddModelError(string.Empty, $"The job {transaction.Job.XJobId} has no plant to checkout.");
+                            ModelState.AddModelError(string.Empty, $"The job {transaction.Job.XJobId} has no plant to check out.");
                         }
 
                         // this is only a temporary docket number, it is assigned during commit
                         docket++;
-                        transaction = new CheckoutTransaction { Plants = new List<Plant>(), WhenStarted = model.WhenStarted, Docket = $"{TransactionDbRepository.DocketPrefix}{docket}" };
+                        transaction = new CheckoutTransaction { Plants = new List<Plant>(), WhenStarted = model.WhenStarted, Docket = TransactionDbRepository.FormatDocket(docket) };
                         transactions.Add(transaction);
 
                         var job = await _repository.Jobs.SingleOrDefaultAsync(
@@ -319,13 +319,13 @@ namespace RussellGroup.Pims.Website.Controllers
                 if (transaction != null && transaction.Plants.Count == 0)
                 {
                     transaction.Job.IsError = true;
-                    ModelState.AddModelError(string.Empty, $"The job {transaction.Job.XJobId} has no plant to checkout.");
+                    ModelState.AddModelError(string.Empty, $"The job {transaction.Job.XJobId} has no plant to check out.");
                 }
             }
 
             if (!transactions.Any())
             {
-                ModelState.AddModelError(string.Empty, "Nothing was scanned to checkout.");
+                ModelState.AddModelError(string.Empty, "Nothing was scanned to check out.");
             }
 
             return transactions;
@@ -393,7 +393,7 @@ namespace RussellGroup.Pims.Website.Controllers
                         if (transaction.IsAutoDocket)
                         {
                             var docket = await _repository.Checkin(transaction.Job, transaction.WhenEnded, model.StatusId, plantIds, inventoriesAndQuantities);
-                            transaction.ReturnDocket = $"{TransactionDbRepository.DocketPrefix}{docket}";
+                            transaction.ReturnDocket = TransactionDbRepository.FormatDocket(docket);
                         }
                         else
                         {
@@ -410,7 +410,7 @@ namespace RussellGroup.Pims.Website.Controllers
                         UserName = HttpContext.User.Identity.Name,
                         WhenCreated = DateTime.Now,
                         Scans = model.Scans,
-                        Dockets = string.Join(",", model.CheckinTransactions.Select(f => f.ReturnDocket)),
+                        Dockets = string.Join(", ", model.CheckinTransactions.Select(f => f.ReturnDocket)),
                         Content = new Content(render),
                         ContentType = "application/pdf"
                     };
@@ -446,15 +446,15 @@ namespace RussellGroup.Pims.Website.Controllers
                 foreach (var scan in scans)
                 {
                     // system assigned return docket
-                    if (scan.StartsWith("AUTO DOCKET"))
+                    if (scan.StartsWith("AUTO DOCKET", StringComparison.OrdinalIgnoreCase))
                     {
                         autoDocket++;
                         isAutoDocket = true;
-                        docket = $"{TransactionDbRepository.DocketPrefix}{autoDocket}";
+                        docket = TransactionDbRepository.FormatDocket(autoDocket);
                         continue;
                     }
                     // return docket
-                    if (scan.StartsWith("DOCKET"))
+                    if (scan.StartsWith("DOCKET", StringComparison.OrdinalIgnoreCase))
                     {
                         nextScanIsDocket = true;
                         continue;
@@ -545,12 +545,6 @@ namespace RussellGroup.Pims.Website.Controllers
                     model.StatusId = status.Id;
                 }
 
-                // ensure the status is neither available or checked out
-                if (model.StatusId == Status.Available)
-                {
-                    ModelState.AddModelError(string.Empty, $"The status cannot be changed to available.");
-                }
-
                 if (model.StatusId == Status.CheckedOut)
                 {
                     ModelState.AddModelError(string.Empty, $"The status cannot be changed to checked out.");
@@ -562,7 +556,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     var transaction = new CheckinTransaction { Job = errorJob, WhenEnded = model.WhenEnded, ReturnDocket = docket, PlantHires = new List<PlantHire>() };
                     transactions.Add(transaction);
 
-                    ModelState.AddModelError(string.Empty, $"The was no plant scanned to checkin.");
+                    ModelState.AddModelError(string.Empty, $"The was no plant scanned to check in.");
                 }
 
                 // check that dockets numbers are different between transactions
@@ -585,7 +579,7 @@ namespace RussellGroup.Pims.Website.Controllers
             }
             else
             {
-                ModelState.AddModelError(string.Empty, "Nothing was scanned to checkin.");
+                ModelState.AddModelError(string.Empty, "Nothing was scanned to check in.");
             }
 
             return transactions;
@@ -686,6 +680,11 @@ namespace RussellGroup.Pims.Website.Controllers
                             plant = new Plant { XPlantId = plantScan, XPlantNewId = plantScan, IsError = true };
                             ModelState.AddModelError(string.Empty, $"The plant {plantScan} could not be found.");
                         }
+                        else if (plant.StatusId == Status.CheckedOut)
+                        {
+                            plant.IsError = true;
+                            ModelState.AddModelError(string.Empty, $"The plant {plantScan} is checked out.");
+                        }
 
                         // check a plant item hasn't already been added
                         if (plants.Any(f =>
@@ -708,12 +707,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     model.Status = status;
                     model.StatusId = status.Id;
 
-                    // ensure the status is neither available or checked out
-                    if (model.StatusId == Status.Available)
-                    {
-                        ModelState.AddModelError(string.Empty, $"The status cannot be changed to available.");
-                    }
-
+                    // ensure the status is not checked out
                     if (model.StatusId == Status.CheckedOut)
                     {
                         ModelState.AddModelError(string.Empty, $"The status cannot be changed to checked out.");

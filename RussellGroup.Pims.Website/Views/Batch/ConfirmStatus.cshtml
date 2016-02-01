@@ -28,7 +28,7 @@
         <div class="form-group">
             @Html.Label("new status", new { @class = "control-label col-sm-2" })
             <div class="col-sm-9 form-data">
-                @Html.Encode(Model.Status.Name)
+                @(Model.Status != null ? Model.Status.Name : "?")
             </div>
         </div>
 
@@ -59,7 +59,7 @@
                                 <tr class="@(plant.IsError ? "danger" : string.Empty)">
                                     <td>@plant.XPlantIdAndXPlantNewId</td>
                                     <td>@plant.Description</td>
-                                    <td>@plant.Status.Name</td>
+                                    <td>@(plant.Status != null ? plant.Status.Name : "?")</td>
                                 </tr>
                             }
                         </tbody>
@@ -76,10 +76,7 @@
                 {
                     <input type="submit" name="command" value="Update Status" class="btn btn-success" />
                 }
-                else
-                {
-                    <input type="submit" name="command" value="Retry" class="btn btn-warning" />
-                }
+                <input type="submit" name="command" value="Retry" class="btn btn-warning" />
                 &nbsp;
                 @Html.ActionLink("Cancel", "Index", "Job")
             </div>

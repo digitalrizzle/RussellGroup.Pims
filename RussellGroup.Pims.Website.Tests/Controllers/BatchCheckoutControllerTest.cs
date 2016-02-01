@@ -118,7 +118,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // assert
             Assert.IsFalse(model.CheckoutTransactions.Any(), "The transactions are not empty.");
-            Assert.AreEqual("Nothing was scanned to checkout.", error);
+            Assert.AreEqual("Nothing was scanned to check out.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -231,7 +231,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
-            Assert.AreEqual("The job DC0001 has no plant to checkout.", error);
+            Assert.AreEqual("The job DC0001 has no plant to check out.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -315,7 +315,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // assert
             Assert.IsTrue(transaction.Job.IsError, "The job is not in error.");
-            Assert.AreEqual("The job DC0001 has no plant to checkout.", error);
+            Assert.AreEqual("The job DC0001 has no plant to check out.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]

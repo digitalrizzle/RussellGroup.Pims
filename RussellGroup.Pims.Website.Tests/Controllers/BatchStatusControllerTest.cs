@@ -193,7 +193,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // assert
             Assert.IsTrue(plants[0].IsError, "The plant is not in error.");
-            Assert.AreEqual("The plant 03002 is not available.", error);
+            Assert.AreEqual("The plant 03002 is checked out.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -262,23 +262,6 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // assert
             Assert.AreEqual(Status.Unknown, model.StatusId);
-        }
-
-        [TestMethod, TestCategory("Controllers")]
-        public async Task Test_ConfirmStatusUpdate_that_the_status_cannot_be_changed_to_available()
-        {
-            // arrange
-            var batch = TestDataFactory.GetBatchStatus();
-            batch.Scans = $"AVAILABLE{Environment.NewLine}02002{Environment.NewLine}99904003";
-
-            // act
-            var result = await Controller.ConfirmStatusUpdate(batch) as ViewResult;
-            var model = result.GetBatchStatusModel();
-            var error = result.GetErrorMessage();
-
-            // assert
-            Assert.AreEqual(Status.Available, model.StatusId);
-            Assert.AreEqual("The status cannot be changed to available.", error);
         }
 
         [TestMethod, TestCategory("Controllers")]
