@@ -50,6 +50,9 @@ namespace RussellGroup.Pims.Website.Tests
             }.AsQueryable();
         }
 
+        // the XPlantId scheme is:
+        //   first two digits = Id
+        //   last three digits = CategoryId
         public static IQueryable<Plant> GetPlants()
         {
             return new[]
@@ -70,8 +73,8 @@ namespace RussellGroup.Pims.Website.Tests
                     WhenDisused = null,
                     Rate = 2.35m,
                     Cost = 1500.00m,
-                    Serial = null,
-                    FixedAssetCode = null,
+                    Serial = "HARNESS01001",
+                    FixedAssetCode = "DCL01001",
                     IsElectrical = false,
                     IsTool = false
                 },
@@ -314,10 +317,11 @@ namespace RussellGroup.Pims.Website.Tests
                     Description = "First Test Job",
                     WhenStarted = new DateTime(2015, 12, 1),
                     WhenEnded = new DateTime(2015, 12, 31),
-                    ProjectManager = "Orlando Gee",
+                    ProjectManager = "Orlando Hubbard",
                     QuantitySurveyor = "Jarrod Koonce",
+                    NotificationEmail = "orlando.hubbard@unittest.com",
                     Comment = "This is a comment.",
-                    PlantHires = hasPlantHires ? _getPlantHires().Where(f => f.JobId == 1).ToArray() : new PlantHire[0]
+                    PlantHires = hasPlantHires ? _getPlantHires().Where(f => f.JobId == 1).ToArray() : null
                 },
                 new Job
                 {
@@ -325,11 +329,12 @@ namespace RussellGroup.Pims.Website.Tests
                     XJobId = "DC0002",
                     Description = "Second Test Job",
                     WhenStarted = new DateTime(2016, 3, 1),
-                    WhenEnded = new DateTime(2016, 9, 30),
+                    WhenEnded = null,
                     ProjectManager = "Peter Parker",
                     QuantitySurveyor = "Johnathan Morefield",
+                    NotificationEmail = "peter.parker@unittest.com",
                     Comment = "This is another comment.",
-                    PlantHires = hasPlantHires ? _getPlantHires().Where(f => f.JobId == 2).ToArray() : new PlantHire[0]
+                    PlantHires = hasPlantHires ? _getPlantHires().Where(f => f.JobId == 2).ToArray() : null
                 },
                 new Job
                 {

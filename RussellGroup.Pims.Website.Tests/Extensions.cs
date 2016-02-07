@@ -11,6 +11,26 @@ namespace RussellGroup.Pims.Website.Tests
 {
     public static class Extensions
     {
+        // http://stackoverflow.com/questions/30671033/unit-test-the-bindattribute-for-method-parameters
+        public static void BindModel<TModel, TController>(this TController controller, TModel model, string methodName)
+        {
+            foreach (var method in typeof(TController).GetMethods().Where(x => x.Name.Equals(methodName)))
+            {
+                foreach (var parameter in method.GetParameters())
+                {
+                    foreach (BindAttribute bindAttribute in parameter.GetCustomAttributes(true))
+                    {
+                        var propertiesToReset = typeof(TModel).GetProperties().Where(x => bindAttribute.IsPropertyAllowed(x.Name) == false).Where(x => x.CanWrite);
+
+                        foreach (var propertyToReset in propertiesToReset)
+                        {
+                            propertyToReset.SetValue(model, null);
+                        }
+                    }
+                }
+            }
+        }
+
         public static string GetErrorMessage(this ViewResult result, int elementNumber = 0)
         {
             var state = result.ViewData.ModelState;
