@@ -53,9 +53,8 @@ namespace RussellGroup.Pims.Website.Controllers
                     (f.StatusId == Status.Unknown || f.StatusId == Status.Available))
                 .Take(5)
                 .OrderBy(f => f.XPlantId)
-                // can't use f.XPlantIds here because LINQ to Entities won't accept it
-                .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantId + "/" + f.XPlantNewId })
-                .ToArray();
+                .ToArray()
+                .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantIdAndXPlantNewId });
 
             var json = Json(result, JsonRequestBehavior.AllowGet);
 
