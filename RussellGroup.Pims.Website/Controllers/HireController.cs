@@ -89,7 +89,14 @@ namespace RussellGroup.Pims.Website.Controllers
             var plantIds = collection.GetIds("plant-id-field");
             var inventoryIdsAndQuantities = collection.GetIdsAndQuantities("inventory-id-field", "inventory-quantity-field");
 
-            var job = await _repository.GetJob(transaction.JobId);
+            int jobId;
+            if (!int.TryParse(collection["JobId"], out jobId))
+            {
+                ModelState.AddModelError("JobId", "The job is invalid.");
+                jobId = transaction.Job.Id;
+            }
+
+            var job = await _repository.GetJob(jobId);
             var plants = new List<Plant>();
             var inventoriesAndQuantities = new List<KeyValuePair<Inventory, int?>>();
 

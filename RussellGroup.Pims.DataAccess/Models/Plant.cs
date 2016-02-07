@@ -22,13 +22,13 @@ namespace RussellGroup.Pims.DataAccess.Models
         [ForeignKey("Condition")]
         public int ConditionId { get; set; }
 
-        [Obsolete]
         [Required]
         [Display(Name = "id")]
         public string XPlantId { get; set; }
 
-        [Obsolete]
         [Display(Name = "new id")]
+        // StringLength isn't used here because there is existing data that doesn't meet this criteria
+        [RegularExpression(@"(?i)\w{5}", ErrorMessage = "The new id field must be five characters.")]
         public string XPlantNewId { get; set; }
 
         [Required]

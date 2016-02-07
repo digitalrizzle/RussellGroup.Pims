@@ -16,14 +16,14 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             get { return Db.Categories; }
         }
 
-        public IQueryable<Status> Statuses
-        {
-            get { return Db.Statuses; }
-        }
-
         public IQueryable<Condition> Conditions
         {
             get { return Db.Conditions; }
+        }
+
+        public IQueryable<Status> Statuses
+        {
+            get { return Db.Statuses; }
         }
 
         public IQueryable<PlantHire> GetPlantHire(int plantId)

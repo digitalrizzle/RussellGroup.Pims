@@ -63,7 +63,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     f.ReturnDocket.Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
-                    SqlFunctions.StringConvert(f.Rate).Contains(hint));
+                    SqlFunctions.StringConvert(f.Rate, 16, 2).Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
@@ -86,7 +86,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.ReturnDocket,
                     WhenStarted = c.WhenStarted.ToShortDateString(),
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.Rate,
+                    Rate = c.Rate.HasValue ? c.Rate.Value.ToString("0.00") : string.Empty,
                     CrudLinks = this.CrudLinks(new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
