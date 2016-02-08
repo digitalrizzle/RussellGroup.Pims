@@ -79,7 +79,7 @@
                     <input type="submit" value="Resend" class="btn btn-success" @(string.IsNullOrWhiteSpace(Model.Recipients) ? "disabled" : string.Empty ) />
                     <text>&nbsp;</text>
                 }
-                @Html.ActionLink("Cancel", "Index")
+                @Html.ActionLink("Cancel", "Receipts")
             }
         </dd>
     </dl>

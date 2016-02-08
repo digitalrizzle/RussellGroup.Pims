@@ -23,7 +23,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         IQueryable<TransactionType> TransactionTypes { get; }
 
         Task<long> GetLastIssuedDocketAsync();
-        Task<Receipt> StoreAsync(Receipt receipt);
+        Task StoreAsync(Receipt receipt);
 
         IEnumerable<InventoryHireCheckin> GetCheckinInventoryHires(Job job);
 

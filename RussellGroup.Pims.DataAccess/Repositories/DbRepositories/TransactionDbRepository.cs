@@ -120,13 +120,11 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             return $"{TransactionDbRepository.DocketPrefix}{docketNumber:00000}";
         }
 
-        public async Task<Receipt> StoreAsync(Receipt receipt)
+        public async Task StoreAsync(Receipt receipt)
         {
             Db.Receipts.Add(receipt);
 
             await Db.SaveChangesAsync();
-
-            return receipt;
         }
 
         public IEnumerable<InventoryHireCheckin> GetCheckinInventoryHires(Job job)

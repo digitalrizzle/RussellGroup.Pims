@@ -194,7 +194,7 @@ namespace RussellGroup.Pims.Website.Controllers
         #region Checkout
 
         [HttpGet]
-        public ActionResult Checkout(string whenStarted, string scans, bool? receiptSuccess)
+        public ActionResult Checkout(string whenStarted, string scans, bool? sendSuccess)
         {
             DateTime parsedDate;
 
@@ -209,9 +209,10 @@ namespace RussellGroup.Pims.Website.Controllers
                 Scans = scans
             };
 
-            if (receiptSuccess.GetValueOrDefault())
+            if (sendSuccess.HasValue)
             {
-                ViewBag.Message = "Receipts have been created.";
+                ViewBag.Success = sendSuccess.Value;
+                ViewBag.Message = sendSuccess.Value ? "The receipt has been created and sent." : "There was a problem sending the receipt.";
             }
 
             return View("Checkout", model);
@@ -235,6 +236,7 @@ namespace RussellGroup.Pims.Website.Controllers
             switch (command)
             {
                 case "Checkout":
+                    var sendSuccess = false;
                     var transactions = await GetCheckoutTransactionsAsync(model);
                     model.CheckoutTransactions = transactions;
 
@@ -277,20 +279,21 @@ namespace RussellGroup.Pims.Website.Controllers
 
                         await _repository.StoreAsync(receipt);
 
-                        //try
-                        //{
-                        if (!string.IsNullOrEmpty(job.NotificationEmail))
+                        try
                         {
-                            MailHelper.Send(receipt);
+                            if (!string.IsNullOrEmpty(job.NotificationEmail))
+                            {
+                                MailHelper.Send(receipt);
+                                sendSuccess = true;
+                            }
                         }
-                        //}
-                        //catch
-                        //{
-                        //    // do nothing
-                        //}
+                        catch
+                        {
+                            // do nothing
+                        }
                     }
 
-                    return RedirectToAction("Checkout", new { whenStarted = model.WhenStarted.ToShortDateString(), receiptSuccess = true });
+                    return RedirectToAction("Checkout", new { whenStarted = model.WhenStarted.ToShortDateString(), sendSuccess });
 
                 case "Retry":
                     return RedirectToAction("Checkout", new { whenStarted = model.WhenStarted.ToShortDateString(), scans = model.Scans });
@@ -418,7 +421,7 @@ namespace RussellGroup.Pims.Website.Controllers
         #region Checkin
 
         [HttpGet]
-        public ActionResult Checkin(string whenEnded, string scans, bool? receiptSuccess)
+        public ActionResult Checkin(string whenEnded, string scans, bool? sendSuccess)
         {
             DateTime parsedDate;
 
@@ -433,9 +436,10 @@ namespace RussellGroup.Pims.Website.Controllers
                 Scans = scans
             };
 
-            if (receiptSuccess.GetValueOrDefault())
+            if (sendSuccess.HasValue)
             {
-                ViewBag.Message = "Receipts have been created.";
+                ViewBag.Success = sendSuccess.Value;
+                ViewBag.Message = sendSuccess.Value ? "The receipt has been created and sent." : "There was a problem sending the receipt.";
             }
 
             return View("Checkin", model);
@@ -460,6 +464,7 @@ namespace RussellGroup.Pims.Website.Controllers
             switch (command)
             {
                 case "Checkin":
+                    var sendSuccess = false;
                     var transactions = await GetCheckinTransactionsAsync(model);
                     model.CheckinTransactions = transactions;
 
@@ -498,7 +503,7 @@ namespace RussellGroup.Pims.Website.Controllers
                         {
                             Job = job,
                             JobId = job.Id,
-                            TransactionType = _repository.TransactionTypes.Single(f => f.Id == TransactionType.Checkout),
+                            TransactionType = _repository.TransactionTypes.Single(f => f.Id == TransactionType.Checkin),
                             TransactionTypeId = TransactionType.Checkin,
                             UserName = HttpContext.User.Identity.Name,
                             WhenCreated = DateTime.Now,
@@ -510,20 +515,21 @@ namespace RussellGroup.Pims.Website.Controllers
 
                         await _repository.StoreAsync(receipt);
 
-                        //try
-                        //{
-                        if (!string.IsNullOrEmpty(job.NotificationEmail))
+                        try
                         {
-                            MailHelper.Send(receipt);
+                            if (!string.IsNullOrEmpty(job.NotificationEmail))
+                            {
+                                MailHelper.Send(receipt);
+                                sendSuccess = true;
+                            }
                         }
-                        //}
-                        //catch
-                        //{
-                        //    // do nothing
-                        //}
+                        catch
+                        {
+                            // do nothing
+                        }
                     }
 
-                    return RedirectToAction("Checkin", new { whenEnded = model.WhenEnded.ToShortDateString(), receiptSuccess = true });
+                    return RedirectToAction("Checkin", new { whenEnded = model.WhenEnded.ToShortDateString(), sendSuccess });
 
                 case "Retry":
                     return RedirectToAction("Checkin", new { whenEnded = model.WhenEnded.ToShortDateString(), scans = model.Scans });

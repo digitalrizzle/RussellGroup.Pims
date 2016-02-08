@@ -10,7 +10,7 @@
 
 @if (ViewBag.Message != null)
 {
-    <p class="alert alert-success">@ViewBag.Message</p>
+    <p class="alert @(ViewBag.Success ? "alert-success" : "alert-warning")">@ViewBag.Message</p>
 }
 
 @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
@@ -52,7 +52,7 @@
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="submit" value="Checkin" class="btn btn-primary" />
                 &nbsp;
-                @Html.ActionLink("Cancel", "Index", "Job")
+                @Html.ActionLink("Cancel", "Receipts")
             </div>
         </div>
     </div>
