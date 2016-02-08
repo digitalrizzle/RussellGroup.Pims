@@ -20,6 +20,8 @@ namespace RussellGroup.Pims.DataAccess.Models
 
         public int Id { get; set; }
 
+        public string ContentType { get; private set; }
+
         private byte[] _data;
         public byte[] Data
         {
@@ -28,7 +30,16 @@ namespace RussellGroup.Pims.DataAccess.Models
             {
                 _data = value;
 
-                Hash = value != null ? GetHash(value) : null;
+                if (value != null)
+                {
+                    Hash = GetHash(value);
+                    ContentType = MimeHelper.GetMimeType(value);
+                }
+                else
+                {
+                    Hash = null;
+                    ContentType = null;
+                }
             }
         }
 

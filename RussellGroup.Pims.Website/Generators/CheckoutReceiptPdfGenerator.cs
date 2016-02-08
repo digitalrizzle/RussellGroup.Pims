@@ -44,8 +44,7 @@ namespace RussellGroup.Pims.Website.Generators
 
             private static void AddHeading(Document document, BatchCheckout batch)
             {
-                var logoPath = HttpContext.Current.Server.MapPath("~/Content/dominion_constructors.png");
-                var logo = Image.GetInstance(logoPath);
+                var logo = Image.GetInstance(HttpContext.Current.Server.MapPath("~/Content/dominion_constructors.png"));
 
                 var table = new PdfPTable(new[] { 60f, 20f, 30f })
                 {
@@ -61,6 +60,7 @@ namespace RussellGroup.Pims.Website.Generators
                 table.AddCell(new PdfPCell(logo) { Border = PdfPCell.NO_BORDER, HorizontalAlignment = PdfPCell.ALIGN_RIGHT });
 
                 table.AddCell(new PdfPCell(new Phrase($"Checked out: {batch.WhenStarted.ToShortDateString()}", SubtitleFont)) { Colspan = 3, Border = PdfPCell.NO_BORDER });
+                table.AddCell(new PdfPCell(new Phrase($"Checked out by: {HttpContext.Current.User.Identity.Name}", SubtitleFont)) { Colspan = 3, Border = PdfPCell.NO_BORDER });
 
                 document.Add(table);
                 document.Add(new Chunk(line));

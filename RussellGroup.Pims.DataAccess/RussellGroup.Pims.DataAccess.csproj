@@ -75,6 +75,7 @@
     <Compile Include="Migrations\MigrationContextFactory.cs" />
     <Compile Include="Migrations\Seed.cs" />
     <Compile Include="Migrations\SqlFactory.cs" />
+    <Compile Include="MimeHelper.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\Audit.cs" />

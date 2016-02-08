@@ -60,6 +60,7 @@ namespace RussellGroup.Pims.Website.Generators
                 table.AddCell(new PdfPCell(logo) { Border = PdfPCell.NO_BORDER, HorizontalAlignment = PdfPCell.ALIGN_RIGHT });
 
                 table.AddCell(new PdfPCell(new Phrase($"Checked in: {batch.WhenEnded.ToShortDateString()}", SubtitleFont)) { Colspan = 3, Border = PdfPCell.NO_BORDER });
+                table.AddCell(new PdfPCell(new Phrase($"Checked in by: {HttpContext.Current.User.Identity.Name}", SubtitleFont)) { Colspan = 3, Border = PdfPCell.NO_BORDER });
 
                 document.Add(table);
                 document.Add(new Chunk(line));

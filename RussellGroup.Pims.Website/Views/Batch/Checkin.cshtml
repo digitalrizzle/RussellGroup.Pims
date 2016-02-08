@@ -8,6 +8,11 @@
 
 <hr />
 
+@if (ViewBag.Message != null)
+{
+    <p class="alert alert-success">@ViewBag.Message</p>
+}
+
 @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
 {
     @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
@@ -57,11 +62,6 @@
     <script>
         $(document).ready(function () {
             $('#Scans').focus();
-
-            // download and open the receipt if available
-            if ('@(Model.ReceiptId.HasValue)' === '@true') {
-                window.open('@Url.Action("Receipt")' + '?id=' + '@Model.ReceiptId', '_blank');
-            }
         });
     </script>
 }

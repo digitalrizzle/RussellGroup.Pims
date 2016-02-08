@@ -3,6 +3,7 @@ using LinqKit;
 using RussellGroup.Pims.DataAccess.Models;
 using RussellGroup.Pims.DataAccess.Repositories;
 using RussellGroup.Pims.Website.Generators;
+using RussellGroup.Pims.Website.Helpers;
 using RussellGroup.Pims.Website.Models;
 using System;
 using System.Collections.Generic;
@@ -27,8 +28,14 @@ namespace RussellGroup.Pims.Website.Controllers
             _repository = repository;
         }
 
-        public ActionResult Receipts()
+        public ActionResult Receipts(bool? resendSuccess)
         {
+            if (resendSuccess.HasValue)
+            {
+                ViewBag.Success = resendSuccess.Value;
+                ViewBag.Message = resendSuccess.Value ? "The receipt has been sent." : "There was a problem resending the receipt.";
+            }
+
             return View("Receipts");
         }
 
@@ -51,7 +58,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 : all.Where(f =>
                     f.TransactionType.Name.Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenCreated).Contains(hint) ||
-                    f.Dockets.Contains(hint));
+                    f.Docket.Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
@@ -71,8 +78,11 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     TransactionType = c.TransactionType.Name,
                     WhenCreated = c.WhenCreated.ToString("dd/MM/yyyy h:mm:ss tt"),
-                    c.Dockets,
-                    CrudLinks = string.Format("<a href=\"{0}\" class=\"download\" target=\"_blank\">{1}</a>", Url.Action("Receipt", new { id = c.Id }), "View")
+                    XJobId = c.Job.XJobId,
+                    c.Docket,
+                    CrudLinks =
+                        $"<a href=\"{Url.Action("Resend", new { id = c.Id })}\">Resend</a> | " +
+                        $"<a href=\"{Url.Action("Receipt", new { id = c.Id })}\" class=\"download\" target=\"_blank\">View</a>"
                 });
 
             return Json(new DataTablesResponse(model.Draw, paged, filtered.Count(), all.Count()), JsonRequestBehavior.AllowGet);
@@ -90,7 +100,57 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            return File(receipt.Content.Data, receipt.ContentType);
+            return File(receipt.Content.Data, receipt.Content.ContentType);
+        }
+
+        public async Task<ActionResult> Resend(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var receipt = await _repository.Receipts.Include("Content").SingleOrDefaultAsync(f => f.Id.Equals(id.Value));
+            if (receipt == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(receipt);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Resend(Receipt receipt)
+        {
+            if (receipt == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            receipt = await _repository.Receipts.Include("Content").SingleOrDefaultAsync(f => f.Id.Equals(receipt.Id));
+            if (receipt == null)
+            {
+                return HttpNotFound();
+            }
+
+            bool resendSuccess = false;
+
+            if (!string.IsNullOrEmpty(receipt.Job.NotificationEmail))
+            {
+                try
+                {
+                    receipt.Recipients = receipt.Job.NotificationEmail;
+
+                    MailHelper.Send(receipt);
+
+                    resendSuccess = true;
+                }
+                catch
+                {
+
+                }
+            }
+
+            return RedirectToAction("Receipts", new { resendSuccess });
         }
 
         public ActionResult Barcodes()
@@ -134,7 +194,7 @@ namespace RussellGroup.Pims.Website.Controllers
         #region Checkout
 
         [HttpGet]
-        public ActionResult Checkout(string whenStarted, string scans, int? receiptId)
+        public ActionResult Checkout(string whenStarted, string scans, bool? receiptSuccess)
         {
             DateTime parsedDate;
 
@@ -145,10 +205,14 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var model = new BatchCheckout
             {
-                ReceiptId = receiptId,
                 WhenStarted = parsedDate.Date,
                 Scans = scans
             };
+
+            if (receiptSuccess.GetValueOrDefault())
+            {
+                ViewBag.Message = "Receipts have been created.";
+            }
 
             return View("Checkout", model);
         }
@@ -192,23 +256,41 @@ namespace RussellGroup.Pims.Website.Controllers
                         transaction.Docket = TransactionDbRepository.FormatDocket(docket);
                     }
 
-                    byte[] render = new ReceiptPdfGenerator().Create(model);
-
-                    // store the receipt data
-                    var receipt = new Receipt
+                    // generate and store a receipt per job
+                    foreach (var job in model.CheckoutTransactions.Select(f => f.Job).Distinct())
                     {
-                        TransactionTypeId = TransactionType.Checkout,
-                        UserName = HttpContext.User.Identity.Name,
-                        WhenCreated = DateTime.Now,
-                        Scans = model.Scans,
-                        Dockets = string.Join(", ", model.CheckoutTransactions.Select(f => f.Docket)),
-                        Content = new Content(render),
-                        ContentType = "application/pdf"
-                    };
+                        byte[] render = new ReceiptPdfGenerator().Create(model, job);
 
-                    await _repository.StoreAsync(receipt);
+                        var receipt = new Receipt
+                        {
+                            Job = job,
+                            JobId = job.Id,
+                            TransactionType = _repository.TransactionTypes.Single(f => f.Id == TransactionType.Checkout),
+                            TransactionTypeId = TransactionType.Checkout,
+                            UserName = HttpContext.User.Identity.Name,
+                            WhenCreated = DateTime.Now,
+                            Docket = string.Join(", ", model.CheckoutTransactions.Where(f => f.JobId == job.Id).Select(f => f.Docket).Distinct()),
+                            ProjectManager = job.ProjectManager,
+                            Recipients = job.NotificationEmail,
+                            Content = new Content(render)
+                        };
 
-                    return RedirectToAction("Checkout", new { whenStarted = model.WhenStarted.ToShortDateString(), receiptId = receipt.Id });
+                        await _repository.StoreAsync(receipt);
+
+                        //try
+                        //{
+                        if (!string.IsNullOrEmpty(job.NotificationEmail))
+                        {
+                            MailHelper.Send(receipt);
+                        }
+                        //}
+                        //catch
+                        //{
+                        //    // do nothing
+                        //}
+                    }
+
+                    return RedirectToAction("Checkout", new { whenStarted = model.WhenStarted.ToShortDateString(), receiptSuccess = true });
 
                 case "Retry":
                     return RedirectToAction("Checkout", new { whenStarted = model.WhenStarted.ToShortDateString(), scans = model.Scans });
@@ -336,7 +418,7 @@ namespace RussellGroup.Pims.Website.Controllers
         #region Checkin
 
         [HttpGet]
-        public ActionResult Checkin(string whenEnded, string scans, int? receiptId)
+        public ActionResult Checkin(string whenEnded, string scans, bool? receiptSuccess)
         {
             DateTime parsedDate;
 
@@ -347,10 +429,14 @@ namespace RussellGroup.Pims.Website.Controllers
 
             var model = new BatchCheckin
             {
-                ReceiptId = receiptId,
                 WhenEnded = parsedDate.Date,
                 Scans = scans
             };
+
+            if (receiptSuccess.GetValueOrDefault())
+            {
+                ViewBag.Message = "Receipts have been created.";
+            }
 
             return View("Checkin", model);
         }
@@ -401,23 +487,43 @@ namespace RussellGroup.Pims.Website.Controllers
                         }
                     }
 
-                    byte[] render = new ReceiptPdfGenerator().Create(model);
 
-                    // store the receipt data
-                    var receipt = new Receipt
+                    // generate and store a receipt per job
+                    foreach (var job in model.CheckinTransactions.Select(f => f.Job).Distinct())
                     {
-                        TransactionTypeId = TransactionType.Checkin,
-                        UserName = HttpContext.User.Identity.Name,
-                        WhenCreated = DateTime.Now,
-                        Scans = model.Scans,
-                        Dockets = string.Join(", ", model.CheckinTransactions.Select(f => f.ReturnDocket)),
-                        Content = new Content(render),
-                        ContentType = "application/pdf"
-                    };
+                        byte[] render = new ReceiptPdfGenerator().Create(model, job);
 
-                    await _repository.StoreAsync(receipt);
+                        // store the receipt data
+                        var receipt = new Receipt
+                        {
+                            Job = job,
+                            JobId = job.Id,
+                            TransactionType = _repository.TransactionTypes.Single(f => f.Id == TransactionType.Checkout),
+                            TransactionTypeId = TransactionType.Checkin,
+                            UserName = HttpContext.User.Identity.Name,
+                            WhenCreated = DateTime.Now,
+                            Docket = string.Join(", ", model.CheckinTransactions.Where(f => f.JobId == job.Id).Select(f => f.ReturnDocket).Distinct()),
+                            ProjectManager = job.ProjectManager,
+                            Recipients = job.NotificationEmail,
+                            Content = new Content(render)
+                        };
 
-                    return RedirectToAction("Checkin", new { whenEnded = model.WhenEnded.ToShortDateString(), receiptId = receipt.Id });
+                        await _repository.StoreAsync(receipt);
+
+                        //try
+                        //{
+                        if (!string.IsNullOrEmpty(job.NotificationEmail))
+                        {
+                            MailHelper.Send(receipt);
+                        }
+                        //}
+                        //catch
+                        //{
+                        //    // do nothing
+                        //}
+                    }
+
+                    return RedirectToAction("Checkin", new { whenEnded = model.WhenEnded.ToShortDateString(), receiptSuccess = true });
 
                 case "Retry":
                     return RedirectToAction("Checkin", new { whenEnded = model.WhenEnded.ToShortDateString(), scans = model.Scans });
@@ -587,6 +693,8 @@ namespace RussellGroup.Pims.Website.Controllers
 
         #endregion
 
+        #region Status
+
         [HttpGet]
         public ActionResult StatusUpdate(string scans)
         {
@@ -731,5 +839,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             return plants;
         }
+
+        #endregion
     }
 }

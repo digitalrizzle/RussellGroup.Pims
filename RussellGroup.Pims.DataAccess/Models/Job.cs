@@ -39,7 +39,7 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "quantity surveyor")]
         public string QuantitySurveyor { get; set; }
 
-        [DisplayName("notification emails")]
+        [Display(Name = "notification emails")]
         [RegularExpression(@"^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4}[\W]*,{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$", ErrorMessage = "The email address(es) are not valid.")]
         // this is comma delimited so the validation won't work
         //[DataType(DataType.EmailAddress)]

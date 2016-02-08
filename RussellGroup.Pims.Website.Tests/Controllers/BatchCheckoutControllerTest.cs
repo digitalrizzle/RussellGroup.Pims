@@ -24,6 +24,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
         {
             Repository = new Mock<ITransactionRepository>(MockBehavior.Strict);
 
+            var mockTransactionTypes = MockFactory.GetMockDbSet(TestDataFactory.GetTransactionTypes());
             var mockStatuses = MockFactory.GetMockDbSet(TestDataFactory.GetStatuses());
             var mockConditions = MockFactory.GetMockDbSet(TestDataFactory.GetConditions());
             var mockPlants = MockFactory.GetMockDbSet(TestDataFactory.GetPlants());
@@ -33,6 +34,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var mockInventoryHire = MockFactory.GetMockDbSet(new InventoryHire[0].AsQueryable());
 
             Repository.Setup(f => f.GetLastIssuedDocketAsync()).Returns(Task.FromResult(900001L));
+            Repository.Setup(f => f.TransactionTypes).Returns(mockTransactionTypes.Object);
             Repository.Setup(f => f.Statuses).Returns(mockStatuses.Object);
             Repository.Setup(f => f.Conditions).Returns(mockConditions.Object);
             Repository.Setup(f => f.Plants).Returns(mockPlants.Object);
@@ -75,7 +77,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
         public void Test_Checkout_that_the_parameters_passed_are_returned_in_the_view()
         {
             // act
-            var result = Controller.Checkout("31/12/2015", "XX9999", 9) as ViewResult;
+            var result = Controller.Checkout("31/12/2015", "XX9999", true) as ViewResult;
 
             // assert
             Assert.IsTrue(result.Model is BatchCheckout);
@@ -84,7 +86,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             Assert.AreEqual(new DateTime(2015, 12, 31), model.WhenStarted);
             Assert.AreEqual("XX9999", model.Scans);
-            Assert.AreEqual(9, model.ReceiptId);
+            Assert.AreEqual("Receipts have been created.", result.ViewBag.Message);
         }
 
         #endregion
@@ -381,7 +383,6 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             Repository.Setup(f => f.StoreAsync(It.IsAny<Receipt>())).Returns((Receipt receipt) =>
             {
-                receipt.Id = 7;
                 return Task.FromResult(receipt);
             });
 
@@ -393,7 +394,6 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Assert.IsFalse(result.Permanent);
             Assert.AreEqual("Checkout", result.RouteValues["Action"]);
             Assert.AreEqual("31/12/2015", result.RouteValues["whenStarted"]);
-            Assert.AreEqual(7, result.RouteValues["receiptId"]);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -457,7 +457,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Assert.AreEqual(9, receipt.Id);
             Assert.AreEqual(TransactionType.Checkout, receipt.TransactionTypeId);
             Assert.AreEqual("Tester", receipt.UserName);
-            Assert.AreEqual("application/pdf", receipt.ContentType);
+            Assert.AreEqual("application/pdf", receipt.Content.ContentType);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -486,7 +486,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // assert
             Assert.IsNotNull(receipt, "A receipt was not created.");
-            Assert.IsTrue(receipt.Dockets.Split(',').All(f => f.StartsWith("DCL")), "The dockets are not prefixed with DCL.");
+            Assert.IsTrue(receipt.Docket.StartsWith("DCL"), "The docket is not prefixed with DCL.");
         }
 
         [TestMethod, TestCategory("Controllers")]

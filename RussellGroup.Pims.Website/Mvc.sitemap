@@ -26,18 +26,20 @@
       <mvcSiteMapNode title="Checkin" controller="Hire" action="Checkin" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Batch" clickable="false" visibilityProvider="RussellGroup.Pims.Website.TrimEmptyGroupingNodesVisibilityProvider, RussellGroup.Pims.Website">
-      <mvcSiteMapNode title="Receipts" controller="Batch" action="Receipts"></mvcSiteMapNode>
-      <mvcSiteMapNode title="Barcodes" controller="Batch" action="Barcodes">
-        <mvcSiteMapNode title="Job Barcodes" action="JobBarcodes"></mvcSiteMapNode>
-        <mvcSiteMapNode title="Plant Barcodes" action="PlantBarcodes"></mvcSiteMapNode>
-        <mvcSiteMapNode title="Status and Docket Barcodes" action="StatusBarcodes"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Receipts" controller="Batch" action="Receipts">
+        <mvcSiteMapNode title="Resend Receipt" action="Resend" visibility="SiteMapPathHelper,!*" preservedRouteParameters="id" />
       </mvcSiteMapNode>
-      <mvcSiteMapNode title="Batch Status Update" controller="Batch" action="StatusUpdate"></mvcSiteMapNode>
-      <mvcSiteMapNode title="Confirm Batch Status Update" controller="Batch" action="ConfirmStatusUpdate" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
-      <mvcSiteMapNode title="Batch Checkout" controller="Batch" action="Checkout"></mvcSiteMapNode>
-      <mvcSiteMapNode title="Confirm Batch Checkout" controller="Batch" action="ConfirmCheckout" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
-      <mvcSiteMapNode title="Batch Checkin" controller="Batch" action="Checkin"></mvcSiteMapNode>
-      <mvcSiteMapNode title="Confirm Batch Checkin" controller="Batch" action="ConfirmCheckin" visibility="SiteMapPathHelper,!*"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Barcodes" controller="Batch" action="Barcodes">
+        <mvcSiteMapNode title="Job Barcodes" action="JobBarcodes" />
+        <mvcSiteMapNode title="Plant Barcodes" action="PlantBarcodes" />
+        <mvcSiteMapNode title="Status and Docket Barcodes" action="StatusBarcodes" />
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Batch Status Update" controller="Batch" action="StatusUpdate" />
+      <mvcSiteMapNode title="Confirm Batch Status Update" controller="Batch" action="ConfirmStatusUpdate" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Batch Checkout" controller="Batch" action="Checkout" />
+      <mvcSiteMapNode title="Confirm Batch Checkout" controller="Batch" action="ConfirmCheckout" visibility="SiteMapPathHelper,!*" />
+      <mvcSiteMapNode title="Batch Checkin" controller="Batch" action="Checkin" />
+      <mvcSiteMapNode title="Confirm Batch Checkin" controller="Batch" action="ConfirmCheckin" visibility="SiteMapPathHelper,!*" />
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Stock" clickable="false" visibilityProvider="RussellGroup.Pims.Website.TrimEmptyGroupingNodesVisibilityProvider, RussellGroup.Pims.Website">
       <mvcSiteMapNode title="Plant" controller="Plant" action="Index">

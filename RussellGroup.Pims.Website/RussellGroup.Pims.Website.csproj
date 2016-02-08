@@ -188,6 +188,7 @@
     <Compile Include="Helpers\IIdentityHelper.cs" />
     <Compile Include="Generators\ReceiptPdfGenerator.cs" />
     <Compile Include="Generators\ReceiptPdfPageEventHandler.cs" />
+    <Compile Include="Helpers\MailHelper.cs" />
     <Compile Include="Helpers\VersionHelper.cs" />
     <Compile Include="Models\BatchCheckin.cs" />
     <Compile Include="Models\BatchCheckout.cs" />
@@ -625,6 +626,9 @@
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Scripts\jquery-2.2.0.min.map" />
+    <Content Include="Views\Batch\Resend.cshtml" />
+    <Content Include="smtp.config" />
+    <Content Include="smtp.example.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

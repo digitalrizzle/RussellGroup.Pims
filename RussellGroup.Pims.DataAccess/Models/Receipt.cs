@@ -17,6 +17,9 @@ namespace RussellGroup.Pims.DataAccess.Models
         [ForeignKey("TransactionType")]
         public int TransactionTypeId { get; set; }
 
+        [ForeignKey("Job")]
+        public int JobId { get; set; }
+
         [ForeignKey("Content")]
         public int ContentId { get; set; }
 
@@ -28,18 +31,22 @@ namespace RussellGroup.Pims.DataAccess.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime WhenCreated { get; set; }
 
-        [Display(Name = "scans")]
-        [DataType(DataType.MultilineText)]
-        public string Scans { get; set; }
-
-        [Display(Name = "dockets")]
+        [Display(Name = "docket")]
         [DataType(DataType.Text)]
-        public string Dockets { get; set; }
+        public string Docket { get; set; }
+
+        [Display(Name = "project manager")]
+        public string ProjectManager { get; set; }
+
+        [Display(Name = "email recipients")]
+        [RegularExpression(@"^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4}[\W]*,{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$", ErrorMessage = "The email address(es) are not valid.")]
+        public string Recipients { get; set; }
+
+        [Display(Name = "job")]
+        public virtual Job Job { get; set; }
 
         [Display(Name = "content")]
         public Content Content { get; set; }
-
-        public string ContentType { get; set; }
 
         [Display(Name = "transaction type")]
         public virtual TransactionType TransactionType { get; set; }

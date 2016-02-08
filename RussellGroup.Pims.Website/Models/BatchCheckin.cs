@@ -10,8 +10,6 @@ namespace RussellGroup.Pims.Website.Models
 {
     public class BatchCheckin
     {
-        public int? ReceiptId { get; set; }
-
         [Display(Name = "scans")]
         [DataType(DataType.MultilineText)]
         public string Scans { get; set; }

@@ -232,3 +232,4 @@ RussellGroup.Pims.DataAccess/Migrations/seed.txt
 RussellGroup.Pims.Website/App_Data/Pims.mdf
 RussellGroup.Pims.Website/App_Data/Pims_log.ldf
 .vs/config/applicationhost.config
+RussellGroup.Pims.Website/smtp.config

@@ -7,6 +7,15 @@ namespace RussellGroup.Pims.Website.Tests
 {
     public static class TestDataFactory
     {
+        public static IQueryable<TransactionType> GetTransactionTypes()
+        {
+            return new[]
+            {
+                new TransactionType { Id = TransactionType.Checkout, Name = "Checkout" },
+                new TransactionType { Id = TransactionType.Checkin, Name = "Checkin" },
+            }.AsQueryable();
+        }
+
         public static IQueryable<Status> GetStatuses()
         {
             return new[]

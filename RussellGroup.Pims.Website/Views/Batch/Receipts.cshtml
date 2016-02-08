@@ -8,6 +8,11 @@
 
 <h3>@ViewBag.Title</h3>
 
+@if (ViewBag.Message != null)
+{
+    <p class="alert @(ViewBag.Success ? "alert-success" : "alert-warning")">@ViewBag.Message</p>
+}
+
 <table class="table display table-striped table-hover order-column table-responsive" width="100%">
     <thead>
         <tr>
@@ -21,7 +26,10 @@
                 @Html.DisplayNameFor(model => model.WhenCreated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Dockets)
+                job id
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Docket)
             </th>
             <th></th>
         </tr>
@@ -42,7 +50,8 @@
                 { "data": "Id", "visible": false },
                 { "data": "TransactionType", "name": "TransactionType.Name" },
                 { "data": "WhenCreated" },
-                { "data": "Dockets" },
+                { "data": "XJobId" },
+                { "data": "Docket" },
                 { "data": "CrudLinks", "sortable": false, "className": "text-center" }
             ]
         });
