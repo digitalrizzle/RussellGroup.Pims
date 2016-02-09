@@ -44,7 +44,7 @@ namespace RussellGroup.Pims.Website.Generators
 
             private static void AddHeading(Document document, BatchCheckin batch)
             {
-                var logo = Image.GetInstance(HttpContext.Current.Server.MapPath("~/Content/dominion_constructors.png"));
+                var logo = GetLogo();
 
                 var table = new PdfPTable(new[] { 60f, 20f, 30f })
                 {
@@ -57,7 +57,7 @@ namespace RussellGroup.Pims.Website.Generators
 
                 table.AddCell(new Phrase("Checkin Receipt", TitleFont));
                 table.AddCell(new PdfPCell(new Phrase(System.Configuration.ConfigurationManager.AppSettings["Environment"], EnvironmentFont)) { Border = PdfPCell.NO_BORDER, HorizontalAlignment = PdfPCell.ALIGN_CENTER });
-                table.AddCell(new PdfPCell(logo) { Border = PdfPCell.NO_BORDER, HorizontalAlignment = PdfPCell.ALIGN_RIGHT });
+                table.AddCell(new PdfPCell(logo, true) { Border = PdfPCell.NO_BORDER, HorizontalAlignment = PdfPCell.ALIGN_RIGHT });
 
                 table.AddCell(new PdfPCell(new Phrase($"Checked in: {batch.WhenEnded.ToShortDateString()}", SubtitleFont)) { Colspan = 3, Border = PdfPCell.NO_BORDER });
                 table.AddCell(new PdfPCell(new Phrase($"Checked in by: {HttpContext.Current.User.Identity.Name}", SubtitleFont)) { Colspan = 3, Border = PdfPCell.NO_BORDER });

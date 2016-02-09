@@ -5,6 +5,7 @@ using RussellGroup.Pims.Website.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 
 namespace RussellGroup.Pims.Website.Generators
 {
@@ -51,6 +52,11 @@ namespace RussellGroup.Pims.Website.Generators
             }
 
             return CheckinReceiptPdfGenerator.Create(batch);
+        }
+
+        protected static Image GetLogo()
+        {
+            return Image.GetInstance(HttpContext.Current.Server.MapPath("~/Content/dcl_logo_600_dpi_320x109.png"));
         }
     }
 }
