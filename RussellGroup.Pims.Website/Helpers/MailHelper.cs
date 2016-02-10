@@ -51,9 +51,10 @@ namespace RussellGroup.Pims.Website.Helpers
 
                     message.Attachments.Add(new Attachment(stream, receipt.Docket, receipt.Content.ContentType));
 
-                    var smtpClient = new SmtpClient("smtp.sendgrid.net", 587);
-
-                    smtpClient.Send(message);
+                    using (var smtpClient = new SmtpClient())
+                    {
+                        smtpClient.Send(message);
+                    }
                 }
             }
         }

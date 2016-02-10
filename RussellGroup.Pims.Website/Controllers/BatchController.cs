@@ -144,9 +144,9 @@ namespace RussellGroup.Pims.Website.Controllers
 
                     resendSuccess = true;
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    // do nothing
                 }
             }
 
@@ -287,7 +287,7 @@ namespace RussellGroup.Pims.Website.Controllers
                                 sendSuccess = true;
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
                             // do nothing
                         }
@@ -523,7 +523,7 @@ namespace RussellGroup.Pims.Website.Controllers
                                 sendSuccess = true;
                             }
                         }
-                        catch
+                        catch (Exception ex)
                         {
                             // do nothing
                         }
