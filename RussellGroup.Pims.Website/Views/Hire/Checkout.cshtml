@@ -25,6 +25,7 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.Job.Id)
+    @Html.HiddenFor(model => model.Job.XJobId)
     @Html.HiddenFor(model => model.Job.Description)
 
     <div class="form-horizontal">
@@ -53,13 +54,13 @@
             </div>
         </div>
 
-        <div class="form-group@(ViewData.ModelState.IsValidField("JobId") ? string.Empty : " has-error")">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Job.XJobId") ? string.Empty : " has-error")">
             @Html.LabelFor(model => model.Job, new { @class = "control-label col-sm-2" })
             <div class="col-sm-5">
                 @Html.DropDownListFor(model => model.JobId, ViewBag.Jobs as SelectList, new { @class = "form-control" })
             </div>
             <div class="col-sm-offset-2 col-sm-10">
-                @Html.ValidationMessageFor(model => model.JobId, null, new { @class = "help-block" })
+                @Html.ValidationMessageFor(model => model.Job.XJobId, null, new { @class = "help-block" })
             </div>
         </div>
 

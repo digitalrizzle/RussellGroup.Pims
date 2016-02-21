@@ -1,0 +1,98 @@
+﻿@model RussellGroup.Pims.Website.Models.BatchCheckout
+@{
+    ViewBag.ShowAnchors = true;
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+
+<hr />
+
+@using (Html.BeginForm("CommitCheckout", "Batch", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.WhenStarted)
+    @Html.HiddenFor(model => model.Scans)
+
+    <div class="form-horizontal">
+        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+        {
+            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <p>Are you sure you want to checkout these items?</p>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WhenStarted, new { @class = "control-label col-sm-2" })
+            <div class="col-sm-9 form-data">
+                @Html.Encode(Model.WhenStarted.ToShortDateString())
+            </div>
+        </div>
+
+        <hr />
+
+        @if (Model.CheckoutTransactions != null && Model.CheckoutTransactions.Any())
+        {
+            <div class="form-group">
+                <label class="control-label col-sm-2"></label>
+                <div class="col-sm-9">
+                    <table class="table" style="table-layout: fixed">
+                        <thead>
+                            <tr>
+                                <th width="15%">
+                                    job
+                                </th>
+                                <th width="15%">
+                                    docket
+                                </th>
+                                <th width="15%">
+                                    plant id/new id
+                                </th>
+                                <th>
+                                    description
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var transaction in Model.CheckoutTransactions)
+                            {
+                                <tr class="active @(transaction.Job.IsError ? "danger" : string.Empty)">
+                                    <td>@transaction.Job.BarcodeText</td>
+                                    <td colspan="2">@transaction.Docket</td>
+                                    <td>@transaction.Job.Description</td>
+                                </tr>
+                                foreach (var plant in transaction.Plants)
+                                {
+                                    <tr class="@(plant.IsError ? "danger" : string.Empty)">
+                                        <td colspan="2"></td>
+                                        <td>@plant.XPlantIdAndXPlantNewId</td>
+                                        <td>@plant.Description</td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <hr />
+        }
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                @if (ViewData.ModelState.IsValid)
+                {
+                    <input type="submit" name="command" value="Checkout" class="btn btn-success" />
+                }
+                <input type="submit" name="command" value="Retry" class="btn btn-warning" />
+                &nbsp;
+                @Html.ActionLink("Cancel", "Receipts")
+            </div>
+        </div>
+
+    </div>
+}

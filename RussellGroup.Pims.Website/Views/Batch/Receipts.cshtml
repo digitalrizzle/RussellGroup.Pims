@@ -1,0 +1,59 @@
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Receipt>
+@{
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+@section head {
+    @Styles.Render("~/Content/datatables")
+}
+
+<h3>@ViewBag.Title</h3>
+
+@if (ViewBag.Message != null)
+{
+    <p class="alert @(ViewBag.Success ? "alert-success" : "alert-warning")">@ViewBag.Message</p>
+}
+
+<table class="table display table-striped table-hover order-column table-responsive" width="100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.WhenCreated)
+            </th>
+            <th>
+                job id
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Docket)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts {
+    @Scripts.Render("~/bundles/datatables")
+    <script>
+        $('.table').DataTable({
+            "order": [[2, "desc"]],
+            "processing": true,
+            "stateSave": false,
+            "pagingType": 'full',
+            "serverSide": true,
+            "ajax": "@Url.Action("GetDataTableResult")",
+            "columns": [
+                { "data": "Id", "visible": false },
+                { "data": "TransactionType", "name": "TransactionType.Name" },
+                { "data": "WhenCreated" },
+                { "data": "XJobId" },
+                { "data": "Docket" },
+                { "data": "CrudLinks", "sortable": false, "className": "text-center" }
+            ]
+        });
+    </script>
+}

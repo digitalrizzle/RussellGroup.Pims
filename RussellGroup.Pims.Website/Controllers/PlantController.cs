@@ -40,7 +40,7 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             var hint = model.Search != null ? model.Search.Value : string.Empty;
-            var sortColumn = model.Columns.GetSortedColumns().First();
+            var sortColumn = model.Columns.GetSortedColumns().FirstOrDefault() ?? model.Columns.FirstOrDefault();
 
             var all = _repository.GetAll().AsExpandable();
 
@@ -116,10 +116,10 @@ namespace RussellGroup.Pims.Website.Controllers
                 : all.Where(f =>
                     f.Job.XJobId.Contains(hint) ||
                     f.Docket.Contains(hint) ||
+                    f.ReturnDocket.Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
-                    SqlFunctions.StringConvert(f.Rate).Contains(hint) ||
-                    f.Comment.Contains(hint));
+                    SqlFunctions.StringConvert(f.Rate, 16, 2).Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
@@ -139,10 +139,10 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     c.Job.XJobId,
                     c.Docket,
+                    c.ReturnDocket,
                     WhenStarted = c.WhenStarted.ToShortDateString(),
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.Rate,
-                    c.Comment,
+                    Rate = c.Rate.HasValue ? c.Rate.Value.ToString("0.00") : string.Empty,
                     CrudLinks = this.CrudLinks("PlantHire", new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 
@@ -282,13 +282,13 @@ namespace RussellGroup.Pims.Website.Controllers
             var category = plant != null ? plant.CategoryId : 0;
             ViewBag.Categories = new SelectList(categories, "Id", "Name", category);
 
-            var statuses = _repository.Statuses.OrderBy(f => f.Id);
-            var status = plant != null ? plant.StatusId : 0;
-            ViewBag.Statuses = new SelectList(statuses, "Id", "Name", plant.IsCheckedOut ? Status.CheckedOut : status);
-
             var conditions = _repository.Conditions.OrderBy(f => f.Id);
             var condition = plant != null ? plant.ConditionId : 0;
             ViewBag.Conditions = new SelectList(conditions, "Id", "Name", condition);
+
+            var statuses = _repository.Statuses.OrderBy(f => f.Id);
+            var status = plant != null ? plant.StatusId : 0;
+            ViewBag.Statuses = new SelectList(statuses, "Id", "Name", plant.IsCheckedOut ? Status.CheckedOut : status);
 
             return base.View(viewName, plant);
         }

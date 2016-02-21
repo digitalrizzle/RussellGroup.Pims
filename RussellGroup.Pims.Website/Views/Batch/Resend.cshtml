@@ -1,0 +1,86 @@
+﻿@model RussellGroup.Pims.DataAccess.Models.Receipt
+@{
+    ViewBag.ShowAnchors = true;
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+<h4>@Model.TransactionType.Name</h4>
+<h5>@Model.WhenCreated.ToString("dd/MM/yyyy h:mm:ss tt")</h5>
+
+<hr />
+
+<div>
+    @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+    {
+        @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+    }
+
+    <dl class="dl-horizontal">
+        <dt>
+            created by
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Docket)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Docket)
+        </dd>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Recipients))
+        {
+            <dt>
+                original recipients
+            </dt>
+            <dd>
+                @foreach (var recipient in Model.Recipients.Split(','))
+                {
+                    <text>@Html.Encode(recipient)</text><br />
+                }
+            </dd>
+        }
+
+        </dl>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Recipients))
+        {
+            <hr />
+
+            <dl class="dl-horizontal">
+                <dt>
+                    recipients
+                </dt>
+                <dd>
+                    @foreach (var recipient in Model.Job.NotificationEmail.Split(','))
+                    {
+                        <text>@Html.Encode(recipient)</text><br />
+                    }
+                </dd>
+            </dl>
+        }
+
+    <hr />
+
+    <dl class="dl-horizontal">
+        <dt>
+        </dt>
+        <dd>
+            @using (Html.BeginForm())
+            {
+                if (User.IsAuthorized(Role.CanEdit))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.Id)
+
+                    <input type="submit" value="Resend" class="btn btn-success" @(string.IsNullOrWhiteSpace(Model.Recipients) ? "disabled" : string.Empty ) />
+                    <text>&nbsp;</text>
+                }
+                @Html.ActionLink("Cancel", "Receipts")
+            }
+        </dd>
+    </dl>
+</div>

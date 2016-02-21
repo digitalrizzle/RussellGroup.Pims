@@ -1,0 +1,86 @@
+﻿@model RussellGroup.Pims.Website.Models.BatchStatus
+@{
+    ViewBag.ShowAnchors = true;
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+
+<hr />
+
+@using (Html.BeginForm("CommitStatusUpdate", "Batch", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Scans)
+
+    <div class="form-horizontal">
+        @if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+        {
+            @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <p>Are you sure you want to update the status of these items?</p>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.Label("new status", new { @class = "control-label col-sm-2" })
+            <div class="col-sm-9 form-data">
+                @(Model.Status != null ? Model.Status.Name : "?")
+            </div>
+        </div>
+
+        <hr />
+
+        @if (Model.Plants != null && Model.Plants.Any())
+        {
+            <div class="form-group">
+                <label class="control-label col-sm-2"></label>
+                <div class="col-sm-9">
+                    <table class="table" style="table-layout: fixed">
+                        <thead>
+                            <tr>
+                                <th width="20%">
+                                    plant id/new id
+                                </th>
+                                <th>
+                                    description
+                                </th>
+                                <th>
+                                    current status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var plant in Model.Plants)
+                            {
+                                <tr class="@(plant.IsError ? "danger" : string.Empty)">
+                                    <td>@plant.XPlantIdAndXPlantNewId</td>
+                                    <td>@plant.Description</td>
+                                    <td>@(plant.Status != null ? plant.Status.Name : "?")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <hr />
+        }
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                @if (ViewData.ModelState.IsValid)
+                {
+                    <input type="submit" name="command" value="Update Status" class="btn btn-success" />
+                }
+                <input type="submit" name="command" value="Retry" class="btn btn-warning" />
+                &nbsp;
+                @Html.ActionLink("Cancel", "Receipts")
+            </div>
+        </div>
+
+    </div>
+}

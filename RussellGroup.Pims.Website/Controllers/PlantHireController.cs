@@ -60,10 +60,10 @@ namespace RussellGroup.Pims.Website.Controllers
                 : all.Where(f =>
                     f.Plant.XPlantId.Contains(hint) ||
                     f.Docket.Contains(hint) ||
+                    f.ReturnDocket.Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenStarted).Contains(hint) ||
                     Extensions.LittleEndianDateString.Invoke(f.WhenEnded).Contains(hint) ||
-                    SqlFunctions.StringConvert(f.Rate).Contains(hint) ||
-                    f.Comment.Contains(hint));
+                    SqlFunctions.StringConvert(f.Rate, 16, 2).Contains(hint));
 
             // ordering
             var sortColumnName = string.IsNullOrEmpty(sortColumn.Name) ? sortColumn.Data : sortColumn.Name;
@@ -83,10 +83,10 @@ namespace RussellGroup.Pims.Website.Controllers
                     c.Id,
                     c.Plant.XPlantId,
                     c.Docket,
+                    c.ReturnDocket,
                     WhenStarted = c.WhenStarted.ToShortDateString(),
                     WhenEnded = c.WhenEnded.HasValue ? c.WhenEnded.Value.ToShortDateString() : string.Empty,
-                    c.Rate,
-                    c.Comment,
+                    Rate = c.Rate.HasValue ? c.Rate.Value.ToString("0.00") : string.Empty,
                     CrudLinks = this.CrudLinks(new { id = c.JobId, hireId = c.Id }, User.IsAuthorized(Role.CanEdit))
                 });
 

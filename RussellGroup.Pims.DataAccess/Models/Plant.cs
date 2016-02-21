@@ -22,13 +22,13 @@ namespace RussellGroup.Pims.DataAccess.Models
         [ForeignKey("Condition")]
         public int ConditionId { get; set; }
 
-        [Obsolete]
         [Required]
         [Display(Name = "id")]
         public string XPlantId { get; set; }
 
-        [Obsolete]
         [Display(Name = "new id")]
+        // StringLength isn't used here because there is existing data that doesn't meet this criteria
+        [RegularExpression(@"(?i)\w{5}", ErrorMessage = "The new id field must be five characters.")]
         public string XPlantNewId { get; set; }
 
         [Required]
@@ -76,6 +76,29 @@ namespace RussellGroup.Pims.DataAccess.Models
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
 
+        [NotMapped]
+        public string BarcodeText
+        {
+            get
+            {
+                return (string.IsNullOrWhiteSpace(XPlantNewId) ? string.IsNullOrWhiteSpace(XPlantId) ? "UNKNOWN" : XPlantId : XPlantNewId).ToUpper();
+            }
+        }
+
+        [NotMapped]
+        public string Code39
+        {
+            get
+            {
+                return $"*{BarcodeText}*";
+            }
+        }
+
+        // for the batch confirmation
+        [NotMapped]
+        [Display(Name = "error")]
+        public bool IsError { get; set; }
+
         [Display(Name = "hire")]
         public virtual ICollection<PlantHire> PlantHires { get; set; }
 
@@ -107,7 +130,9 @@ namespace RussellGroup.Pims.DataAccess.Models
         {
             get
             {
-                return string.Format("{0}/{1}", XPlantId, XPlantNewId);
+                var ids = new[] { XPlantId, XPlantNewId };
+
+                return string.Join("/", ids.Where(f => !string.IsNullOrWhiteSpace(f)).Distinct());
             }
         }
     }

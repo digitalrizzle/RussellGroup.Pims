@@ -1,7 +1,7 @@
 ﻿<h3 id="a-working-example">4. A working example</h3>
 <p>
     In this section we're going to work through an example, step by step, to show just how to make a
-    job and how to checkout, and in, plant and inventory.
+    job and how to checkout and checkin, plant and inventory.
 </p>
 <div class="bs-callout bs-callout-warning">
     In order to follow the steps in the following sections you will need the ability to edit. Be sure that
@@ -13,7 +13,8 @@
     <li>On the main menu, click <strong>Jobs</strong>.</li>
     <li>Just below the main menu, click <strong>Create New</strong>.</li>
     <li>
-        Fill in each of the blank boxes next to each label. Here's what each of them mean:
+        Fill in each of the blank boxes next to each label. Here's what each of them mean along with
+        examples which you can use:
         <table class="table display table-striped order-column table-responsive table-help-guide">
             <thead>
                 <tr>
@@ -25,23 +26,24 @@
             <tbody>
                 <tr>
                     <td class="help-guide-term">id</td>
-                    <td>1001</td>
+                    <td>XX1001</td>
                     <td>
-                        This is an identifier for a job; a short code. This isn't automatically
-                        assigned, so you'll need to come up with the ID yourself. It doesn't need
-                        to be unique but it may be more useful to you if it is.
+                        This is an identifier for a job; a short code. It must begin with two
+                        characters followed by four digits. This isn't automatically assigned, so
+                        you'll need to come up with the ID yourself. It doesn't need to be unique
+                        but it may be more useful to you if it is.
                     </td>
                 </tr>
                 <tr>
                     <td class="help-guide-term">description</td>
                     <td>My first PIMS job</td>
                     <td>
-                        The name of the job. This name will also be shown on the billing reports.
+                        The friendly name for the job. This name will also be shown on the billing reports.
                     </td>
                 </tr>
                 <tr>
                     <td class="help-guide-term">when started</td>
-                    <td>30/9/2014</td>
+                    <td>30/9/2016</td>
                     <td>
                         In regards to the billing, this is when the job started. You can either type
                         in a date, or you can click the small calendar icon which will show a calendar
@@ -71,13 +73,22 @@
                     <td class="help-guide-term">quantity surveyor</td>
                     <td>Spock</td>
                     <td>
-                        The quantity surveyor for the job. Similarly to the project manager,
-                        as you begin to type a list of names will appear.
+                        The quantity surveyor for the job. Like the project manager, as you
+                        begin to type a list of names will appear.
+                    </td>
+                </tr>
+                <tr>
+                    <td class="help-guide-term">notification email <span class="label label-danger">New</span></td>
+                    <td>james.t.kirk@starfleet.com</td>
+                    <td>
+                        This email address is where batch checkout and checkin receipts are sent.
+                        Typically it is the email address of the project manager. More than one
+                        email address can be entered; just separate them with a comma.
                     </td>
                 </tr>
                 <tr>
                     <td class="help-guide-term">comments</td>
-                    <td>This job is being run in parallel with the old Plant DCL database.</td>
+                    <td>This is an example of a job.</td>
                     <td>
                         Enter any other relevant information for the job in the comments. This
                         is free text so type whatever you want. It will not impact the job.
@@ -90,10 +101,10 @@
     <li>That's it! We just made a new job.</li>
 </ol>
 <div class="bs-callout bs-callout-danger">
-    If you entered something wrong, like accidentally entering a name for the <strong>when started</strong>
-    date, then a red description with what is incorrect will appear next to the problem. Go back and have a
-    look at the problem, correct it, then click <strong>Create</strong> again. The job will only be created
-    if everything has been entered as expected by the system.
+    If you entered something wrong, such as accidentally entering a name for the <strong>when started</strong>
+    date, a red description with what is incorrect will appear next to the problem. Go back and have a look
+    at the problem, correct it, then click <strong>Create</strong> again. The job will only be created if
+    everything has been entered as expected by the system.
 </div>
 <h4 id="make-changes-to-the-job">4.2. Make changes to the job</h4>
 <p>
@@ -106,12 +117,12 @@
         A list of all jobs will show. On the right hand side of the page is a search box. Click in this box
         and begin typing either the name of the job, the ID, or the date. Anything that matches what
         you started to type will narrow the list of jobs (this is called filtering) and will make it easier
-        to find our job. In this example, click in the search box and start typing "1001".
+        to find our job. In this example, click in the search box and start typing "XX1001".
     </li>
     <li>Find our job in the filtered list, then on the right hand side of the page click <strong>Edit</strong>.</li>
     <li>
-        We're now back to job and we can make our changes. Change the <strong>when started</strong> date to
-        1/10/2014.
+        We're now back to our job and we can make our changes. Change the <strong>when started</strong> date
+        to 1/10/2016.
     </li>
     <li>Click the <strong>Save</strong> button to save our changes.</li>
     <li>That's it! We just made changes to our job.</li>
@@ -139,7 +150,7 @@
 </p>
 <ol>
     <li>On the main menu, click <strong>Jobs</strong>.</li>
-    <li>Find our job "1001" by using the search.</li>
+    <li>Find our job "XX1001" by using the search.</li>
     <li>
         On the right hand side of the page for our searched job, click on <strong>Checkout</strong>. We're now at the
         page where we can enter our checkout details.
@@ -193,7 +204,7 @@
     view exactly what transactions have occurred.
 </p>
 <ol>
-    <li>On the main menu, click <strong>Jobs</strong> and find our job "1001" by using the search.</li>
+    <li>On the main menu, click <strong>Jobs</strong> and find our job "XX1001" by using the search.</li>
     <li>
         On the right hand side of the page for our searched job, click on <strong>Details</strong>. We're now at the
         page where we can see the details of our job including how many transactions for the job have
@@ -211,14 +222,14 @@
 <h4 id="view-the-status-of-plant">4.5. View the status of plant</h4>
 <p>
     When we checkout plant we are telling PIMS that the plant is in use and cannot be used by any other job.
-    For every plant in PIMS there is a status, and when checking out plant the status changes from "available"
-    to "unavailable". So how do we see what plant is available and what isn't? We can find out by looking at
+    For every plant in PIMS there is a status, and when checking out plant the status will change from "Available"
+    to "Checked out". So how do we see what plant is available and what isn't? We can find out by looking at
     the plant listing.
 </p>
 <ol>
-    <li>On the main menu, click <strong>Plant</strong>.</li>
+    <li>On the main menu, click <strong>Stock</strong> &raquo; <strong>Plant</strong>.</li>
     <li>Just like searching for jobs, find our plant "55724" by using the search.</li>
-    <li>In the filtered list, examine the line for our plant and note the status. It will say, "Unavailable".</li>
+    <li>In the filtered list, examine the line for our plant and note the status. It will be "Checked out".</li>
     <li>We can find out more information about our plant by clicking on the <strong>Details</strong> link.</li>
 </ol>
 <div class="bs-callout bs-callout-info">
@@ -226,8 +237,8 @@
 </div>
 <h4 id="make-changes-to-the-transactions">4.6. Make changes to the transactions</h4>
 <p>
-    We made a mistake when checking out our plant and inventory. For the "Tandem Axle Trailer" plant
-    item we hired it out the day before, so we need to amend the date. For the "Divvy Daggs" we
+    Let's say we made a mistake when checking out our plant and inventory. For the "Tandem Axle Trailer" plant
+    item we actually hired it out the day before, so we need to amend the date. For the "Divvy Daggs" we
     also hired it out the day before and hired out 20 of them instead of 10. Let's make our amendments.
 </p>
 <ol>
@@ -245,7 +256,7 @@
         Click the <strong>Save</strong> button. We've just corrected our transaction!
     </li>
     <li>
-        Now, go to the plant inventory transactions page as in the previous section. (Hint: go to the job
+        Now, go to the inventory hire transactions page as in the previous section. (Hint: go to the job
         details page.)
     </li>
     <li>
@@ -267,7 +278,7 @@
 </p>
 <ol>
     <li>
-        On the main menu, click <strong>Jobs</strong> and find our job "1001" by using the search.
+        On the main menu, click <strong>Jobs</strong> and find our job "XX1001" by using the search.
     </li>
     <li>
         On the right hand side of our searched job, click on <strong>Checkin</strong>. We're now at the
@@ -304,9 +315,10 @@
     </li>
 </ol>
 <div class="bs-callout bs-callout-info">
-    PIMS knows when an item has been checked in by having a <strong>when ended</strong> date in its transaction
-    which can also be set on the plant or inventory hire transaction edit pages. But it's a lot faster and
-    easier to use the <strong>Checkin</strong> page to do this.
+    PIMS knows when an item has been checked in by having a <strong>return docket</strong> and
+    <strong>when ended</strong> date in its transaction which can also be set on the plant or inventory
+    hire transaction edit pages. But it's a lot faster and easier to use the <strong>Checkin</strong>
+    page to do this.
 </div>
 <h4 id="deleting-a-transaction">4.8. Deleting a transaction</h4>
 <p>
@@ -329,3 +341,8 @@
         That's it! Our transaction has now been deleted.
     </li>
 </ol>
+<div class="bs-callout bs-callout-info">
+    What about the status of the plant? Recall that when a plant is checked out it will have a status of
+    "Checked out." When a transaction is deleted the system will automatically change the plant status to
+    "Available".
+</div>

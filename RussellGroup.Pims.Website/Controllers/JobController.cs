@@ -39,7 +39,7 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             var hint = model.Search != null ? model.Search.Value : string.Empty;
-            var sortColumn = model.Columns.GetSortedColumns().First();
+            var sortColumn = model.Columns.GetSortedColumns().FirstOrDefault() ?? model.Columns.FirstOrDefault();
 
             var all = _repository.GetAll().AsExpandable();
 
@@ -109,7 +109,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Create([Bind(Include = "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment")] Job job)
+        public async Task<ActionResult> Create([Bind(Include = "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,NotificationEmail,Comment")] Job job)
         {
             if (ModelState.IsValid)
             {
@@ -154,7 +154,7 @@ namespace RussellGroup.Pims.Website.Controllers
                 return HttpNotFound();
             }
 
-            if (TryUpdateModel<Job>(job, "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,Comment".Split(',')))
+            if (TryUpdateModel(job, "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,NotificationEmail,QuantitySurveyor,Comment".Split(',')))
             {
                 if (ModelState.IsValid)
                 {

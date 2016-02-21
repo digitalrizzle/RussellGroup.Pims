@@ -17,14 +17,17 @@ namespace RussellGroup.Pims.DataAccess
 
         public DbSet<Audit> Audits { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Content> Content { get; set; }
         public DbSet<Condition> Conditions { get; set; }
         public DbSet<Inventory> Inventories { get; set; }
         public DbSet<InventoryHire> InventoryHires { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Plant> Plants { get; set; }
         public DbSet<PlantHire> PlantHires { get; set; }
+        public DbSet<Receipt> Receipts { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Status> Statuses { get; set; }
+        public DbSet<TransactionType> TransactionTypes { get; set; }
 
         public PimsDbContext(HttpContext context) : base("PimsContext")
         {

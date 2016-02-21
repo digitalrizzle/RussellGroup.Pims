@@ -1,0 +1,67 @@
+﻿@model RussellGroup.Pims.Website.Models.BatchCheckin
+@{
+    ViewBag.ShowAnchors = true;
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+
+<hr />
+
+@if (ViewBag.Message != null)
+{
+    <p class="alert @(ViewBag.Success ? "alert-success" : "alert-warning")">@ViewBag.Message</p>
+}
+
+@if (ViewData.ModelState.Any(f => string.IsNullOrEmpty(f.Key)))
+{
+    @Html.ValidationSummary(true, null, new { @class = "alert alert-danger" })
+}
+
+@using (Html.BeginForm("ConfirmCheckin", "Batch", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <div class="form-group @(ViewData.ModelState.IsValidField("WhenEnded") ? string.Empty : " has-error")">
+            @Html.LabelFor(model => model.WhenEnded, new { @class = "control-label col-sm-2" })
+            <div class="col-sm-3 col-lg-2">
+                <div class="input-group">
+                    @Html.TextBoxFor(model => model.WhenEnded, "{0:d/MM/yyyy}", new { @class = "form-control" })
+                    <span id="WhenEnded-icon" class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                @Html.ValidationMessageFor(model => model.WhenEnded, null, new { @class = "help-block" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Scans, new { @class = "control-label col-sm-2" })
+            <div class="col-sm-8">
+                @Html.TextAreaFor(model => model.Scans, new { @class = "scans form-control" })
+            </div>
+        </div>
+
+        <hr />
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" value="Checkin" class="btn btn-primary" />
+                &nbsp;
+                @Html.ActionLink("Cancel", "Receipts")
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#Scans').focus();
+        });
+    </script>
+}

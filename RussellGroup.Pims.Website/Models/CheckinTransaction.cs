@@ -13,6 +13,10 @@ namespace RussellGroup.Pims.Website.Models
         public Job Job { get; set; }
 
         [Required]
+        [Display(Name = "is auto docket?")]
+        public bool IsAutoDocket { get; set; }
+
+        [Required]
         [Display(Name = "docket")]
         public string ReturnDocket { get; set; }
 

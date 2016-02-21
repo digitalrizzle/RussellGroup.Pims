@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+<hr />
+<div class="alert alert-info">
+    <p>These pages will print listings of barcodes for batch scanning.</p>
+</div>
+
+<p><a href="@Url.Action("JobBarcodes")" target="_blank">Job barcodes</a></p>
+<p><a href="@Url.Action("PlantBarcodes")" target="_blank">Plant barcodes</a></p>
+<p><a href="@Url.Action("StatusBarcodes")" target="_blank">Status and Docket barcodes</a></p>

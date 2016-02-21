@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace RussellGroup.Pims.DataAccess.Models
         [ScaffoldColumn(false)]
         public int Id { get; set; }
 
-        [Obsolete]
+        [Required]
         [Display(Name = "id")]
+        [RegularExpression(@"(?i)[a-z]{2}\d{4}", ErrorMessage = "The job id must begin with two alphabetic characters and end with four digits.")]
         public string XJobId { get; set; }
 
         [Required]
@@ -37,9 +39,39 @@ namespace RussellGroup.Pims.DataAccess.Models
         [Display(Name = "quantity surveyor")]
         public string QuantitySurveyor { get; set; }
 
+        [Display(Name = "notification emails")]
+        [RegularExpression(@"^[\W]*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4}[\W]*,{1}[\W]*)*([\w+\-.%]+@[\w\-.]+\.[A-Za-z]{2,4})[\W]*$", ErrorMessage = "The email address(es) are not valid.")]
+        // this is comma delimited so the validation won't work
+        //[DataType(DataType.EmailAddress)]
+        //[EmailAddress(ErrorMessage = "The email address is not valid.")]
+        public string NotificationEmail { get; set; }
+
         [Display(Name = "comments")]
         [DataType(DataType.MultilineText)]
         public string Comment { get; set; }
+
+        [NotMapped]
+        public string BarcodeText
+        {
+            get
+            {
+                return (string.IsNullOrWhiteSpace(XJobId) ? "UNKNOWN" : XJobId).ToUpper();
+            }
+        }
+
+        [NotMapped]
+        public string Code39
+        {
+            get
+            {
+                return $"*{BarcodeText}*";
+            }
+        }
+
+        // for the batch confirmation
+        [NotMapped]
+        [Display(Name = "error")]
+        public bool IsError { get; set; }
 
         [Display(Name = "plant hire")]
         public virtual ICollection<PlantHire> PlantHires { get; set; }

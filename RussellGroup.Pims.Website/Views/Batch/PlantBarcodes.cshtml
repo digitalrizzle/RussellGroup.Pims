@@ -1,0 +1,62 @@
+﻿@model IEnumerable<RussellGroup.Pims.DataAccess.Models.Plant>
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = Html.MvcSiteMap().SiteMapTitle();
+}
+
+<h3>@ViewBag.Title</h3>
+
+<hr />
+
+@if (Model == null)
+{
+    <p>There is no available plant.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.XPlantId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.XPlantNewId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Condition)
+                </th>
+                <th class="text-center">
+                    barcode
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var plant in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(model => plant.XPlantId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => plant.XPlantNewId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => plant.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(model => plant.Condition.Name)
+                    </td>
+                    <td class="text-center">
+                        <div class="barcode">@plant.Code39</div>
+                        <div class="barcode-text">@plant.BarcodeText</div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

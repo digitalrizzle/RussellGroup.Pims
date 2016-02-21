@@ -42,6 +42,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
         public void GenerateAuditTrigger(string tableName, string primaryKeyName1, string primaryKeyName2 = null)
         {
             var data = new {
+                tableName,
                 table = string.Format("[dbo].[{0}]", tableName),
                 trigger = string.Format("[dbo].[TR_{0}{1}]", tableName, AuditTableName),
                 primaryKeyName1 = primaryKeyName1,

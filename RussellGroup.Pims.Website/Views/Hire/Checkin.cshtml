@@ -24,11 +24,22 @@
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.Job.Id)
+    @Html.HiddenFor(model => model.Job.XJobId)
     @Html.HiddenFor(model => model.Job.Description)
     @Html.Hidden("selectedPlantHire")
     @Html.Hidden("selectedInventoryHire")
 
     <div class="form-horizontal">
+        <div class="form-group@(ViewData.ModelState.IsValidField("Job.XJobId") ? string.Empty : " has-error")">
+            @Html.Label("job id", new { @class = "control-label col-sm-2" })
+            <div class="col-sm-2">
+                <input type="text" value="@Html.Encode(Model.Job.XJobId)" class="form-control" disabled />
+            </div>
+            <div class="col-sm-offset-2 col-sm-10">
+                @Html.ValidationMessageFor(model => model.Job.XJobId, null, new { @class = "help-block" })
+            </div>
+        </div>
+
         <div class="form-group@(ViewData.ModelState.IsValidField("ReturnDocket") ? string.Empty : " has-error")">
             @Html.Label("return docket", new { @class = "control-label col-sm-2" })
             <div class="col-sm-2">

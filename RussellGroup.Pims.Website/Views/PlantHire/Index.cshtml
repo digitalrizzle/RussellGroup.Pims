@@ -29,6 +29,9 @@
                 @Html.DisplayNameFor(model => hires.Docket)
             </th>
             <th>
+                @Html.DisplayNameFor(model => hires.ReturnDocket)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => hires.WhenStarted)
             </th>
             <th>
@@ -36,9 +39,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => hires.Rate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => hires.Comment)
             </th>
             <th></th>
         </tr>
@@ -60,10 +60,10 @@
                 { "data": "Id", "visible": false },
                 { "data": "XPlantId", "name": "Plant.XPlantId" },
                 { "data": "Docket" },
+                { "data": "ReturnDocket" },
                 { "data": "WhenStarted" },
                 { "data": "WhenEnded" },
                 { "data": "Rate", "className": "text-right" },
-                { "data": "Comment" },
                 { "data": "CrudLinks", "sortable": false, "className": "text-right" }
             ]
         });
