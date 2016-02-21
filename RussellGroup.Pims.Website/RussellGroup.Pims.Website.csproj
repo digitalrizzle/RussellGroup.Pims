@@ -607,8 +607,8 @@
     <Content Include="Views\Home\_06_adding_editing_and_deleting_plant.cshtml" />
     <Content Include="Views\Home\_07_categories.cshtml" />
     <Content Include="Views\Home\_08_adding_editing_and_deleting_inventory.cshtml" />
-    <Content Include="Views\Home\_09_reports.cshtml" />
-    <Content Include="Views\Home\_10_user_management.cshtml" />
+    <Content Include="Views\Home\_10_reports.cshtml" />
+    <Content Include="Views\Home\_11_user_management.cshtml" />
     <Content Include="Views\Plant\PlantHire.cshtml" />
     <Content Include="Views\Batch\Checkout.cshtml" />
     <Content Include="Views\Batch\JobBarcodes.cshtml" />
@@ -631,6 +631,7 @@
     <Content Include="Views\Batch\Resend.cshtml" />
     <Content Include="smtp.config" />
     <Content Include="smtp.example.config" />
+    <Content Include="Views\Home\_09_barcode_scanning.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">

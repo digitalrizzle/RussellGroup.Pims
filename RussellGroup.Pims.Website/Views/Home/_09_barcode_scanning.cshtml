@@ -1,0 +1,263 @@
+﻿<h3 id="barcode-scanning">9. Barcode Scanning <span class="label label-danger">New</span></h3>
+<p>
+    Barcode scanning aids in the data entry of checking in and checking out plant. Instead of
+    manually entering plant ids when performing a transaction, a simple barcoding system has been
+    employed in which you scan barcodes on plant to be checked out. We call a group of plant
+    being scanned a batch.
+</p>
+<div class="bs-callout bs-callout-info">
+    These steps require a barcode scanner, one that can scan barcodes of the type 3 of 9.
+</div>
+<h4 id="the-process">9.1. The Process</h4>
+<p>
+    Here's the general process of barcode scanning:
+</p>
+<ul>
+    <li>
+        The first step is to check out plant to a job. So the first scan is of a job barcode. A
+        list of current jobs can be printed out from PIMS (we'll get to that step later).
+    </li>
+    <li>
+        Next is to begin scanning the barcodes on each plant to be checked out to a job.
+        You can scan as many plant barcodes as needed for that job scanned above.
+    </li>
+    <li>
+        Once scanning is completed, a confirmation of the checkout is presented. This checks
+        that the job scanned exists and that the plant items scanned are available. Any
+        errors or check failures will be displayed on this confirmation. If the check is
+        valid then you can check out the items.
+    </li>
+    <li>
+        What follows next is that a checkout receipt is created and then, if applicable,
+        emailed to notification address set in the job. The check out process is now complete.
+    </li>
+    <li>
+        When it comes time for plant to be returned (or checked in) then the scanning
+        process can also be used. This time we need to give a docket number for the items
+        being returned. It can be specified by you manually entering it, or you can use a docket
+        number automatically created by PIMS. Following this, the barcodes of the plant being returned
+        can be scanned.
+    </li>
+    <li>
+        By default, when checking in items via scanning the status of each plant will be set
+        to "Under Repair". Again, a confirmation is presented in which the system checks the
+        scans. If successful, a checkin receipt is created and again, if applicable, emailed
+        to the address set in the respective job.
+    </li>
+</ul>
+<h4 id="printing-barcodes">9.2. Printing Barcodes</h4>
+<p>
+    When using the barcode scanning with PIMS you'll need some additional barcodes to scan
+    for the job and the status of plant. Here's how to print the barcodes:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Batch</strong> &raquo; <strong>Barcodes</strong>.</li>
+    <li>There will be three links to click on for job barcodes, plant barcodes and status barcodes.</li>
+</ol>
+<p>The links to the barcodes are described in the following table:</p>
+<table class="table display table-striped order-column table-responsive table-help-guide">
+    <thead>
+        <tr>
+            <th>Link</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="help-guide-term">Job barcodes</td>
+            <td>
+                Displays a printable page of barcodes for each job. They are listed in reverse
+                date order of the <strong>when started</strong> field of the job. You probably
+                only need to print the first few pages since there will be old jobs no longer
+                being used.
+            </td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Plant barcodes</td>
+            <td>
+                Displays a printable page of barcodes for each plant. You probably do not need
+                this page since the barcodes will be on each plant item. (The page was put here
+                to aid with testing the system.)
+            </td>
+        </tr>
+        <tr>
+            <td class="help-guide-term">Status and Docket barcodes</td>
+            <td>
+                Displays a printable page of barcodes for each status. This page has barcodes
+                needed for checking in plant. In addition to statuses, it also has barcodes
+                for docket numbers.
+            </td>
+        </tr>
+    </tbody>
+</table>
+<h4 id="batch-checkout">9.3. Batch Checkout</h4>
+<p>
+    To checkout plant using the barcode scanning, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Batch</strong> &raquo; <strong>Batch Checkout</strong>.</li>
+    <li>Ensure that the cursor is flashing in the big text box (it should do this by default).</li>
+    <li>
+        Scan the bacode of a job. For example, XX0001. If you don't have the barcode handy, just
+        type in the characters using the keyboard. If you do use the keyboard, make sure to press
+        the ENTER key so that the cursor moves to a line empty line.
+    </li>
+    <li>
+        Next start scanning the barcodes of each plant to be checked out. For example, 90001, then
+        90002 and lastly 90003. Each should be on a new line.
+    </li>
+    <li>
+        If you've been using the examples, the text should look something like this:
+        <div class="code code-block">
+            XX0001<br />
+            90001<br />
+            90002<br />
+            90003
+        </div>
+    </li>
+    <li>
+        If you need, use the mouse to manually change the checkout date. It will default to the
+        current date.
+    </li>
+    <li>
+        Click the blue <strong>Checkout</strong> button. A confirmation page will appear giving
+        you the opportunity to review the scans. If there were errors then you must click the
+        <strong>Retry</strong> button and fix the errors. Otherwise, click the green <strong>Checkout</strong>
+        button. The green button will only be shown if there are no errors.
+    </li>
+    <li>
+        The system will now checkout the plant items and create a receipt which details the plant
+        that was checked out. This will be emailed to the notification email address set in the job.
+    </li>
+    <li>
+        You will be returned to the Batch Checkout page again with an empty text box for another
+        checkout.
+    </li>
+</ol>
+<h4 id="batch-checkin">9.4. Batch Checkin</h4>
+<p>
+    To checkin plant using the barcode scanning, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Batch</strong> &raquo; <strong>Batch Checkin</strong>.</li>
+    <li>Ensure that the cursor is flashing in the big text box (it should do this by default).</li>
+    <li>
+        Before scanning, determine if the plant being checked in has a docket number. Have the
+        status barcodes printed sheet handy.
+        <ul>
+            <li>
+                If you have a docket number, scan "DOCKET" then manually type in the docket number.
+                Be sure to press the ENTER key after the docket number so that the cursor is on a
+                new line.
+            </li>
+            <li>
+                If you do not have a docket number, scan "AUTO DOCKET". The system will automatically
+                generate a docket number for you; it will be prefixed with "DCL". For example, it may
+                look something like <span class="code">DCL100045</span>.
+            </li>
+        </ul>
+    </li>
+    <li>
+        Next start scanning the barcodes of each plant to be checked in. For example, 90001, then
+        90002 and lastly 90003. Each should be on a new line.
+    </li>
+    <li>
+        Next, using the status barcodes printed sheet, scan the status to be set for the plant
+        items being checked in. If you do not scan a status then the items will have their
+        status changed to "Under Repair" by default. For this example, let's scan
+        "AVAIALABLE".
+    </li>
+    <li>
+        If you've been using the examples, the text should look something like this:
+        <div class="code code-block">
+            AUTO DOCKET<br />
+            90001<br />
+            90002<br />
+            90003<br />
+            AVAILABLE
+        </div>
+    </li>
+    <li>
+        If you need, use the mouse to manually change the checkout date. It will default to the
+        current date.
+    </li>
+    <li>
+        Click the blue <strong>Checkin</strong> button. A confirmation page will appear giving
+        you the opportunity to review the scans. If there were errors then you must click the
+        <strong>Retry</strong> button and fix the errors. Otherwise, click the green <strong>Checkin</strong>
+        button. The green button will only be shown if there are no errors.
+    </li>
+    <li>
+        The system will now checkin the plant items and create a receipt which details the plant
+        that was checked in. This will be emailed to the notification email address set in the job.
+    </li>
+    <li>
+        You will be returned to the Batch Checkin page again with an empty text box for another
+        checkout.
+    </li>
+</ol>
+<h4 id="batch-status-update">9.5. Batch Status Update</h4>
+<p>
+    To update the status of several plant items in one go, follow these steps:
+</p>
+<ol>
+    <li>On the main menu, click <strong>Batch</strong> &raquo; <strong>Batch Status Update</strong>.</li>
+    <li>Ensure that the cursor is flashing in the big text box (it should do this by default).</li>
+    <li>
+        Next start scanning the barcodes of each plant to be updated. For example, 90001, then
+        90002 and lastly 90003. Each should be on a new line.
+    </li>
+    <li>
+        Next, using the status barcodes printed sheet, scan the status to be set for the plant
+        items being checked in. For example, "WRITTEN OFF".
+    </li>
+    <li>
+        If you've been using the examples, the text should look something like this:
+        <div class="code code-block">
+            90001<br />
+            90002<br />
+            90003<br />
+            WRITTEN OFF
+        </div>
+    </li>
+    <li>
+        Click the blue <strong>Status Update</strong> button. A confirmation page will appear giving
+        you the opportunity to review the scans. If there were errors then you must click the
+        <strong>Retry</strong> button and fix the errors. Otherwise, click the green <strong>Status Update</strong>
+        button. The green button will only be shown if there are no errors.
+    </li>
+    <li>
+        The system will now update the status of each plant item. A receipt will not be generated.
+    </li>
+</ol>
+<div class="bs-callout bs-callout-warning">
+    The status of plant can only be changed if it is not checked out.
+</div>
+<h4 id="receipts">9.6. Receipts</h4>
+<p>
+    If you ever need to review a receipt that was created during a checkout or checkin you can do that
+    by looking at the batch receipts section. This will let you search on all the receipts that have
+    been created and you can even resend them via email to someone. Let's have a look at how to get
+    to the receipts.
+</p>
+<ol>
+    <li>On the main menu, click <strong>Batch</strong> &raquo; <strong>Receipts</strong>.</li>
+    <li>
+        Find your particular receipt by typing in the search box a docket number, the job id,
+        or the date and time it was created.
+    </li>
+    <li>
+        To view the receipt, click on the <strong>View</strong> link. A new tab will open in your browser
+        showing the receipt. You can print this receipt or save it to a file.
+    </li>
+    <li>
+        To email the receipt, click on the <strong>Resend</strong> link. This will take you to another
+        page where you can check that the email recipient is correct. If it is, then click on the
+        green <strong>Resend</strong> button. The email recipient is set in the <strong>notification email</strong>
+        field of the respective job.
+    </li>
+</ol>
+<div class="bs-callout bs-callout-info">
+    To change the email recipient when resending a receipt you need to edit the job and update
+    the <strong>notification email</strong> field.
+</div>

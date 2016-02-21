@@ -68,6 +68,7 @@
       <mvcSiteMapNode title="Locations #69, #71" action="Locations" />
       <mvcSiteMapNode title="Listings" action="Listings" />
       <mvcSiteMapNode title="Yard" action="YardStocktake" />
+      <mvcSiteMapNode title="Pie Charts" controller="Home" action="Index" />
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Users" controller="User" action="Index">
       <mvcSiteMapNode title="New User" action="Create" visibility="SiteMapPathHelper,!*" />

@@ -13,6 +13,15 @@ h5 {
     padding-right: 15px;
 }
 
+.code {
+    font-family: monospace;
+}
+
+.code.code-block {
+    padding: 10px;
+    margin-left: 25px;
+}
+
 #logo {
     padding-top: 6px;
     padding-right: 30px;
