@@ -18,8 +18,8 @@
 <div class="row">
     <div class="col-sm-offset-1 col-sm-4">
         <div class="text-center">List 1</div>
-        <ol id="left" class="sortable-list">
-            @foreach (var plant in Model.PlantList1)
+        <ol id="excluded" class="sortable-list">
+            @foreach (var plant in Model.ExcludedItems)
             {
                 <li id="@(plant.Category.Name + "-"+plant.Id)" class="sortable-item">@plant.Description</li>
             }
@@ -29,8 +29,8 @@
     </div>
     <div class="col-sm-4">
         <div class="text-center">List 2</div>
-        <ol id="right" class="sortable-list">
-            @foreach (var plant in Model.PlantList2)
+        <ol id="included" class="sortable-list">
+            @foreach (var plant in Model.IncludedItems)
             {
                 <li id="@(plant.Category.Name + "-" + plant.Id)" class="sortable-item">@plant.Description</li>
             }
@@ -46,19 +46,19 @@
     <script>
         $(document).ready(function () {
             $('.sortable-list').multisortable();
-            $('#left').sortable('option', 'connectWith', '#right');
-            $('#right').sortable('option', 'connectWith', '#left');
+            $('#excluded').sortable('option', 'connectWith', '#included');
+            $('#included').sortable('option', 'connectWith', '#excluded');
         });
 
         $('#searchCategory').keyup(function () {
-            var $left = $('#left li');
+            var $left = $('#excluded li');
             var re = new RegExp($(this).val(), "i"); // "i" means it's case-insensitive
             $left.show().filter(function () {
-                return !re.test($(this).attr('id'));
+                return !re.test($(this).text());    //attr('id')); //if search by id
             }).addClass('hidden'); //.hide();
 
             $left.show().filter(function () {
-                return re.test($(this).attr('id'));
+                return re.test($(this).text());
             }).removeClass('hidden'); //.hide();
         });
 

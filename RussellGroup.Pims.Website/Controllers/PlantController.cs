@@ -282,10 +282,10 @@ namespace RussellGroup.Pims.Website.Controllers
         public ActionResult Demo1()
         {
             var plants = _repository.GetAll().OrderBy(f => f.Description);
-            var list1 = plants.Take(200).ToList();
-            var list2 = new List<Plant>();  // plants.Take(2).ToList();
+            var excludedItems = plants.Take(200).ToList();
+            var includedItems = new List<Plant>();  // plants.Take(2).ToList();
 
-            return View(new DemoPlant { PlantList1 = list1, PlantList2 = list2 });
+            return View(new DemoPlant { ExcludedItems = excludedItems, IncludedItems = includedItems });
         }
 
         // GET: /Plant/Edit/5
@@ -293,10 +293,10 @@ namespace RussellGroup.Pims.Website.Controllers
         public ActionResult Demo2()
         {
             var plants = _repository.GetAll().OrderBy(f => f.Description);
-            var list1 = plants.Take(100).ToList();
-            var list2 = new List<Plant>();
+            var excludedItems = plants.Take(200).ToList();
+            var includedItems = new List<Plant>();
 
-            return View(new DemoPlant { PlantList1 = list1, PlantList2 = list2 });
+            return View(new DemoPlant { ExcludedItems = excludedItems, IncludedItems = includedItems });
         }
 
         private ActionResult View(string viewName, Plant plant)

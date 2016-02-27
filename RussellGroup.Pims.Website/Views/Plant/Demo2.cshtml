@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-xs-5">
         <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
-            @foreach (var plant in Model.PlantList1)
+            @foreach (var plant in Model.ExcludedItems)
             {
                 <option value="@(plant.Category.Name + "-"+plant.Id)">@plant.Description</option>
             }

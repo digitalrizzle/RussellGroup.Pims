@@ -9,8 +9,8 @@ namespace RussellGroup.Pims.Website.Models
 {
     public class DemoPlant
     {
-        public List<Plant> PlantList1 { get; set; }
+        public List<Plant> IncludedItems { get; set; }
 
-        public List<Plant> PlantList2 { get; set; }
+        public List<Plant> ExcludedItems { get; set; }
     }
 }
