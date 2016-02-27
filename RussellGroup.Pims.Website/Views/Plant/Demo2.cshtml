@@ -1,0 +1,53 @@
+﻿@model RussellGroup.Pims.Website.Models.DemoPlant
+
+@{
+    ViewBag.Title = "Demo 2";
+}
+
+<h2>Demo 2</h2>
+<br />
+
+<div class="row">
+    <div class="col-xs-5">
+        <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
+            @foreach (var plant in Model.PlantList1)
+            {
+                <option value="@(plant.Category.Name + "-"+plant.Id)">@plant.Description</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-xs-2" style="margin-top: 100px;">
+        <button type="button" id="search_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
+        <button type="button" id="search_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
+        <button type="button" id="search_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
+        <button type="button" id="search_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
+    </div>
+
+    <div class="col-xs-5">
+        <select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple"></select>
+    </div>
+</div>
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/multisortable")
+    <script type="text/javascript">
+        //support case insensitive contains
+        jQuery.expr[":"].contains = jQuery.expr.createPseudo(function (arg) {
+            return function (elem) {
+                return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
+            };
+        });
+
+        $(document).ready(function ($) {
+            $('#search').multiselect({
+                search: {
+                    left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+                    //right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+                }
+            });
+        });
+    </script>
+
+}

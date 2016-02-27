@@ -17,10 +17,10 @@ h5 {
     font-family: monospace;
 }
 
-.code.code-block {
-    padding: 10px;
-    margin-left: 25px;
-}
+    .code.code-block {
+        padding: 10px;
+        margin-left: 25px;
+    }
 
 #logo {
     padding-top: 6px;
@@ -323,4 +323,52 @@ table.dataTable.order-column.hover tbody tr.even:hover.selected > .sorting_3 {
 .typeahead-id {
     display: inline;
     font-family: 'Courier New', Courier, monospace;
+}
+
+/* multisortable jquery ui widget */
+.sortable-list {
+    background-color: #ddd;
+    list-style: none;
+    height: 400px;
+    min-height: 60px;
+    padding: 10px;
+    overflow-x: hidden;
+}
+
+.sortable-list-instructions {
+    margin-top: 165px;
+}
+
+.sortable-list li {
+    margin: 2px 0;
+    cursor: pointer;
+}
+
+    .sortable-list li.selected {
+        outline: 1px solid #888;
+    }
+
+    .sortable-list li.child {
+        margin-left: 20px;
+    }
+
+
+
+.sortable-item {
+    background-color: #fff;
+    border: 1px solid #eeeeee;
+    cursor: move;
+    display: block;
+    margin-bottom: 5px;
+    padding: 5px;
+    text-align: left;
+}
+
+.hidden {
+    opacity: 0;
+}
+
+select[multiple], select[size] {
+    height: 400px;
+    ;
 }

@@ -12,6 +12,7 @@ using RussellGroup.Pims.DataAccess.Repositories;
 using DataTables.Mvc;
 using LinqKit;
 using System.Data.Entity.SqlServer;
+using RussellGroup.Pims.Website.Models;
 
 namespace RussellGroup.Pims.Website.Controllers
 {
@@ -274,6 +275,28 @@ namespace RussellGroup.Pims.Website.Controllers
             }
             await _repository.RemoveAsync(plant);
             return RedirectToAction("Index");
+        }
+
+        // GET: /Plant/Edit/5
+        [PimsAuthorize(Role.CanEdit)]
+        public ActionResult Demo1()
+        {
+            var plants = _repository.GetAll().OrderBy(f => f.Description);
+            var list1 = plants.Take(200).ToList();
+            var list2 = new List<Plant>();  // plants.Take(2).ToList();
+
+            return View(new DemoPlant { PlantList1 = list1, PlantList2 = list2 });
+        }
+
+        // GET: /Plant/Edit/5
+        [PimsAuthorize(Role.CanEdit)]
+        public ActionResult Demo2()
+        {
+            var plants = _repository.GetAll().OrderBy(f => f.Description);
+            var list1 = plants.Take(100).ToList();
+            var list2 = new List<Plant>();
+
+            return View(new DemoPlant { PlantList1 = list1, PlantList2 = list2 });
         }
 
         private ActionResult View(string viewName, Plant plant)

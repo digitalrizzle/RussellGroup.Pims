@@ -30,6 +30,11 @@ namespace RussellGroup.Pims.Website
                 "~/Scripts/typeahead.bundle.js",
                 "~/Scripts/view-typeahead.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/multisortable").Include(
+                "~/Scripts/jquery-ui-{version}.js",
+                "~/Scripts/multiselect.js",
+                "~/Scripts/jquery.multisortable.js"));
+
             bundles.Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/bootstrap.css", new CssRewriteUrlTransformWrapper())
                 .Include("~/Content/bootstrap-theme.css", new CssRewriteUrlTransformWrapper())

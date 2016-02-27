@@ -195,6 +195,7 @@
     <Compile Include="Models\BatchStatus.cs" />
     <Compile Include="Models\CheckinTransaction.cs" />
     <Compile Include="Models\CheckoutTransaction.cs" />
+    <Compile Include="Models\DemoPlant.cs" />
     <Compile Include="Models\UserRolesViewModel.cs" />
     <Compile Include="PimsAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -431,6 +432,9 @@
     <Content Include="Scripts\handlebars.runtime.min.js" />
     <Content Include="Scripts\jquery-2.2.0.js" />
     <Content Include="Scripts\jquery-2.2.0.min.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.js" />
+    <Content Include="Scripts\jquery-ui-1.11.4.min.js" />
+    <Content Include="Scripts\jquery.multisortable.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ar.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.az.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.bg.min.js" />
@@ -497,6 +501,7 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\multiselect.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -632,6 +637,8 @@
     <Content Include="smtp.config" />
     <Content Include="smtp.example.config" />
     <Content Include="Views\Home\_09_barcode_scanning.cshtml" />
+    <Content Include="Views\Plant\Demo2.cshtml" />
+    <Content Include="Views\Plant\Demo1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataTables.Mvc\DataTables.Mvc.csproj">
