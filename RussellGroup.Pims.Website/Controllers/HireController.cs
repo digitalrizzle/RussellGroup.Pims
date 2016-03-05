@@ -48,13 +48,13 @@ namespace RussellGroup.Pims.Website.Controllers
                 // f.IsCheckedIn can't be used because it isn't queryable
                 .Where(f =>
                     !f.WhenDisused.HasValue &&
-                    (f.XPlantNewId.StartsWith(hint) | f.XPlantId.StartsWith(hint) | f.Description.Contains(hint)) &&
-                    f.PlantHires.All(h => h.WhenEnded.HasValue) &&
-                    (f.StatusId == Status.Unknown || f.StatusId == Status.Available))
+                    (f.XPlantNewId.StartsWith(hint) | f.XPlantId.StartsWith(hint) | f.Description.Contains(hint))) //&&
+                    //f.PlantHires.All(h => h.WhenEnded.HasValue) &&
+                    //(f.StatusId == Status.Unknown || f.StatusId == Status.Available))
                 .Take(5)
                 .OrderBy(f => f.XPlantId)
                 .ToArray()
-                .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantIdAndXPlantNewId });
+                .Select(f => new { id = f.Id, description = f.Description, xid = f.XPlantIdAndXPlantNewId, rate = f.Rate.ToString("0.00"), status = f.Status.Name });
 
             var json = Json(result, JsonRequestBehavior.AllowGet);
 

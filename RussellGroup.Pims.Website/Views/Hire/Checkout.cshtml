@@ -122,7 +122,7 @@
 
             if (id != "") {
                 var disabled = $("#plant-field" + next);
-                disabled.val('[' + xid + ']  ' + disabled.val());
+                disabled.val('[' + xid + ' @@ $' + rate + ']  ' + disabled.val());
                 disabled.typeahead("destroy");
                 disabled.attr("disabled", "disabled");
             }
@@ -180,7 +180,8 @@
                 templates: {
                     suggestion: Handlebars.compile([
                         '<p class="typeahead-description">{{description}}</p>',
-                        '<p class="typeahead-id">{{xid}}</p>'
+                        '<p class="typeahead-id">{{xid}} @@ ${{rate}}</p>',
+                        '<p class="pull-right">{{status}}</p>'
                     ].join(""))
                 }
             });
