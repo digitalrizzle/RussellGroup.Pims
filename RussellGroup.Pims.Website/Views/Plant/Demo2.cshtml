@@ -4,36 +4,50 @@
     ViewBag.Title = "Demo 2";
 }
 
-<h2>Demo 2</h2>
+<h2>@ViewBag.Title</h2>
+
 <br />
 
 <div class="row">
-    <div class="col-xs-5">
+    <div class="col-sm-offset-1 col-sm-4">
         <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
             @foreach (var plant in Model.ExcludedItems)
             {
-                <option value="@(plant.Category.Name + "-"+plant.Id)">@plant.Description</option>
+                <option value="@(plant.Category.Name + "-" + plant.Id)">@plant.Description</option>
             }
         </select>
     </div>
 
-    <div class="col-xs-2" style="margin-top: 100px;">
+    <div class="col-sm-1" style="margin-top: 140px">
         <button type="button" id="search_rightAll" class="btn btn-block"><i class="glyphicon glyphicon-forward"></i></button>
         <button type="button" id="search_rightSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-right"></i></button>
         <button type="button" id="search_leftSelected" class="btn btn-block"><i class="glyphicon glyphicon-chevron-left"></i></button>
         <button type="button" id="search_leftAll" class="btn btn-block"><i class="glyphicon glyphicon-backward"></i></button>
     </div>
 
-    <div class="col-xs-5">
-        <select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple"></select>
+    <div class="col-sm-4">
+        <select style="margin-top: 56px" name="to[]" id="search_to" class="form-control" size="8" multiple="multiple"></select>
     </div>
 </div>
 
+<hr />
+
+<form>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-11">
+                <input type="submit" value="Request" class="btn btn-primary" />
+                &nbsp;
+                @Html.ActionLink("Cancel", "Index")
+            </div>
+        </div>
+    </div>
+</form>
 
 @section scripts {
     @Scripts.Render("~/bundles/multisortable")
     <script type="text/javascript">
-        //support case insensitive contains
+        // support case insensitive contains
         jQuery.expr[":"].contains = jQuery.expr.createPseudo(function (arg) {
             return function (elem) {
                 return jQuery(elem).text().toUpperCase().indexOf(arg.toUpperCase()) >= 0;
@@ -43,11 +57,10 @@
         $(document).ready(function ($) {
             $('#search').multiselect({
                 search: {
-                    left: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
+                    left: '<input type="text" name="q" class="form-control" placeholder="Search..." /><br />',
                     //right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
                 }
             });
         });
     </script>
-
 }

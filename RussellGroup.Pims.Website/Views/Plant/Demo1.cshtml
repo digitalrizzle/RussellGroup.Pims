@@ -1,15 +1,16 @@
 ﻿@model RussellGroup.Pims.Website.Models.DemoPlant
 
 @{
-    ViewBag.Title = "Demo";
+    ViewBag.Title = "Demo 1";
 }
 
-<h2>Demo</h2>
+<h2>@ViewBag.Title</h2>
+
+<br />
 
 <div class="row">
-    <div class="col-sm-offset-1 col-sm-6">
-        <label>Filter by category</label>
-        <input id="searchCategory" name="searchCategory" type="text" />
+    <div class="col-sm-offset-1 col-sm-4">
+        <input id="searchCategory" class="form-control" name="searchCategory" type="text" placeholder="Search..." />
     </div>
 </div>
 
@@ -17,18 +18,21 @@
 
 <div class="row">
     <div class="col-sm-offset-1 col-sm-4">
-        <div class="text-center">List 1</div>
+        <div class="text-center">Excluded</div>
         <ol id="excluded" class="sortable-list">
             @foreach (var plant in Model.ExcludedItems)
             {
-                <li id="@(plant.Category.Name + "-"+plant.Id)" class="sortable-item">@plant.Description</li>
+                <li id="@(plant.Category.Name + "-" + plant.Id)" class="sortable-item">
+                    <div>@plant.Description</div>
+                    <div class="small text-muted">@plant.Category.Name</div>
+                </li>
             }
         </ol>
     </div>
     <div class="col-sm-2 col-md-1">
     </div>
     <div class="col-sm-4">
-        <div class="text-center">List 2</div>
+        <div class="text-center">Included</div>
         <ol id="included" class="sortable-list">
             @foreach (var plant in Model.IncludedItems)
             {
@@ -40,6 +44,18 @@
 </div>
 
 <hr />
+
+<form>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-sm-offset-1 col-sm-11">
+                <input type="submit" value="Request" class="btn btn-primary" />
+                &nbsp;
+                @Html.ActionLink("Cancel", "Index")
+            </div>
+        </div>
+    </div>
+</form>
 
 @section scripts {
     @Scripts.Render("~/bundles/multisortable")
@@ -63,5 +79,4 @@
         });
 
     </script>
-
 }

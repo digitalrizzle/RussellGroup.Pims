@@ -61,10 +61,8 @@
         <mvcSiteMapNode title="Category Details" action="Details" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
         <mvcSiteMapNode title="Delete Category" action="Delete" preservedRouteParameters="id" visibility="SiteMapPathHelper,!*" />
       </mvcSiteMapNode>
-      <mvcSiteMapNode title="Demo1" controller="Plant" action="Demo1">        
-      </mvcSiteMapNode>
-      <mvcSiteMapNode title="Demo2" controller="Plant" action="Demo2">
-      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Demo 1" controller="Plant" action="Demo1" />        
+      <mvcSiteMapNode title="Demo 2" controller="Plant" action="Demo2" />
     </mvcSiteMapNode>
     <mvcSiteMapNode title="Reports" controller="Report" clickable="false" visibilityProvider="RussellGroup.Pims.Website.TrimEmptyGroupingNodesVisibilityProvider, RussellGroup.Pims.Website">
       <mvcSiteMapNode title="Jobs #51, #56" action="Jobs" />
