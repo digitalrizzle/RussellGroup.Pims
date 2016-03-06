@@ -119,7 +119,9 @@
             <div class="col-sm-offset-2 col-sm-10">
                 @if (Html.IsAction("Edit"))
                 {
-                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <input name="submit" type="submit" value="Save" class="btn btn-primary" />
+                    <text>&nbsp;</text>
+                    <input name="submit" type="submit" value="@(Model.WhenEnded.HasValue ? "Reopen" : "Close")" class="btn btn-warning" />
                 }
                 else
                 {

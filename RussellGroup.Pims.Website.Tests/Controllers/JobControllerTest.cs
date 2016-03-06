@@ -327,7 +327,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             controller.ValueProvider = collection.ToValueProvider();
 
             // act
-            var result = await controller.Edit(1, collection) as RedirectToRouteResult;
+            var result = await controller.Edit(1, "Save", collection) as RedirectToRouteResult;
 
             // assert
             Assert.IsNotNull(result, "The result is not a RedirectToRouteResult.");
@@ -372,7 +372,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             // act
             controller.BindModel(job, "Edit");
-            var result = await controller.Edit(1, collection) as ViewResult;
+            var result = await controller.Edit(1, "Save", collection) as ViewResult;
 
             // assert
             Assert.IsNotNull(result, "The result is not a ViewResult.");

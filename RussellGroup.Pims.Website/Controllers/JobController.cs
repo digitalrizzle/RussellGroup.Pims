@@ -144,7 +144,7 @@ namespace RussellGroup.Pims.Website.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [PimsAuthorize(Role.CanEdit)]
-        public async Task<ActionResult> Edit(int? id, FormCollection collection)
+        public async Task<ActionResult> Edit(int? id, string submit, FormCollection collection)
         {
             if (id == null)
             {
@@ -159,6 +159,19 @@ namespace RussellGroup.Pims.Website.Controllers
             if (TryUpdateModel(job, "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,NotificationEmail,QuantitySurveyor,Comment".Split(',')))
             {
                 Validate(job);
+
+                switch (submit)
+                {
+                    case "Save":
+                    case "Close":
+                        if (!job.WhenEnded.HasValue) job.WhenEnded = DateTime.Now;
+                        break;
+                    case "Reopen":
+                        job.WhenEnded = null;
+                        break;
+                    default:
+                        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
 
                 if (ModelState.IsValid)
                 {
