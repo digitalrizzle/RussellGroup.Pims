@@ -10,6 +10,7 @@ namespace RussellGroup.Pims.Website.Tests
         {
             base.InitializeDatabase(context);
 
+            context.Database.ExecuteSqlCommand("DELETE FROM dbo.Jobs");
             context.Database.ExecuteSqlCommand("DELETE FROM dbo.Settings");
         }
 

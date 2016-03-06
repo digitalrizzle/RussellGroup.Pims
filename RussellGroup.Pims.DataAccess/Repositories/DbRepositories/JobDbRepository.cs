@@ -11,6 +11,20 @@ namespace RussellGroup.Pims.DataAccess.Repositories
     {
         public JobDbRepository(PimsDbContext context) : base(context) { }
 
+        public override Task<int> AddAsync(Job job)
+        {
+            Validate(job);
+
+            return base.AddAsync(job);
+        }
+
+        public override Task<int> UpdateAsync(Job job)
+        {
+            Validate(job);
+
+            return base.UpdateAsync(job);
+        }
+
         public override async Task<int> RemoveAsync(Job job)
         {
             // remove hire is done using the repositories so that
@@ -41,6 +55,17 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             }
 
             return await base.RemoveAsync(job);
+        }
+
+        private void Validate(Job job)
+        {
+            // does the xjobid value already exist?
+            var isDuplicate = this.GetAll().Any(f => f.Id != job.Id && f.XJobId.Equals(job.XJobId, StringComparison.OrdinalIgnoreCase));
+
+            if (isDuplicate)
+            {
+                throw new InvalidOperationException($"The XJobId value '{job.XJobId}' already exists.");
+            }
         }
     }
 }

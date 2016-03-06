@@ -106,7 +106,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             if (ModelState.IsValid)
             {
-                await _repository.Checkout(job, transaction.Docket, transaction.WhenStarted, plantIds, inventoryIdsAndQuantities);
+                await _repository.CheckoutAsync(job, transaction.Docket, transaction.WhenStarted, plantIds, inventoryIdsAndQuantities);
                 return RedirectToAction("Details", "Job", new { id = job.Id });
             }
 
@@ -164,7 +164,7 @@ namespace RussellGroup.Pims.Website.Controllers
 
             if (ModelState.IsValid)
             {
-                await _repository.Checkin(job, transaction.ReturnDocket, transaction.WhenEnded, plantHireIds, inventoryIdsAndQuantities);
+                await _repository.CheckinAsync(job, transaction.ReturnDocket, transaction.WhenEnded, plantHireIds, inventoryIdsAndQuantities);
                 return RedirectToAction("Details", "Job", new { id = transaction.JobId });
             }
 

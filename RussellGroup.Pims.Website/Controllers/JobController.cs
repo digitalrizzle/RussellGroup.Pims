@@ -111,6 +111,8 @@ namespace RussellGroup.Pims.Website.Controllers
         [PimsAuthorize(Role.CanEdit)]
         public async Task<ActionResult> Create([Bind(Include = "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,QuantitySurveyor,NotificationEmail,Comment")] Job job)
         {
+            Validate(job);
+
             if (ModelState.IsValid)
             {
                 await _repository.AddAsync(job);
@@ -156,6 +158,8 @@ namespace RussellGroup.Pims.Website.Controllers
 
             if (TryUpdateModel(job, "XJobId,Description,WhenStarted,WhenEnded,ProjectManager,NotificationEmail,QuantitySurveyor,Comment".Split(',')))
             {
+                Validate(job);
+
                 if (ModelState.IsValid)
                 {
                     await _repository.UpdateAsync(job);
@@ -250,6 +254,17 @@ namespace RussellGroup.Pims.Website.Controllers
             }
 
             return links;
+        }
+
+        private void Validate(Job job)
+        {
+            // does the xjobid value already exist?
+            var isDuplicate = _repository.GetAll().Any(f => f.Id != job.Id && f.XJobId.Equals(job.XJobId, StringComparison.OrdinalIgnoreCase));
+
+            if (isDuplicate)
+            {
+                ModelState.AddModelError("XJobId", "The id already exists.");
+            }
         }
     }
 }
