@@ -86,7 +86,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             Assert.AreEqual(new DateTime(2017, 10, 31), model.WhenEnded);
             Assert.AreEqual("XX9999", model.Scans);
-            Assert.AreEqual("Receipts have been created.", result.ViewBag.Message);
+            Assert.AreEqual("The receipt has been created and sent.", result.ViewBag.Message);
         }
 
         #endregion
