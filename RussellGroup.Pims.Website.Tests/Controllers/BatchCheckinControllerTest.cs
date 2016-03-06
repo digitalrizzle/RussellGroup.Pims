@@ -474,7 +474,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var batch = TestDataFactory.GetBatchCheckin();
 
             Repository.
-                Setup(f => f.Checkin(
+                Setup(f => f.CheckinAsync(
                     It.IsAny<Job>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTime>(),
@@ -537,7 +537,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var batch = TestDataFactory.GetBatchCheckin();
 
             Repository.
-                Setup(f => f.Checkin(
+                Setup(f => f.CheckinAsync(
                     It.IsAny<Job>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTime>(),
@@ -573,7 +573,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             batch.Scans = $"AUTO DOCKET{Environment.NewLine}03002{Environment.NewLine}99906003";
 
             Repository.
-                Setup(f => f.Checkin(
+                Setup(f => f.CheckinAsync(
                     It.IsAny<Job>(),
                     It.IsAny<DateTime>(),
                     It.IsAny<int>(),
@@ -603,7 +603,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var batch = TestDataFactory.GetBatchCheckin();
 
             Repository.
-                Setup(f => f.Checkin(
+                Setup(f => f.CheckinAsync(
                     It.IsAny<Job>(),
                     It.IsAny<string>(),
                     It.IsAny<DateTime>(),
