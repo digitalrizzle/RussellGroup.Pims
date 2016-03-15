@@ -86,15 +86,9 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         public async Task<long> GetLastIssuedDocketAsync()
         {
             var setting = await GetLastIssuedDocketSettingAsync();
-            var value = StripPrefix(setting);
-            var docket = long.Parse(value);
+            var docket = long.Parse(setting.Value);
 
             return docket;
-        }
-
-        private string StripPrefix(Setting setting)
-        {
-            return setting.Value.Replace(DocketPrefix, null);
         }
 
         private async Task<Setting> GetLastIssuedDocketSettingAsync()
@@ -104,9 +98,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
             if (setting != null)
             {
-                var value = StripPrefix(setting);
-
-                if (long.TryParse(value, out docket))
+                if (long.TryParse(setting.Value, out docket))
                 {
                     return setting;
                 }
@@ -156,8 +148,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         {
             // get and update the docket number (SaveChanges() in Checkout ought to commit the change)
             var setting = await GetLastIssuedDocketSettingAsync();
-            var value = StripPrefix(setting);
-            var docket = long.Parse(value);
+            var docket = long.Parse(setting.Value);
 
             docket++;
             setting.Value = docket.ToString();
