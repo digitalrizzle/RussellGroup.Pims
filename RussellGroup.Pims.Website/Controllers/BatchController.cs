@@ -141,7 +141,6 @@ namespace RussellGroup.Pims.Website.Controllers
                     receipt.Recipients = receipt.Job.NotificationEmail;
 
                     MailHelper.Send(receipt);
-
                     resendSuccess = true;
                 }
                 catch (Exception ex)

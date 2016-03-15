@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Threading.Tasks;
 using System.Web;
 
 namespace RussellGroup.Pims.Website.Helpers
@@ -53,7 +54,7 @@ namespace RussellGroup.Pims.Website.Helpers
 
                     using (var smtpClient = new SmtpClient())
                     {
-                        smtpClient.Send(message);
+                        Task.Run(() => smtpClient.Send(message)).Wait();
                     }
                 }
             }
