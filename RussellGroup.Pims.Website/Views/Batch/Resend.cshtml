@@ -46,7 +46,7 @@
 
         </dl>
 
-        @if (!string.IsNullOrWhiteSpace(Model.Recipients))
+        @if (!string.IsNullOrWhiteSpace(Model.Job.NotificationEmail))
         {
             <hr />
 
@@ -76,7 +76,7 @@
                     @Html.AntiForgeryToken()
                     @Html.HiddenFor(model => model.Id)
 
-                    <input type="submit" value="Resend" class="btn btn-success" @(string.IsNullOrWhiteSpace(Model.Recipients) ? "disabled" : string.Empty ) />
+                    <input type="submit" value="Resend" class="btn btn-success" @(string.IsNullOrWhiteSpace(Model.Job.NotificationEmail) ? "disabled" : string.Empty ) />
                     <text>&nbsp;</text>
                 }
                 @Html.ActionLink("Cancel", "Receipts")

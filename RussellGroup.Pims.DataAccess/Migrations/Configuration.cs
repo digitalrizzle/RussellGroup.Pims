@@ -102,7 +102,7 @@ namespace RussellGroup.Pims.DataAccess.Migrations
             setting = context.Settings.SingleOrDefault(f => f.Key.Equals("LastIssuedDocket"));
             if (setting == null)
             {
-                context.Settings.Add(new Setting { Key = "LastIssuedDocket", Value = "DCL00000" });
+                context.Settings.Add(new Setting { Key = "LastIssuedDocket", Value = "0" });
             }
 
             context.SaveChanges();

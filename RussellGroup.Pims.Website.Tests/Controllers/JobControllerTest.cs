@@ -215,15 +215,15 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Job model = null;
             var job = TestDataFactory.GetJobs().First();
 
-            repository
-                .Setup(f => f.AddAsync(job)).Returns(Task.FromResult(1))
-                .Callback((Job x) => model = x);
+            repository.Setup(f => f.AddAsync(job)).Returns(Task.FromResult(1)).Callback((Job x) => model = x);
+            repository.Setup(f => f.GetAll()).Returns(new Job[0].AsQueryable());
 
             // act
             controller.BindModel(job, "Create");
             var result = await controller.Create(job) as RedirectToRouteResult;
 
             // assert
+            Assert.IsNotNull(result, "The result is not a RedirectToRouteResult.");
             Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(null, result.RouteValues["controller"]);
 
@@ -237,6 +237,24 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Assert.AreEqual("Jarrod Koonce", model.QuantitySurveyor);
             Assert.AreEqual("orlando.hubbard@unittest.com", model.NotificationEmail);
             Assert.AreEqual("This is a comment.", model.Comment);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_a_job_with_an_XJobId_that_already_exists_cannot_be_created()
+        {
+            // arrange
+            var job = TestDataFactory.GetJobs().First();
+
+            repository.Setup(f => f.AddAsync(job)).Returns(Task.FromResult(1));
+            repository.Setup(f => f.GetAll()).Returns(TestDataFactory.GetJobs());
+
+            // act
+            controller.BindModel(job, "Create");
+            var result = await controller.Create(job) as ViewResult;
+
+            // assert
+            Assert.IsNotNull(result, "The result is not a ViewResult.");
+            Assert.AreEqual("The id already exists.", result.GetErrorMessage());
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -287,6 +305,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var job = TestDataFactory.GetJobs().First();
 
             repository.Setup(f => f.FindAsync(job.Id)).Returns(Task.FromResult(job));
+            repository.Setup(f => f.GetAll()).Returns(TestDataFactory.GetJobs());
 
             repository
                 .Setup(f => f.UpdateAsync(job)).Returns(Task.FromResult(1))
@@ -311,6 +330,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var result = await controller.Edit(1, collection) as RedirectToRouteResult;
 
             // assert
+            Assert.IsNotNull(result, "The result is not a RedirectToRouteResult.");
             Assert.AreEqual("Index", result.RouteValues["action"]);
             Assert.AreEqual(null, result.RouteValues["controller"]);
 
@@ -323,6 +343,40 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             Assert.AreEqual("Belinda Hunt", model.QuantitySurveyor);
             Assert.AreEqual("dominic.morrison@unittest.com,jarrodkoonce@unittest.com", model.NotificationEmail);
             Assert.AreEqual("This is an edited comment.", model.Comment);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_a_job_with_an_XJobId_that_already_exists_cannot_be_edited()
+        {
+            // arrange
+            var job = TestDataFactory.GetJobs().First();
+
+            repository.Setup(f => f.UpdateAsync(job)).Returns(Task.FromResult(1));
+            repository.Setup(f => f.FindAsync(1)).Returns(Task.FromResult(job));
+            repository.Setup(f => f.GetAll()).Returns(TestDataFactory.GetJobs());
+
+            var collection = new FormCollection()
+            {
+                { "Id", "0" },  // this should not change
+                { "XJobId", "DC0002" }, // this is our duplicate
+                { "Description", "Edited First Test Job" },
+                { "WhenStarted", "16/9/2015" },
+                { "WhenEnded","1/10/2016" },
+                { "ProjectManager", "Dominic Morrison" },
+                { "QuantitySurveyor", "Belinda Hunt" },
+                { "NotificationEmail", "dominic.morrison@unittest.com,jarrodkoonce@unittest.com" },
+                { "Comment", "This is an edited comment." }
+            };
+
+            controller.ValueProvider = collection.ToValueProvider();
+
+            // act
+            controller.BindModel(job, "Edit");
+            var result = await controller.Edit(1, collection) as ViewResult;
+
+            // assert
+            Assert.IsNotNull(result, "The result is not a ViewResult.");
+            Assert.AreEqual("The id already exists.", result.GetErrorMessage());
         }
 
         [TestMethod, TestCategory("Controllers")]

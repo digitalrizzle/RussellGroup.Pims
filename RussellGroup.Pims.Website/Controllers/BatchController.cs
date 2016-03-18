@@ -141,7 +141,6 @@ namespace RussellGroup.Pims.Website.Controllers
                     receipt.Recipients = receipt.Job.NotificationEmail;
 
                     MailHelper.Send(receipt);
-
                     resendSuccess = true;
                 }
                 catch (Exception ex)
@@ -253,7 +252,7 @@ namespace RussellGroup.Pims.Website.Controllers
                         var plantIds = transaction.Plants.Select(f => f.Id);
                         var inventoriesAndQuantities = new List<KeyValuePair<int, int?>>();
 
-                        var docket = await _repository.Checkout(transaction.Job, transaction.WhenStarted, plantIds, inventoriesAndQuantities);
+                        var docket = await _repository.CheckoutAsync(transaction.Job, transaction.WhenStarted, plantIds, inventoriesAndQuantities);
 
                         transaction.Docket = TransactionDbRepository.FormatDocket(docket);
                     }
@@ -483,12 +482,12 @@ namespace RussellGroup.Pims.Website.Controllers
 
                         if (transaction.IsAutoDocket)
                         {
-                            var docket = await _repository.Checkin(transaction.Job, transaction.WhenEnded, model.StatusId, plantIds, inventoriesAndQuantities);
+                            var docket = await _repository.CheckinAsync(transaction.Job, transaction.WhenEnded, model.StatusId, plantIds, inventoriesAndQuantities);
                             transaction.ReturnDocket = TransactionDbRepository.FormatDocket(docket);
                         }
                         else
                         {
-                            await _repository.Checkin(transaction.Job, transaction.ReturnDocket, transaction.WhenEnded, model.StatusId, plantIds, inventoriesAndQuantities);
+                            await _repository.CheckinAsync(transaction.Job, transaction.ReturnDocket, transaction.WhenEnded, model.StatusId, plantIds, inventoriesAndQuantities);
                         }
                     }
 

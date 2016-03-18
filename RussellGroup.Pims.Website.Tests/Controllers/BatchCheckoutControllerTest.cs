@@ -86,7 +86,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
 
             Assert.AreEqual(new DateTime(2015, 12, 31), model.WhenStarted);
             Assert.AreEqual("XX9999", model.Scans);
-            Assert.AreEqual("Receipts have been created.", result.ViewBag.Message);
+            Assert.AreEqual("The receipt has been created and sent.", result.ViewBag.Message);
         }
 
         #endregion
@@ -374,7 +374,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var batch = TestDataFactory.GetBatchCheckout();
 
             Repository.
-                Setup(f => f.Checkout(
+                Setup(f => f.CheckoutAsync(
                     It.IsAny<Job>(),
                     It.IsAny<DateTime>(),
                     It.IsAny<IEnumerable<int>>(),
@@ -435,7 +435,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var batch = TestDataFactory.GetBatchCheckout();
 
             Repository.
-                Setup(f => f.Checkout(
+                Setup(f => f.CheckoutAsync(
                     It.IsAny<Job>(),
                     It.IsAny<DateTime>(),
                     It.IsAny<IEnumerable<int>>(),
@@ -468,7 +468,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var batch = TestDataFactory.GetBatchCheckout();
 
             Repository.
-                Setup(f => f.Checkout(
+                Setup(f => f.CheckoutAsync(
                     It.IsAny<Job>(),
                     It.IsAny<DateTime>(),
                     It.IsAny<IEnumerable<int>>(),
@@ -497,7 +497,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             var batch = TestDataFactory.GetBatchCheckout();
 
             Repository.
-                Setup(f => f.Checkout(
+                Setup(f => f.CheckoutAsync(
                     It.IsAny<Job>(),
                     It.IsAny<DateTime>(),
                     It.IsAny<IEnumerable<int>>(),

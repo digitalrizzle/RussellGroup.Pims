@@ -86,15 +86,9 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         public async Task<long> GetLastIssuedDocketAsync()
         {
             var setting = await GetLastIssuedDocketSettingAsync();
-            var value = StripPrefix(setting);
-            var docket = long.Parse(value);
+            var docket = long.Parse(setting.Value);
 
             return docket;
-        }
-
-        private string StripPrefix(Setting setting)
-        {
-            return setting.Value.Replace(DocketPrefix, null);
         }
 
         private async Task<Setting> GetLastIssuedDocketSettingAsync()
@@ -104,9 +98,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
 
             if (setting != null)
             {
-                var value = StripPrefix(setting);
-
-                if (long.TryParse(value, out docket))
+                if (long.TryParse(setting.Value, out docket))
                 {
                     return setting;
                 }
@@ -152,24 +144,23 @@ namespace RussellGroup.Pims.DataAccess.Repositories
         }
 
         // the docket number will be automatically assigned
-        public async Task<long> Checkout(Job job, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        public async Task<long> CheckoutAsync(Job job, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
             // get and update the docket number (SaveChanges() in Checkout ought to commit the change)
             var setting = await GetLastIssuedDocketSettingAsync();
-            var value = StripPrefix(setting);
-            var docket = long.Parse(value);
+            var docket = long.Parse(setting.Value);
 
             docket++;
             setting.Value = docket.ToString();
             Db.Entry(setting).State = EntityState.Modified;
 
             // checkout as usual
-            await Checkout(job, FormatDocket(docket), whenStarted, plantIds, inventoryIdsAndQuantities);
+            await CheckoutAsync(job, FormatDocket(docket), whenStarted, plantIds, inventoryIdsAndQuantities);
 
             return docket;
         }
 
-        public async Task Checkout(Job job, string docket, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        public async Task CheckoutAsync(Job job, string docket, DateTime whenStarted, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
             // save plant
             foreach (var id in plantIds)
@@ -217,13 +208,13 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             await Db.SaveChangesAsync();
         }
 
-        public async Task Checkin(Job job, string docket, DateTime whenEnded, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        public async Task CheckinAsync(Job job, string docket, DateTime whenEnded, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
-            await Checkin(job, docket, whenEnded, Status.Available, plantHireIds, inventoryIdsAndQuantities);
+            await CheckinAsync(job, docket, whenEnded, Status.Available, plantHireIds, inventoryIdsAndQuantities);
         }
 
         // the docket number will be automatically assigned
-        public async Task<long> Checkin(Job job, DateTime whenEnded, int statusId, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        public async Task<long> CheckinAsync(Job job, DateTime whenEnded, int statusId, IEnumerable<int> plantIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
             // get and update the docket number (SaveChanges() in Checkin ought to commit the change)
             var setting = await GetLastIssuedDocketSettingAsync();
@@ -234,12 +225,12 @@ namespace RussellGroup.Pims.DataAccess.Repositories
             Db.Entry(setting).State = EntityState.Modified;
 
             // checkout as usual
-            await Checkin(job, FormatDocket(docket), whenEnded, statusId, plantIds, inventoryIdsAndQuantities);
+            await CheckinAsync(job, FormatDocket(docket), whenEnded, statusId, plantIds, inventoryIdsAndQuantities);
 
             return docket;
         }
 
-        public async Task Checkin(Job job, string docket, DateTime whenEnded, int statusId, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
+        public async Task CheckinAsync(Job job, string docket, DateTime whenEnded, int statusId, IEnumerable<int> plantHireIds, IEnumerable<KeyValuePair<int, int?>> inventoryIdsAndQuantities)
         {
             // save plant
             foreach (var id in plantHireIds)
@@ -252,6 +243,7 @@ namespace RussellGroup.Pims.DataAccess.Repositories
                     hire.WhenEnded = whenEnded;
                     Db.Entry(hire).State = EntityState.Modified;
 
+                    // Github Issue #6
                     // TODO: this could be the intermittent bug they're talking about
                     // only set the status if it is truly available
                     if (hire.Plant.IsCheckedIn)
