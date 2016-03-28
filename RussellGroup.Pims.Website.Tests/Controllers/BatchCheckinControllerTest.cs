@@ -187,6 +187,46 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
         }
 
         [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_the_docket_method_cannot_be_changed_from_DOCKET()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"DOCKET{Environment.NewLine}100001{Environment.NewLine}99903002{Environment.NewLine}06003{Environment.NewLine}AUTO DOCKET{Environment.NewLine}12307001";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+            var error = result.GetErrorMessage();
+
+            // assert
+            //Assert.AreNotEqual(transaction2.ReturnDocket, transaction1.ReturnDocket, "The docket numbers were expected to be different.");
+            Assert.AreEqual("DOCKET and AUTO DOCKET cannot be batched together.", error);
+            Assert.IsTrue(transaction1.Job.IsError, "The job is not in error.");
+            Assert.IsTrue(transaction2.Job.IsError, "The job is not in error.");
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_the_docket_method_cannot_be_changed_from_AUTO_DOCKET()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"AUTO DOCKET{Environment.NewLine}12307001{Environment.NewLine}06003{Environment.NewLine}DOCKET{Environment.NewLine}100001{Environment.NewLine}99903002";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+            var error = result.GetErrorMessage();
+
+            // assert
+            //Assert.AreNotEqual(transaction2.ReturnDocket, transaction1.ReturnDocket, "The docket numbers were expected to be different.");
+            Assert.AreEqual("DOCKET and AUTO DOCKET cannot be batched together.", error);
+            Assert.IsTrue(transaction1.Job.IsError, "The job is not in error.");
+            Assert.IsTrue(transaction2.Job.IsError, "The job is not in error.");
+        }
+
+        [TestMethod, TestCategory("Controllers")]
         public async Task Test_ConfirmCheckin_that_two_transactions_cannot_have_the_same_docket_number()
         {
             // arrange
@@ -207,7 +247,7 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
         }
 
         [TestMethod, TestCategory("Controllers")]
-        public async Task Test_ConfirmCheckin_that_two_transactions_cannot_have_the_same_auto_docket_number()
+        public async Task Test_ConfirmCheckin_that_two_transactions_have_different_auto_docket_numbers()
         {
             // arrange
             var batch = TestDataFactory.GetBatchCheckin();
@@ -216,14 +256,92 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;
             var transaction1 = result.GetBatchCheckinTransaction();
+            var plants1 = result.GetPlantsOfBatchCheckinTransaction();
             var transaction2 = result.GetBatchCheckinTransaction(1);
-            var error = result.GetErrorMessage();
+            var plants2 = result.GetPlantsOfBatchCheckinTransaction(1);
 
             // assert
-            Assert.AreEqual(transaction2.ReturnDocket, transaction1.ReturnDocket, "The docket numbers were expected to be the same.");
-            Assert.AreEqual("The docket numbers cannot be the same between different jobs.", error);
-            Assert.IsTrue(transaction1.Job.IsError, "The job is not in error.");
-            Assert.IsTrue(transaction2.Job.IsError, "The job is not in error.");
+            Assert.IsFalse(transaction1.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsTrue(transaction1.IsAutoDocket, "The auto docket is incorrectly false.");
+            Assert.IsFalse(plants1[0].IsError, "The plant is incorrectly in error.");
+            Assert.IsFalse(plants1[1].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0001", transaction1.Job.XJobId);
+            Assert.AreEqual("DCL900002", transaction1.ReturnDocket);
+            Assert.AreEqual("03002", plants1[0].XPlantId);
+            Assert.AreEqual("CMPSSR1", plants1[1].XPlantId);
+
+            Assert.IsFalse(transaction2.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsTrue(transaction2.IsAutoDocket, "The auto docket is incorrectly false.");
+            Assert.IsFalse(plants2[0].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0002", transaction2.Job.XJobId);
+            Assert.AreEqual("DCL900003", transaction2.ReturnDocket);
+            Assert.AreEqual("07001", plants2[0].XPlantId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_eccentric_plant_scans_in_different_jobs_group_to_respective_jobs_in_transactions_for_auto_dockets()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            // plant 06003 ought to group with plant 03002
+            batch.Scans = $"AUTO DOCKET{Environment.NewLine}99903002{Environment.NewLine}12307001{Environment.NewLine}06003";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var plants1 = result.GetPlantsOfBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+            var plants2 = result.GetPlantsOfBatchCheckinTransaction(1);
+
+            // assert
+            Assert.IsFalse(transaction1.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsTrue(transaction1.IsAutoDocket, "The auto docket is incorrectly false.");
+            Assert.IsFalse(plants1[0].IsError, "The plant is incorrectly in error.");
+            Assert.IsFalse(plants1[1].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0001", transaction1.Job.XJobId);
+            Assert.AreEqual("DCL900002", transaction1.ReturnDocket);
+            Assert.AreEqual("03002", plants1[0].XPlantId);
+            Assert.AreEqual("CMPSSR1", plants1[1].XPlantId);
+
+            Assert.IsFalse(transaction2.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsTrue(transaction2.IsAutoDocket, "The auto docket is incorrectly false.");
+            Assert.IsFalse(plants2[0].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0002", transaction2.Job.XJobId);
+            Assert.AreEqual("DCL900003", transaction2.ReturnDocket);
+            Assert.AreEqual("07001", plants2[0].XPlantId);
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_eccentric_plant_scans_in_different_jobs_group_to_respective_jobs_in_transactions_for_manual_dockets()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            // plant 06003 ought to group with plant 03002 and docket 100001
+            batch.Scans = $"DOCKET{Environment.NewLine}100001{Environment.NewLine}99903002{Environment.NewLine}DOCKET{Environment.NewLine}100002{Environment.NewLine}12307001{Environment.NewLine}06003";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var plants1 = result.GetPlantsOfBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+            var plants2 = result.GetPlantsOfBatchCheckinTransaction(1);
+
+            // assert
+            Assert.IsFalse(transaction1.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsFalse(transaction1.IsAutoDocket, "The auto docket is incorrectly true.");
+            Assert.IsFalse(plants1[0].IsError, "The plant is incorrectly in error.");
+            Assert.IsFalse(plants1[1].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0001", transaction1.Job.XJobId);
+            Assert.AreEqual("100001", transaction1.ReturnDocket);
+            Assert.AreEqual("03002", plants1[0].XPlantId);
+            Assert.AreEqual("CMPSSR1", plants1[1].XPlantId);
+
+            Assert.IsFalse(transaction2.Job.IsError, "The job is incorrectly in error.");
+            Assert.IsFalse(transaction2.IsAutoDocket, "The auto docket is incorrectly true.");
+            Assert.IsFalse(plants2[0].IsError, "The plant is incorrectly in error.");
+            Assert.AreEqual("DC0002", transaction2.Job.XJobId);
+            Assert.AreEqual("100002", transaction2.ReturnDocket);
+            Assert.AreEqual("07001", plants2[0].XPlantId);
         }
 
         [TestMethod, TestCategory("Controllers")]
@@ -341,6 +459,26 @@ namespace RussellGroup.Pims.Website.Tests.Controllers
             // arrange
             var batch = TestDataFactory.GetBatchCheckin();
             batch.Scans = $"AUTO DOCKET{Environment.NewLine}99903002{Environment.NewLine}06003{Environment.NewLine}AUTO DOCKET{Environment.NewLine}12307001";
+
+            // act
+            var result = await Controller.ConfirmCheckin(batch) as ViewResult;
+            var transaction1 = result.GetBatchCheckinTransaction();
+            var transaction2 = result.GetBatchCheckinTransaction(1);
+
+            // assert
+            Assert.AreEqual("DCL900002", transaction1.ReturnDocket);
+            Assert.IsTrue(transaction1.IsAutoDocket, "The auto docket is incorrectly false.");
+
+            Assert.AreEqual("DCL900003", transaction2.ReturnDocket);
+            Assert.IsTrue(transaction2.IsAutoDocket, "The auto docket is incorrectly false.");
+        }
+
+        [TestMethod, TestCategory("Controllers")]
+        public async Task Test_ConfirmCheckin_that_auto_docket_numbers_can_be_issued_twice_for_different_jobs()
+        {
+            // arrange
+            var batch = TestDataFactory.GetBatchCheckin();
+            batch.Scans = $"AUTO DOCKET{Environment.NewLine}99903002{Environment.NewLine}06003{Environment.NewLine}12307001";
 
             // act
             var result = await Controller.ConfirmCheckin(batch) as ViewResult;

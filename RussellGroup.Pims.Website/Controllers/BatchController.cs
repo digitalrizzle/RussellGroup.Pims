@@ -33,7 +33,7 @@ namespace RussellGroup.Pims.Website.Controllers
             if (resendSuccess.HasValue)
             {
                 ViewBag.Success = resendSuccess.Value;
-                ViewBag.Message = resendSuccess.Value ? "The receipt has been sent." : "There was a problem resending the receipt.";
+                ViewBag.Message = resendSuccess.Value ? "The receipts have been sent." : "There was a problem resending the receipts.";
             }
 
             return View("Receipts");
@@ -211,7 +211,7 @@ namespace RussellGroup.Pims.Website.Controllers
             if (sendSuccess.HasValue)
             {
                 ViewBag.Success = sendSuccess.Value;
-                ViewBag.Message = sendSuccess.Value ? "The receipt has been created and sent." : "There was a problem sending the receipt.";
+                ViewBag.Message = sendSuccess.Value ? "The receipts have been created and sent." : "There was a problem sending the receipts.";
             }
 
             return View("Checkout", model);
@@ -438,12 +438,11 @@ namespace RussellGroup.Pims.Website.Controllers
             if (sendSuccess.HasValue)
             {
                 ViewBag.Success = sendSuccess.Value;
-                ViewBag.Message = sendSuccess.Value ? "The receipt has been created and sent." : "There was a problem sending the receipt.";
+                ViewBag.Message = sendSuccess.Value ? "The receipts have been created and sent." : "There was a problem sending the receipts.";
             }
 
             return View("Checkin", model);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -490,7 +489,6 @@ namespace RussellGroup.Pims.Website.Controllers
                             await _repository.CheckinAsync(transaction.Job, transaction.ReturnDocket, transaction.WhenEnded, model.StatusId, plantIds, inventoriesAndQuantities);
                         }
                     }
-
 
                     // generate and store a receipt per job
                     foreach (var job in model.CheckinTransactions.Select(f => f.Job).Distinct())
@@ -542,8 +540,8 @@ namespace RussellGroup.Pims.Website.Controllers
         {
             string docket = null;
             var nextScanIsDocket = false;
-            var autoDocket = await _repository.GetLastIssuedDocketAsync();
             var isAutoDocket = false;
+            var autoDocket = await _repository.GetLastIssuedDocketAsync();
 
             string statusScan = null;
             var transactions = new List<CheckinTransaction>();
@@ -559,9 +557,7 @@ namespace RussellGroup.Pims.Website.Controllers
                     // system assigned return docket
                     if (scan.StartsWith("AUTO DOCKET", StringComparison.OrdinalIgnoreCase))
                     {
-                        autoDocket++;
                         isAutoDocket = true;
-                        docket = TransactionDbRepository.FormatDocket(autoDocket);
                         continue;
                     }
                     // return docket
@@ -625,7 +621,7 @@ namespace RussellGroup.Pims.Website.Controllers
                         }
 
                         // check the docket exists
-                        if (string.IsNullOrWhiteSpace(docket))
+                        if (!isAutoDocket && string.IsNullOrWhiteSpace(docket))
                         {
                             hire.Plant.IsError = true;
                             ModelState.AddModelError(string.Empty, $"There is no docket for the plant {plantScan}.");
@@ -636,11 +632,10 @@ namespace RussellGroup.Pims.Website.Controllers
 
                         if (transaction == null)
                         {
-                            transaction = new CheckinTransaction { Job = hire.Job, WhenEnded = model.WhenEnded, PlantHires = new List<PlantHire>() };
+                            transaction = new CheckinTransaction { Job = hire.Job, WhenEnded = model.WhenEnded, ReturnDocket = docket, PlantHires = new List<PlantHire>() };
                             transactions.Add(transaction);
                         }
 
-                        transaction.ReturnDocket = docket;
                         transaction.IsAutoDocket = isAutoDocket;
                         transaction.PlantHires.Add(hire);
                     }
@@ -668,6 +663,27 @@ namespace RussellGroup.Pims.Website.Controllers
                     transactions.Add(transaction);
 
                     ModelState.AddModelError(string.Empty, $"The was no plant scanned to check in.");
+                }
+
+                // issue auto dockets, if any
+                foreach (var transaction in transactions.Where(f => f.IsAutoDocket))
+                {
+                    autoDocket++;
+                    transaction.ReturnDocket = TransactionDbRepository.FormatDocket(autoDocket);
+                }
+
+                // check that DOCKET and AUTO DOCKET cannot be batched together
+                if (transactions.Count >= 2 &&
+                    (transactions.Count(f => f.IsAutoDocket) != transactions.Count &&
+                     transactions.Count(f => !f.IsAutoDocket) != transactions.Count))
+                {
+                    var firstTransaction = transactions.First();
+                    firstTransaction.Job.IsError = true;
+
+                    var nextDifferentTransaction = transactions.First(f => f.IsAutoDocket != firstTransaction.IsAutoDocket);
+                    nextDifferentTransaction.Job.IsError = true;
+
+                    ModelState.AddModelError(string.Empty, $"DOCKET and AUTO DOCKET cannot be batched together.");
                 }
 
                 // check that dockets numbers are different between transactions
